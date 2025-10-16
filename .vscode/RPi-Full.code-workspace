@@ -74,6 +74,27 @@
             
         }, //<
         
+        
+        "terminal.integrated.defaultProfile.linux": "printy",
+        "terminal.integrated.profiles.linux": {
+            // "pwsh": { "path": "pwsh", "icon": "terminal-powershell" },
+            // "fish": { "path": "fish" },
+            // "tmux": { "path": "tmux", "icon": "terminal-tmux" },
+            
+            "bash": { "path": "bash", "icon": "terminal-bash" },
+            "sh": { "path": "/bin/sh" },
+            "zsh": { "path": "/usr/bin/zsh", "args": ["-l", "-i"] },
+            "printy": { //>
+                "path": "/bin/bash",
+                "args": ["-c", "cd /home/pi && exec /usr/bin/zsh -l -i"],
+                "overrideName": true,
+                "icon": "terminal"
+            }, //<
+        },
+        
+        
+        
+        
         "additionalContextMenus.menus": [
         {
           "command": "workbench.action.terminal.sendSequence",

@@ -1,0 +1,12 @@
+{
+    "files.exclude": {
+        "usr": false,
+        "boot": true,
+        "home/pi/.config": true,
+        "home/pi/.oh-my-zsh": true,
+        "home/pi/.cursor-server": true
+    },
+    "markdown.styles": [
+        "/home/pi/.vscode/css/github-dimmed.css"
+    ]
+}

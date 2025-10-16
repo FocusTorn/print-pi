@@ -12,7 +12,6 @@ Thumbs.db
 
 # Cache directories
 .cache/
-.cursor-server/
 .oh-my-zsh/cache/
 
 # Compressed files
@@ -21,8 +20,8 @@ Thumbs.db
 *.tar.bz2
 
 # IDE files
-.vscode/settings.json
-.cursor/
+.cursor-server/
+
 
 # Sensitive files
 *.key
@@ -97,5 +96,9 @@ printer_data
 
 
 
-# 
+
 .config/labwc/environment
+
+
+test-source.txt
+.symlink-db
