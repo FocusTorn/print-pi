@@ -200,3 +200,12 @@ print_status "You can now create command files and use Cursor features without p
 # cd ~/.local/share/kiauh && git clone https://github.com/th33xitus/kiauh.git .
 # ln -s ~/.local/share/kiauh/kiauh.sh ~/.local/bin/kiauh
 # chmod +x ~/.local/share/kiauh/kiauh.sh && chmod +x ~/.local/bin/kiauh
+
+# echo Install Klipper Moonraker and Mainsail
+
+
+
+# Init git
+# git config --global user.name "FocusTorn"
+# git config --global user.email "FocusTorn@gmail.com"
+# git config --global --list | grep user

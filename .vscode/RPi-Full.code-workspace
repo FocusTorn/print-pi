@@ -46,10 +46,10 @@
             "home/pi/Videos": true,
             
             //= [~] dotfiles ==================================================== 
-            "home/pi/.sudo_as_admin_successful}": true,
+            "home/pi/.sudo_as_admin_successful": true,
 
-            "home/pi/.Xauthority}": true,
-            "home/pi/.xsession-errors}": true,            
+            "home/pi/.Xauthority": true,
+            "home/pi/.xsession-errors": true,            
             
             // bash
             "home/pi/.bashrc": true,
