@@ -1,0 +1,59 @@
+/* CursorAI Chat Interface Submenu Customization */
+
+/* Submenu background */
+#typeahead-menu > div > div > div > div > div > div > div > div:nth-child(1) {
+    background-color: #101010 !important;
+}
+
+/* Individual menu items - static state */
+#typeahead-item-0 > div,
+#typeahead-item-1 > div,
+#typeahead-item-2 > div,
+#typeahead-item-3 > div,
+#typeahead-item-4 > div,
+#typeahead-item-5 > div,
+#typeahead-item-6 > div,
+#typeahead-item-7 > div,
+#typeahead-item-8 > div,
+#typeahead-item-9 > div,
+#typeahead-item-10 > div,
+#typeahead-item-11 > div,
+#typeahead-item-12 > div,
+#typeahead-item-13 > div,
+#typeahead-item-14 > div,
+#typeahead-item-15 > div,
+#typeahead-item-16 > div,
+#typeahead-item-17 > div,
+#typeahead-item-18 > div,
+#typeahead-item-19 > div,
+#typeahead-item-20 > div {
+    background-color: transparent !important;
+    color: #ffffff !important;
+}
+
+
+/* Selected state (when using keyboard navigation) */
+#typeahead-item-0 > div[data-is-selected="true"],
+#typeahead-item-1 > div[data-is-selected="true"],
+#typeahead-item-2 > div[data-is-selected="true"],
+#typeahead-item-3 > div[data-is-selected="true"],
+#typeahead-item-4 > div[data-is-selected="true"],
+#typeahead-item-5 > div[data-is-selected="true"],
+#typeahead-item-6 > div[data-is-selected="true"],
+#typeahead-item-7 > div[data-is-selected="true"],
+#typeahead-item-8 > div[data-is-selected="true"],
+#typeahead-item-9 > div[data-is-selected="true"],
+#typeahead-item-10 > div[data-is-selected="true"],
+#typeahead-item-11 > div[data-is-selected="true"],
+#typeahead-item-12 > div[data-is-selected="true"],
+#typeahead-item-13 > div[data-is-selected="true"],
+#typeahead-item-14 > div[data-is-selected="true"],
+#typeahead-item-15 > div[data-is-selected="true"],
+#typeahead-item-16 > div[data-is-selected="true"],
+#typeahead-item-17 > div[data-is-selected="true"],
+#typeahead-item-18 > div[data-is-selected="true"],
+#typeahead-item-19 > div[data-is-selected="true"],
+#typeahead-item-20 > div[data-is-selected="true"] {
+    background-color: #660000 !important;
+    color: #ffffff !important;
+}

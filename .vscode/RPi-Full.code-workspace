@@ -1,0 +1,104 @@
+{
+    "folders": [
+        {
+            "name": "printy-pi",
+            "path": "../../.."
+        }
+    ],
+    
+    
+    
+    "settings": {
+        "files.exclude": { //>
+
+            // [root] links to ~ (for access rights)
+            "{.cursor}": true,
+            "{.cursor-server}": true,
+            "{.vscode}": true,
+            "{.local}": true,
+            
+            // [root] Dir
+            "{bin}": true, // Essential command-line utilities available to all users
+            "{lost+found}": true, // Files recovered during filesystem check
+            "{media}": true, // Automatic mount points for removable media
+            "{mnt}": true, // se for temporary mounts, organize by purpose
+            "{dev}": true, // Never create manually, managed by udev system
+            "{etc}": true, // System-wide configuration files
+            "{lib}": true, // Essential shared libraries required by programs in 
+            "{opt}": true, // Optional software packages not managed by package manager
+            "{proc}": true, // system monitoring, never store files here
+            "{root}": true, // Home directory for the root user
+            "{run}": true, // Cleared on reboot, don't store persistent data
+            "{sbin}": true, // System administration utilities for root/sudo users
+            "{srv}": true, // Data for services provided by the system
+            "{sys}": true, // ware configuration, system tuning
+            "{tmp}": true, //Temporary files that may be deleted on reboot
+            "{var}": true, // es that change frequently during system operation
+            
+            // [~] Dir
+            "home/pi/.cache": true,
+            "home/pi/.ssh": true,
+            "home/pi/Desktop": true,
+            "home/pi/Music": true,
+            "home/pi/Pictures": true,
+            "home/pi/Public": true,
+            "home/pi/Templates": true,
+            "home/pi/Videos": true,
+            
+            //= [~] dotfiles ==================================================== 
+            "home/pi/.sudo_as_admin_successful}": true,
+
+            "home/pi/.Xauthority}": true,
+            "home/pi/.xsession-errors}": true,            
+            
+            // bash
+            "home/pi/.bashrc": true,
+            "home/pi/.profile": true,
+            "home/pi/.bash_history": true,
+            "home/pi/.bash_logout": true,
+            
+            // zsh            
+            "home/pi/.zsh_history": true,
+            "home/pi/.zcompdump*": true,
+            
+
+            "klipper": true ,
+            "klippy-env": true,
+            
+            
+            
+            
+            
+
+            
+            
+        }, //<
+        
+        "additionalContextMenus.menus": [
+        {
+          "command": "workbench.action.terminal.sendSequence",
+          "args": {
+            "text": "sudo rm -rf \"${file}\"\n"
+          },
+          "when": "resourceScheme == 'file'",
+          "title": "🗑️ Delete with Sudo"
+        }
+      ],        
+        
+    //   "explorer.decorations.badges": true,
+    //   "explorer.decorations.colors": true,
+      "workbench.tree.indent": 20,
+      "workbench.tree.renderIndentGuides": "always",
+      "explorer.compactFolders": true,
+    //   "workbench.iconTheme": "vs-seti"
+    // "workbench.iconTheme": "material-icon-theme"
+      
+      
+      
+    }  
+    
+    
+    
+    
+    
+}
