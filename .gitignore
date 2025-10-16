@@ -1,0 +1,105 @@
+# System files
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.temp
+*~
+
+# Log files
+*.log
+
+# Cache directories
+.cache/
+.cursor-server/
+.oh-my-zsh/cache/
+
+# Compressed files
+*.zip
+*.tar.gz
+*.tar.bz2
+
+# IDE files
+.vscode/settings.json
+.cursor/
+
+# Sensitive files
+*.key
+*.pem
+*.crt
+.secrets/
+
+# Large directories
+Videos/
+Downloads/
+Pictures/
+Music/
+
+# Package manager files
+*.deb
+*.rpm
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.python-version
+
+# Node.js
+node_modules/
+npm-debug.log*
+
+# Local development
+.env
+.env.local
+
+
+klipper
+klippy-env
+printer_data
+
+
+
+
+# System runtime files
+.Xauthority
+.bash_history
+.sudo_as_admin_successful
+.xsession-errors
+
+# Zsh completion cache
+.zcompdump*
+.zsh_history
+
+# SSH keys (keep config, ignore keys)
+.ssh/id_*
+.ssh/known_hosts
+
+# Session files
+.xsession*
+
+# .config selective ignoring
+.config/kanshi/
+.config/pulse/
+.config/wf-panel-pi/
+
+# .local selective ignoring
+.local/share/
+.local/state/
+
+# .oh-my-zsh selective ignoring
+.oh-my-zsh/cache/
+.oh-my-zsh/.git/
+.oh-my-zsh/*.md
+.oh-my-zsh/CONTRIBUTING.md
+.oh-my-zsh/CODE_OF_CONDUCT.md
+
+# SSH security
+.ssh/authorized_keys
+
+
+
+
+
+.config/labwc/environment
