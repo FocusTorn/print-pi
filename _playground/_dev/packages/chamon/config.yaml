@@ -1,0 +1,57 @@
+
+title_bar:
+    display: "ChaMon - File Change Monitor (Watching)"
+
+
+commands_view:
+    commands:
+        - name: "Refresh [B]aseline"
+          key: "b"
+          desc: "Refresh baseline checksums of system files"
+          command: null
+        
+        - name: "Show [D]ifferences"
+          key: "d"
+          desc: "Show differences for selected file"
+          command: null
+        
+        - name: "[V]iew File"
+          key: "v"
+          desc: "Open the selected file in the default editor"
+          command: null
+        
+        - name: "[G]enerate Change Report"
+          key: "g"
+          desc: "Generate a detailed change report"
+          command: null
+        
+        - name: "[T]rack File"
+          key: "t"
+          desc: "Start tracking the selected file"
+          command: null
+        
+        - name: "[U]ntrack File"
+          key: "u"
+          desc: "Stop tracking the selected file"
+          command: null
+
+    
+    
+    
+    
+files_view:
+    tab1:
+        name: "Filtered"
+    
+    tab2:
+        name: "All"
+
+
+help_line:
+    text: "↕ commands ←→ files [Q]uit [W]atch [H]elp [PgUp]/[PgDn]: Cycle between file views   "
+
+
+    
+    
+    
+    

@@ -1,8 +1,16 @@
 {
     "folders": [
         {
-            "name": "printy-pi",
+            "name": "root (printy-pi)",
             "path": "../../.."
+        },
+        {
+            "name": "~ (home/pi)",
+            "path": ".."
+        },
+        {
+            "name": "_playground",
+            "path": "../_playground"
         }
     ],
     
@@ -20,7 +28,7 @@
             // [root] Dir
             "{bin}": true, // Essential command-line utilities available to all users
             "{lost+found}": true, // Files recovered during filesystem check
-            "{media}": true, // Automatic mount points for removable media
+            // "{media}": true, // Automatic mount points for removable media
             "{mnt}": true, // se for temporary mounts, organize by purpose
             "{dev}": true, // Never create manually, managed by udev system
             "{etc}": true, // System-wide configuration files
@@ -86,7 +94,10 @@
             "zsh": { "path": "/usr/bin/zsh", "args": ["-l", "-i"] },
             "printy": { //>
                 "path": "/bin/bash",
-                "args": ["-c", "cd /home/pi && exec /usr/bin/zsh -l -i"],
+                
+                // "args": ["-c", "cd /home/pi && exec /usr/bin/zsh -l -i"],
+                "args": ["-c", "exec /usr/bin/zsh -l -i"],
+                
                 "overrideName": true,
                 "icon": "terminal"
             }, //<

@@ -15,9 +15,9 @@ GRAY='\033[0;90m'
 NC='\033[0m' # No Color
 
 # Configuration
-CONFIG_FILE="/home/pi/_playground/_scripts/detour/detour-config.conf"
-LOG_FILE="/home/pi/_playground/_scripts/detour/file-detour.log"
-SCRIPT_DIR="/home/pi/_playground/_scripts/detour"
+CONFIG_FILE="$HOME/.detour.conf"
+LOG_FILE="$HOME/.local/share/detour/file-detour.log"
+SCRIPT_DIR="$HOME/.local/share/detour"
 DRY_RUN=false
 
 # Logging function

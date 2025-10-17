@@ -49,6 +49,11 @@ __pycache__/
 node_modules/
 npm-debug.log*
 
+# Rust
+target/
+**/*.rs.bk
+.cargo/
+
 # Local development
 .env
 .env.local
@@ -97,8 +102,13 @@ printer_data
 
 
 
+
+
 .config/labwc/environment
 
+
+
+xfer/
 
 test-source.txt
 .symlink-db

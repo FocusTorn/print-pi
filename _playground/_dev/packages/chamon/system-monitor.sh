@@ -38,28 +38,23 @@ while [[ $# -gt 0 ]]; do
 done
 
 # Logging functions
-log_info() {
-    echo -e "${CYAN}[INFO]${NC} $1"
-}
-
-log_warning() {
+log_info() { #>
+    echo -e "${BLUE}[INFO]${NC} $1"
+} #<
+log_warning() { #>
     echo -e "${YELLOW}[WARNING]${NC} $1"
-}
-
-log_error() {
+} #<
+log_error() { #>
     echo -e "${RED}[ERROR]${NC} $1"
-}
-
-log_success() {
+} #<
+log_success() { #>
     echo -e "${GREEN}[SUCCESS]${NC} $1"
-}
-
-log_dry_run() {
+} #<
+log_dry_run() { #>
     echo -e "${PURPLE}[DRY-RUN]${NC} $1"
-}
+} #<
 
-# Function to show help
-show_help() {
+show_help() { #>
     echo -e "${CYAN}System File Monitor - Never Miss a System Change${NC}"
     echo -e "${CYAN}==============================================${NC}"
     echo
@@ -87,10 +82,9 @@ show_help() {
     echo "Purpose:"
     echo "  Detects ANY system file changes to prevent forgotten modifications"
     echo "  Automatically suggests tracking files you didn't plan to modify"
-}
+} #<
 
-# Function to ensure monitor directory exists
-ensure_monitor_dir() {
+ensure_monitor_dir() { #>
     if [ ! -d "$MONITOR_DIR" ]; then
         if [ "$DRY_RUN" = true ]; then
             log_dry_run "Would create directory: $MONITOR_DIR"
@@ -99,10 +93,9 @@ ensure_monitor_dir() {
             log_success "Created monitoring directory: $MONITOR_DIR"
         fi
     fi
-}
+} #<
 
-# Function to create baseline checksums
-create_baseline() {
+create_baseline() { #>
     ensure_monitor_dir
     
     log_info "Creating baseline checksums of system files..."
@@ -145,10 +138,9 @@ create_baseline() {
         git add "$SYSTEM_CHECKSUM"
         log_success "Added baseline to git"
     fi
-}
+} #<
 
-# Function to check for changes
-check_changes() {
+check_changes() { #>
     if [ ! -f "$SYSTEM_CHECKSUM" ]; then
         log_error "No baseline found. Run 'system-monitor baseline' first."
         exit 1
@@ -236,10 +228,9 @@ check_changes() {
     fi
     
     echo "" >> "$CHANGE_LOG"
-}
+} #<
 
-# Function to automatically track newly detected files
-track_new_changes() {
+track_new_changes() { #>
     if [ ! -f "$CHANGE_LOG" ]; then
         log_error "No change log found. Run 'system-monitor check' first."
         exit 1
@@ -285,10 +276,9 @@ track_new_changes() {
     else
         log_info "Tracking cancelled"
     fi
-}
+} #<
 
-# Function to generate detailed report
-generate_report() {
+generate_report() { #>
     if [ ! -f "$CHANGE_LOG" ]; then
         log_error "No change log found. Run 'system-monitor check' first."
         exit 1
@@ -324,10 +314,9 @@ generate_report() {
     echo "  Total new files: $total_new"
     echo "  Total deleted files: $total_deleted"
     echo "  Total changes: $((total_changes + total_new + total_deleted))"
-}
+} #<
 
-# Function to reset monitoring
-reset_monitoring() {
+reset_monitoring() { #>
     if [ "$DRY_RUN" = true ]; then
         log_dry_run "Would remove: $SYSTEM_CHECKSUM"
         log_dry_run "Would remove: $CHANGE_LOG"
@@ -346,10 +335,9 @@ reset_monitoring() {
     
     rm -f "$SYSTEM_CHECKSUM" "$CHANGE_LOG"
     log_success "Reset monitoring data"
-}
+} #<
 
-# Function to show status
-show_status() {
+show_status() { #>
     echo -e "${BLUE}System Monitor Status${NC}"
     echo -e "${BLUE}====================${NC}"
     echo
@@ -383,7 +371,7 @@ show_status() {
     else
         echo -e "${RED}✗${NC} No change log found"
     fi
-}
+} #<
 
 # Main script logic
 case "$1" in
