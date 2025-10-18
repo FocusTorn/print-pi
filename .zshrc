@@ -95,6 +95,7 @@ ZSH_THEME="focused"
  #<
 plugins=( #>
   git
+  git-prompt
   python
   pip
   pyenv

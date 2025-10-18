@@ -1,39 +1,39 @@
 
 title_bar:
     display: "ChaMon - File Change Monitor (Watching)"
-
+    background: "#FF0000"
 
 commands_view:
     commands:
-        - name: "Refresh [B]aseline"
+        - name: "Refresh Files [B]aseline"
           key: "b"
           desc: "Refresh baseline checksums of system files"
-          command: null
+          command: "refresh"
         
         - name: "Show [D]ifferences"
           key: "d"
-          desc: "Show differences for selected file"
-          command: null
+          desc: "Show git diff for selected file"
+          command: "diff"
         
         - name: "[V]iew File"
           key: "v"
-          desc: "Open the selected file in the default editor"
-          command: null
+          desc: "Open file in default editor ($EDITOR or nano)"
+          command: "view"
         
         - name: "[G]enerate Change Report"
           key: "g"
           desc: "Generate a detailed change report"
-          command: null
+          command: "report"
         
         - name: "[T]rack File"
           key: "t"
-          desc: "Start tracking the selected file"
-          command: null
+          desc: "Add file to git tracking (git add)"
+          command: "track"
         
         - name: "[U]ntrack File"
           key: "u"
-          desc: "Stop tracking the selected file"
-          command: null
+          desc: "Remove file from git tracking (git rm --cached)"
+          command: "untrack"
 
     
     

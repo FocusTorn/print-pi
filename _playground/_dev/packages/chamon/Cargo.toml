@@ -1,7 +1,15 @@
 [package]
 name = "chamon-tui"
 version = "0.1.0"
-edition = "2024"
+edition = "2021"
+
+[lib]
+name = "chamon_tui"
+path = "src/lib.rs"
+
+[[bin]]
+name = "chamon"
+path = "src/main.rs"
 
 [dependencies]
 crossterm = "0.29.0"
