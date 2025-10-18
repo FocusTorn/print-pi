@@ -1,14 +1,44 @@
 {
     "files.exclude": {
-        "boot": false,
-        "media": false,
-        "usr": false,
-        "home/pi/.config": true,
-        "home/pi/.oh-my-zsh": true,
-        "home/pi/.cursor-server": true,
-        "home": false
+        
+        // ".oh-my-zsh": true,
+        ".cursor-server": true,
+        ".cargo": true,
+
+
+
+        // OEM Directories
+        ".cache": true,
+        ".config": true,
+        ".ssh": true,
+        "bin": true,
+        "Desktop": true,
+        "Documents": true,
+        "Music": true,
+        "Pictures": true,
+        "Public": true,
+        "Templates": true,
+        "Videos": true,
+
+        //= DOT FILES =========================================================== 
+        ".sudo_as_admin_successful": true,
+        
+        //- GIT --------------------------------------------- 
+        ".gitconfig": true,
+        //- Bash -------------------------------------------- 
+        ".bash_history": true,
+        ".bash_logout": true,
+        ".bashrc": true,
+        ".profile": true,                
+        //- X11 --------------------------------------------- 
+        ".Xauthority": true,
+        ".xsession-errors": true,
+        //- ZSH --------------------------------------------- 
+        ".zcomp*": true,
+        ".zsh_history": true,
+        ".zshenv": true,
     },
     "markdown.styles": [
-        "/home/pi/.vscode/css/github-dimmed.css"
+        "/.vscode/css/github-dimmed.css"
     ]
 }
