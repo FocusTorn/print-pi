@@ -1,0 +1,75 @@
+#!/bin/bash
+
+# System Monitor - TUI-friendly wrapper
+# Detects system file changes with JSON output support
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "$SCRIPT_DIR/lib/common.sh"
+source "$SCRIPT_DIR/lib/monitor-core.sh"
+
+# Parse arguments
+while [[ $# -gt 0 ]]; do
+    case $1 in
+        --json)
+            OUTPUT_MODE="json"
+            shift
+            ;;
+        --dry-run)
+            DRY_RUN="true"
+            shift
+            ;;
+        --quiet)
+            OUTPUT_MODE="quiet"
+            shift
+            ;;
+        *)
+            break
+            ;;
+    esac
+done
+
+COMMAND="$1"
+shift
+
+# Execute command
+case "$COMMAND" in
+    baseline)
+        create_baseline
+        ;;
+    check|changes)
+        get_changes
+        ;;
+    status)
+        get_status
+        ;;
+    help|--help|-h|"")
+        cat <<EOF
+System Monitor - File Change Detection
+
+Usage: system-monitor [options] <command>
+
+Options:
+  --json      Output in JSON format (for TUI consumption)
+  --dry-run   Show what would be done without making changes
+  --quiet     Suppress all output
+
+Commands:
+  baseline    Create baseline of system files
+  check       Check for changes since baseline
+  changes     Alias for 'check'
+  status      Show monitoring status
+  help        Show this help message
+
+Examples:
+  system-monitor baseline
+  system-monitor --json check
+  system-monitor --dry-run baseline
+EOF
+        ;;
+    *)
+        log_error "Unknown command: $COMMAND"
+        echo "Run 'system-monitor help' for usage information"
+        exit 1
+        ;;
+esac
+

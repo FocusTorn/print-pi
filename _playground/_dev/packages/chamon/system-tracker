@@ -1,0 +1,80 @@
+#!/bin/bash
+
+# System Tracker - TUI-friendly wrapper
+# Track system files with symlinks and JSON output support
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "$SCRIPT_DIR/lib/common.sh"
+source "$SCRIPT_DIR/lib/tracker-core.sh"
+
+# Parse arguments
+while [[ $# -gt 0 ]]; do
+    case $1 in
+        --json)
+            OUTPUT_MODE="json"
+            shift
+            ;;
+        --dry-run)
+            DRY_RUN="true"
+            shift
+            ;;
+        --quiet)
+            OUTPUT_MODE="quiet"
+            shift
+            ;;
+        *)
+            break
+            ;;
+    esac
+done
+
+COMMAND="$1"
+FILE_ARG="$2"
+
+# Execute command
+case "$COMMAND" in
+    add|track)
+        track_file "$FILE_ARG"
+        ;;
+    remove|untrack)
+        untrack_file "$FILE_ARG"
+        ;;
+    list)
+        list_tracked
+        ;;
+    status)
+        check_tracked_status
+        ;;
+    help|--help|-h|"")
+        cat <<EOF
+System Tracker - Git File Tracking
+
+Usage: system-tracker [options] <command> [file]
+
+Options:
+  --json      Output in JSON format (for TUI consumption)
+  --dry-run   Show what would be done without making changes
+  --quiet     Suppress all output
+
+Commands:
+  add <file>        Add file to git tracking (git add)
+  track <file>      Alias for 'add'
+  remove <file>     Remove file from git tracking (git rm --cached)
+  untrack <file>    Alias for 'remove'
+  list              List all git-tracked files
+  status            Check status of git-tracked files
+  help              Show this help message
+
+Examples:
+  system-tracker add /etc/systemd/system/myservice.service
+  system-tracker --json list
+  system-tracker --dry-run remove /etc/config.conf
+EOF
+        ;;
+    *)
+        log_error "Unknown command: $COMMAND"
+        echo "Run 'system-tracker help' for usage information"
+        exit 1
+        ;;
+esac
+
