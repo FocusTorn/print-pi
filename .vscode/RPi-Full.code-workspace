@@ -81,8 +81,8 @@
             "home/pi/.zcompdump*": true,
 
 
-            "klipper": true,
-            "klippy-env": true,
+            // "klipper": true,
+            // "klippy-env": true,
 
 
 

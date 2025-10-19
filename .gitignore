@@ -101,7 +101,7 @@ printer_data
 
 
 
-
+ide_state.json
 
 
 
@@ -113,3 +113,4 @@ xfer/
 
 test-source.txt
 .symlink-db
+.cursor/ide_state.json
