@@ -6,13 +6,13 @@ Create a concise, high-level summary of the conversation topics.
 
 ## **REFERENCE FILES**
 
-- **SUMMARY_OUTPUT**: `.cursor/ADHOC/Summary.md`
+- **SUMMARY_OUTPUT**: `~/.cursor/ADHOC/Summary.md`
 
 ## Execution Steps
 
 **CRITICAL: Execution Expectation** → MANDATORY: This command MUST be executed exactly as written with NO DEVIATION, NO SKIPPING, and NO MODIFICATION.
 
-1. **Clear existing summary**: Delete **SUMMARY_OUTPUT** file
+1. **Clear existing summary**: Use the `delete_file` tool to delete **SUMMARY_OUTPUT** file if it exists
 2. **COMPLETE CONVERSATION SCOPE**: Summary MUST reflect the ENTIRE conversation from initial prompt to completion, NOT just since "Summarizing Chat Context" creation.
 3. **Identify main topics**: Extract the key discussion themes (exclude summary requests)
 4. **Create summary**: Write a brief, bullet-point summary

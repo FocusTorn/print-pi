@@ -1,0 +1,154 @@
+[
+  // ============================================
+  // THIN BOX DRAWING CHARACTERS (RCtrl + NumPad)
+  // ============================================
+  
+  // Corners
+  {
+    "key": "ctrl+numpad7",
+    "command": "type",
+    "args": { "text": "┌" },
+    "when": "editorTextFocus"
+  },
+  {
+    "key": "ctrl+numpad9",
+    "command": "type",
+    "args": { "text": "┐" },
+    "when": "editorTextFocus"
+  },
+  {
+    "key": "ctrl+numpad1",
+    "command": "type",
+    "args": { "text": "└" },
+    "when": "editorTextFocus"
+  },
+  {
+    "key": "ctrl+numpad3",
+    "command": "type",
+    "args": { "text": "┘" },
+    "when": "editorTextFocus"
+  },
+  
+  // T-junctions
+  {
+    "key": "ctrl+numpad8",
+    "command": "type",
+    "args": { "text": "┬" },
+    "when": "editorTextFocus"
+  },
+  {
+    "key": "ctrl+numpad2",
+    "command": "type",
+    "args": { "text": "┴" },
+    "when": "editorTextFocus"
+  },
+  {
+    "key": "ctrl+numpad4",
+    "command": "type",
+    "args": { "text": "├" },
+    "when": "editorTextFocus"
+  },
+  {
+    "key": "ctrl+numpad6",
+    "command": "type",
+    "args": { "text": "┤" },
+    "when": "editorTextFocus"
+  },
+  
+  // Lines and Cross
+  {
+    "key": "ctrl+numpad_divide",
+    "command": "type",
+    "args": { "text": "│" },
+    "when": "editorTextFocus"
+  },
+  {
+    "key": "ctrl+numpad_subtract",
+    "command": "type",
+    "args": { "text": "─" },
+    "when": "editorTextFocus"
+  },
+  {
+    "key": "ctrl+numpad_add",
+    "command": "type",
+    "args": { "text": "┼" },
+    "when": "editorTextFocus"
+  },
+
+  // ============================================
+  // THICK BOX DRAWING CHARACTERS (RCtrl + RShift + NumPad)
+  // ============================================
+  
+  // Corners
+  {
+    "key": "ctrl+shift+numpad7",
+    "command": "type",
+    "args": { "text": "┏" },
+    "when": "editorTextFocus"
+  },
+  {
+    "key": "ctrl+shift+numpad9",
+    "command": "type",
+    "args": { "text": "┓" },
+    "when": "editorTextFocus"
+  },
+  {
+    "key": "ctrl+shift+numpad1",
+    "command": "type",
+    "args": { "text": "┗" },
+    "when": "editorTextFocus"
+  },
+  {
+    "key": "ctrl+shift+numpad3",
+    "command": "type",
+    "args": { "text": "┛" },
+    "when": "editorTextFocus"
+  },
+  
+  // T-junctions
+  {
+    "key": "ctrl+shift+numpad8",
+    "command": "type",
+    "args": { "text": "┳" },
+    "when": "editorTextFocus"
+  },
+  {
+    "key": "ctrl+shift+numpad2",
+    "command": "type",
+    "args": { "text": "┻" },
+    "when": "editorTextFocus"
+  },
+  {
+    "key": "ctrl+shift+numpad4",
+    "command": "type",
+    "args": { "text": "┣" },
+    "when": "editorTextFocus"
+  },
+  {
+    "key": "ctrl+shift+numpad6",
+    "command": "type",
+    "args": { "text": "┫" },
+    "when": "editorTextFocus"
+  },
+  
+  // Lines and Cross
+  {
+    "key": "ctrl+shift+numpad_divide",
+    "command": "type",
+    "args": { "text": "┃" },
+    "when": "editorTextFocus"
+  },
+  {
+    "key": "ctrl+shift+numpad_subtract",
+    "command": "type",
+    "args": { "text": "━" },
+    "when": "editorTextFocus"
+  },
+  {
+    "key": "ctrl+shift+numpad_add",
+    "command": "type",
+    "args": { "text": "╋" },
+    "when": "editorTextFocus"
+  }
+]
+

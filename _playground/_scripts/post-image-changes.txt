@@ -1,0 +1,6793 @@
+═══════════════════════════════════════════════════════════════
+POST-IMAGE CHANGES ANALYSIS
+Generated: Sun 19 Oct 04:22:48 CDT 2025
+Base Image Date: 2025-09-30
+═══════════════════════════════════════════════════════════════
+
+GOAL: Show ONLY what changed after base image was written
+If you remove everything in this report, system = virgin image
+(excluding /home directory)
+
+═══════════════════════════════════════════════════════════════
+SUMMARY
+═══════════════════════════════════════════════════════════════
+
+Manual Installations (YOU did this):
+  • APT packages (manual):      263
+  • PIP packages:                305
+  • Files in /usr/local:         0
+  • Git repositories:            0
+
+Automatic Installations (pulled as dependencies):
+  • APT packages (auto):         1446
+
+
+═══════════════════════════════════════════════════════════════
+MANUAL INSTALLATIONS
+═══════════════════════════════════════════════════════════════
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+APT PACKAGES (Manually Installed)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Unique apt installs: 263 packages
+adduser
+apt
+apt-listchanges
+apt-utils
+avahi-daemon
+avrdude
+avr-libc
+base-files
+base-passwd
+bash
+bash-completion
+binutils-arm-none-eabi
+binutils-avr
+bluez
+bluez-firmware
+bsdutils
+build-essential
+ca-certificates
+cargo
+cifs-utils
+cloud-init
+console-setup
+coreutils
+cpio
+cron
+cron-daemon-common
+curl
+dash
+debconf
+debconf-i18n
+debconf-utils
+debian-archive-keyring
+debianutils
+debsums
+dfu-util
+dhcpcd-base
+diffutils
+dmidecode
+dosfstools
+dpkg
+e2fsprogs
+ed
+ethtool
+fbset
+fdisk
+file
+findutils
+firmware-atheros
+firmware-brcm80211
+firmware-libertas
+firmware-mediatek
+firmware-realtek
+fonts-powerline
+gcc-14-base
+gcc-arm-none-eabi
+gcc-avr
+gdb
+gpick
+gpiod
+grep
+gzip
+hostname
+htop
+init
+initramfs-tools
+init-system-helpers
+iproute2
+iputils-ping
+keyboard-configuration
+kmod
+kms++-utils
+less
+libacl1
+libapparmor1
+libapt-pkg7.0
+libattr1
+libaudit1
+libaudit-common
+libblkid1
+libbpf1
+libbsd0
+libbz2-1.0
+libc6
+libcap2
+libcap2-bin
+libcap-ng0
+libc-bin
+libcom-err2
+libcrypt1
+libdb5.3t64
+libdebconfclient0
+libedit2
+libelf1t64
+libext2fs2t64
+libfdisk1
+libffi-dev
+libgcc-s1
+libgmp10
+libgssapi-krb5-2
+libhogweed6t64
+libidn2-0
+libjansson4
+libjpeg-dev
+libk5crypto3
+libkeyutils1
+libkmod2
+libkrb5-3
+libkrb5support0
+liblastlog2-2
+liblocale-gettext-perl
+liblz4-1
+liblzma5
+libmd0
+libmnl0
+libmount1
+libmtp-runtime
+libncurses-dev
+libncursesw6
+libnettle8t64
+libnewlib-arm-none-eabi
+libnewt0.52
+libnftables1
+libnftnl11
+libpam0g
+libpam-chksshpwd
+libpam-modules
+libpam-modules-bin
+libpam-runtime
+libpcre2-8-0
+libpopt0
+libproc2-0
+libreadline8t64
+libseccomp2
+libselinux1
+libsemanage2
+libsemanage-common
+libsepol2
+libslang2
+libsmartcols1
+libsodium-dev
+libsqlite3-0
+libss2
+libssl3t64
+libstdc++6
+libsystemd0
+libsystemd-shared
+libtext-charwidth-perl
+libtext-iconv-perl
+libtext-wrapi18n-perl
+libtinfo6
+libtirpc3t64
+libtirpc-common
+libudev1
+libunistring5
+libusb-1.0-0
+libusb-1.0-0-dev
+libusb-1.0-doc
+libusb-dev
+libuuid1
+libxtables12
+libxxhash0
+libzstd1
+linux-headers-rpi-2712
+linux-headers-rpi-v8
+linux-image-rpi-2712
+linux-image-rpi-v8
+linux-sysctl-defaults
+locales
+login
+login.defs
+logrotate
+logsave
+lua5.1
+luajit
+man-db
+manpages-dev
+mawk
+mkvtoolnix
+mount
+nano
+ncdu
+ncurses-base
+ncurses-bin
+netbase
+net-tools
+network-manager
+nftables
+ntfs-3g
+openssl
+openssl-provider-legacy
+p7zip-full
+parted
+passwd
+pciutils
+perl-base
+pkg-config
+procps
+psmisc
+python3-gpiozero
+python3-libgpiod
+python3-rpi-lgpio
+python3-smbus2
+python3-spidev
+python3-venv
+python3-virtualenv
+python-is-python3
+raspberrypi-archive-keyring
+raspberrypi-net-mods
+raspberrypi-sys-mods
+raspi-config
+raspi-firmware
+raspi-utils
+readline-common
+rpd-applications
+rpd-developer
+rpd-graphics
+rpd-preferences
+rpd-theme
+rpd-utilities
+rpd-wayland-core
+rpd-wayland-extras
+rpd-x-core
+rpd-x-extras
+rpicam-apps-lite
+rpi-eeprom
+rpi-keyboard-config
+rpi-keyboard-fw-update
+rpi-loop-utils
+rpi-swap
+rpi-update
+rsync
+rustc
+sed
+sensible-utils
+sqv
+ssh
+ssh-import-id
+stm32flash
+strace
+sudo
+systemd
+systemd-sysv
+systemd-timesyncd
+sysvinit-utils
+tar
+tzdata
+udev
+udisks2
+unzip
+usb-modeswitch
+usbutils
+userconf-pi
+util-linux
+v4l-utils
+vim-common
+vim-tiny
+virtualenv
+whiptail
+wireless-tools
+wpasupplicant
+zip
+zlib1g
+zsh
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install adduser
+Files: 124  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install apt
+Files: 366  |  Size: 4MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install apt-listchanges
+Files: 141  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+├─ python3-apt (auto-installed)
+│  └─ distro-info-data
+│  └─ libapt-pkg7.0
+│  └─ libc6
+│  └─ libgcc-s1
+│  └─ libstdc++6
+│  └─ python3
+│  └─ python-apt-common
+├─ python3-debconf (auto-installed)
+│  └─ debconf
+├─ ucf (auto-installed)
+│  └─ libtext-wrapi18n-perl
+│  └─ procps
+│  └─ sensible-utils
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install apt-utils
+Files: 196  |  Size: 1MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install avahi-daemon
+Files: 49  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+├─ libavahi-common3 (auto-installed)
+│  └─ libavahi-common-data
+│  └─ libc6
+├─ libavahi-core7 (auto-installed)
+│  └─ libavahi-common3
+│  └─ libc6
+├─ libdaemon0 (auto-installed)
+│  └─ libc6
+├─ libdbus-1-3 (auto-installed)
+│  └─ libc6
+│  └─ libsystemd0
+└─ libexpat1 (auto-installed)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install avrdude
+Files: 24  |  Size: 1MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+├─ libftdi1 (auto-installed)
+│  └─ libc6
+│  └─ libusb-0.1-4
+├─ libhidapi-libusb0 (auto-installed)
+│  └─ libc6
+│  └─ libusb-1.0-0
+├─ libusb-0.1-4 (auto-installed)
+│  └─ libc6
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install avr-libc
+Files: 4199  |  Size: 117MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install base-files
+Files: 89  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install base-passwd
+Files: 44  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install bash
+Files: 166  |  Size: 7MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install bash-completion
+Files: 1087  |  Size: 1MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install binutils-arm-none-eabi
+Files: 106  |  Size: 19MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install binutils-avr
+Files: 216  |  Size: 17MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install bluez
+Files: 143  |  Size: 5MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+├─ libasound2t64 (auto-installed)
+│  └─ libasound2-data
+│  └─ libc6
+├─ libdbus-1-3 (auto-installed)
+│  └─ libc6
+│  └─ libsystemd0
+├─ libdw1t64 (auto-installed)
+│  └─ libbz2-1.0
+│  └─ libc6
+│  └─ libelf1t64
+│  └─ liblzma5
+│  └─ libzstd1
+│  └─ zlib1g
+├─ libglib2.0-0t64 (auto-installed)
+│  └─ libatomic1
+│  └─ libc6
+│  └─ libffi8
+│  └─ libmount1
+│  └─ libpcre2-8-0
+│  └─ libselinux1
+│  └─ zlib1g
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install bluez-firmware
+Files: 42  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install bsdutils
+Files: 35  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install build-essential
+Files: 13  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+├─ dpkg-dev (auto-installed)
+│  └─ binutils
+│  └─ bzip2
+│  └─ libdpkg-perl
+│  └─ make
+│  └─ patch
+│  └─ tar
+│  └─ xz-utils
+├─ g++ (auto-installed)
+│  └─ cpp
+│  └─ cpp-aarch64-linux-gnu
+│  └─ g++-14
+│  └─ g++-aarch64-linux-gnu
+│  └─ gcc
+│  └─ gcc-14
+├─ gcc (auto-installed)
+│  └─ cpp
+│  └─ cpp-aarch64-linux-gnu
+│  └─ gcc-14
+│  └─ gcc-aarch64-linux-gnu
+├─ make (auto-installed)
+│  └─ libc6
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install ca-certificates
+Files: 187  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install cargo
+Files: 63  |  Size: 20MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+├─ binutils (auto-installed)
+│  └─ binutils-aarch64-linux-gnu
+│  └─ binutils-common
+│  └─ libbinutils
+│  └─ libc6
+│  └─ libgcc-s1
+│  └─ libgprofng0
+│  └─ libstdc++6
+├─ libcurl4t64 (auto-installed)
+│  └─ libbrotli1
+│  └─ libc6
+│  └─ libgssapi-krb5-2
+│  └─ libidn2-0
+│  └─ libldap2
+│  └─ libnghttp2-14
+│  └─ libnghttp3-9
+│  └─ libpsl5t64
+│  └─ librtmp1
+│  └─ libssh2-1t64
+│  └─ libssl3t64
+│  └─ libzstd1
+│  └─ zlib1g
+├─ libgit2-1.9 (auto-installed)
+│  └─ libc6
+│  └─ libgssapi-krb5-2
+│  └─ libhttp-parser2.9
+│  └─ libmbedcrypto16
+│  └─ libmbedtls21
+│  └─ libmbedx509-7
+│  └─ libpcre2-8-0
+│  └─ libssh2-1t64
+│  └─ zlib1g
+├─ libssh2-1t64 (auto-installed)
+│  └─ libc6
+│  └─ libssl3t64
+│  └─ zlib1g
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install cifs-utils
+Files: 52  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+├─ libtalloc2 (auto-installed)
+│  └─ libc6
+├─ libwbclient0 (auto-installed)
+│  └─ libbsd0
+│  └─ libc6
+├─ python3 (auto-installed)
+│  └─ libpython3-stdlib
+│  └─ python3.13
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install cloud-init
+Files: 479  |  Size: 3MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+├─ eject (auto-installed)
+│  └─ libc6
+│  └─ libmount1
+├─ gdisk (auto-installed)
+│  └─ libc6
+│  └─ libgcc-s1
+│  └─ libncursesw6
+│  └─ libpopt0
+│  └─ libstdc++6
+│  └─ libtinfo6
+│  └─ libuuid1
+└─ lsb-release (auto-installed)
+├─ netcat-openbsd (auto-installed)
+│  └─ libbsd0
+│  └─ libc6
+└─ python3-configobj (auto-installed)
+├─ python3-jinja2 (auto-installed)
+│  └─ python3-markupsafe
+├─ python3-jsonpatch (auto-installed)
+│  └─ python3-json-pointer
+├─ python3-jsonschema (auto-installed)
+│  └─ python3-attr
+│  └─ python3-jsonschema-specifications
+│  └─ python3-referencing
+│  └─ python3-rpds-py
+├─ python3-oauthlib (auto-installed)
+│  └─ python3-blinker
+│  └─ python3-cryptography
+│  └─ python3-jwt
+├─ python3-requests (auto-installed)
+│  └─ ca-certificates
+│  └─ python3-certifi
+│  └─ python3-chardet
+│  └─ python3-charset-normalizer
+│  └─ python3-idna
+│  └─ python3-urllib3
+├─ python3-yaml (auto-installed)
+│  └─ libc6
+│  └─ libyaml-0-2
+│  └─ python3
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install console-setup
+Files: 21  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+└─ xkb-data (auto-installed)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install coreutils
+Files: 463  |  Size: 20MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install cpio
+Files: 103  |  Size: 1MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install cron
+Files: 48  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install cron-daemon-common
+Files: 34  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install curl
+Files: 23  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+├─ libcurl4t64 (auto-installed)
+│  └─ libbrotli1
+│  └─ libc6
+│  └─ libgssapi-krb5-2
+│  └─ libidn2-0
+│  └─ libldap2
+│  └─ libnghttp2-14
+│  └─ libnghttp3-9
+│  └─ libpsl5t64
+│  └─ librtmp1
+│  └─ libssh2-1t64
+│  └─ libssl3t64
+│  └─ libzstd1
+│  └─ zlib1g
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install dash
+Files: 25  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install debconf
+Files: 173  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install debconf-i18n
+Files: 236  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install debconf-utils
+Files: 59  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install debian-archive-keyring
+Files: 44  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install debianutils
+Files: 106  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install debsums
+Files: 55  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+├─ libdpkg-perl (auto-installed)
+│  └─ dpkg
+├─ libfile-fnmatch-perl (auto-installed)
+│  └─ libc6
+│  └─ perl
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install dfu-util
+Files: 27  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+├─ python3 (auto-installed)
+│  └─ libpython3-stdlib
+│  └─ python3.13
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install dhcpcd-base
+Files: 41  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install diffutils
+Files: 131  |  Size: 1MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install dmidecode
+Files: 15  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install dosfstools
+Files: 41  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install dpkg
+Files: 300  |  Size: 6MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install e2fsprogs
+Files: 94  |  Size: 2MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install ed
+Files: 20  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install ethtool
+Files: 27  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install fbset
+Files: 69  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install fdisk
+Files: 23  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install file
+Files: 18  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+├─ libmagic1t64 (auto-installed)
+│  └─ libbz2-1.0
+│  └─ libc6
+│  └─ liblzma5
+│  └─ libmagic-mgc
+│  └─ zlib1g
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install findutils
+Files: 144  |  Size: 2MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install firmware-atheros
+Files: 329  |  Size: 80MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install firmware-brcm80211
+Files: 206  |  Size: 19MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install firmware-libertas
+Files: 75  |  Size: 11MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install firmware-mediatek
+Files: 114  |  Size: 32MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install firmware-realtek
+Files: 157  |  Size: 17MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install fonts-powerline
+Files: 16  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+├─ fontconfig (auto-installed)
+│  └─ fontconfig-config
+│  └─ libc6
+│  └─ libfontconfig1
+│  └─ libfreetype6
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install gcc-14-base
+Files: 9  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install gcc-arm-none-eabi
+Files: 1125  |  Size: 503MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+├─ libisl23 (auto-installed)
+│  └─ libc6
+│  └─ libgmp10
+├─ libmpc3 (auto-installed)
+│  └─ libc6
+│  └─ libgmp10
+│  └─ libmpfr6
+├─ libmpfr6 (auto-installed)
+│  └─ libc6
+│  └─ libgmp10
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install gcc-avr
+Files: 1150  |  Size: 257MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+├─ libmpc3 (auto-installed)
+│  └─ libc6
+│  └─ libgmp10
+│  └─ libmpfr6
+├─ libmpfr6 (auto-installed)
+│  └─ libc6
+│  └─ libgmp10
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install gdb
+Files: 129  |  Size: 15MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+├─ libbabeltrace1 (auto-installed)
+│  └─ libc6
+│  └─ libdw1t64
+│  └─ libelf1t64
+│  └─ libglib2.0-0t64
+│  └─ libuuid1
+├─ libdebuginfod1t64 (auto-installed)
+│  └─ libc6
+│  └─ libcurl3t64-gnutls
+│  └─ libdebuginfod-common
+│  └─ libdw1t64
+│  └─ libelf1t64
+│  └─ libjson-c5
+└─ libexpat1 (auto-installed)
+├─ libmpfr6 (auto-installed)
+│  └─ libc6
+│  └─ libgmp10
+├─ libpython3.13 (auto-installed)
+│  └─ libc6
+│  └─ libexpat1
+│  └─ libpython3.13-stdlib
+│  └─ zlib1g
+├─ libsource-highlight4t64 (auto-installed)
+│  └─ libc6
+│  └─ libgcc-s1
+│  └─ libsource-highlight-common
+│  └─ libstdc++6
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install gpick
+Files: 62  |  Size: 1MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+├─ libboost-filesystem1.83.0 (auto-installed)
+│  └─ libc6
+│  └─ libgcc-s1
+│  └─ libstdc++6
+├─ libcairo2 (auto-installed)
+│  └─ libc6
+│  └─ libfontconfig1
+│  └─ libfreetype6
+│  └─ libpixman-1-0
+│  └─ libpng16-16t64
+│  └─ libx11-6
+│  └─ libxcb1
+│  └─ libxcb-render0
+│  └─ libxcb-shm0
+│  └─ libxext6
+│  └─ libxrender1
+│  └─ zlib1g
+└─ libexpat1 (auto-installed)
+├─ libgdk-pixbuf-2.0-0 (auto-installed)
+│  └─ libc6
+│  └─ libgdk-pixbuf2.0-common
+│  └─ libglib2.0-0t64
+│  └─ libjpeg62-turbo
+│  └─ libpng16-16t64
+│  └─ libtiff6
+│  └─ shared-mime-info
+├─ libglib2.0-0t64 (auto-installed)
+│  └─ libatomic1
+│  └─ libc6
+│  └─ libffi8
+│  └─ libmount1
+│  └─ libpcre2-8-0
+│  └─ libselinux1
+│  └─ zlib1g
+├─ libgtk-3-0t64 (auto-installed)
+│  └─ adwaita-icon-theme
+│  └─ hicolor-icon-theme
+│  └─ libatk1.0-0t64
+│  └─ libatk-bridge2.0-0t64
+│  └─ libc6
+│  └─ libcairo2
+│  └─ libcairo-gobject2
+│  └─ libcloudproviders0
+│  └─ libcolord2
+│  └─ libcups2t64
+│  └─ libepoxy0
+│  └─ libfontconfig1
+│  └─ libfribidi0
+│  └─ libgdk-pixbuf-2.0-0
+│  └─ libglib2.0-0t64
+│  └─ libgtk-3-common
+│  └─ libharfbuzz0b
+│  └─ libpango-1.0-0
+│  └─ libpangocairo-1.0-0
+│  └─ libpangoft2-1.0-0
+│  └─ libwayland-client0
+│  └─ libwayland-cursor0
+│  └─ libwayland-egl1
+│  └─ libx11-6
+│  └─ libxcomposite1
+│  └─ libxcursor1
+│  └─ libxdamage1
+│  └─ libxext6
+│  └─ libxfixes3
+│  └─ libxi6
+│  └─ libxinerama1
+│  └─ libxkbcommon0
+│  └─ libxrandr2
+│  └─ shared-mime-info
+├─ liblua5.4-0 (auto-installed)
+│  └─ libc6
+│  └─ libstdc++6
+├─ libpango-1.0-0 (auto-installed)
+│  └─ fontconfig
+│  └─ libc6
+│  └─ libfribidi0
+│  └─ libglib2.0-0t64
+│  └─ libharfbuzz0b
+│  └─ libthai0
+├─ libpangocairo-1.0-0 (auto-installed)
+│  └─ libc6
+│  └─ libcairo2
+│  └─ libfontconfig1
+│  └─ libglib2.0-0t64
+│  └─ libharfbuzz0b
+│  └─ libpango-1.0-0
+│  └─ libpangoft2-1.0-0
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install gpiod
+Files: 22  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+├─ libgpiod3 (auto-installed)
+│  └─ libc6
+│  └─ libgcc-s1
+│  └─ libstdc++6
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install grep
+Files: 164  |  Size: 1MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install gzip
+Files: 44  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install hostname
+Files: 20  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install htop
+Files: 24  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install init
+Files: 10  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install initramfs-tools
+Files: 30  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+├─ initramfs-tools-core (auto-installed)
+│  └─ coreutils
+│  └─ cpio
+│  └─ dracut-install
+│  └─ e2fsprogs
+│  └─ initramfs-tools-bin
+│  └─ klibc-utils
+│  └─ kmod
+│  └─ udev
+└─ linux-base (auto-installed)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install init-system-helpers
+Files: 45  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install iproute2
+Files: 208  |  Size: 4MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install iputils-ping
+Files: 18  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install keyboard-configuration
+Files: 25  |  Size: 2MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+└─ xkb-data (auto-installed)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install kmod
+Files: 58  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install kms++-utils
+Files: 15  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+├─ libfmt10 (auto-installed)
+│  └─ libc6
+│  └─ libgcc-s1
+│  └─ libstdc++6
+├─ libkms++0 (auto-installed)
+│  └─ libc6
+│  └─ libdrm2
+│  └─ libfmt10
+│  └─ libgcc-s1
+│  └─ libstdc++6
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install less
+Files: 27  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install libacl1
+Files: 16  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install libapparmor1
+Files: 11  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install libapt-pkg7.0
+Files: 142  |  Size: 3MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install libattr1
+Files: 17  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install libaudit1
+Files: 13  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install libaudit-common
+Files: 13  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install libblkid1
+Files: 16  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install libbpf1
+Files: 11  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install libbsd0
+Files: 15  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install libbz2-1.0
+Files: 13  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install libc6
+Files: 299  |  Size: 23MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install libcap2
+Files: 15  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install libcap2-bin
+Files: 25  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install libcap-ng0
+Files: 15  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install libc-bin
+Files: 59  |  Size: 2MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install libcom-err2
+Files: 12  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install libcrypt1
+Files: 12  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install libdb5.3t64
+Files: 14  |  Size: 1MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install libdebconfclient0
+Files: 11  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install libedit2
+Files: 21  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install libelf1t64
+Files: 34  |  Size: 1MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install libext2fs2t64
+Files: 17  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install libfdisk1
+Files: 16  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install libffi-dev
+Files: 49  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+├─ libffi8 (auto-installed)
+│  └─ libc6
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install libgcc-s1
+Files: 11  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install libgmp10
+Files: 13  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install libgssapi-krb5-2
+Files: 17  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install libhogweed6t64
+Files: 15  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install libidn2-0
+Files: 96  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install libjansson4
+Files: 16  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install libjpeg-dev
+Files: 11  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+├─ libjpeg62-turbo-dev (auto-installed)
+│  └─ libjpeg62-turbo
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install libk5crypto3
+Files: 11  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install libkeyutils1
+Files: 11  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install libkmod2
+Files: 12  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install libkrb5-3
+Files: 21  |  Size: 1MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install libkrb5support0
+Files: 14  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install liblastlog2-2
+Files: 13  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install liblocale-gettext-perl
+Files: 23  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install liblz4-1
+Files: 11  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install liblzma5
+Files: 15  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install libmd0
+Files: 13  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install libmnl0
+Files: 11  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install libmount1
+Files: 16  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install libmtp-runtime
+Files: 11  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+├─ libmtp9t64 (auto-installed)
+│  └─ libc6
+│  └─ libgcrypt20
+│  └─ libmtp-common
+│  └─ libusb-1.0-0
+└─ libmtp-common (auto-installed)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install libncurses-dev
+Files: 93  |  Size: 2MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+├─ libncurses6 (auto-installed)
+│  └─ libc6
+│  └─ libtinfo6
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install libncursesw6
+Files: 15  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install libnettle8t64
+Files: 17  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install libnewlib-arm-none-eabi
+Files: 1408  |  Size: 406MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+└─ libnewlib-dev (auto-installed)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install libnewt0.52
+Files: 250  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install libnftables1
+Files: 19  |  Size: 1MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install libnftnl11
+Files: 11  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install libpam0g
+Files: 23  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install libpam-chksshpwd
+Files: 16  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+├─ gettext-base (auto-installed)
+│  └─ libc6
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install libpam-modules
+Files: 77  |  Size: 2MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install libpam-modules-bin
+Files: 23  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install libpam-runtime
+Files: 352  |  Size: 1MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install libpcre2-8-0
+Files: 13  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install libpopt0
+Files: 121  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install libproc2-0
+Files: 13  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install libreadline8t64
+Files: 19  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install libseccomp2
+Files: 12  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install libselinux1
+Files: 12  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install libsemanage2
+Files: 10  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install libsemanage-common
+Files: 13  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install libsepol2
+Files: 10  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install libslang2
+Files: 20  |  Size: 2MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install libsmartcols1
+Files: 16  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install libsodium-dev
+Files: 80  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+├─ libsodium23 (auto-installed)
+│  └─ libc6
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install libsqlite3-0
+Files: 14  |  Size: 1MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install libss2
+Files: 12  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install libssl3t64
+Files: 19  |  Size: 7MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install libstdc++6
+Files: 23  |  Size: 2MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install libsystemd0
+Files: 12  |  Size: 1MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install libsystemd-shared
+Files: 16  |  Size: 6MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install libtext-charwidth-perl
+Files: 23  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install libtext-iconv-perl
+Files: 23  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install libtext-wrapi18n-perl
+Files: 15  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install libtinfo6
+Files: 14  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install libtirpc3t64
+Files: 16  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install libtirpc-common
+Files: 14  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install libudev1
+Files: 12  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install libunistring5
+Files: 12  |  Size: 2MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install libusb-1.0-0
+Files: 13  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install libusb-1.0-0-dev
+Files: 18  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install libusb-1.0-doc
+Files: 100  |  Size: 1MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install libusb-dev
+Files: 71  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+├─ libusb-0.1-4 (auto-installed)
+│  └─ libc6
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install libuuid1
+Files: 13  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install libxtables12
+Files: 12  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install libxxhash0
+Files: 12  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install libzstd1
+Files: 12  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install linux-headers-rpi-2712
+Files: 5  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+├─ linux-headers-6.12.47+rpt-rpi-2712 (auto-installed)
+│  └─ gcc-14
+│  └─ linux-headers-6.12.47+rpt-common-rpi
+│  └─ linux-kbuild-6.12.47+rpt
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install linux-headers-rpi-v8
+Files: 5  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+├─ linux-headers-6.12.47+rpt-rpi-v8 (auto-installed)
+│  └─ gcc-14
+│  └─ linux-headers-6.12.47+rpt-common-rpi
+│  └─ linux-kbuild-6.12.47+rpt
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install linux-image-rpi-2712
+Files: 8  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+├─ linux-image-6.12.47+rpt-rpi-2712 (auto-installed)
+│  └─ kmod
+│  └─ linux-base
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install linux-image-rpi-v8
+Files: 8  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+├─ linux-image-6.12.47+rpt-rpi-v8 (auto-installed)
+│  └─ kmod
+│  └─ linux-base
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install linux-sysctl-defaults
+Files: 10  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install locales
+Files: 647  |  Size: 15MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+└─ libc-l10n (auto-installed)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install login
+Files: 62  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install login.defs
+Files: 35  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install logrotate
+Files: 34  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install logsave
+Files: 13  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install lua5.1
+Files: 16  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install luajit
+Files: 12  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+├─ libluajit-5.1-2 (auto-installed)
+│  └─ libc6
+│  └─ libgcc-s1
+│  └─ libluajit-5.1-common
+└─ libluajit-5.1-common (auto-installed)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install man-db
+Files: 537  |  Size: 3MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+├─ groff-base (auto-installed)
+│  └─ libc6
+│  └─ libgcc-s1
+│  └─ libstdc++6
+│  └─ libuchardet0
+├─ libgdbm6t64 (auto-installed)
+│  └─ libc6
+├─ libpipeline1 (auto-installed)
+│  └─ libc6
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install manpages-dev
+Files: 2526  |  Size: 3MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+└─ manpages (auto-installed)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install mawk
+Files: 29  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install mkvtoolnix
+Files: 262  |  Size: 27MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+├─ libboost-filesystem1.83.0 (auto-installed)
+│  └─ libc6
+│  └─ libgcc-s1
+│  └─ libstdc++6
+├─ libdvdread8t64 (auto-installed)
+│  └─ libc6
+├─ libebml5 (auto-installed)
+│  └─ libc6
+│  └─ libgcc-s1
+│  └─ libstdc++6
+├─ libflac14 (auto-installed)
+│  └─ libc6
+│  └─ libogg0
+├─ libfmt10 (auto-installed)
+│  └─ libc6
+│  └─ libgcc-s1
+│  └─ libstdc++6
+├─ libmatroska7 (auto-installed)
+│  └─ libc6
+│  └─ libebml5
+│  └─ libgcc-s1
+│  └─ libstdc++6
+├─ libogg0 (auto-installed)
+│  └─ libc6
+├─ libpugixml1v5 (auto-installed)
+│  └─ libc6
+│  └─ libgcc-s1
+│  └─ libstdc++6
+├─ libqt6core6t64 (auto-installed)
+│  └─ libb2-1
+│  └─ libc6
+│  └─ libdouble-conversion3
+│  └─ libgcc-s1
+│  └─ libglib2.0-0t64
+│  └─ libicu76
+│  └─ libpcre2-16-0
+│  └─ libstdc++6
+│  └─ libzstd1
+│  └─ shared-mime-info
+│  └─ zlib1g
+├─ libvorbis0a (auto-installed)
+│  └─ libc6
+│  └─ libogg0
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install mount
+Files: 40  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install nano
+Files: 203  |  Size: 2MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install ncdu
+Files: 13  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install ncurses-base
+Files: 80  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install ncurses-bin
+Files: 38  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install netbase
+Files: 12  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install net-tools
+Files: 84  |  Size: 1MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install network-manager
+Files: 129  |  Size: 8MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+├─ libbluetooth3 (auto-installed)
+│  └─ libc6
+├─ libcurl3t64-gnutls (auto-installed)
+│  └─ libbrotli1
+│  └─ libc6
+│  └─ libgnutls30t64
+│  └─ libgssapi-krb5-2
+│  └─ libidn2-0
+│  └─ libldap2
+│  └─ libnettle8t64
+│  └─ libnghttp2-14
+│  └─ libnghttp3-9
+│  └─ libngtcp2-16
+│  └─ libngtcp2-crypto-gnutls8
+│  └─ libpsl5t64
+│  └─ librtmp1
+│  └─ libssh2-1t64
+│  └─ libzstd1
+│  └─ zlib1g
+├─ libglib2.0-0t64 (auto-installed)
+│  └─ libatomic1
+│  └─ libc6
+│  └─ libffi8
+│  └─ libmount1
+│  └─ libpcre2-8-0
+│  └─ libselinux1
+│  └─ zlib1g
+├─ libgnutls30t64 (auto-installed)
+│  └─ libc6
+│  └─ libgmp10
+│  └─ libhogweed6t64
+│  └─ libidn2-0
+│  └─ libnettle8t64
+│  └─ libp11-kit0
+│  └─ libtasn1-6
+│  └─ libunistring5
+├─ libmm-glib0 (auto-installed)
+│  └─ libc6
+│  └─ libglib2.0-0t64
+├─ libndp0 (auto-installed)
+│  └─ libc6
+├─ libnetplan1 (auto-installed)
+│  └─ libc6
+│  └─ libglib2.0-0t64
+│  └─ libuuid1
+│  └─ libyaml-0-2
+├─ libnm0 (auto-installed)
+│  └─ libc6
+│  └─ libglib2.0-0t64
+│  └─ libgnutls30t64
+│  └─ libudev1
+├─ libpsl5t64 (auto-installed)
+│  └─ libc6
+│  └─ libidn2-0
+│  └─ libunistring5
+├─ libteamdctl0 (auto-installed)
+│  └─ libc6
+│  └─ libdbus-1-3
+├─ netplan.io (auto-installed)
+│  └─ ethtool
+│  └─ iproute2
+│  └─ libc6
+│  └─ libglib2.0-0t64
+│  └─ libnetplan1
+│  └─ libsystemd0
+│  └─ netplan-generator
+│  └─ python3-netplan
+│  └─ python3-yaml
+│  └─ systemd
+│  └─ udev
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install nftables
+Files: 50  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install ntfs-3g
+Files: 80  |  Size: 2MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+├─ fuse3 (auto-installed)
+│  └─ adduser
+│  └─ libc6
+│  └─ libfuse3-4
+│  └─ mount
+│  └─ sed
+├─ libgcrypt20 (auto-installed)
+│  └─ libc6
+│  └─ libgpg-error0
+├─ libgnutls30t64 (auto-installed)
+│  └─ libc6
+│  └─ libgmp10
+│  └─ libhogweed6t64
+│  └─ libidn2-0
+│  └─ libnettle8t64
+│  └─ libp11-kit0
+│  └─ libtasn1-6
+│  └─ libunistring5
+├─ libntfs-3g89t64 (auto-installed)
+│  └─ libc6
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install openssl
+Files: 400  |  Size: 2MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install openssl-provider-legacy
+Files: 12  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install p7zip-full
+Files: 7  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+├─ 7zip (auto-installed)
+│  └─ libc6
+│  └─ libgcc-s1
+│  └─ libstdc++6
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install parted
+Files: 15  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+├─ libparted2t64 (auto-installed)
+│  └─ libblkid1
+│  └─ libc6
+│  └─ libdevmapper1.02.1
+│  └─ libuuid1
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install passwd
+Files: 534  |  Size: 5MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install pciutils
+Files: 25  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+├─ libpci3 (auto-installed)
+│  └─ libc6
+│  └─ libudev1
+│  └─ pci.ids
+│  └─ zlib1g
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install perl-base
+Files: 744  |  Size: 7MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install pkg-config
+Files: 11  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+├─ pkgconf (auto-installed)
+│  └─ pkgconf-bin
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install procps
+Files: 249  |  Size: 2MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install psmisc
+Files: 205  |  Size: 1MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install python3-gpiozero
+Files: 63  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+└─ python3-colorzero (auto-installed)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install python3-libgpiod
+Files: 43  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+├─ libgpiod3 (auto-installed)
+│  └─ libc6
+│  └─ libgcc-s1
+│  └─ libstdc++6
+├─ python3 (auto-installed)
+│  └─ libpython3-stdlib
+│  └─ python3.13
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install python3-rpi-lgpio
+Files: 22  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+├─ python3-lgpio (auto-installed)
+│  └─ libc6
+│  └─ liblgpio1
+│  └─ python3
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install python3-smbus2
+Files: 21  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install python3-spidev
+Files: 18  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+├─ python3 (auto-installed)
+│  └─ libpython3-stdlib
+│  └─ python3.13
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install python3-venv
+Files: 5  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+├─ python3 (auto-installed)
+│  └─ libpython3-stdlib
+│  └─ python3.13
+├─ python3.13-venv (auto-installed)
+│  └─ python3.13
+│  └─ python3-pip-whl
+│  └─ python3-setuptools-whl
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install python3-virtualenv
+Files: 151  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+└─ python3-distlib (auto-installed)
+└─ python3-filelock (auto-installed)
+├─ python3-pip-whl (auto-installed)
+│  └─ ca-certificates
+└─ python3-platformdirs (auto-installed)
+└─ python3-setuptools-whl (auto-installed)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install python-is-python3
+Files: 14  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+├─ python3 (auto-installed)
+│  └─ libpython3-stdlib
+│  └─ python3.13
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install raspberrypi-archive-keyring
+Files: 18  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install raspberrypi-net-mods
+Files: 13  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install raspberrypi-sys-mods
+Files: 79  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+├─ gettext-base (auto-installed)
+│  └─ libc6
+├─ uuid (auto-installed)
+│  └─ libc6
+│  └─ libossp-uuid16
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install raspi-config
+Files: 18  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+├─ alsa-utils (auto-installed)
+│  └─ kmod
+│  └─ libasound2t64
+│  └─ libatopology2t64
+│  └─ libc6
+│  └─ libfftw3-single3
+│  └─ libncursesw6
+│  └─ libsamplerate0
+│  └─ libtinfo6
+├─ bsdextrautils (auto-installed)
+│  └─ libc6
+│  └─ libsmartcols1
+│  └─ libtinfo6
+├─ dconf-cli (auto-installed)
+│  └─ libc6
+│  └─ libdconf1
+│  └─ libglib2.0-0t64
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install raspi-firmware
+Files: 44  |  Size: 21MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install raspi-utils
+Files: 7  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+├─ raspinfo (auto-installed)
+│  └─ kms++-utils
+│  └─ net-tools
+│  └─ raspi-utils-core
+│  └─ rpi-eeprom
+│  └─ sudo
+│  └─ usbutils
+├─ raspi-utils-core (auto-installed)
+│  └─ libc6
+│  └─ libgpiolib0
+├─ raspi-utils-dt (auto-installed)
+│  └─ device-tree-compiler
+│  └─ libc6
+│  └─ libdtovl0
+│  └─ libfdt1
+├─ raspi-utils-eeprom (auto-installed)
+│  └─ libc6
+└─ raspi-utils-otp (auto-installed)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install readline-common
+Files: 21  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install rpd-applications
+Files: 7  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install rpd-developer
+Files: 7  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install rpd-graphics
+Files: 7  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install rpd-preferences
+Files: 7  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install rpd-theme
+Files: 7  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install rpd-utilities
+Files: 7  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install rpd-wayland-core
+Files: 34  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+├─ autotouch (auto-installed)
+│  └─ xmlstarlet
+├─ kanshi (auto-installed)
+│  └─ libc6
+│  └─ libwayland-client0
+├─ labwc (auto-installed)
+│  └─ libc6
+│  └─ libcairo2
+│  └─ libglib2.0-0t64
+│  └─ libinput10
+│  └─ libpango-1.0-0
+│  └─ libpangocairo-1.0-0
+│  └─ libpixman-1-0
+│  └─ libpng16-16t64
+│  └─ librsvg2-2
+│  └─ libwayland-server0
+│  └─ libwlroots-0.18
+│  └─ libxcb1
+│  └─ libxkbcommon0
+│  └─ libxml2
+│  └─ xwayland
+├─ rpd-common (auto-installed)
+│  └─ desktop-file-utils
+│  └─ firmware-brcm80211
+│  └─ fonts-droid-fallback
+│  └─ fonts-noto-mono
+│  └─ gnome-keyring
+│  └─ gtk-nop
+│  └─ gui-pkinst
+│  └─ gvfs
+│  └─ gvfs-backends
+│  └─ gvfs-fuse
+│  └─ libfm-modules
+│  └─ libspa-0.2-bluetooth
+│  └─ lightdm
+│  └─ lxsession
+│  └─ lxterminal
+│  └─ mate-polkit-bin
+│  └─ network-manager
+│  └─ nfs-common
+│  └─ pcmanfm
+│  └─ pi-greeter
+│  └─ pipewire
+│  └─ pipewire-pulse
+│  └─ pishutdown
+│  └─ pkexec
+│  └─ polkitd
+│  └─ pprompt
+│  └─ pulseaudio
+│  └─ pulseaudio-module-bluetooth
+│  └─ qt5ct
+│  └─ qt5-style-plugins
+│  └─ raspi-config
+│  └─ rfkill
+│  └─ rpd-plym-splash
+│  └─ wireplumber
+│  └─ wpasupplicant
+├─ swayidle (auto-installed)
+│  └─ libc6
+│  └─ libsystemd0
+│  └─ libwayland-client0
+│  └─ libwayland-server0
+├─ swaylock (auto-installed)
+│  └─ libc6
+│  └─ libcairo2
+│  └─ libgdk-pixbuf-2.0-0
+│  └─ libglib2.0-0t64
+│  └─ libpam0g
+│  └─ libwayland-client0
+│  └─ libxkbcommon0
+├─ wf-panel-pi (auto-installed)
+│  └─ libatkmm-1.6-1v5
+│  └─ libc6
+│  └─ libcairo2
+│  └─ libcairomm-1.0-1v5
+│  └─ libdbusmenu-gtk3-4
+│  └─ libevdev2
+│  └─ libgcc-s1
+│  └─ libgdk-pixbuf-2.0-0
+│  └─ libglib2.0-0t64
+│  └─ libglibmm-2.4-1t64
+│  └─ libgtk-3-0t64
+│  └─ libgtk-layer-shell0
+│  └─ libgtkmm-3.0-1t64
+│  └─ libinput10
+│  └─ libsigc++-2.0-0v5
+│  └─ libstdc++6
+│  └─ libudev1
+│  └─ libwayland-client0
+│  └─ libxml2
+├─ wfplug-batt (auto-installed)
+│  └─ libc6
+│  └─ libcairo2
+│  └─ libgcc-s1
+│  └─ libgdk-pixbuf-2.0-0
+│  └─ libglib2.0-0t64
+│  └─ libglibmm-2.4-1t64
+│  └─ libgtk-3-0t64
+│  └─ libgtkmm-3.0-1t64
+│  └─ libsigc++-2.0-0v5
+│  └─ libstdc++6
+│  └─ wf-panel-pi
+├─ wfplug-bluetooth (auto-installed)
+│  └─ libc6
+│  └─ libgcc-s1
+│  └─ libgdk-pixbuf-2.0-0
+│  └─ libglib2.0-0t64
+│  └─ libglibmm-2.4-1t64
+│  └─ libgtk-3-0t64
+│  └─ libgtkmm-3.0-1t64
+│  └─ libsigc++-2.0-0v5
+│  └─ libstdc++6
+│  └─ wf-panel-pi
+├─ wfplug-clock (auto-installed)
+│  └─ libc6
+│  └─ libgcc-s1
+│  └─ libglib2.0-0t64
+│  └─ libglibmm-2.4-1t64
+│  └─ libgtk-3-0t64
+│  └─ libgtkmm-3.0-1t64
+│  └─ libstdc++6
+│  └─ wf-panel-pi
+├─ wfplug-connect (auto-installed)
+│  └─ gtk-update-icon-cache
+│  └─ libc6
+│  └─ libgcc-s1
+│  └─ libglib2.0-0t64
+│  └─ libglibmm-2.4-1t64
+│  └─ libgtk-3-0t64
+│  └─ libgtkmm-3.0-1t64
+│  └─ libsigc++-2.0-0v5
+│  └─ libstdc++6
+│  └─ wf-panel-pi
+├─ wfplug-cpu (auto-installed)
+│  └─ libc6
+│  └─ libgcc-s1
+│  └─ libglib2.0-0t64
+│  └─ libglibmm-2.4-1t64
+│  └─ libgtk-3-0t64
+│  └─ libgtkmm-3.0-1t64
+│  └─ libsigc++-2.0-0v5
+│  └─ libstdc++6
+│  └─ wf-panel-pi
+├─ wfplug-cputemp (auto-installed)
+│  └─ libc6
+│  └─ libgcc-s1
+│  └─ libglib2.0-0t64
+│  └─ libglibmm-2.4-1t64
+│  └─ libgtk-3-0t64
+│  └─ libgtkmm-3.0-1t64
+│  └─ libsigc++-2.0-0v5
+│  └─ libstdc++6
+│  └─ wf-panel-pi
+├─ wfplug-ejecter (auto-installed)
+│  └─ eject
+│  └─ libc6
+│  └─ libgcc-s1
+│  └─ libglib2.0-0t64
+│  └─ libglibmm-2.4-1t64
+│  └─ libgtk-3-0t64
+│  └─ libgtkmm-3.0-1t64
+│  └─ libsigc++-2.0-0v5
+│  └─ libstdc++6
+│  └─ pplug-ejecter-data
+│  └─ wf-panel-pi
+├─ wfplug-gpu (auto-installed)
+│  └─ libc6
+│  └─ libgcc-s1
+│  └─ libglib2.0-0t64
+│  └─ libglibmm-2.4-1t64
+│  └─ libgtk-3-0t64
+│  └─ libgtkmm-3.0-1t64
+│  └─ libsigc++-2.0-0v5
+│  └─ libstdc++6
+│  └─ wf-panel-pi
+├─ wfplug-menu (auto-installed)
+│  └─ libc6
+│  └─ libfm4t64
+│  └─ libfm-gtk3-4t64
+│  └─ libgcc-s1
+│  └─ libgdk-pixbuf-2.0-0
+│  └─ libglib2.0-0t64
+│  └─ libglibmm-2.4-1t64
+│  └─ libgtk-3-0t64
+│  └─ libgtkmm-3.0-1t64
+│  └─ libmenu-cache3
+│  └─ libsigc++-2.0-0v5
+│  └─ libstdc++6
+│  └─ pishutdown
+│  └─ wf-panel-pi
+├─ wfplug-netman (auto-installed)
+│  └─ libatk1.0-0t64
+│  └─ libc6
+│  └─ libcairo2
+│  └─ libgcc-s1
+│  └─ libgdk-pixbuf-2.0-0
+│  └─ libglib2.0-0t64
+│  └─ libglibmm-2.4-1t64
+│  └─ libgtk-3-0t64
+│  └─ libgtkmm-3.0-1t64
+│  └─ libnm0
+│  └─ libnma0
+│  └─ libpango-1.0-0
+│  └─ libpangocairo-1.0-0
+│  └─ libsecret-1-0
+│  └─ libsigc++-2.0-0v5
+│  └─ libstdc++6
+│  └─ lp-connection-editor
+│  └─ pplug-netman-schema
+│  └─ rfkill
+│  └─ wf-panel-pi
+├─ wfplug-power (auto-installed)
+│  └─ libc6
+│  └─ libgcc-s1
+│  └─ libglib2.0-0t64
+│  └─ libglibmm-2.4-1t64
+│  └─ libgtk-3-0t64
+│  └─ libgtkmm-3.0-1t64
+│  └─ libsigc++-2.0-0v5
+│  └─ libstdc++6
+│  └─ libudev1
+│  └─ pplug-power-data
+│  └─ wf-panel-pi
+├─ wfplug-squeek (auto-installed)
+│  └─ gtk-update-icon-cache
+│  └─ libc6
+│  └─ libgcc-s1
+│  └─ libglib2.0-0t64
+│  └─ libglibmm-2.4-1t64
+│  └─ libgtk-3-0t64
+│  └─ libgtkmm-3.0-1t64
+│  └─ libsigc++-2.0-0v5
+│  └─ libstdc++6
+│  └─ wf-panel-pi
+├─ wfplug-updater (auto-installed)
+│  └─ gui-updater
+│  └─ libc6
+│  └─ libgcc-s1
+│  └─ libglib2.0-0t64
+│  └─ libglibmm-2.4-1t64
+│  └─ libgtk-3-0t64
+│  └─ libgtkmm-3.0-1t64
+│  └─ libpackagekit-glib2-18
+│  └─ libsigc++-2.0-0v5
+│  └─ libstdc++6
+│  └─ pplug-updater-data
+│  └─ raspi-config
+│  └─ wf-panel-pi
+├─ wfplug-volumepulse (auto-installed)
+│  └─ libc6
+│  └─ libgcc-s1
+│  └─ libglib2.0-0t64
+│  └─ libglibmm-2.4-1t64
+│  └─ libgtk-3-0t64
+│  └─ libgtkmm-3.0-1t64
+│  └─ libpulse0
+│  └─ libsigc++-2.0-0v5
+│  └─ libstdc++6
+│  └─ wf-panel-pi
+├─ wlopm (auto-installed)
+│  └─ libc6
+│  └─ libwayland-client0
+├─ xsettingsd (auto-installed)
+│  └─ libc6
+│  └─ libgcc-s1
+│  └─ libstdc++6
+│  └─ libx11-6
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install rpd-wayland-extras
+Files: 7  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install rpd-x-core
+Files: 31  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+├─ gldriver-test (auto-installed)
+│  └─ raspi-config
+├─ lpplug-batt (auto-installed)
+│  └─ libc6
+│  └─ libcairo2
+│  └─ libgdk-pixbuf-2.0-0
+│  └─ libglib2.0-0t64
+│  └─ libgtk-3-0t64
+│  └─ lxpanel-pi
+├─ lpplug-bluetooth (auto-installed)
+│  └─ libc6
+│  └─ libgdk-pixbuf-2.0-0
+│  └─ libglib2.0-0t64
+│  └─ libgtk-3-0t64
+│  └─ lxpanel-pi
+├─ lpplug-clock (auto-installed)
+│  └─ libc6
+│  └─ libglib2.0-0t64
+│  └─ libgtk-3-0t64
+│  └─ lxpanel-pi
+├─ lpplug-cpu (auto-installed)
+│  └─ libc6
+│  └─ libglib2.0-0t64
+│  └─ libgtk-3-0t64
+│  └─ lxpanel-pi
+├─ lpplug-cputemp (auto-installed)
+│  └─ libc6
+│  └─ libglib2.0-0t64
+│  └─ libgtk-3-0t64
+│  └─ lxpanel-pi
+├─ lpplug-ejecter (auto-installed)
+│  └─ eject
+│  └─ libc6
+│  └─ libglib2.0-0t64
+│  └─ libgtk-3-0t64
+│  └─ lxpanel-pi
+│  └─ pplug-ejecter-data
+├─ lpplug-gpu (auto-installed)
+│  └─ libc6
+│  └─ libglib2.0-0t64
+│  └─ libgtk-3-0t64
+│  └─ lxpanel-pi
+├─ lpplug-magnifier (auto-installed)
+│  └─ libc6
+│  └─ libglib2.0-0t64
+│  └─ libgtk-3-0t64
+│  └─ lxpanel-pi
+├─ lpplug-menu (auto-installed)
+│  └─ libc6
+│  └─ libfm4t64
+│  └─ libfm-gtk3-4t64
+│  └─ libgdk-pixbuf-2.0-0
+│  └─ libglib2.0-0t64
+│  └─ libgtk-3-0t64
+│  └─ libmenu-cache3
+│  └─ lxpanel-pi
+│  └─ pishutdown
+├─ lpplug-netman (auto-installed)
+│  └─ libatk1.0-0t64
+│  └─ libc6
+│  └─ libcairo2
+│  └─ libgdk-pixbuf-2.0-0
+│  └─ libglib2.0-0t64
+│  └─ libgtk-3-0t64
+│  └─ libnm0
+│  └─ libnma0
+│  └─ libpango-1.0-0
+│  └─ libpangocairo-1.0-0
+│  └─ libsecret-1-0
+│  └─ lp-connection-editor
+│  └─ lxpanel-pi
+│  └─ pplug-netman-schema
+│  └─ rfkill
+├─ lpplug-power (auto-installed)
+│  └─ libc6
+│  └─ libglib2.0-0t64
+│  └─ libgtk-3-0t64
+│  └─ libudev1
+│  └─ lxpanel-pi
+│  └─ pplug-power-data
+├─ lpplug-updater (auto-installed)
+│  └─ gui-updater
+│  └─ libc6
+│  └─ libglib2.0-0t64
+│  └─ libgtk-3-0t64
+│  └─ libpackagekit-glib2-18
+│  └─ lxpanel-pi
+│  └─ pplug-updater-data
+│  └─ raspi-config
+├─ lpplug-volumepulse (auto-installed)
+│  └─ libc6
+│  └─ libglib2.0-0t64
+│  └─ libgtk-3-0t64
+│  └─ libpulse0
+│  └─ lxpanel-pi
+├─ lxpanel-pi (auto-installed)
+│  └─ libc6
+│  └─ libcairo2
+│  └─ libfm4t64
+│  └─ libfm-gtk3-4t64
+│  └─ libgdk-pixbuf-2.0-0
+│  └─ libglib2.0-0t64
+│  └─ libgtk-3-0t64
+│  └─ libkeybinder-3.0-0
+│  └─ libmenu-cache3
+│  └─ libpango-1.0-0
+│  └─ libx11-6
+├─ openbox (auto-installed)
+│  └─ libc6
+│  └─ libglib2.0-0t64
+│  └─ libice6
+│  └─ libobrender32v5
+│  └─ libobt2v5
+│  └─ libsm6
+│  └─ libstartup-notification0
+│  └─ libx11-6
+│  └─ libxau6
+│  └─ libxcursor1
+│  └─ libxext6
+│  └─ libxi6
+│  └─ libxinerama1
+│  └─ libxrandr2
+│  └─ python3
+├─ rpd-common (auto-installed)
+│  └─ desktop-file-utils
+│  └─ firmware-brcm80211
+│  └─ fonts-droid-fallback
+│  └─ fonts-noto-mono
+│  └─ gnome-keyring
+│  └─ gtk-nop
+│  └─ gui-pkinst
+│  └─ gvfs
+│  └─ gvfs-backends
+│  └─ gvfs-fuse
+│  └─ libfm-modules
+│  └─ libspa-0.2-bluetooth
+│  └─ lightdm
+│  └─ lxsession
+│  └─ lxterminal
+│  └─ mate-polkit-bin
+│  └─ network-manager
+│  └─ nfs-common
+│  └─ pcmanfm
+│  └─ pi-greeter
+│  └─ pipewire
+│  └─ pipewire-pulse
+│  └─ pishutdown
+│  └─ pkexec
+│  └─ polkitd
+│  └─ pprompt
+│  └─ pulseaudio
+│  └─ pulseaudio-module-bluetooth
+│  └─ qt5ct
+│  └─ qt5-style-plugins
+│  └─ raspi-config
+│  └─ rfkill
+│  └─ rpd-plym-splash
+│  └─ wireplumber
+│  └─ wpasupplicant
+├─ x11-xserver-utils (auto-installed)
+│  └─ cpp
+│  └─ libc6
+│  └─ libice6
+│  └─ libx11-6
+│  └─ libxaw7
+│  └─ libxcursor1
+│  └─ libxext6
+│  └─ libxi6
+│  └─ libxmu6
+│  └─ libxmuu1
+│  └─ libxrandr2
+│  └─ libxt6t64
+│  └─ libxxf86vm1
+├─ xcompmgr (auto-installed)
+│  └─ libc6
+│  └─ libx11-6
+│  └─ libxcomposite1
+│  └─ libxdamage1
+│  └─ libxext6
+│  └─ libxfixes3
+│  └─ libxrender1
+├─ xinit (auto-installed)
+│  └─ libc6
+│  └─ libx11-6
+│  └─ x11-common
+│  └─ xauth
+├─ xserver-xorg (auto-installed)
+│  └─ x11-xkb-utils
+│  └─ xkb-data
+│  └─ xserver-xorg-core
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install rpd-x-extras
+Files: 7  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install rpicam-apps-lite
+Files: 7  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+├─ rpicam-apps-core (auto-installed)
+│  └─ libboost-program-options1.83.0
+│  └─ libc6
+│  └─ libcamera0.5
+│  └─ libdrm2
+│  └─ libgcc-s1
+│  └─ librpicam-app1
+│  └─ libstdc++6
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install rpi-eeprom
+Files: 71  |  Size: 24MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+├─ binutils (auto-installed)
+│  └─ binutils-aarch64-linux-gnu
+│  └─ binutils-common
+│  └─ libbinutils
+│  └─ libc6
+│  └─ libgcc-s1
+│  └─ libgprofng0
+│  └─ libstdc++6
+├─ python3 (auto-installed)
+│  └─ libpython3-stdlib
+│  └─ python3.13
+├─ python3-pycryptodome (auto-installed)
+│  └─ libc6
+│  └─ python3
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install rpi-keyboard-config
+Files: 29  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+├─ libhidapi-hidraw0 (auto-installed)
+│  └─ libc6
+│  └─ libudev1
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install rpi-keyboard-fw-update
+Files: 19  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+├─ raspi-utils-core (auto-installed)
+│  └─ libc6
+│  └─ libgpiolib0
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install rpi-loop-utils
+Files: 24  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+├─ inotify-tools (auto-installed)
+│  └─ libc6
+│  └─ libinotifytools0
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install rpi-swap
+Files: 33  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+├─ rpi-systemd-config (auto-installed)
+│  └─ libsystemd0
+│  └─ libsystemd-shared
+│  └─ python3
+├─ systemd-zram-generator (auto-installed)
+│  └─ libc6
+│  └─ libgcc-s1
+│  └─ systemd
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install rpi-update
+Files: 10  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+├─ binutils (auto-installed)
+│  └─ binutils-aarch64-linux-gnu
+│  └─ binutils-common
+│  └─ libbinutils
+│  └─ libc6
+│  └─ libgcc-s1
+│  └─ libgprofng0
+│  └─ libstdc++6
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install rsync
+Files: 50  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install rustc
+Files: 31  |  Size: 11MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+├─ binutils (auto-installed)
+│  └─ binutils-aarch64-linux-gnu
+│  └─ binutils-common
+│  └─ libbinutils
+│  └─ libc6
+│  └─ libgcc-s1
+│  └─ libgprofng0
+│  └─ libstdc++6
+├─ gcc (auto-installed)
+│  └─ cpp
+│  └─ cpp-aarch64-linux-gnu
+│  └─ gcc-14
+│  └─ gcc-aarch64-linux-gnu
+├─ libstd-rust-dev (auto-installed)
+│  └─ libstd-rust-1.85
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install sed
+Files: 145  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install sensible-utils
+Files: 46  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install sqv
+Files: 22  |  Size: 1MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install ssh
+Files: 9  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+├─ openssh-client (auto-installed)
+│  └─ adduser
+│  └─ init-system-helpers
+│  └─ libc6
+│  └─ libedit2
+│  └─ libfido2-1
+│  └─ libgssapi-krb5-2
+│  └─ libselinux1
+│  └─ libssl3t64
+│  └─ passwd
+│  └─ zlib1g
+├─ openssh-server (auto-installed)
+│  └─ libaudit1
+│  └─ libc6
+│  └─ libcom-err2
+│  └─ libcrypt1
+│  └─ libgssapi-krb5-2
+│  └─ libkrb5-3
+│  └─ libpam0g
+│  └─ libpam-modules
+│  └─ libpam-runtime
+│  └─ libselinux1
+│  └─ libssl3t64
+│  └─ libwrap0
+│  └─ libwtmpdb0
+│  └─ lsb-base
+│  └─ openssh-client
+│  └─ openssh-sftp-server
+│  └─ procps
+│  └─ runit-helper
+│  └─ ucf
+│  └─ zlib1g
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install ssh-import-id
+Files: 32  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+├─ openssh-client (auto-installed)
+│  └─ adduser
+│  └─ init-system-helpers
+│  └─ libc6
+│  └─ libedit2
+│  └─ libfido2-1
+│  └─ libgssapi-krb5-2
+│  └─ libselinux1
+│  └─ libssl3t64
+│  └─ passwd
+│  └─ zlib1g
+├─ python3-distro (auto-installed)
+│  └─ lsb-release
+├─ python3-requests (auto-installed)
+│  └─ ca-certificates
+│  └─ python3-certifi
+│  └─ python3-chardet
+│  └─ python3-charset-normalizer
+│  └─ python3-idna
+│  └─ python3-urllib3
+├─ wget (auto-installed)
+│  └─ libc6
+│  └─ libgnutls30t64
+│  └─ libidn2-0
+│  └─ libnettle8t64
+│  └─ libpcre2-8-0
+│  └─ libpsl5t64
+│  └─ libuuid1
+│  └─ zlib1g
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install stm32flash
+Files: 18  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install strace
+Files: 18  |  Size: 2MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install sudo
+Files: 249  |  Size: 6MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install systemd
+Files: 1051  |  Size: 13MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install systemd-sysv
+Files: 29  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install systemd-timesyncd
+Files: 43  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install sysvinit-utils
+Files: 27  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install tar
+Files: 148  |  Size: 3MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install tzdata
+Files: 523  |  Size: 1MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install udev
+Files: 163  |  Size: 10MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install udisks2
+Files: 267  |  Size: 2MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+├─ libatasmart4 (auto-installed)
+│  └─ libc6
+│  └─ libudev1
+├─ libblockdev3 (auto-installed)
+│  └─ libblockdev-utils3
+│  └─ libc6
+│  └─ libglib2.0-0t64
+├─ libblockdev-crypto3 (auto-installed)
+│  └─ libblkid1
+│  └─ libblockdev-utils3
+│  └─ libc6
+│  └─ libcryptsetup12
+│  └─ libglib2.0-0t64
+│  └─ libkeyutils1
+│  └─ libnss3
+│  └─ libvolume-key1
+├─ libblockdev-fs3 (auto-installed)
+│  └─ libblkid1
+│  └─ libblockdev-utils3
+│  └─ libc6
+│  └─ libext2fs2t64
+│  └─ libglib2.0-0t64
+│  └─ libmount1
+│  └─ libuuid1
+├─ libblockdev-loop3 (auto-installed)
+│  └─ libblockdev-utils3
+│  └─ libc6
+│  └─ libglib2.0-0t64
+├─ libblockdev-mdraid3 (auto-installed)
+│  └─ libblockdev-utils3
+│  └─ libbytesize1
+│  └─ libc6
+│  └─ libglib2.0-0t64
+├─ libblockdev-nvme3 (auto-installed)
+│  └─ libblockdev-utils3
+│  └─ libc6
+│  └─ libglib2.0-0t64
+│  └─ libnvme1t64
+├─ libblockdev-part3 (auto-installed)
+│  └─ libblockdev-utils3
+│  └─ libc6
+│  └─ libfdisk1
+│  └─ libglib2.0-0t64
+├─ libblockdev-swap3 (auto-installed)
+│  └─ libblkid1
+│  └─ libblockdev-utils3
+│  └─ libc6
+│  └─ libglib2.0-0t64
+│  └─ libuuid1
+├─ libblockdev-utils3 (auto-installed)
+│  └─ libc6
+│  └─ libglib2.0-0t64
+│  └─ libkmod2
+│  └─ libudev1
+├─ libglib2.0-0t64 (auto-installed)
+│  └─ libatomic1
+│  └─ libc6
+│  └─ libffi8
+│  └─ libmount1
+│  └─ libpcre2-8-0
+│  └─ libselinux1
+│  └─ zlib1g
+├─ libgudev-1.0-0 (auto-installed)
+│  └─ libc6
+│  └─ libglib2.0-0t64
+│  └─ libudev1
+├─ libpolkit-agent-1-0 (auto-installed)
+│  └─ libc6
+│  └─ libglib2.0-0t64
+│  └─ libpolkit-gobject-1-0
+├─ libpolkit-gobject-1-0 (auto-installed)
+│  └─ libc6
+│  └─ libglib2.0-0t64
+│  └─ libsystemd0
+├─ libudisks2-0 (auto-installed)
+│  └─ libc6
+│  └─ libglib2.0-0t64
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install unzip
+Files: 28  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install usb-modeswitch
+Files: 29  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+├─ libjim0.83 (auto-installed)
+│  └─ libc6
+│  └─ libssl3t64
+└─ usb-modeswitch-data (auto-installed)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install usbutils
+Files: 22  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install userconf-pi
+Files: 22  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+├─ dos2unix (auto-installed)
+│  └─ libc6
+├─ retry (auto-installed)
+│  └─ libc6
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install util-linux
+Files: 286  |  Size: 7MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install v4l-utils
+Files: 44  |  Size: 2MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+├─ libv4l-0t64 (auto-installed)
+│  └─ libc6
+│  └─ libv4lconvert0t64
+├─ libv4l2rds0t64 (auto-installed)
+│  └─ libc6
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install vim-common
+Files: 101  |  Size: 1MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install vim-tiny
+Files: 26  |  Size: 1MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install virtualenv
+Files: 7  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install whiptail
+Files: 18  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install wireless-tools
+Files: 66  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+├─ libiw30t64 (auto-installed)
+│  └─ libc6
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install wpasupplicant
+Files: 79  |  Size: 3MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+├─ libdbus-1-3 (auto-installed)
+│  └─ libc6
+│  └─ libsystemd0
+├─ libnl-3-200 (auto-installed)
+│  └─ libc6
+├─ libnl-genl-3-200 (auto-installed)
+│  └─ libc6
+│  └─ libnl-3-200
+├─ libnl-route-3-200 (auto-installed)
+│  └─ libc6
+│  └─ libnl-3-200
+├─ libpcsclite1 (auto-installed)
+│  └─ libc6
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install zip
+Files: 22  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install zlib1g
+Files: 13  |  Size: 0MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: apt install zsh
+Files: 74  |  Size: 4MB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+└─ zsh-common (auto-installed)
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+PIP PACKAGES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Unique pip installs: 305 packages
+apt-listchanges
+arrow
+asgiref
+astroid
+asttokens
+attrs
+autocommand
+av
+babel
+bcrypt
+beautifulsoup4
+blinker
+certifi
+chardet
+charset-normalizer
+click
+cloud-init
+colorzero
+configobj
+cryptography
+cssselect
+cupshelpers
+dbus-python
+dill
+distlib
+distro
+docutils
+filelock
+Flask
+fqdn
+freetype-py
+gpiod
+gpiozero
+html5lib-modern
+idna
+inflect
+isoduration
+isort
+itsdangerous
+jaraco.context
+jaraco.functools
+jaraco.text
+jedi
+Jinja2
+jsonpatch
+jsonpointer
+jsonschema
+jsonschema-specifications
+lgpio
+libarchive-c
+libevdev
+linkify-it-py
+logilab-common
+lxml
+markdown-it-py
+MarkupSafe
+mccabe
+mdurl
+meson
+more-itertools
+mypy
+mypy-extensions
+numpy
+oauthlib
+olefile
+orjson
+packaging
+parso
+pexpect
+pgzero
+picamera2
+pidng
+piexif
+pillow
+pip
+platformdirs
+psutil
+ptyprocess
+pyasyncore
+pycairo
+pycryptodomex
+pycups
+pygame
+Pygments
+PyGObject
+pyinotify
+PyJWT
+pylint
+PyOpenGL
+pyOpenSSL
+PyQt5
+PyQt5_sip
+pyserial
+pysmbc
+python-apt
+python-dateutil
+python-dotenv
+python-prctl
+pyudev
+PyYAML
+referencing
+reportlab
+requests
+rfc3339-validator
+rfc3986-validator
+rfc3987
+rich
+rlPyCairo
+roman
+rpds-py
+rpi-keyboard-config
+rpi-lgpio
+RTIMULib
+Send2Trash
+sense-hat
+setuptools
+simplejpeg
+smbus
+smbus2
+soupsieve
+spidev
+ssh-import-id
+thonny
+tomlkit
+tqdm
+typeguard
+types-aiofiles
+types-antlr4-python3-runtime
+types-assertpy
+types-atheris
+types-aws-xray-sdk
+types-beautifulsoup4
+types-bleach
+types-boltons
+types-braintree
+types-cachetools
+types-caldav
+types-capturer
+types-cffi
+types-chevron
+types-click-default-group
+types-click-spinner
+types-colorama
+types-commonmark
+types-console-menu
+types-corus
+types-croniter
+types-dateparser
+types-decorator
+types-defusedxml
+types-Deprecated
+types-docker
+types-dockerfile-parse
+types-docutils
+types-editdistance
+types-entrypoints
+types-ExifRead
+types-fanstatic
+types-first
+types-flake8
+types-flake8-bugbear
+types-flake8-builtins
+types-flake8-docstrings
+types-flake8-rst-docstrings
+types-flake8-simplify
+types-flake8-typing-imports
+types-Flask-Cors
+types-Flask-Migrate
+types-Flask-SocketIO
+types-fpdf2
+types-gdb
+types-gevent
+types-google-cloud-ndb
+types-greenlet
+types-hdbcli
+types-html5lib
+types-httplib2
+types-humanfriendly
+types-hvac
+types-ibm-db
+types-icalendar
+types-influxdb-client
+types-inifile
+types-JACK-Client
+types-Jetson.GPIO
+types-jmespath
+types-jsonschema
+types-jwcrypto
+types-keyboard
+types-ldap3
+types-libsass
+types-lupa
+types-lzstring
+types-m3u8
+types-Markdown
+types-mock
+types-mypy-extensions
+types-mysqlclient
+types-nanoid
+types-netaddr
+types-netifaces
+types-networkx
+types-oauthlib
+types-objgraph
+types-olefile
+types-openpyxl
+types-opentracing
+types-paramiko
+types-parsimonious
+types-passlib
+types-passpy
+types-peewee
+types-pep8-naming
+types-pexpect
+types-pika-ts
+types-polib
+types-portpicker
+types-protobuf
+types-psutil
+types-psycopg2
+types-pyasn1
+types-pyaudio
+types-PyAutoGUI
+types-pycocotools
+types-pycurl
+types-pyfarmhash
+types-pyflakes
+types-pygit2
+types-Pygments
+types-pyinstaller
+types-pyjks
+types-PyMySQL
+types-pynput
+types-pyOpenSSL
+types-pyRFC3339
+types-PyScreeze
+types-pyserial
+types-pysftp
+types-pytest-lazy-fixture
+types-python-crontab
+types-python-datemath
+types-python-dateutil
+types-python-http-client
+types-python-jenkins
+types-python-jose
+types-python-nmap
+types-python-xlib
+types-pytz
+types-pywin32
+types-pyxdg
+types-PyYAML
+types-qrbill
+types-qrcode
+types-regex
+types-reportlab
+types-requests
+types-requests-oauthlib
+types-retry
+types-RPi.GPIO
+types-s2clientprotocol
+types-seaborn
+types-Send2Trash
+types-setuptools
+types-shapely
+types-simplejson
+types-singledispatch
+types-six
+types-slumber
+types-str2bool
+types-tabulate
+types-tensorflow
+types-TgCrypto
+types-toml
+types-toposort
+types-tqdm
+types-translationstring
+types-tree-sitter-languages
+types-ttkthemes
+types-ujson
+types-unidiff
+types-untangle
+types-usersettings
+types-uWSGI
+types-vobject
+types-waitress
+types-WebOb
+types-whatthepatch
+types-workalendar
+types-WTForms
+types-wurlitzer
+types-xdgenvpy
+types-xmltodict
+types-zstd
+types-zxcvbn
+typing_extensions
+uc-micro-py
+uritemplate
+urllib3
+videodev2
+virtualenv
+webcolors
+webencodings
+Werkzeug
+wheel
+zipp
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install apt-listchanges
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 4.8
+Dependencies:
+└─ debconf
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install arrow
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 1.3.0
+Dependencies:
+└─ python-dateutil
+└─ types-python-dateutil
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install asgiref
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 3.8.1
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install astroid
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 3.3.8
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install asttokens
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 3.0.0
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install attrs
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 25.3.0
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install autocommand
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 2.2.2
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install av
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 14.2.0
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install babel
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 2.17.0
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install bcrypt
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 4.2.0
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install beautifulsoup4
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 4.13.4
+Dependencies:
+└─ soupsieve
+└─ typing-extensions
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install blinker
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 1.9.0
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install certifi
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 2025.1.31
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install chardet
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 5.2.0
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install charset-normalizer
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 3.4.2
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install click
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 8.1.8
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install cloud-init
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 25.2
+Dependencies:
+└─ configobj
+├─ jinja2
+│  └─ MarkupSafe
+├─ jsonpatch
+│  └─ jsonpointer
+├─ jsonschema
+│  └─ attrs
+│  └─ jsonschema-specifications
+│  └─ referencing
+│  └─ rpds-py
+└─ oauthlib
+└─ pyyaml
+├─ requests
+│  └─ certifi
+│  └─ charset_normalizer
+│  └─ idna
+│  └─ urllib3
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install colorzero
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 2.0
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install configobj
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 5.0.9
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install cryptography
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 43.0.0
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install cssselect
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 1.3.0
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install cupshelpers
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 1.0
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install dbus-python
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 1.4.0
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install dill
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 0.4.0
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install distlib
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 0.3.9
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install distro
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 1.9.0
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install docutils
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 0.21.2
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install filelock
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 3.18.0
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install Flask
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 3.1.1
+Dependencies:
+└─ blinker
+└─ click
+└─ itsdangerous
+├─ jinja2
+│  └─ MarkupSafe
+└─ markupsafe
+├─ werkzeug
+│  └─ MarkupSafe
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install fqdn
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 1.5.1
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install freetype-py
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 2.5.1
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install gpiod
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 2.2.0
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install gpiozero
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 2.0.1
+Dependencies:
+└─ colorzero
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install html5lib-modern
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 1.2
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install idna
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 3.10
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install inflect
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 7.3.1
+Dependencies:
+└─ more-itertools
+├─ typeguard
+│  └─ typing_extensions
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install isoduration
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 20.11.0
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install isort
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 6.0.1
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install itsdangerous
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 2.2.0
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install jaraco.context
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 6.0.1
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install jaraco.functools
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 4.1.0
+Dependencies:
+└─ more-itertools
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install jaraco.text
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 4.0.0
+Dependencies:
+└─ autocommand
+└─ jaraco.context
+├─ jaraco.functools
+│  └─ more-itertools
+└─ more-itertools
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install jedi
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 0.19.1
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install Jinja2
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 3.1.6
+Dependencies:
+└─ MarkupSafe
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install jsonpatch
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 1.32
+Dependencies:
+└─ jsonpointer
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install jsonpointer
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 2.4
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install jsonschema
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 4.19.2
+Dependencies:
+└─ attrs
+├─ jsonschema-specifications
+│  └─ referencing
+├─ referencing
+│  └─ attrs
+│  └─ rpds-py
+└─ rpds-py
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install jsonschema-specifications
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 2023.12.1
+Dependencies:
+├─ referencing
+│  └─ attrs
+│  └─ rpds-py
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install lgpio
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 0.2.2.0
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install libarchive-c
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 5.1
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install libevdev
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 0.11
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install linkify-it-py
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 2.0.3
+Dependencies:
+└─ uc-micro-py
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install logilab-common
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 2.1.0
+Dependencies:
+└─ mypy-extensions
+└─ typing_extensions
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install lxml
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 5.4.0
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install markdown-it-py
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 3.0.0
+Dependencies:
+└─ mdurl
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install MarkupSafe
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 2.1.5
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install mccabe
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 0.7.0
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install mdurl
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 0.1.2
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install meson
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 1.7.0
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install more-itertools
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 10.7.0
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install mypy
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 1.15.0
+Dependencies:
+└─ mypy_extensions
+└─ typing_extensions
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install mypy-extensions
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 1.0.0
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install numpy
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 2.2.4
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install oauthlib
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 3.2.2
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install olefile
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 0.47
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install orjson
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 3.10.7
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install packaging
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 25.0
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install parso
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 0.8.4
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install pexpect
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 4.9.0
+Dependencies:
+└─ ptyprocess
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install pgzero
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 1.2.1
+Dependencies:
+└─ numpy
+└─ pygame
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install picamera2
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 0.3.31
+Dependencies:
+└─ av
+├─ jsonschema
+│  └─ attrs
+│  └─ jsonschema-specifications
+│  └─ referencing
+│  └─ rpds-py
+└─ libarchive-c
+└─ numpy
+├─ PiDNG
+│  └─ numpy
+└─ piexif
+└─ pillow
+└─ python-prctl
+├─ simplejpeg
+│  └─ numpy
+└─ tqdm
+└─ videodev2
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install pidng
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 4.0.9
+Dependencies:
+└─ numpy
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install piexif
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 1.1.3
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install pillow
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 11.1.0
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install pip
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 25.1.1
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install platformdirs
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 4.3.7
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install psutil
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 7.0.0
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install ptyprocess
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 0.7.0
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install pyasyncore
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 1.0.2
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install pycairo
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 1.27.0
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install pycryptodomex
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 3.20.0
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install pycups
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 2.0.4
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install pygame
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 2.6.1
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install Pygments
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 2.18.0
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install PyGObject
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 3.50.0
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install pyinotify
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 0.9.6
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install PyJWT
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 2.10.1
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install pylint
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 3.3.4
+Dependencies:
+└─ astroid
+└─ dill
+└─ isort
+└─ mccabe
+└─ platformdirs
+└─ tomlkit
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install PyOpenGL
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 3.1.9
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install pyOpenSSL
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 25.0.0
+Dependencies:
+└─ cryptography
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install PyQt5
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 5.15.11
+Dependencies:
+└─ PyQt5-sip
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install PyQt5_sip
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 12.17.0
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install pyserial
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 3.5
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install pysmbc
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 1.0.25.1
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install python-apt
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 3.0.0
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install python-dateutil
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 2.9.0
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install python-dotenv
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 1.0.1
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install python-prctl
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 1.8.1
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install pyudev
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 0.24.3
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install PyYAML
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 6.0.2
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install referencing
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 0.36.2
+Dependencies:
+└─ attrs
+└─ rpds-py
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install reportlab
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 4.3.1
+Dependencies:
+└─ chardet
+└─ pillow
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install requests
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 2.32.3
+Dependencies:
+└─ certifi
+└─ charset_normalizer
+└─ idna
+└─ urllib3
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install rfc3339-validator
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 0.1.4
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install rfc3986-validator
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 0.1.1
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install rfc3987
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 1.3.8
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install rich
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 13.9.4
+Dependencies:
+├─ markdown-it-py
+│  └─ mdurl
+└─ pygments
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install rlPyCairo
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 0.3.0
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install roman
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 5.0
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install rpds-py
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 0.21.0
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install rpi-keyboard-config
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 1.0
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install rpi-lgpio
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 0.6
+Dependencies:
+└─ lgpio
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install RTIMULib
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 7.2.1
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install Send2Trash
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 1.8.3
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install sense-hat
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 2.6.0
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install setuptools
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 78.1.1
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install simplejpeg
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 1.8.1
+Dependencies:
+└─ numpy
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install smbus
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 1.1
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install smbus2
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 0.4.3
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install soupsieve
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 2.7
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install spidev
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 3.6
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install ssh-import-id
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 5.10
+Dependencies:
+└─ distro
+├─ requests
+│  └─ certifi
+│  └─ charset_normalizer
+│  └─ idna
+│  └─ urllib3
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install thonny
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 4.1.7
+Dependencies:
+└─ asttokens
+└─ docutils
+└─ jedi
+├─ mypy
+│  └─ mypy_extensions
+│  └─ typing_extensions
+├─ pylint
+│  └─ astroid
+│  └─ dill
+│  └─ isort
+│  └─ mccabe
+│  └─ platformdirs
+│  └─ tomlkit
+└─ pyserial
+└─ Send2Trash
+└─ setuptools
+├─ wheel
+│  └─ packaging
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install tomlkit
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 0.13.2
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install tqdm
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 4.67.1
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install typeguard
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 4.4.2
+Dependencies:
+└─ typing_extensions
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-aiofiles
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 24.1
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-antlr4-python3-runtime
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 4.13
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-assertpy
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 1.1
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-atheris
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 2.3
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-aws-xray-sdk
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 2.14
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-beautifulsoup4
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 4.12
+Dependencies:
+└─ types-html5lib
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-bleach
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 6.2
+Dependencies:
+└─ types-html5lib
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-boltons
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 24.1
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-braintree
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 4.31
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-cachetools
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 5.5
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-caldav
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 1.3
+Dependencies:
+├─ types-requests
+│  └─ urllib3
+└─ types-vobject
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-capturer
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 3.0
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-cffi
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 1.16
+Dependencies:
+└─ types-setuptools
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-chevron
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 0.14
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-click-default-group
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 1.2
+Dependencies:
+└─ click
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-click-spinner
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 0.1
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-colorama
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 0.4
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-commonmark
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 0.9
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-console-menu
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 0.8
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-corus
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 0.10
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-croniter
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 5.0.1
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-dateparser
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 1.2
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-decorator
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 5.1
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-defusedxml
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 0.7
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-Deprecated
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 1.2.15
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-docker
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 7.1
+Dependencies:
+├─ types-requests
+│  └─ urllib3
+└─ urllib3
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-dockerfile-parse
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 2.0
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-docutils
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 0.21
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-editdistance
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 0.8
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-entrypoints
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 0.4
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-ExifRead
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 3.0
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-fanstatic
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 1.4
+Dependencies:
+└─ types-setuptools
+└─ types-WebOb
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-first
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 2.0
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-flake8
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 7.1
+Dependencies:
+└─ types-pyflakes
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-flake8-bugbear
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 24.12.12
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-flake8-builtins
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 2.5
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-flake8-docstrings
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 1.7
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-flake8-rst-docstrings
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 0.3
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-flake8-simplify
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 0.21
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-flake8-typing-imports
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 1.16
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-Flask-Cors
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 5.0
+Dependencies:
+├─ Flask
+│  └─ blinker
+│  └─ click
+│  └─ itsdangerous
+│  └─ jinja2
+│  └─ markupsafe
+│  └─ werkzeug
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-Flask-Migrate
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 4.0
+Dependencies:
+├─ Flask
+│  └─ blinker
+│  └─ click
+│  └─ itsdangerous
+│  └─ jinja2
+│  └─ markupsafe
+│  └─ werkzeug
+└─ Flask-SQLAlchemy
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-Flask-SocketIO
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 5.4
+Dependencies:
+├─ Flask
+│  └─ blinker
+│  └─ click
+│  └─ itsdangerous
+│  └─ jinja2
+│  └─ markupsafe
+│  └─ werkzeug
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-fpdf2
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 2.8.2
+Dependencies:
+└─ Pillow
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-gdb
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 15.0
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-gevent
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 24.11
+Dependencies:
+└─ types-greenlet
+└─ types-psutil
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-google-cloud-ndb
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 2.3
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-greenlet
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 3.1
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-hdbcli
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 2.23
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-html5lib
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 1.1
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-httplib2
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 0.22
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-humanfriendly
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 10.0
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-hvac
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 2.3
+Dependencies:
+├─ types-requests
+│  └─ urllib3
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-ibm-db
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 3.2.4
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-icalendar
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 6.1
+Dependencies:
+└─ types-python-dateutil
+└─ types-pytz
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-influxdb-client
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 1.45
+Dependencies:
+└─ urllib3
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-inifile
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 0.4
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-JACK-Client
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 0.5
+Dependencies:
+└─ numpy
+├─ types-cffi
+│  └─ types-setuptools
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-Jetson.GPIO
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 2.1
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-jmespath
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 1.0
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-jsonschema
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 4.23
+Dependencies:
+├─ referencing
+│  └─ attrs
+│  └─ rpds-py
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-jwcrypto
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 1.5
+Dependencies:
+└─ cryptography
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-keyboard
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 0.13
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-ldap3
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 2.9
+Dependencies:
+└─ types-pyasn1
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-libsass
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 0.23
+Dependencies:
+└─ types-setuptools
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-lupa
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 2.2
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-lzstring
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 1.0
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-m3u8
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 6.0
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-Markdown
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 3.7
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-mock
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 5.1
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-mypy-extensions
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 1.0
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-mysqlclient
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 2.2
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-nanoid
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 2.0.0
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-netaddr
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 1.3
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-netifaces
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 0.11
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-networkx
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 3.4.2
+Dependencies:
+└─ numpy
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-oauthlib
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 3.2
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-objgraph
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 3.6
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-olefile
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 0.47
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-openpyxl
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 3.1.5
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-opentracing
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 2.4
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-paramiko
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 3.5
+Dependencies:
+└─ cryptography
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-parsimonious
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 0.10
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-passlib
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 1.7
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-passpy
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 1.0
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-peewee
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 3.17.8
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-pep8-naming
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 0.14
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-pexpect
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 4.9
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-pika-ts
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 1.3
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-polib
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 1.2
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-portpicker
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 1.6
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-protobuf
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 5.29.1
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-psutil
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 6.1
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-psycopg2
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 2.9.10
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-pyasn1
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 0.6
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-pyaudio
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 0.2
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-PyAutoGUI
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 0.9
+Dependencies:
+├─ types-PyScreeze
+│  └─ Pillow
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-pycocotools
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 2.0
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-pycurl
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 7.45.4
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-pyfarmhash
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 0.4
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-pyflakes
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 3.2
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-pygit2
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 1.15
+Dependencies:
+├─ types-cffi
+│  └─ types-setuptools
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-Pygments
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 2.18
+Dependencies:
+└─ types-docutils
+└─ types-setuptools
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-pyinstaller
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 6.11
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-pyjks
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 20.0
+Dependencies:
+└─ types-pyasn1
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-PyMySQL
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 1.1
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-pynput
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 1.7.7
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-pyOpenSSL
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 24.1
+Dependencies:
+└─ cryptography
+├─ types-cffi
+│  └─ types-setuptools
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-pyRFC3339
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 2.0.1
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-PyScreeze
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 1.0.1
+Dependencies:
+└─ Pillow
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-pyserial
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 3.5
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-pysftp
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 0.2
+Dependencies:
+├─ types-paramiko
+│  └─ cryptography
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-pytest-lazy-fixture
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 0.6
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-python-crontab
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 3.2
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-python-datemath
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 3.0.1
+Dependencies:
+├─ arrow
+│  └─ python-dateutil
+│  └─ types-python-dateutil
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-python-dateutil
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 2.9
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-python-http-client
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 3.3.7
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-python-jenkins
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 1.8
+Dependencies:
+├─ types-requests
+│  └─ urllib3
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-python-jose
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 3.3
+Dependencies:
+└─ types-pyasn1
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-python-nmap
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 0.7
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-python-xlib
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 0.33
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-pytz
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 2024.2
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-pywin32
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 308
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-pyxdg
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 0.28
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-PyYAML
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 6.0
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-qrbill
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 1.1
+Dependencies:
+├─ types-qrcode
+│  └─ Pillow
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-qrcode
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 8.0
+Dependencies:
+└─ Pillow
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-regex
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 2024.11.6
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-reportlab
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 4.2.5
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-requests
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 2.32
+Dependencies:
+└─ urllib3
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-requests-oauthlib
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 2.0
+Dependencies:
+└─ types-oauthlib
+├─ types-requests
+│  └─ urllib3
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-retry
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 0.9
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-RPi.GPIO
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 0.7
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-s2clientprotocol
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 5
+Dependencies:
+└─ types-protobuf
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-seaborn
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 0.13.2
+Dependencies:
+└─ matplotlib
+└─ numpy
+└─ pandas-stubs
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-Send2Trash
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 1.8
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-setuptools
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 75.6
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-shapely
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 2.0
+Dependencies:
+└─ numpy
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-simplejson
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 3.19
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-singledispatch
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 4.1
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-six
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 1.17
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-slumber
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 0.7
+Dependencies:
+├─ types-requests
+│  └─ urllib3
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-str2bool
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 1.1
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-tabulate
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 0.9
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-tensorflow
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 2.18.0
+Dependencies:
+└─ numpy
+└─ types-protobuf
+├─ types-requests
+│  └─ urllib3
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-TgCrypto
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 1.2
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-toml
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 0.10
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-toposort
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 1.10
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-tqdm
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 4.67
+Dependencies:
+├─ types-requests
+│  └─ urllib3
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-translationstring
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 1.4
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-tree-sitter-languages
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 1.10
+Dependencies:
+└─ tree-sitter
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-ttkthemes
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 3.2
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-ujson
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 5.10
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-unidiff
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 0.7
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-untangle
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 1.2
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-usersettings
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 1.1
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-uWSGI
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 2.0
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-vobject
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 0.9.9
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-waitress
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 3.0.1
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-WebOb
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 1.8
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-whatthepatch
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 1.0
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-workalendar
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 17.0
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-WTForms
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 3.2.1
+Dependencies:
+└─ MarkupSafe
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-wurlitzer
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 3.1
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-xdgenvpy
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 3.0
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-xmltodict
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 0.14
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-zstd
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 1.5
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install types-zxcvbn
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 4.4
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install typing_extensions
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 4.13.2
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install uc-micro-py
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 1.0.3
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install uritemplate
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 4.1.1
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install urllib3
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 2.3.0
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install videodev2
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 0.0.4
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install virtualenv
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 20.31.2
+Dependencies:
+└─ distlib
+└─ filelock
+└─ platformdirs
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install webcolors
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 1.13
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install webencodings
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 0.5.1
+(no dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install Werkzeug
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 3.1.3
+Dependencies:
+└─ MarkupSafe
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install wheel
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 0.46.1
+Dependencies:
+└─ packaging
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: pip3 install zipp
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Version: 3.21.0
+(no dependencies)
+
+
+═══════════════════════════════════════════════════════════════
+AUTOMATIC INSTALLATIONS (Dependencies)
+═══════════════════════════════════════════════════════════════
+
+These were automatically installed as dependencies:
+
+7zip
+accountsservice
+acl
+adwaita-icon-theme
+adwaita-icon-theme-legacy
+agnostics
+alsa-topology-conf
+alsa-ucm-conf
+alsa-utils
+apparmor
+aspell
+aspell-en
+at-spi2-common
+autotouch
+bc
+binutils
+binutils-aarch64-linux-gnu
+binutils-common
+blt
+bsdextrautils
+bubblewrap
+busybox
+bzip2
+chromium
+chromium-common
+chromium-l10n
+chromium-sandbox
+clang-19
+clang-tools-19
+cloud-guest-utils
+colord
+colord-data
+console-setup-linux
+cpp
+cpp-14
+cpp-14-aarch64-linux-gnu
+cpp-aarch64-linux-gnu
+cups
+cups-browsed
+cups-client
+cups-common
+cups-core-drivers
+cups-daemon
+cups-filters
+cups-filters-core-drivers
+cups-ipp-utils
+cups-pk-helper
+cups-ppdc
+cups-server-common
+dbus
+dbus-bin
+dbus-daemon
+dbus-session-bus-common
+dbus-system-bus-common
+dbus-user-session
+dbus-x11
+dconf-cli
+dconf-gsettings-backend
+dconf-service
+desktop-file-utils
+device-tree-compiler
+dictionaries-common
+dirmngr
+distro-info-data
+dmsetup
+dnsmasq-base
+dns-root-data
+docutils-common
+dos2unix
+dpkg-dev
+dracut-install
+eatmydata
+eject
+emacsen-common
+enchant-2
+eom
+eom-common
+evince
+evince-common
+exfatprogs
+fakeroot
+feedbackd
+feedbackd-common
+feedbackd-device-themes
+ffmpeg
+fio
+firefox
+flashrom
+fontconfig
+fontconfig-config
+fonts-cantarell
+fonts-dejavu-core
+fonts-dejavu-extra
+fonts-dejavu-mono
+fonts-droid-fallback
+fonts-freefont-ttf
+fonts-gfs-didot-classic
+fonts-liberation
+fonts-liberation2
+fonts-liberation-sans-narrow
+fonts-noto-mono
+fonts-nunito-sans
+fonts-urw-base35
+fuse3
+g++
+g++-14
+g++-14-aarch64-linux-gnu
+g++-aarch64-linux-gnu
+galculator
+gcc
+gcc-14
+gcc-14-aarch64-linux-gnu
+gcc-aarch64-linux-gnu
+gcr
+gcr4
+gdisk
+geany
+geany-common
+gettext-base
+ghostscript
+gir1.2-atk-1.0
+gir1.2-eom-1.0
+gir1.2-freedesktop
+gir1.2-gdkpixbuf-2.0
+gir1.2-girepository-2.0
+gir1.2-glib-2.0
+gir1.2-gtk-3.0
+gir1.2-harfbuzz-0.0
+gir1.2-notify-0.7
+gir1.2-pango-1.0
+gir1.2-secret-1
+git
+git-man
+gldriver-test
+glib-networking
+glib-networking-common
+glib-networking-services
+gnome-desktop3-data
+gnome-keyring
+gnome-themes-extra-data
+gnupg
+gnupg-l10n
+gnupg-utils
+gpg
+gpg-agent
+gpgconf
+gpgsm
+gpgv
+gpg-wks-client
+grim
+groff-base
+gsettings-desktop-schemas
+gstreamer1.0-alsa
+gstreamer1.0-gl
+gstreamer1.0-libav
+gstreamer1.0-plugins-bad
+gstreamer1.0-plugins-base
+gstreamer1.0-plugins-good
+gstreamer1.0-x
+gtk2-engines-pixbuf
+gtk2-engines-pixflat
+gtk-nop
+gtk-update-icon-cache
+gui-pkinst
+gui-updater
+gvfs
+gvfs-backends
+gvfs-common
+gvfs-daemons
+gvfs-fuse
+gvfs-libs
+hicolor-icon-theme
+hplip
+hplip-data
+hunspell-en-gb
+hunspell-en-us
+hyphen-en-gb
+i2c-tools
+ibverbs-providers
+imagemagick-7-common
+initramfs-tools-bin
+initramfs-tools-core
+inotify-tools
+ipp-usb
+iso-codes
+iw
+javascript-common
+kanshi
+kbd
+keyutils
+klibc-utils
+labwc
+laptop-detect
+libaa1
+libabsl20240722
+libaccountsservice0
+libadwaita-1-0
+libaio1t64
+libalgorithm-diff-perl
+libalgorithm-diff-xs-perl
+libalgorithm-merge-perl
+libaml0t64
+libaom3
+libappstream5
+libarchive13t64
+libaribb24-0t64
+libasan8
+libasound2-data
+libasound2-plugins
+libasound2t64
+libaspell15
+libass9
+libassuan9
+libasyncns0
+libatasmart4
+libatk1.0-0t64
+libatk-bridge2.0-0t64
+libatkmm-1.6-1v5
+libatomic1
+libatopology2t64
+libatspi2.0-0t64
+libavahi-client3
+libavahi-common3
+libavahi-common-data
+libavahi-core7
+libavahi-glib1
+libavc1394-0
+libavcodec61
+libavdevice61
+libavfilter10
+libavformat61
+libavif16
+libavtp0
+libavutil59
+libayatana-ido3-0.4-0
+libayatana-indicator3-7
+libb2-1
+libbabeltrace1
+libbasicusageenvironment2
+libbinutils
+libblas3
+libblockdev3
+libblockdev-crypto3
+libblockdev-fs3
+libblockdev-loop3
+libblockdev-mdraid3
+libblockdev-nvme3
+libblockdev-part3
+libblockdev-swap3
+libblockdev-utils3
+libbluetooth3
+libbluray2
+libboost-filesystem1.83.0
+libboost-iostreams1.83.0
+libboost-log1.83.0
+libboost-program-options1.83.0
+libboost-thread1.83.0
+libbrotli1
+libbs2b0
+libbytesize1
+libbytesize-common
+libc6-dev
+libcaca0
+libcairo2
+libcairo-gobject2
+libcairomm-1.0-1v5
+libcairo-script-interpreter2
+libcamera0.5
+libcamera-ipa
+libcamera-tools
+libcamera-v4l2
+libcanberra0
+libcapstone5
+libcbor0.10
+libcc1-0
+libcddb2
+libc-dev-bin
+libcdio19t64
+libcdio-cdda2t64
+libcdio-paranoia2t64
+libcdparanoia0
+libchromaprint1
+libcjson1
+libc-l10n
+libclang1-19
+libclang-common-19-dev
+libclang-cpp19
+libclang-rt-19-dev
+libcloudproviders0
+libcodec2-1.2
+libcolord2
+libcolorhug2
+libconfig++11
+libcpuinfo0
+libcrypt-dev
+libcryptsetup12
+libctf0
+libctf-nobfd0
+libcups2t64
+libcupsfilters1t64
+libcupsimage2t64
+libcurl3t64-gnutls
+libcurl4t64
+libdaemon0
+libdatrie1
+libdav1d7
+libdaxctl1
+libdbus-1-3
+libdbus-glib-1-2
+libdbusmenu-glib4
+libdbusmenu-gtk3-4
+libdc1394-25
+libdca0
+libdconf1
+libde265-0
+libdebuginfod1t64
+libdebuginfod-common
+libdecor-0-0
+libdeflate0
+libdevmapper1.02.1
+libdisplay-info2
+libdjvulibre21
+libdjvulibre-text
+libdnnl3.6
+libdouble-conversion3
+libdpkg-perl
+libdrm2
+libdrm-amdgpu1
+libdrm-common
+libdrm-nouveau2
+libdrm-radeon1
+libdtovl0
+libduktape207
+libdv4t64
+libdvbpsi10
+libdvdnav4
+libdvdread8t64
+libdw1t64
+libeatmydata1
+libebml5
+libebur128-1
+libegl1
+libegl-mesa0
+libenchant-2-2
+libepoxy0
+liberror-perl
+libevdev2
+libevdocument3-4t64
+libevent-2.1-7t64
+libevent-core-2.1-7t64
+libevent-pthreads-2.1-7t64
+libevview3-3t64
+libexempi8
+libexif12
+libexpat1
+libexpat1-dev
+libfaad2
+libfakeroot
+libfdt1
+libfeedback-0.0-0
+libffado2
+libffi8
+libfftw3-double3
+libfftw3-single3
+libfido2-1
+libfile-fcntllock-perl
+libfile-fnmatch-perl
+libflac14
+libflite1
+libfluidsynth3
+libfm4t64
+libfm-data
+libfm-extra4t64
+libfm-gtk3-4t64
+libfm-gtk-data
+libfm-modules
+libfmt10
+libfontconfig1
+libfontembed1t64
+libfontenc1
+libfreeaptx0
+libfreetype6
+libfribidi0
+libftdi1
+libftdi1-2
+libfuse2t64
+libfuse3-4
+libgav1-1
+libgbm1
+libgc1
+libgcc-14-dev
+libgck-1-0
+libgck-2-2
+libgcr-4-4
+libgcr-base-3-1
+libgcr-ui-3-1
+libgcrypt20
+libgd3
+libgdata22
+libgdata-common
+libgdbm6t64
+libgdbm-compat4t64
+libgdk-pixbuf-2.0-0
+libgdk-pixbuf2.0-bin
+libgdk-pixbuf2.0-common
+libgfapi0
+libgfortran5
+libgfrpc0
+libgfxdr0
+libgif7
+libgirepository-1.0-1
+libgit2-1.9
+libgl1
+libgl1-mesa-dri
+libgl-dev
+libgles1
+libgles2
+libglib2.0-0t64
+libglib2.0-bin
+libglib2.0-data
+libglibmm-2.4-1t64
+libglu1-mesa
+libglu1-mesa-dev
+libglusterfs0
+libglut3.12
+libglut-dev
+libglvnd0
+libglx0
+libglx-dev
+libglx-mesa0
+libgme0
+libgmobile0
+libgmobile-common
+libgnome-desktop-3-20t64
+libgnutls30t64
+libgoa-1.0-0b
+libgoa-1.0-common
+libgomp1
+libgpg-error0
+libgpg-error-l10n
+libgpgme11t64
+libgpgmepp6t64
+libgphoto2-6t64
+libgphoto2-port12t64
+libgpiod3
+libgpiolib0
+libgpm2
+libgprofng0
+libgraphene-1.0-0
+libgraphite2-3
+libgroupsock30
+libgs10
+libgs10-common
+libgs-common
+libgsm1
+libgsound0t64
+libgspell-1-3
+libgspell-1-common
+libgssdp-1.6-0
+libgstreamer1.0-0
+libgstreamer-gl1.0-0
+libgstreamer-plugins-bad1.0-0
+libgstreamer-plugins-base1.0-0
+libgtk2.0-0t64
+libgtk2.0-common
+libgtk-3-0t64
+libgtk-3-common
+libgtk-4-1
+libgtk-4-common
+libgtk-layer-shell0
+libgtkmm-3.0-1t64
+libgtksourceview-4-0
+libgtksourceview-4-common
+libgudev-1.0-0
+libgupnp-1.6-0
+libgupnp-igd-1.6-0
+libgusb2
+libgxps2t64
+libhandy-1-0
+libharfbuzz0b
+libharfbuzz-gobject0
+libharfbuzz-subset0
+libheif1
+libheif-plugin-dav1d
+libheif-plugin-libde265
+libhidapi-hidraw0
+libhidapi-libusb0
+libhpmud0
+libhttp-parser2.9
+libhunspell-1.7-0
+libhwasan0
+libhwloc15
+libhwloc-plugins
+libhwy1t64
+libi2c0
+libibverbs1
+libice6
+libice-dev
+libicu76
+libid3tag0
+libidn12
+libiec61883-0
+libieee1284-3t64
+libijs-0.35
+libimagequant0
+libimath-3-1-29t64
+libimlib2t64
+libimobiledevice-1.0-6
+libimobiledevice-glue-1.0-0
+libinih1
+libinotifytools0
+libinput10
+libinput-bin
+libinput-tools
+libinstpatch-1.0-2
+libisl23
+libitm1
+libiw30t64
+libixml11t64
+libjack-jackd2-0
+libjaylink0
+libjbig0
+libjbig2dec0
+libjim0.83
+libjpeg62-turbo
+libjpeg62-turbo-dev
+libjs-jquery
+libjson-c5
+libjson-glib-1.0-0
+libjson-glib-1.0-common
+libjs-sphinxdoc
+libjs-underscore
+libjxl0.11
+libjxr0t64
+libjxr-tools
+libkate1
+libkeybinder-3.0-0
+libklibc
+libkms++0
+libkpathsea6
+libksba8
+liblapack3
+liblc3-1
+liblcms2-2
+libldacbt-abr2
+libldacbt-enc2
+libldap2
+libldap-common
+libldb2
+liblerc4
+liblgpio1
+libliftoff0
+liblightdm-gobject-1-0
+liblilv-0-0
+liblirc-client0t64
+liblivemedia116
+libllvm19
+liblmdb0
+liblouis20
+liblouis-data
+liblouisutdml9t64
+liblouisutdml-bin
+liblouisutdml-data
+liblqr-1-0
+liblrdf0
+liblsan0
+liblsof0
+libltc11
+libltdl7
+liblttng-ust1t64
+liblttng-ust-common1t64
+liblttng-ust-ctl5t64
+liblua5.2-0
+liblua5.4-0
+libluajit-5.1-2
+libluajit-5.1-common
+liblzo2-2
+libmad0
+libmagic1t64
+libmagickcore-7.q16-10
+libmagickcore-7.q16-10-extra
+libmagickwand-7.q16-10
+libmagic-mgc
+libmate-desktop-2-17t64
+libmatroska7
+libmbedcrypto16
+libmbedtls21
+libmbedx509-7
+libmbim-glib4
+libmbim-proxy
+libmbim-utils
+libmd4c0
+libmenu-cache3
+libmenu-cache-bin
+libminizip1t64
+libmjpegutils-2.1-0t64
+libmm-glib0
+libmodplug1
+libmousepad0
+libmp3lame0
+libmpc3
+libmpcdec6
+libmpeg2encpp-2.1-0t64
+libmpfr6
+libmpg123-0t64
+libmplex2-2.1-0t64
+libmsgraph-1-1
+libmtdev1t64
+libmtp9t64
+libmtp-common
+libmysofa1
+libnbd0
+libncurses6
+libndctl6
+libndp0
+libneatvnc0
+libneon27t64
+libnetfilter-conntrack3
+libnetplan1
+libnewlib-dev
+libnfnetlink0
+libnfs14
+libnfsidmap1
+libnghttp2-14
+libnghttp3-9
+libngtcp2-16
+libngtcp2-crypto-gnutls8
+libnice10
+libnl-3-200
+libnl-genl-3-200
+libnl-route-3-200
+libnm0
+libnma0
+libnma-common
+libnorm1t64
+libnotify4
+libnpth0t64
+libnspr4
+libnss3
+libnss-mdns
+libntfs-3g89t64
+libnuma1
+libnvme1t64
+libobjc-14-dev
+libobjc4
+libobrender32v5
+libobt2v5
+libogg0
+libonnx1t64
+libonnxruntime1.21
+libopenal1
+libopenal-data
+libopencore-amrnb0
+libopencore-amrwb0
+libopencv-calib3d410
+libopencv-core410
+libopencv-dnn410
+libopencv-features2d410
+libopencv-flann410
+libopencv-imgproc410
+libopencv-objdetect410
+libopenexr-3-1-30
+libopenfec1
+libopengl0
+libopengl-dev
+libopenh264-8
+libopenjp2-7
+libopenmpt0t64
+libopenmpt-modplug1
+libopenni2-0
+libopus0
+libopusfile0
+liborc-0.4-0t64
+libossp-uuid16
+libp11-kit0
+libpackagekit-glib2-18
+libpam-systemd
+libpango-1.0-0
+libpangocairo-1.0-0
+libpangoft2-1.0-0
+libpangomm-1.4-1v5
+libpangoxft-1.0-0
+libpaper2
+libpaper-utils
+libparted2t64
+libpcap0.8t64
+libpci3
+libpciaccess0
+libpcre2-16-0
+libpcsclite1
+libpeas-1.0-0
+libpeas-common
+libperl5.40
+libpfm4
+libpgm-5.3-0t64
+libpipeline1
+libpipewire-0.3-0t64
+libpipewire-0.3-modules
+libpisp1
+libpisp-common
+libpixman-1-0
+libpkgconf3
+libplacebo349
+libplist-2.0-4
+libplymouth5
+libpmem1
+libpng16-16t64
+libpocketsphinx3
+libpolkit-agent-1-0
+libpolkit-gobject-1-0
+libpoppler147
+libpoppler-cpp2
+libpoppler-glib8t64
+libportmidi0
+libpostproc58
+libprotobuf32t64
+libprotobuf-lite32t64
+libproxy1v5
+libproxy-tools
+libpsl5t64
+libpthreadpool0
+libpugixml1v5
+libpulse0
+libpulsedsp
+libpython3.13
+libpython3.13-dev
+libpython3.13-minimal
+libpython3.13-stdlib
+libpython3-dev
+libpython3-stdlib
+libqmi-glib5
+libqmi-proxy
+libqmi-utils
+libqpdf30
+libqrencode4
+libqrtr-glib0
+libqt5core5t64
+libqt5ct-common1.8
+libqt5dbus5t64
+libqt5designer5
+libqt5gui5t64
+libqt5help5
+libqt5network5t64
+libqt5printsupport5t64
+libqt5qml5
+libqt5qmlmodels5
+libqt5quick5
+libqt5sql5-sqlite
+libqt5sql5t64
+libqt5svg5
+libqt5test5t64
+libqt5waylandclient5
+libqt5waylandcompositor5
+libqt5widgets5t64
+libqt5x11extras5
+libqt5xml5t64
+libqt6core6t64
+libqt6dbus6
+libqt6gui6
+libqt6network6
+libqt6opengl6
+libqt6openglwidgets6
+libqt6qml6
+libqt6qmlmeta6
+libqt6qmlmodels6
+libqt6qmlworkerscript6
+libqt6quick6
+libqt6svg6
+libqt6waylandclient6
+libqt6waylandcompositor6
+libqt6widgets6
+libqt6wlshellintegration6
+librabbitmq4
+librados2
+libraptor2-0
+libraqm0
+librav1e0.7
+libraw1394-11
+libraw23t64
+librbd1
+librdmacm1t64
+libre2-11
+libresid-builder0c2a
+librist4
+libroc0.4
+librpicam-app1
+librsvg2-2
+librsvg2-common
+librtimulib7
+librtimulib-dev
+librtimulib-utils
+librtmp1
+librubberband2
+libsamplerate0
+libsane1
+libsane-common
+libsane-hpaio
+libsasl2-2
+libsasl2-modules
+libsasl2-modules-db
+libsbc1
+libsdl2-2.0-0
+libsdl2-image-2.0-0
+libsdl2-mixer-2.0-0
+libsdl2-ttf-2.0-0
+libseat1
+libsecret-1-0
+libsecret-common
+libsensors5
+libsensors-config
+libserd-0-0
+libsframe1
+libsharpyuv0
+libshine3
+libshout3
+libsidplay2
+libsigc++-2.0-0v5
+libsm6
+libsmbclient0
+libsm-dev
+libsnappy1v5
+libsndfile1
+libsnmp40t64
+libsnmp-base
+libsodium23
+libsord-0-0
+libsoundtouch1
+libsoup-2.4-1
+libsoup2.4-common
+libsoup-3.0-0
+libsoup-3.0-common
+libsource-highlight4t64
+libsource-highlight-common
+libsoxr0
+libspa-0.2-bluetooth
+libspa-0.2-libcamera
+libspa-0.2-modules
+libspandsp2t64
+libspatialaudio0t64
+libspectre1
+libspeex1
+libspeexdsp1
+libsphinxbase3t64
+libsratom-0-0
+libsrt1.5-gnutls
+libsrtp2-1
+libssh2-1t64
+libssh-4
+libstartup-notification0
+libstdc++-14-dev
+libstdc++-arm-none-eabi-dev
+libstdc++-arm-none-eabi-newlib
+libstd-rust-1.85
+libstd-rust-dev
+libstemmer0d
+libsvtav1enc2
+libswresample5
+libswscale8
+libsynctex2
+libtag2
+libtalloc2
+libtasn1-6
+libtbb12
+libtbbbind-2-5
+libtbbmalloc2
+libtcl8.6
+libtdb1
+libteamdctl0
+libtevent0t64
+libthai0
+libthai-data
+libtheora0
+libtheoradec1
+libtheoraenc1
+libtiff6
+libtk8.6
+libts0t64
+libtsan2
+libturbojpeg0
+libtwolame0
+libubsan1
+libuchardet0
+libudfread0
+libudisks2-0
+libunibreak6
+libunwind8
+libupnp17t64
+libupower-glib3
+libusageenvironment3
+libusb-0.1-4
+libusbmuxd-2.0-7
+libuv1t64
+libv4l-0t64
+libv4l2rds0t64
+libv4lconvert0t64
+libva2
+libva-drm2
+libva-x11-2
+libvdpau1
+libvidstab1.1
+libvisual-0.4-0
+libvlc5
+libvlc-bin
+libvlccore9
+libvncclient1
+libvo-aacenc0
+libvo-amrwbenc0
+libvolume-key1
+libvorbis0a
+libvorbisenc2
+libvorbisfile3
+libvpx9
+libvte-2.91-0
+libvte-2.91-common
+libvulkan1
+libwacom9
+libwacom-common
+libwavpack1
+libwayland-client0
+libwayland-cursor0
+libwayland-egl1
+libwayland-server0
+libwbclient0
+libwebp7
+libwebpdemux2
+libwebpmux3
+libwebrtc-audio-processing-1-3
+libwidevinecdm0
+libwildmidi2
+libwireplumber-0.5-0
+libwlroots-0.18
+libwmflite-0.2-7
+libwrap0
+libwtmpdb0
+libx11-6
+libx11-data
+libx11-dev
+libx11-xcb1
+libx264-164
+libx265-215
+libxau6
+libxau-dev
+libxaw7
+libxcb1
+libxcb1-dev
+libxcb-composite0
+libxcb-cursor0
+libxcb-dri3-0
+libxcb-errors0
+libxcb-ewmh2
+libxcb-glx0
+libxcb-icccm4
+libxcb-image0
+libxcb-keysyms1
+libxcb-present0
+libxcb-randr0
+libxcb-render0
+libxcb-render-util0
+libxcb-res0
+libxcb-shape0
+libxcb-shm0
+libxcb-sync1
+libxcb-util1
+libxcb-xfixes0
+libxcb-xinerama0
+libxcb-xinput0
+libxcb-xkb1
+libxcb-xv0
+libxcomposite1
+libxcursor1
+libxcvt0
+libxdamage1
+libxdmcp6
+libxdmcp-dev
+libxext6
+libxext-dev
+libxfce4ui-2-0
+libxfce4ui-common
+libxfce4util7
+libxfce4util-bin
+libxfce4util-common
+libxfconf-0-3
+libxfixes3
+libxfont2
+libxft2
+libxi6
+libxinerama1
+libxkbcommon0
+libxkbcommon-x11-0
+libxkbfile1
+libxkbregistry0
+libxklavier16
+libxml2
+libxml++2.6-2v5
+libxml2-dev
+libxmlb2
+libxmp4
+libxmu6
+libxmuu1
+libxnnpack0.20241108
+libxnvctrl0
+libxpm4
+libxrandr2
+libxrender1
+libxshmfence1
+libxslt1.1
+libxss1
+libxt6t64
+libxt-dev
+libxtst6
+libxv1
+libxvidcore4
+libxxf86vm1
+libyajl2
+libyaml-0-2
+libyuv0
+libz3-4
+libz3-dev
+libzbar0t64
+libzimg2
+libzix-0-0
+libzmq5
+libzvbi0t64
+libzvbi-common
+libzxing3
+lightdm
+lightdm-gtk-greeter
+linux-base
+linux-headers-6.12.47+rpt-common-rpi
+linux-headers-6.12.47+rpt-rpi-2712
+linux-headers-6.12.47+rpt-rpi-v8
+linux-image-6.12.47+rpt-rpi-2712
+linux-image-6.12.47+rpt-rpi-v8
+linux-kbuild-6.12.47+rpt
+linux-libc-dev
+lld-19
+llvm-19
+llvm-19-dev
+llvm-19-linker-tools
+llvm-19-runtime
+llvm-19-tools
+lp-connection-editor
+lpplug-batt
+lpplug-bluetooth
+lpplug-clock
+lpplug-cpu
+lpplug-cputemp
+lpplug-ejecter
+lpplug-gpu
+lpplug-magnifier
+lpplug-menu
+lpplug-netman
+lpplug-power
+lpplug-updater
+lpplug-volumepulse
+lsb-release
+lsof
+lxmenu-data
+lxpanel-pi
+lxpolkit
+lxsession
+lxsession-data
+lxsession-logout
+lxtask
+lxterminal
+lynx
+lynx-common
+mailcap
+make
+manpages
+mate-desktop-common
+mate-polkit
+mate-polkit-bin
+mate-polkit-common
+media-types
+mesa-libgallium
+mesa-vulkan-drivers
+meson
+modemmanager
+mousepad
+mypy
+ncurses-term
+netcat-openbsd
+netplan-generator
+netplan.io
+network-manager-l10n
+nfs-common
+ninja-build
+notification-daemon
+ocl-icd-libopencl1
+openbox
+openocd
+openssh-client
+openssh-server
+openssh-sftp-server
+p11-kit
+p11-kit-modules
+packagekit
+pahole
+pastebinit
+patch
+pci.ids
+pcmanfm
+perl
+perl-modules-5.40
+piclone
+pi-greeter
+pi-language-support
+pinentry-curses
+pinentry-gnome3
+pi-package
+pi-package-data
+pi-package-session
+pipanel
+pipewire
+pipewire-bin
+pipewire-libcamera
+pipewire-pulse
+pi-printer-support
+pishutdown
+piwiz
+pixtrix-icons
+pixtrix-theme
+pkexec
+pkgconf
+pkgconf-bin
+plymouth
+plymouth-label
+plymouth-themes
+pocketsphinx-en-us
+polkitd
+poppler-data
+poppler-utils
+pplug-ejecter-data
+pplug-netman-schema
+pplug-power-data
+pplug-updater-data
+ppp
+pprompt
+printer-driver-escpr
+printer-driver-hpcups
+printer-driver-postscript-hp
+publicsuffix
+pulseaudio
+pulseaudio-module-bluetooth
+pulseaudio-utils
+pylint
+python3
+python3.13
+python3.13-dev
+python3.13-minimal
+python3.13-tk
+python3.13-venv
+python3-apt
+python3-arrow
+python3-asgiref
+python3-astroid
+python3-asttokens
+python3-attr
+python3-autocommand
+python3-av
+python3-babel
+python3-bcrypt
+python3-blinker
+python3-bs4
+python3-cairo
+python3-certifi
+python3-cffi-backend
+python3-chardet
+python3-charset-normalizer
+python3-click
+python3-colorzero
+python3-configobj
+python3-cryptography
+python3-cssselect
+python3-cups
+python3-cupshelpers
+python3-dateutil
+python3-dbus
+python3-debconf
+python3-dev
+python3-dill
+python3-distlib
+python3-distro
+python3-docutils
+python3-dotenv
+python3-filelock
+python3-flask
+python3-fqdn
+python3-freetype
+python3-gi
+python3-html5lib
+python3-idna
+python3-inflect
+python3-isoduration
+python3-isort
+python3-itsdangerous
+python3-jaraco.context
+python3-jaraco.functools
+python3-jaraco.text
+python3-jedi
+python3-jinja2
+python3-jsonpatch
+python3-json-pointer
+python3-jsonschema
+python3-jsonschema-specifications
+python3-jwt
+python3-kms++
+python3-lgpio
+python3-libarchive-c
+python3-libcamera
+python3-libevdev
+python3-linkify-it
+python3-logilab-common
+python3-lxml
+python3-markdown-it
+python3-markupsafe
+python3-mccabe
+python3-mdurl
+python3-minimal
+python3-more-itertools
+python3-mypy
+python3-mypy-extensions
+python3-netplan
+python3-numpy
+python3-numpy-dev
+python3-oauthlib
+python3-olefile
+python3-opengl
+python3-openssl
+python3-orjson
+python3-packaging
+python3-parso
+python3-pexpect
+python3-pgzero
+python3-picamera2
+python3-pidng
+python3-piexif
+python3-pil
+python3-pip
+python3-pip-whl
+python3-pkg-resources
+python3-platformdirs
+python3-prctl
+python3-psutil
+python3-ptyprocess
+python3-pyasyncore
+python3-pycryptodome
+python3-pygame
+python3-pygments
+python3-pyinotify
+python3-pyqt5
+python3-pyqt5.sip
+python3-pyudev
+python3-referencing
+python3-reportlab
+python3-requests
+python3-rfc3339-validator
+python3-rfc3986-validator
+python3-rfc3987
+python3-rich
+python3-rlpycairo
+python3-roman
+python3-rpds-py
+python3-rtimulib
+python3-send2trash
+python3-sense-hat
+python3-serial
+python3-setuptools
+python3-setuptools-whl
+python3-simplejpeg
+python3-smbc
+python3-smbus
+python3-soupsieve
+python3-tk
+python3-tomlkit
+python3-tqdm
+python3-typeguard
+python3-typeshed
+python3-typing-extensions
+python3-uc-micro
+python3-uritemplate
+python3-urllib3
+python3-videodev2
+python3-webcolors
+python3-webencodings
+python3-werkzeug
+python3-wheel
+python3-yaml
+python3-zipp
+python-apt-common
+python-babel-localedata
+qt5ct
+qt5-gtk2-platformtheme
+qt5-style-plugin-cleanlooks
+qt5-style-plugin-motif
+qt5-style-plugin-plastique
+qt5-style-plugins
+qt6-gtk-platformtheme
+qt6-qpa-plugins
+qt6-svg-plugins
+qt6-wayland
+qtwayland5
+raindrop
+raspinfo
+raspi-utils-core
+raspi-utils-dt
+raspi-utils-eeprom
+raspi-utils-otp
+rasputin
+rc-gui
+read-edid
+retry
+rfkill
+rp-bookshelf
+rpcbind
+rpcc
+rpcsvc-proto
+rpd-common
+rpd-plym-splash
+rpd-wallpaper
+rpd-wallpaper-trixie
+rpicam-apps
+rpicam-apps-core
+rpicam-apps-encoder
+rpicam-apps-opencv-postprocess
+rpicam-apps-preview
+rpi-chromium-mods
+rpi-connect
+rpi-firefox-mods
+rpi-imager
+rpinters
+rpi-systemd-config
+rpi-userguide
+rp-prefapps
+runit-helper
+rust-llvm
+samba-libs
+sane-airscan
+sane-utils
+scrot
+sense-hat
+sgml-base
+shared-mime-info
+slurp
+sound-theme-freedesktop
+sq
+squeekboard
+ssl-cert
+sudopwd
+swayidle
+swaylock
+system-config-printer-common
+system-config-printer-udev
+systemd-zram-generator
+thonny
+timgm6mb-soundfont
+tk8.6-blt2.5
+ucf
+update-inetd
+upower
+usb.ids
+usb-modeswitch-data
+uuid
+uuid-dev
+vlc
+vlc-bin
+vlc-data
+vlc-l10n
+vlc-plugin-access-extra
+vlc-plugin-base
+vlc-plugin-notify
+vlc-plugin-qt
+vlc-plugin-samba
+vlc-plugin-skins2
+vlc-plugin-video-output
+vlc-plugin-video-splitter
+vlc-plugin-visualization
+vulkan-tools
+wamerican
+wayvnc
+wbritish
+webp-pixbuf-loader
+wf-panel-pi
+wfplug-batt
+wfplug-bluetooth
+wfplug-clock
+wfplug-connect
+wfplug-cpu
+wfplug-cputemp
+wfplug-ejecter
+wfplug-gpu
+wfplug-menu
+wfplug-netman
+wfplug-power
+wfplug-squeek
+wfplug-updater
+wfplug-volumepulse
+wget
+wireless-regdb
+wireplumber
+wlopm
+wlr-randr
+x11-common
+x11proto-dev
+x11-xkb-utils
+x11-xserver-utils
+xarchiver
+xauth
+xcompmgr
+xdg-desktop-portal
+xdg-desktop-portal-gtk
+xdg-desktop-portal-wlr
+xdg-user-dirs
+xdg-utils
+xfconf
+xfonts-encodings
+xfonts-utils
+xinit
+xinput
+xkb-data
+xml-core
+xmlstarlet
+xorg-sgml-doctools
+xsel
+xserver-common
+xserver-xorg
+xserver-xorg-core
+xserver-xorg-input-all
+xserver-xorg-input-libinput
+xserver-xorg-video-all
+xserver-xorg-video-amdgpu
+xserver-xorg-video-ati
+xserver-xorg-video-fbdev
+xserver-xorg-video-nouveau
+xserver-xorg-video-radeon
+xsettingsd
+xtrans-dev
+xwayland
+xz-utils
+zenity
+zenity-common
+zenoty
+zlib1g-dev
+zsh-common
+zstd
+
+Total: 1446 packages
+

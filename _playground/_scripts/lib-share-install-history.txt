@@ -1,0 +1,947 @@
+═══════════════════════════════════════════════════════════════
+Installation History Analysis
+Generated: Sun 19 Oct 03:26:22 CDT 2025
+System Install Date: 2025-09-30
+═══════════════════════════════════════════════════════════════
+
+SUMMARY
+-------
+Total Origins: 151
+Base Image (Day 0): 1
+Post-Install (User): 2
+Unknown: 148
+
+INSTALL METHODS
+---------------
+Unknown                                   19 origins
+pip3 install                               1 origins
+pip (not in pip list - manual?)          129 origins
+manual install                             2 origins
+
+═══════════════════════════════════════════════════════════════
+DETAILED ANALYSIS (sorted by type, then timeline)
+═══════════════════════════════════════════════════════════════
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Application Data: applications
+Type: app-data
+Timeline: UNKNOWN
+Install Method: Unknown
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Application Data: glib-2.0
+Type: app-data
+Timeline: UNKNOWN
+Install Method: Unknown
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Application Data: hplip
+Type: app-data
+Timeline: UNKNOWN
+Install Method: Unknown
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Application Data: info
+Type: app-data
+Timeline: UNKNOWN
+Install Method: Unknown
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Application Data: mime
+Type: app-data
+Timeline: UNKNOWN
+Install Method: Unknown
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Application Data: python3
+Type: app-data
+Timeline: UNKNOWN
+Install Method: Unknown
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Application Data: raspi-ui-overrides
+Type: app-data
+Timeline: UNKNOWN
+Install Method: Unknown
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Application Data: system-config-printer
+Type: app-data
+Timeline: UNKNOWN
+Install Method: Unknown
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Application Data: thonny
+Type: app-data
+Timeline: UNKNOWN
+Install Method: Unknown
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Fonts: X11
+Type: fonts
+Timeline: POST-INSTALL
+Install Method: manual install
+Details: possibly from website or git
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Library: aarch64-linux-gnu
+Type: library
+Timeline: UNKNOWN
+Install Method: Unknown
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Library: cups
+Type: library
+Timeline: UNKNOWN
+Install Method: Unknown
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Library: locale
+Type: library
+Timeline: UNKNOWN
+Install Method: Unknown
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Library: modules
+Type: library
+Timeline: UNKNOWN
+Install Method: Unknown
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Library: netplan
+Type: library
+Timeline: UNKNOWN
+Install Method: Unknown
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Library: python3.13
+Type: library
+Timeline: UNKNOWN
+Install Method: Unknown
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Library: security
+Type: library
+Timeline: UNKNOWN
+Install Method: Unknown
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Library: systemd
+Type: library
+Timeline: UNKNOWN
+Install Method: Unknown
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Library: udev
+Type: library
+Timeline: UNKNOWN
+Install Method: Unknown
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Python: zipp
+Type: pip
+Timeline: BASE-IMAGE
+Install Method: pip3 install
+Details: version 3.21.0
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Python: apt_listchanges
+Type: pip
+Timeline: UNKNOWN
+Install Method: pip (not in pip list - manual?)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Python: aptsources
+Type: pip
+Timeline: UNKNOWN
+Install Method: pip (not in pip list - manual?)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Python: apt
+Type: pip
+Timeline: UNKNOWN
+Install Method: pip (not in pip list - manual?)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Python: arrow
+Type: pip
+Timeline: UNKNOWN
+Install Method: pip (not in pip list - manual?)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Python: asgiref
+Type: pip
+Timeline: UNKNOWN
+Install Method: pip (not in pip list - manual?)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Python: astroid
+Type: pip
+Timeline: UNKNOWN
+Install Method: pip (not in pip list - manual?)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Python: asttokens
+Type: pip
+Timeline: UNKNOWN
+Install Method: pip (not in pip list - manual?)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Python: asyncore
+Type: pip
+Timeline: UNKNOWN
+Install Method: pip (not in pip list - manual?)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Python: attrs
+Type: pip
+Timeline: UNKNOWN
+Install Method: pip (not in pip list - manual?)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Python: attr
+Type: pip
+Timeline: UNKNOWN
+Install Method: pip (not in pip list - manual?)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Python: autocommand
+Type: pip
+Timeline: UNKNOWN
+Install Method: pip (not in pip list - manual?)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Python: av
+Type: pip
+Timeline: UNKNOWN
+Install Method: pip (not in pip list - manual?)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Python: babel
+Type: pip
+Timeline: UNKNOWN
+Install Method: pip (not in pip list - manual?)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Python: bcrypt
+Type: pip
+Timeline: UNKNOWN
+Install Method: pip (not in pip list - manual?)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Python: blinker
+Type: pip
+Timeline: UNKNOWN
+Install Method: pip (not in pip list - manual?)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Python: bs4
+Type: pip
+Timeline: UNKNOWN
+Install Method: pip (not in pip list - manual?)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Python: cairo
+Type: pip
+Timeline: UNKNOWN
+Install Method: pip (not in pip list - manual?)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Python: certifi
+Type: pip
+Timeline: UNKNOWN
+Install Method: pip (not in pip list - manual?)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Python: chardet
+Type: pip
+Timeline: UNKNOWN
+Install Method: pip (not in pip list - manual?)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Python: charset_normalizer
+Type: pip
+Timeline: UNKNOWN
+Install Method: pip (not in pip list - manual?)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Python: click
+Type: pip
+Timeline: UNKNOWN
+Install Method: pip (not in pip list - manual?)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Python: cloudinit
+Type: pip
+Timeline: UNKNOWN
+Install Method: pip (not in pip list - manual?)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Python: colorzero
+Type: pip
+Timeline: UNKNOWN
+Install Method: pip (not in pip list - manual?)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Python: configobj
+Type: pip
+Timeline: UNKNOWN
+Install Method: pip (not in pip list - manual?)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Python: Cryptodome
+Type: pip
+Timeline: UNKNOWN
+Install Method: pip (not in pip list - manual?)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Python: cryptography
+Type: pip
+Timeline: UNKNOWN
+Install Method: pip (not in pip list - manual?)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Python: cssselect
+Type: pip
+Timeline: UNKNOWN
+Install Method: pip (not in pip list - manual?)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Python: cupshelpers
+Type: pip
+Timeline: UNKNOWN
+Install Method: pip (not in pip list - manual?)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Python: dateutil
+Type: pip
+Timeline: UNKNOWN
+Install Method: pip (not in pip list - manual?)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Python: dbus
+Type: pip
+Timeline: UNKNOWN
+Install Method: pip (not in pip list - manual?)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Python: dill
+Type: pip
+Timeline: UNKNOWN
+Install Method: pip (not in pip list - manual?)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Python: distlib
+Type: pip
+Timeline: UNKNOWN
+Install Method: pip (not in pip list - manual?)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Python: distro
+Type: pip
+Timeline: UNKNOWN
+Install Method: pip (not in pip list - manual?)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Python: _distutils_hack
+Type: pip
+Timeline: UNKNOWN
+Install Method: pip (not in pip list - manual?)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Python: docutils
+Type: pip
+Timeline: UNKNOWN
+Install Method: pip (not in pip list - manual?)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Python: dotenv
+Type: pip
+Timeline: UNKNOWN
+Install Method: pip (not in pip list - manual?)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Python: filelock
+Type: pip
+Timeline: UNKNOWN
+Install Method: pip (not in pip list - manual?)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Python: flask
+Type: pip
+Timeline: UNKNOWN
+Install Method: pip (not in pip list - manual?)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Python: fqdn
+Type: pip
+Timeline: UNKNOWN
+Install Method: pip (not in pip list - manual?)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Python: freetype
+Type: pip
+Timeline: UNKNOWN
+Install Method: pip (not in pip list - manual?)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Python: gi
+Type: pip
+Timeline: UNKNOWN
+Install Method: pip (not in pip list - manual?)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Python: gpiod
+Type: pip
+Timeline: UNKNOWN
+Install Method: pip (not in pip list - manual?)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Python: gpiozerocli
+Type: pip
+Timeline: UNKNOWN
+Install Method: pip (not in pip list - manual?)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Python: gpiozero
+Type: pip
+Timeline: UNKNOWN
+Install Method: pip (not in pip list - manual?)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Python: html5lib
+Type: pip
+Timeline: UNKNOWN
+Install Method: pip (not in pip list - manual?)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Python: idna
+Type: pip
+Timeline: UNKNOWN
+Install Method: pip (not in pip list - manual?)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Python: inflect
+Type: pip
+Timeline: UNKNOWN
+Install Method: pip (not in pip list - manual?)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Python: isoduration
+Type: pip
+Timeline: UNKNOWN
+Install Method: pip (not in pip list - manual?)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Python: isort
+Type: pip
+Timeline: UNKNOWN
+Install Method: pip (not in pip list - manual?)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Python: itsdangerous
+Type: pip
+Timeline: UNKNOWN
+Install Method: pip (not in pip list - manual?)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Python: jaraco
+Type: pip
+Timeline: UNKNOWN
+Install Method: pip (not in pip list - manual?)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Python: jedi
+Type: pip
+Timeline: UNKNOWN
+Install Method: pip (not in pip list - manual?)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Python: jinja2
+Type: pip
+Timeline: UNKNOWN
+Install Method: pip (not in pip list - manual?)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Python: jsonschema_specifications
+Type: pip
+Timeline: UNKNOWN
+Install Method: pip (not in pip list - manual?)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Python: jsonschema
+Type: pip
+Timeline: UNKNOWN
+Install Method: pip (not in pip list - manual?)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Python: jwt
+Type: pip
+Timeline: UNKNOWN
+Install Method: pip (not in pip list - manual?)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Python: libarchive
+Type: pip
+Timeline: UNKNOWN
+Install Method: pip (not in pip list - manual?)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Python: libcamera
+Type: pip
+Timeline: UNKNOWN
+Install Method: pip (not in pip list - manual?)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Python: libevdev
+Type: pip
+Timeline: UNKNOWN
+Install Method: pip (not in pip list - manual?)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Python: linkify_it
+Type: pip
+Timeline: UNKNOWN
+Install Method: pip (not in pip list - manual?)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Python: logilab
+Type: pip
+Timeline: UNKNOWN
+Install Method: pip (not in pip list - manual?)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Python: lxml
+Type: pip
+Timeline: UNKNOWN
+Install Method: pip (not in pip list - manual?)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Python: markdown_it
+Type: pip
+Timeline: UNKNOWN
+Install Method: pip (not in pip list - manual?)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Python: markupsafe
+Type: pip
+Timeline: UNKNOWN
+Install Method: pip (not in pip list - manual?)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Python: mdurl
+Type: pip
+Timeline: UNKNOWN
+Install Method: pip (not in pip list - manual?)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Python: mesonbuild
+Type: pip
+Timeline: UNKNOWN
+Install Method: pip (not in pip list - manual?)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Python: more_itertools
+Type: pip
+Timeline: UNKNOWN
+Install Method: pip (not in pip list - manual?)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Python: mypyc
+Type: pip
+Timeline: UNKNOWN
+Install Method: pip (not in pip list - manual?)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Python: mypy
+Type: pip
+Timeline: UNKNOWN
+Install Method: pip (not in pip list - manual?)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Python: netplan
+Type: pip
+Timeline: UNKNOWN
+Install Method: pip (not in pip list - manual?)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Python: numpy
+Type: pip
+Timeline: UNKNOWN
+Install Method: pip (not in pip list - manual?)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Python: oauthlib
+Type: pip
+Timeline: UNKNOWN
+Install Method: pip (not in pip list - manual?)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Python: olefile
+Type: pip
+Timeline: UNKNOWN
+Install Method: pip (not in pip list - manual?)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Python: OpenGL
+Type: pip
+Timeline: UNKNOWN
+Install Method: pip (not in pip list - manual?)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Python: OpenSSL
+Type: pip
+Timeline: UNKNOWN
+Install Method: pip (not in pip list - manual?)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Python: orjson
+Type: pip
+Timeline: UNKNOWN
+Install Method: pip (not in pip list - manual?)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Python: packaging
+Type: pip
+Timeline: UNKNOWN
+Install Method: pip (not in pip list - manual?)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Python: parso
+Type: pip
+Timeline: UNKNOWN
+Install Method: pip (not in pip list - manual?)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Python: pexpect
+Type: pip
+Timeline: UNKNOWN
+Install Method: pip (not in pip list - manual?)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Python: pgzero
+Type: pip
+Timeline: UNKNOWN
+Install Method: pip (not in pip list - manual?)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Python: picamera2
+Type: pip
+Timeline: UNKNOWN
+Install Method: pip (not in pip list - manual?)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Python: pidng
+Type: pip
+Timeline: UNKNOWN
+Install Method: pip (not in pip list - manual?)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Python: piexif
+Type: pip
+Timeline: UNKNOWN
+Install Method: pip (not in pip list - manual?)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Python: PIL
+Type: pip
+Timeline: UNKNOWN
+Install Method: pip (not in pip list - manual?)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Python: pip
+Type: pip
+Timeline: UNKNOWN
+Install Method: pip (not in pip list - manual?)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Python: pkg_resources
+Type: pip
+Timeline: UNKNOWN
+Install Method: pip (not in pip list - manual?)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Python: platformdirs
+Type: pip
+Timeline: UNKNOWN
+Install Method: pip (not in pip list - manual?)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Python: psutil
+Type: pip
+Timeline: UNKNOWN
+Install Method: pip (not in pip list - manual?)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Python: ptyprocess
+Type: pip
+Timeline: UNKNOWN
+Install Method: pip (not in pip list - manual?)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Python: __pycache__
+Type: pip
+Timeline: UNKNOWN
+Install Method: pip (not in pip list - manual?)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Python: pygame
+Type: pip
+Timeline: UNKNOWN
+Install Method: pip (not in pip list - manual?)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Python: pygments
+Type: pip
+Timeline: UNKNOWN
+Install Method: pip (not in pip list - manual?)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Python: pygtkcompat
+Type: pip
+Timeline: UNKNOWN
+Install Method: pip (not in pip list - manual?)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Python: pykms
+Type: pip
+Timeline: UNKNOWN
+Install Method: pip (not in pip list - manual?)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Python: pylint
+Type: pip
+Timeline: UNKNOWN
+Install Method: pip (not in pip list - manual?)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Python: PyQt5
+Type: pip
+Timeline: UNKNOWN
+Install Method: pip (not in pip list - manual?)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Python: pyudev
+Type: pip
+Timeline: UNKNOWN
+Install Method: pip (not in pip list - manual?)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Python: referencing
+Type: pip
+Timeline: UNKNOWN
+Install Method: pip (not in pip list - manual?)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Python: reportlab
+Type: pip
+Timeline: UNKNOWN
+Install Method: pip (not in pip list - manual?)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Python: requests
+Type: pip
+Timeline: UNKNOWN
+Install Method: pip (not in pip list - manual?)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Python: rich
+Type: pip
+Timeline: UNKNOWN
+Install Method: pip (not in pip list - manual?)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Python: rlPyCairo
+Type: pip
+Timeline: UNKNOWN
+Install Method: pip (not in pip list - manual?)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Python: rpds
+Type: pip
+Timeline: UNKNOWN
+Install Method: pip (not in pip list - manual?)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Python: RPi
+Type: pip
+Timeline: UNKNOWN
+Install Method: pip (not in pip list - manual?)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Python: send2trash
+Type: pip
+Timeline: UNKNOWN
+Install Method: pip (not in pip list - manual?)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Python: sense_hat
+Type: pip
+Timeline: UNKNOWN
+Install Method: pip (not in pip list - manual?)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Python: serial
+Type: pip
+Timeline: UNKNOWN
+Install Method: pip (not in pip list - manual?)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Python: setuptools
+Type: pip
+Timeline: UNKNOWN
+Install Method: pip (not in pip list - manual?)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Python: simplejpeg
+Type: pip
+Timeline: UNKNOWN
+Install Method: pip (not in pip list - manual?)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Python: smbc
+Type: pip
+Timeline: UNKNOWN
+Install Method: pip (not in pip list - manual?)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Python: smbus2
+Type: pip
+Timeline: UNKNOWN
+Install Method: pip (not in pip list - manual?)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Python: soupsieve
+Type: pip
+Timeline: UNKNOWN
+Install Method: pip (not in pip list - manual?)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Python: ssh_import_id
+Type: pip
+Timeline: UNKNOWN
+Install Method: pip (not in pip list - manual?)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Python: thonny
+Type: pip
+Timeline: UNKNOWN
+Install Method: pip (not in pip list - manual?)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Python: tomlkit
+Type: pip
+Timeline: UNKNOWN
+Install Method: pip (not in pip list - manual?)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Python: tqdm
+Type: pip
+Timeline: UNKNOWN
+Install Method: pip (not in pip list - manual?)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Python: typeguard
+Type: pip
+Timeline: UNKNOWN
+Install Method: pip (not in pip list - manual?)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Python: uc_micro
+Type: pip
+Timeline: UNKNOWN
+Install Method: pip (not in pip list - manual?)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Python: uritemplate
+Type: pip
+Timeline: UNKNOWN
+Install Method: pip (not in pip list - manual?)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Python: urllib3
+Type: pip
+Timeline: UNKNOWN
+Install Method: pip (not in pip list - manual?)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Python: validate
+Type: pip
+Timeline: UNKNOWN
+Install Method: pip (not in pip list - manual?)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Python: videodev2
+Type: pip
+Timeline: UNKNOWN
+Install Method: pip (not in pip list - manual?)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Python: virtualenv
+Type: pip
+Timeline: UNKNOWN
+Install Method: pip (not in pip list - manual?)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Python: webcolors
+Type: pip
+Timeline: UNKNOWN
+Install Method: pip (not in pip list - manual?)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Python: webencodings
+Type: pip
+Timeline: UNKNOWN
+Install Method: pip (not in pip list - manual?)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Python: werkzeug
+Type: pip
+Timeline: UNKNOWN
+Install Method: pip (not in pip list - manual?)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Python: wheel
+Type: pip
+Timeline: UNKNOWN
+Install Method: pip (not in pip list - manual?)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Python: _yaml
+Type: pip
+Timeline: UNKNOWN
+Install Method: pip (not in pip list - manual?)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Python: yaml
+Type: pip
+Timeline: UNKNOWN
+Install Method: pip (not in pip list - manual?)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Icons: hicolor
+Type: theme
+Timeline: POST-INSTALL
+Install Method: manual install
+Details: possibly from website or git
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Origin: Unknown: /usr/share/dispsetup.sh
+Type: unknown
+Timeline: UNKNOWN
+Install Method: Unknown
+
+═══════════════════════════════════════════════════════════════
+POST-INSTALL ORIGINS (User Installed)
+═══════════════════════════════════════════════════════════════
+
+• Fonts: X11
+  Type: fonts
+  Method: manual install
+  Details: possibly from website or git
+
+• Icons: hicolor
+  Type: theme
+  Method: manual install
+  Details: possibly from website or git
+
