@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+# Chamon TUI Wrapper Script
+# Automatically selects dev or prod build (uses newer if both exist)
+
+CHAMON_DIR="/home/pi/_playground/_dev/packages/chamon"
+DEV_BUILD="$CHAMON_DIR/target/debug/chamon"
+PROD_BUILD="$CHAMON_DIR/target/release/chamon"
+
+# Check which builds exist
+DEV_EXISTS=false
+PROD_EXISTS=false
+
+[ -f "$DEV_BUILD" ] && DEV_EXISTS=true
+[ -f "$PROD_BUILD" ] && PROD_EXISTS=true
+
+# Determine which to use
+if $DEV_EXISTS && $PROD_EXISTS; then
+    # Both exist - use the newer one
+    if [ "$DEV_BUILD" -nt "$PROD_BUILD" ]; then
+        BINARY="$DEV_BUILD"
+        # echo "[chamon] Using dev build (newer)" >&2
+    else
+        BINARY="$PROD_BUILD"
+        # echo "[chamon] Using prod build (newer)" >&2
+    fi
+elif $DEV_EXISTS; then
+    BINARY="$DEV_BUILD"
+    # echo "[chamon] Using dev build" >&2
+elif $PROD_EXISTS; then
+    BINARY="$PROD_BUILD"
+    # echo "[chamon] Using prod build" >&2
+else
+    echo "Error: No chamon binary found!" >&2
+    echo "Please run: cd $CHAMON_DIR && cargo build" >&2
+    exit 1
+fi
+
+# Execute with all arguments passed through
+exec "$BINARY" "$@"
