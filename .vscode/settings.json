@@ -1,9 +1,11 @@
 {
     "files.exclude": {
         
-        // ".oh-my-zsh": true,
+        ".oh-my-zsh": true,
+        "_playground": true,
+        
         ".cursor-server": true,
-        // ".cargo": true,
+        ".cargo": true,
 
 
 

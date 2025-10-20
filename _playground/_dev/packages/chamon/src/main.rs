@@ -9,8 +9,34 @@ use ratatui::{ //>
     Terminal,
 }; //<
 use std::io;
+use std::env;
+
+const VERSION: &str = env!("CARGO_PKG_VERSION");
+const NAME: &str = env!("CARGO_PKG_NAME");
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
+    
+    // Parse command line arguments ------------------------------------------->> 
+    let args: Vec<String> = env::args().collect();
+    
+    if args.len() > 1 {
+        match args[1].as_str() {
+            "--version" | "-v" => {
+                println!("{} v{}", NAME, VERSION);
+                return Ok(());
+            }
+            "--help" | "-h" => {
+                print_help();
+                return Ok(());
+            }
+            _ => {
+                eprintln!("Unknown option: {}", args[1]);
+                eprintln!("Try '{} --help' for more information.", args[0]);
+                std::process::exit(1);
+            }
+        }
+    }
+    //--------------------------------------------------------------------------------------------<<
     
     // Check terminal size before starting ------------------------------------>> 
     let terminal_size = crossterm::terminal::size()?;
@@ -62,3 +88,24 @@ fn run_app<B: Backend>(terminal: &mut Terminal<B>, app: &mut App) -> io::Result<
     }
     Ok(())
 } //<
+
+fn print_help() {
+    println!("Chamon - System Monitoring TUI");
+    println!();
+    println!("USAGE:");
+    println!("    chamon [OPTIONS]");
+    println!();
+    println!("OPTIONS:");
+    println!("    -h, --help       Print this help message");
+    println!("    -v, --version    Print version information");
+    println!();
+    println!("DESCRIPTION:");
+    println!("    A terminal-based system monitoring tool for tracking file changes,");
+    println!("    system status, and git repository management.");
+    println!();
+    println!("CONTROLS:");
+    println!("    Tab           - Cycle through tabs");
+    println!("    q/Esc         - Quit the application");
+    println!("    Arrow Keys    - Navigate within tabs");
+    println!();
+}
