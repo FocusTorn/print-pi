@@ -1,0 +1,13 @@
+[Unit]
+Description=Network Connectivity LED Blinker - One-Time Boot Indicator
+After=network.target networking.service
+Wants=network.target
+
+[Service]
+Type=oneshot
+ExecStart=/home/pi/_playground/_scripts/network-blink/network-blink.sh
+RemainAfterExit=no
+User=root
+
+[Install]
+WantedBy=multi-user.target
