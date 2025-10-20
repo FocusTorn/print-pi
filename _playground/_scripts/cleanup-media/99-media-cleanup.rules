@@ -1,0 +1,4 @@
+# Auto-cleanup empty directories in /media/pi when USB drives are removed
+ACTION=="remove", SUBSYSTEM=="block", KERNEL=="sd*[0-9]", RUN+="/usr/local/sbin/cleanup-media.sh"
+
+
