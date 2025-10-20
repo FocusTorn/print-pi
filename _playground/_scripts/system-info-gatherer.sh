@@ -7,442 +7,414 @@
 
 set -e
 
-# Color codes for output
-RED='\033[0;31m'
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
-BLUE='\033[0;34m'
-CYAN='\033[0;36m'
-BOLD='\033[1m'
-NC='\033[0m' # No Color
-
-# Output formatting
-section() {
-    echo -e "\n${BOLD}${CYAN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
-    echo -e "${BOLD}${CYAN}▶ $1${NC}"
-    echo -e "${BOLD}${CYAN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}\n"
-}
-
-subsection() {
-    echo -e "\n${BOLD}${BLUE}┌─ $1${NC}"
-}
-
-info() {
-    echo -e "${GREEN}  ✓${NC} $1: ${YELLOW}$2${NC}"
-}
-
-check_command() {
-    if command -v "$1" &> /dev/null; then
-        echo -e "${GREEN}  ✓${NC} $1: ${YELLOW}$(command -v "$1")${NC}"
-    else
-        echo -e "${RED}  ✗${NC} $1: ${YELLOW}Not installed${NC}"
-    fi
-}
-
-get_version() {
-    local cmd="$1"
-    local flag="${2:---version}"
-    if command -v "$cmd" &> /dev/null; then
-        local version=$($cmd $flag 2>&1 | head -n1)
-        echo -e "${GREEN}  ✓${NC} $cmd: ${YELLOW}$version${NC}"
-    else
-        echo -e "${RED}  ✗${NC} $cmd: ${YELLOW}Not installed${NC}"
-    fi
-}
+# Load shared formatting library
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "${SCRIPT_DIR}/lib/formatting.sh"
 
 # Header
-echo -e "${BOLD}${GREEN}"
-cat << "EOF"
-╔═══════════════════════════════════════════════════════════════╗
-║                                                               ║
-║          SYSTEM INFORMATION GATHERER v1.0                    ║
-║          Raspberry Pi Environment Documentation              ║
-║                                                               ║
-╚═══════════════════════════════════════════════════════════════╝
-EOF
-echo -e "${NC}"
-
-echo -e "${CYAN}Gathering system information... This may take a moment.${NC}\n"
+fmt.header "SYSTEM INFORMATION GATHERER v1.0"
 
 # ============================================================================
-section "1. SYSTEM IDENTITY"
+fmt.section "1. SYSTEM IDENTITY"
 # ============================================================================
 
-subsection "Operating System"
-info "OS Name" "$(cat /etc/os-release | grep PRETTY_NAME | cut -d= -f2 | tr -d '"')"
-info "OS ID" "$(cat /etc/os-release | grep -w ID | cut -d= -f2 | tr -d '"')"
-info "OS Version" "$(cat /etc/os-release | grep VERSION_ID | cut -d= -f2 | tr -d '"')"
-info "Kernel Version" "$(uname -r)"
-info "Architecture" "$(uname -m)"
-info "Hostname" "$(hostname)"
-info "FQDN" "$(hostname -f 2>/dev/null || echo 'Not configured')"
+fmt.subsection "Operating System"
+fmt.info "OS Name" "$(cat /etc/os-release | grep PRETTY_NAME | cut -d= -f2 | tr -d '"')"
+fmt.info "OS ID" "$(cat /etc/os-release | grep -w ID | cut -d= -f2 | tr -d '"')"
+fmt.info "OS Version" "$(cat /etc/os-release | grep VERSION_ID | cut -d= -f2 | tr -d '"')"
+fmt.info "Kernel Version" "$(uname -r)"
+fmt.info "Architecture" "$(uname -m)"
+fmt.info "Hostname" "$(hostname)"
+fmt.info "FQDN" "$(hostname -f 2>/dev/null || echo 'Not configured')"
 
-subsection "Boot Configuration"
+fmt.subsection "Boot Configuration"
 if [ -f /boot/firmware/config.txt ]; then
-    info "Boot Config" "/boot/firmware/config.txt"
+    fmt.info "Boot Config" "/boot/firmware/config.txt"
 elif [ -f /boot/config.txt ]; then
-    info "Boot Config" "/boot/config.txt"
+    fmt.info "Boot Config" "/boot/config.txt"
 fi
-info "Cmdline" "$(cat /proc/cmdline | cut -c1-60)..."
+fmt.info "Cmdline" "$(cat /proc/cmdline | cut -c1-60)..."
 
 # ============================================================================
-section "2. HARDWARE DETAILS"
+fmt.section "2. HARDWARE DETAILS"
 # ============================================================================
 
-subsection "Raspberry Pi Model"
+fmt.subsection "Raspberry Pi Model"
 if [ -f /proc/device-tree/model ]; then
-    info "Model" "$(cat /proc/device-tree/model | tr -d '\0')"
+    fmt.info "Model" "$(cat /proc/device-tree/model | tr -d '\0')"
 fi
-info "Serial Number" "$(cat /proc/cpuinfo | grep Serial | cut -d ':' -f 2 | xargs)"
-info "Revision" "$(cat /proc/cpuinfo | grep Revision | cut -d ':' -f 2 | xargs)"
+fmt.info "Serial Number" "$(cat /proc/cpuinfo | grep Serial | cut -d ':' -f 2 | xargs)"
+fmt.info "Revision" "$(cat /proc/cpuinfo | grep Revision | cut -d ':' -f 2 | xargs)"
 
-subsection "CPU Information"
-info "CPU Model" "$(lscpu | grep 'Model name' | cut -d':' -f2 | xargs)"
-info "CPU Cores" "$(nproc)"
-info "CPU Architecture" "$(lscpu | grep 'Architecture' | cut -d':' -f2 | xargs)"
-info "CPU MHz" "$(lscpu | grep 'CPU max MHz' | cut -d':' -f2 | xargs || echo 'N/A')"
-info "CPU Temperature" "$(vcgencmd measure_temp 2>/dev/null || echo 'N/A')"
+fmt.subsection "CPU Information"
+fmt.info "CPU Model" "$(lscpu | grep 'Model name' | cut -d':' -f2 | xargs)"
+fmt.info "CPU Cores" "$(nproc)"
+fmt.info "CPU Architecture" "$(lscpu | grep 'Architecture' | cut -d':' -f2 | xargs)"
+fmt.info "CPU MHz" "$(lscpu | grep 'CPU max MHz' | cut -d':' -f2 | xargs || echo 'N/A')"
+fmt.info "CPU Temperature" "$(vcgencmd measure_temp 2>/dev/null || echo 'N/A')"
 
-subsection "Memory Information"
-info "Total RAM" "$(free -h | grep Mem | awk '{print $2}')"
-info "Used RAM" "$(free -h | grep Mem | awk '{print $3}')"
-info "Free RAM" "$(free -h | grep Mem | awk '{print $4}')"
-info "Swap Total" "$(free -h | grep Swap | awk '{print $2}')"
+fmt.subsection "Memory Information"
+fmt.info "Total RAM" "$(free -h | grep Mem | awk '{print $2}')"
+fmt.info "Used RAM" "$(free -h | grep Mem | awk '{print $3}')"
+fmt.info "Free RAM" "$(free -h | grep Mem | awk '{print $4}')"
+fmt.info "Swap Total" "$(free -h | grep Swap | awk '{print $2}')"
 
-subsection "GPU Information"
-info "GPU Memory" "$(vcgencmd get_mem gpu 2>/dev/null || echo 'N/A')"
-info "ARM Memory" "$(vcgencmd get_mem arm 2>/dev/null || echo 'N/A')"
+fmt.subsection "GPU Information"
+fmt.info "GPU Memory" "$(vcgencmd get_mem gpu 2>/dev/null || echo 'N/A')"
+fmt.info "ARM Memory" "$(vcgencmd get_mem arm 2>/dev/null || echo 'N/A')"
 
 # ============================================================================
-section "3. STORAGE & FILESYSTEM"
+fmt.section "3. STORAGE & FILESYSTEM"
 # ============================================================================
 
-subsection "Disk Usage"
+fmt.subsection "Disk Usage"
 df -h | grep -E '^/dev|^Filesystem' | while read line; do
-    echo "  $line"
+    echo -e "${BLUE}│${NC}  $line"
 done
 
-subsection "Root Filesystem"
-info "Root FS Type" "$(findmnt -n -o FSTYPE /)"
-info "Root FS Size" "$(df -h / | tail -1 | awk '{print $2}')"
-info "Root FS Used" "$(df -h / | tail -1 | awk '{print $3}')"
-info "Root FS Available" "$(df -h / | tail -1 | awk '{print $4}')"
-info "Root FS Use%" "$(df -h / | tail -1 | awk '{print $5}')"
+fmt.subsection "Root Filesystem"
+fmt.info "Root FS Type" "$(findmnt -n -o FSTYPE /)"
+fmt.info "Root FS Size" "$(df -h / | tail -1 | awk '{print $2}')"
+fmt.info "Root FS Used" "$(df -h / | tail -1 | awk '{print $3}')"
+fmt.info "Root FS Available" "$(df -h / | tail -1 | awk '{print $4}')"
+fmt.info "Root FS Use%" "$(df -h / | tail -1 | awk '{print $5}')"
 
-subsection "Mount Points"
-findmnt -t ext4,vfat,tmpfs,overlay | head -20
+fmt.subsection "Mount Points"
+findmnt -t ext4,vfat,tmpfs,overlay | head -20 | while read line; do
+    echo -e "${BLUE}│${NC}  $line"
+done
 
 # ============================================================================
-section "4. DIRECTORY STRUCTURE"
+fmt.section "4. DIRECTORY STRUCTURE"
 # ============================================================================
 
-subsection "User Directories"
-for dir in /home/pi/_playground /home/pi/3dp-mods /home/pi/.user-scripts /home/pi/Downloads; do
+fmt.subsection "User Directories"
+for dir in /home/pi/_playground /home/pi/_scripts /home/pi/Downloads; do
     if [ -d "$dir" ]; then
         size=$(du -sh "$dir" 2>/dev/null | cut -f1)
-        info "$(basename $dir)" "$dir ($size)"
+        fmt.info "$(basename $dir)" "$dir ($size)"
     fi
 done
 
-subsection "Important Paths"
+fmt.subsection "Important Paths"
 for path in /home/pi /usr/local/bin /opt /etc/systemd/system; do
     if [ -d "$path" ]; then
-        info "$path" "$(ls -la $path | head -3 | tail -1 | awk '{print $1, $3, $4}')"
+        fmt.info "$path" "$(ls -la $path | head -3 | tail -1 | awk '{print $1, $3, $4}')"
     fi
 done
 
 # ============================================================================
-section "5. NETWORK CONFIGURATION"
+fmt.section "5. NETWORK CONFIGURATION"
 # ============================================================================
 
-subsection "Network Interfaces"
+fmt.subsection "Network Interfaces"
 ip -br addr show | while read line; do
-    echo "  $line"
+    echo -e "${BLUE}│${NC}  $line"
 done
 
-subsection "Active Connections"
-info "WiFi Status" "$(iwgetid -r 2>/dev/null || echo 'Not connected')"
-info "Default Gateway" "$(ip route | grep default | awk '{print $3}')"
-info "DNS Servers" "$(grep nameserver /etc/resolv.conf | awk '{print $2}' | tr '\n' ', ' | sed 's/,$//')"
+fmt.subsection "Active Connections"
+fmt.info "WiFi Status" "$(iwgetid -r 2>/dev/null || echo 'Not connected')"
+fmt.info "Default Gateway" "$(ip route | grep default | awk '{print $3}')"
+fmt.info "DNS Servers" "$(grep nameserver /etc/resolv.conf | awk '{print $2}' | tr '\n' ', ' | sed 's/,$//')"
 
-subsection "Hostname Resolution"
-info "Hostname" "$(hostname)"
-info "Avahi Hostname" "$(hostname).local"
-
-# ============================================================================
-section "6. DEVELOPMENT ENVIRONMENT"
-# ============================================================================
-
-subsection "Programming Languages"
-get_version "python3"
-get_version "python2"
-get_version "node"
-get_version "npm"
-get_version "rustc"
-get_version "cargo"
-get_version "gcc"
-get_version "make"
-
-subsection "Shell & Tools"
-info "Default Shell" "$SHELL"
-get_version "bash"
-get_version "zsh"
-get_version "git"
-get_version "curl"
-get_version "wget"
-
-subsection "Package Managers"
-get_version "apt"
-get_version "pip3" "--version"
-get_version "cargo"
-get_version "npm"
+fmt.subsection "Hostname Resolution"
+fmt.info "Hostname" "$(hostname)"
+fmt.info "Avahi Hostname" "$(hostname).local"
 
 # ============================================================================
-section "7. INSTALLED SERVICES"
+fmt.section "6. DEVELOPMENT ENVIRONMENT"
 # ============================================================================
 
-subsection "Systemd Services (Custom)"
-echo "  Active custom services:"
-systemctl list-units --type=service --state=active --no-pager | grep -E 'klipper|moonraker|overlay|3dp' || echo "  None found"
+fmt.subsection "Programming Languages"
+fmt.check_cmd "python3"
+fmt.check_cmd "python2"
+fmt.check_cmd "node"
+fmt.check_cmd "npm"
+fmt.check_cmd "rustc"
+fmt.check_cmd "cargo"
+fmt.check_cmd "gcc"
+fmt.check_cmd "make"
 
-subsection "Running Services (Key)"
+fmt.subsection "Shell & Tools"
+fmt.info "Default Shell" "$SHELL"
+fmt.check_cmd "bash"
+fmt.check_cmd "zsh"
+fmt.check_cmd "git"
+fmt.check_cmd "curl"
+fmt.check_cmd "wget"
+
+fmt.subsection "Package Managers"
+fmt.check_cmd "apt"
+fmt.check_cmd "pip3" "--version"
+fmt.check_cmd "cargo"
+fmt.check_cmd "npm"
+
+# ============================================================================
+fmt.section "7. INSTALLED SERVICES"
+# ============================================================================
+
+fmt.subsection "Systemd Services (Custom)"
+systemctl list-units --type=service --state=active --no-pager | grep -E 'klipper|moonraker|overlay|3dp' | while read line; do
+    echo -e "${BLUE}│${NC}  $line"
+done
+[[ $? -ne 0 ]] && echo -e "${BLUE}│${NC}  None found"
+
+fmt.subsection "Running Services (Key)"
 for service in ssh klipper moonraker nginx; do
     if systemctl is-active --quiet $service 2>/dev/null; then
-        echo -e "${GREEN}  ✓${NC} $service: ${YELLOW}Active${NC}"
+        echo -e "${BLUE}│${NC}  ${GREEN}✓${NC} $service: ${YELLOW}Active${NC}"
     else
-        echo -e "${RED}  ✗${NC} $service: ${YELLOW}Inactive or Not Installed${NC}"
+        echo -e "${BLUE}│${NC}  ${RED}✗${NC} $service: ${YELLOW}Inactive or Not Installed${NC}"
     fi
 done
 
 # ============================================================================
-section "8. OVERLAY & REDIRECTION SYSTEM"
+fmt.section "8. OVERLAY & REDIRECTION SYSTEM"
 # ============================================================================
 
-subsection "File Overlay Manager"
+fmt.subsection "File Overlay Manager"
 if [ -f /home/pi/.user-scripts/redirector/file-overlay-manager.sh ]; then
-    info "Overlay Manager" "Installed ✓"
-    info "Location" "/home/pi/.user-scripts/redirector/file-overlay-manager.sh"
+    fmt.info "Overlay Manager" "Installed ✓"
+    fmt.info "Location" "/home/pi/.user-scripts/redirector/file-overlay-manager.sh"
     
     if [ -f /home/pi/.user-scripts/redirector/overlay-config.conf ]; then
-        info "Config File" "/home/pi/.user-scripts/redirector/overlay-config.conf"
+        fmt.info "Config File" "/home/pi/.user-scripts/redirector/overlay-config.conf"
         overlay_count=$(grep -c "^/home" /home/pi/.user-scripts/redirector/overlay-config.conf 2>/dev/null || echo "0")
-        info "Configured Overlays" "$overlay_count"
+        fmt.info "Configured Overlays" "$overlay_count"
     fi
 else
-    info "Overlay Manager" "Not found"
+    fmt.info "Overlay Manager" "Not found"
 fi
 
-subsection "System File Tracker"
+fmt.subsection "System File Tracker"
 if [ -f /home/pi/.user-scripts/system-tracker ]; then
-    info "System Tracker" "Installed ✓"
-    info "Location" "/home/pi/.user-scripts/system-tracker"
+    fmt.info "System Tracker" "Installed ✓"
+    fmt.info "Location" "/home/pi/.user-scripts/system-tracker"
     
     if [ -f /home/pi/3dp-mods/.system-track-list ]; then
         tracked_count=$(wc -l < /home/pi/3dp-mods/.system-track-list 2>/dev/null || echo "0")
-        info "Tracked Files" "$tracked_count"
+        fmt.info "Tracked Files" "$tracked_count"
     fi
 else
-    info "System Tracker" "Not found"
+    fmt.info "System Tracker" "Not found"
 fi
 
-subsection "Active Bind Mounts"
-mount | grep -E 'bind|overlay' | head -10 || echo "  None found"
+fmt.subsection "Active Bind Mounts"
+mount | grep -E 'bind|overlay' | head -10 | while read line; do
+    echo -e "${BLUE}│${NC}  $line"
+done
+[[ $? -ne 0 ]] && echo -e "${BLUE}│${NC}  None found"
 
 # ============================================================================
-section "9. 3D PRINTING SETUP"
+fmt.section "9. 3D PRINTING SETUP"
 # ============================================================================
 
-subsection "Klipper Installation"
+fmt.subsection "Klipper Installation"
 if [ -d /home/pi/klipper ]; then
-    info "Klipper Directory" "/home/pi/klipper"
+    fmt.info "Klipper Directory" "/home/pi/klipper"
     if [ -f /home/pi/klipper/.git/HEAD ]; then
         klipper_commit=$(cd /home/pi/klipper && git rev-parse --short HEAD 2>/dev/null || echo "Unknown")
-        info "Klipper Version" "$klipper_commit"
+        fmt.info "Klipper Version" "$klipper_commit"
     fi
 fi
 
-subsection "Printer Configuration"
+fmt.subsection "Printer Configuration"
 if [ -d /home/pi/printer_data ]; then
-    info "Printer Data" "/home/pi/printer_data"
+    fmt.info "Printer Data" "/home/pi/printer_data"
     if [ -f /home/pi/printer_data/config/printer.cfg ]; then
-        info "printer.cfg" "Found ✓"
+        fmt.info "printer.cfg" "Found ✓"
     fi
 fi
 
-subsection "Modifications Directory"
-if [ -d /home/pi/3dp-mods ]; then
+fmt.subsection "Modifications Directory"
+if [ -d /home/pi/playground ]; then
     mod_size=$(du -sh /home/pi/3dp-mods 2>/dev/null | cut -f1)
-    info "3DP Mods Directory" "/home/pi/3dp-mods ($mod_size)"
+    fmt.info "3DP Mods Directory" "/home/pi/3dp-mods ($mod_size)"
     
     if [ -d /home/pi/3dp-mods/.git ]; then
-        info "Git Repository" "Initialized ✓"
+        fmt.info "Git Repository" "Initialized ✓"
         git_remote=$(cd /home/pi/3dp-mods && git remote get-url origin 2>/dev/null || echo "No remote")
-        info "Git Remote" "$git_remote"
+        fmt.info "Git Remote" "$git_remote"
     fi
 fi
 
 # ============================================================================
-section "10. USER ENVIRONMENT"
+fmt.section "10. USER ENVIRONMENT"
 # ============================================================================
 
-subsection "Current User"
-info "Username" "$USER"
-info "User ID" "$(id -u)"
-info "Group ID" "$(id -g)"
-info "Groups" "$(groups | tr ' ' ', ')"
-info "Home Directory" "$HOME"
+fmt.subsection "Current User"
+fmt.info "Username" "$USER"
+fmt.info "User ID" "$(id -u)"
+fmt.info "Group ID" "$(id -g)"
+fmt.info "Groups" "$(groups | tr ' ' ', ')"
+fmt.info "Home Directory" "$HOME"
 
-subsection "Environment Variables (Key)"
-info "PATH" "${PATH:0:80}..."
-info "EDITOR" "${EDITOR:-Not set}"
-info "SHELL" "$SHELL"
-info "TERM" "$TERM"
-info "PWD" "$PWD"
+fmt.subsection "Environment Variables (Key)"
+fmt.info "PATH" "${PATH:0:80}..."
+fmt.info "EDITOR" "${EDITOR:-Not set}"
+fmt.info "SHELL" "$SHELL"
+fmt.info "TERM" "$TERM"
+fmt.info "PWD" "$PWD"
 
-subsection "Shell Configuration Files"
+fmt.subsection "Shell Configuration Files"
 for rc in ~/.bashrc ~/.zshrc ~/.profile ~/.bash_profile; do
     if [ -f "$rc" ]; then
         size=$(du -h "$rc" | cut -f1)
-        info "$(basename $rc)" "$rc ($size)"
+        fmt.info "$(basename $rc)" "$rc ($size)"
     fi
 done
 
 # ============================================================================
-section "11. SYSTEM PERFORMANCE"
+fmt.section "11. SYSTEM PERFORMANCE"
 # ============================================================================
 
-subsection "Load Average"
-info "1 min / 5 min / 15 min" "$(uptime | awk -F'load average:' '{print $2}')"
+fmt.subsection "Load Average"
+fmt.info "1 min / 5 min / 15 min" "$(uptime | awk -F'load average:' '{print $2}')"
 
-subsection "Uptime"
-info "System Uptime" "$(uptime -p)"
-info "Boot Time" "$(who -b | awk '{print $3, $4}')"
+fmt.subsection "Uptime"
+fmt.info "System Uptime" "$(uptime -p)"
+fmt.info "Boot Time" "$(who -b | awk '{print $3, $4}')"
 
-subsection "Process Count"
-info "Total Processes" "$(ps aux | wc -l)"
-info "Running Processes" "$(ps aux | grep -c ' R ')"
-
-# ============================================================================
-section "12. INSTALLED PACKAGES (SAMPLE)"
-# ============================================================================
-
-subsection "Debian Packages (Key Tools)"
-dpkg -l | grep -E 'git|python3|gcc|make|cmake|nginx|vim' | awk '{print "  " $2 " - " $3}' | head -20
-
-subsection "Python Packages (Global)"
-pip3 list 2>/dev/null | head -15 || echo "  Unable to list pip packages"
+fmt.subsection "Process Count"
+fmt.info "Total Processes" "$(ps aux | wc -l)"
+fmt.info "Running Processes" "$(ps aux | grep -c ' R ')"
 
 # ============================================================================
-section "13. GIT CONFIGURATION"
+fmt.section "12. INSTALLED PACKAGES (SAMPLE)"
 # ============================================================================
 
-subsection "Git Identity"
-info "User Name" "$(git config --global user.name || echo 'Not configured')"
-info "User Email" "$(git config --global user.email || echo 'Not configured')"
+fmt.subsection "Debian Packages (Key Tools)"
+dpkg -l | grep -E 'git|python3|gcc|make|cmake|nginx|vim' | awk -v blue="${BLUE}" -v nc="${NC}" '{print blue "│" nc "  " $2 " - " $3}' | head -20
 
-subsection "Git Repositories"
-for dir in /home/pi/3dp-mods /home/pi/_playground /home/pi/klipper; do
-    if [ -d "$dir/.git" ]; then
-        cd "$dir"
-        branch=$(git branch --show-current 2>/dev/null || echo "detached HEAD")
-        status=$(git status --porcelain | wc -l)
-        echo -e "${GREEN}  ✓${NC} $(basename $dir): ${YELLOW}$branch${NC} (${status} changes)"
+fmt.subsection "Python Packages (Global)"
+pip3 list 2>/dev/null | tail -n +3 | awk -v blue="${BLUE}" -v nc="${NC}" '{print blue "│" nc "  " $1 " - " $2}' | head -20 || echo -e "${BLUE}│${NC}  Unable to list pip packages"
+
+# ============================================================================
+fmt.section "13. GIT CONFIGURATION"
+# ============================================================================
+
+fmt.subsection "Git Identity"
+fmt.info "User Name" "$(git config --global user.name || echo 'Not configured')"
+fmt.info "User Email" "$(git config --global user.email || echo 'Not configured')"
+
+fmt.subsection "Git Repositories"
+
+# Smart scan: exclude problematic/slow paths
+found_repos=0
+while IFS= read -r -d '' git_dir; do
+    repo_dir=$(dirname "$git_dir")
+    if [ -f "$repo_dir/.git/HEAD" ]; then
+        (
+            # Run in subshell to isolate any errors from set -e
+            cd "$repo_dir" || exit 0
+            branch=$(git branch --show-current 2>/dev/null || echo "detached HEAD")
+            status=$(git status --porcelain 2>/dev/null | wc -l)
+            remote=$(git remote get-url origin 2>/dev/null || echo "no remote")
+            echo -e "${BLUE}│${NC}  ${GREEN}✓${NC} $repo_dir"
+            echo -e "${BLUE}│${NC}     ${YELLOW}Branch:${NC} $branch  ${YELLOW}Changes:${NC} $status  ${YELLOW}Remote:${NC} ${remote:0:60}"
+        )
+        ((found_repos++)) || true
     fi
-done
+done < <(find /home /opt /usr/local -type d -name .git \
+    -print0 2>/dev/null)
 
-# ============================================================================
-section "14. SECURITY & ACCESS"
-# ============================================================================
-
-subsection "SSH Configuration"
-if [ -f /etc/ssh/sshd_config ]; then
-    info "SSH Config" "/etc/ssh/sshd_config"
-    ssh_port=$(grep -E "^Port " /etc/ssh/sshd_config | awk '{print $2}' || echo "22 (default)")
-    info "SSH Port" "$ssh_port"
+if [ $found_repos -eq 0 ]; then
+    echo -e "${BLUE}│${NC}  ${YELLOW}No git repositories found${NC}"
 fi
 
-subsection "Firewall Status"
+# ============================================================================
+fmt.section "14. SECURITY & ACCESS"
+# ============================================================================
+
+fmt.subsection "SSH Configuration"
+if [ -f /etc/ssh/sshd_config ]; then
+    fmt.info "SSH Config" "/etc/ssh/sshd_config"
+    ssh_port=$(grep -E "^Port " /etc/ssh/sshd_config | awk '{print $2}' || echo "22 (default)")
+    fmt.info "SSH Port" "$ssh_port"
+fi
+
+fmt.subsection "Firewall Status"
 if command -v ufw &> /dev/null; then
     ufw_status=$(sudo ufw status 2>/dev/null | head -1 || echo "Unknown")
-    info "UFW Status" "$ufw_status"
+    fmt.info "UFW Status" "$ufw_status"
 else
-    info "UFW" "Not installed"
+    fmt.info "UFW" "Not installed"
 fi
 
-subsection "Sudo Access"
+fmt.subsection "Sudo Access"
 if sudo -n true 2>/dev/null; then
-    info "Passwordless Sudo" "Enabled"
+    fmt.info "Passwordless Sudo" "Enabled"
 else
-    info "Passwordless Sudo" "Disabled"
+    fmt.info "Passwordless Sudo" "Disabled"
 fi
 
 # ============================================================================
-section "15. CUSTOM SCRIPTS & TOOLS"
+fmt.section "15. CUSTOM SCRIPTS & TOOLS"
 # ============================================================================
 
-subsection "User Scripts"
-if [ -d /home/pi/.user-scripts ]; then
-    find /home/pi/.user-scripts -maxdepth 2 -type f -executable | while read script; do
-        echo -e "${GREEN}  ✓${NC} $(basename $script): ${YELLOW}$script${NC}"
+fmt.subsection "User Scripts"
+if [ -d /home/pi/_playground/_scripts ]; then
+    find /home/pi/_playground/_scripts -maxdepth 2 -type f -executable | while read script; do
+        echo -e "${BLUE}│${NC}  ${GREEN}✓${NC} $(basename $script): ${YELLOW}$script${NC}"
     done
 fi
 
-subsection "Global Commands"
+fmt.subsection "Global Commands"
 for cmd in overlay system-track chamon system-monitor; do
-    check_command "$cmd"
+    fmt.check_cmd "$cmd"
 done
 
+# # ============================================================================
+# section "16. MODIFIED SYSTEM FILES"
+# # ============================================================================
+
+# subsection "Package File Integrity Check"
+# echo -e "${CYAN}Checking for modified system files (this may take a moment)...${NC}"
+
+# # Check if debsums is installed
+# if command -v debsums &> /dev/null; then
+#     # Quick check for modified config files
+#     modified_etc=$(sudo debsums -c 2>/dev/null | grep "^/etc" | wc -l || echo "0")
+#     modified_boot=$(sudo debsums -c 2>/dev/null | grep "^/boot" | wc -l || echo "0")
+#     modified_total=$(sudo debsums -c 2>/dev/null | wc -l || echo "0")
+    
+#     fmt.info "Modified /etc files" "$modified_etc"
+#     fmt.info "Modified /boot files" "$modified_boot"
+#     fmt.info "Total modified files" "$modified_total"
+    
+#     if [ $modified_total -gt 0 ]; then
+#         echo ""
+#         echo -e "${YELLOW}  ⚠ System files have been modified from package defaults${NC}"
+#         echo -e "${YELLOW}  Run: /home/pi/_playground/_scripts/detect-modified-system-files.sh${NC}"
+#         echo -e "${YELLOW}  For detailed analysis and recommendations${NC}"
+#     else
+#         echo ""
+#         echo -e "${GREEN}  ✓ All system files match package checksums${NC}"
+#     fi
+# else
+#     fmt.info "debsums" "Not installed (run 'sudo apt install debsums' for file verification)"
+# fi
+
+# subsection "Known System Customizations"
+# if [ -f /home/pi/3dp-mods/.system-track-list ]; then
+#     tracked_files=$(wc -l < /home/pi/3dp-mods/.system-track-list)
+#     fmt.info "Tracked System Files" "$tracked_files files in system-tracker"
+    
+#     echo ""
+#     echo -e "${CYAN}  Files being tracked:${NC}"
+#     head -10 /home/pi/3dp-mods/.system-track-list | while read -r file; do
+#         echo "    • $file"
+#     done
+    
+#     if [ $tracked_files -gt 10 ]; then
+#         echo "    ... and $((tracked_files - 10)) more"
+#     fi
+# else
+#     fmt.info "System Tracker" "No tracked files"
+# fi
+
 # ============================================================================
-section "16. MODIFIED SYSTEM FILES"
-# ============================================================================
-
-subsection "Package File Integrity Check"
-echo -e "${CYAN}Checking for modified system files (this may take a moment)...${NC}"
-
-# Check if debsums is installed
-if command -v debsums &> /dev/null; then
-    # Quick check for modified config files
-    modified_etc=$(sudo debsums -c 2>/dev/null | grep "^/etc" | wc -l || echo "0")
-    modified_boot=$(sudo debsums -c 2>/dev/null | grep "^/boot" | wc -l || echo "0")
-    modified_total=$(sudo debsums -c 2>/dev/null | wc -l || echo "0")
-    
-    info "Modified /etc files" "$modified_etc"
-    info "Modified /boot files" "$modified_boot"
-    info "Total modified files" "$modified_total"
-    
-    if [ $modified_total -gt 0 ]; then
-        echo ""
-        echo -e "${YELLOW}  ⚠ System files have been modified from package defaults${NC}"
-        echo -e "${YELLOW}  Run: /home/pi/_playground/_scripts/detect-modified-system-files.sh${NC}"
-        echo -e "${YELLOW}  For detailed analysis and recommendations${NC}"
-    else
-        echo ""
-        echo -e "${GREEN}  ✓ All system files match package checksums${NC}"
-    fi
-else
-    info "debsums" "Not installed (run 'sudo apt install debsums' for file verification)"
-fi
-
-subsection "Known System Customizations"
-if [ -f /home/pi/3dp-mods/.system-track-list ]; then
-    tracked_files=$(wc -l < /home/pi/3dp-mods/.system-track-list)
-    info "Tracked System Files" "$tracked_files files in system-tracker"
-    
-    echo ""
-    echo -e "${CYAN}  Files being tracked:${NC}"
-    head -10 /home/pi/3dp-mods/.system-track-list | while read -r file; do
-        echo "    • $file"
-    done
-    
-    if [ $tracked_files -gt 10 ]; then
-        echo "    ... and $((tracked_files - 10)) more"
-    fi
-else
-    info "System Tracker" "No tracked files"
-fi
-
-# ============================================================================
-section "17. SUMMARY"
+fmt.section "17. SUMMARY"
 # ============================================================================
 
 echo ""

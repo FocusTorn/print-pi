@@ -101,16 +101,14 @@ printer_data
 
 
 
-ide_state.json
+idle_state.json
 
 
 
 .config/labwc/environment
 
 
-
-xfer/
+_removed
 
 test-source.txt
 .symlink-db
-.cursor/ide_state.json
