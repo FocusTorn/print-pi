@@ -91,8 +91,7 @@ printer_data
 .local/share/
 .local/state/
 
-# .oh-my-zsh - ignore entire directory (it's a separate git repo)
-# .oh-my-zsh/cache/
+# .oh-my-zsh - ignore entire directory (it's just a framework + our custom is symlinked from _playground)
 .oh-my-zsh/
 
 
