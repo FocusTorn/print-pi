@@ -175,6 +175,13 @@ slink() { #>
         return 1
     fi
     
+    # If destination is an existing directory, append the source filename
+    if [[ -d "$destPath" ]]; then
+        local srcBasename="${srcPath:t}"  # zsh way to get basename
+        destPath="${destPath%/}/$srcBasename"
+        print_status "Destination is a directory, creating: " "$destPath"
+    fi
+    
     # Create the symlink
     sudo ln -sf "$srcPath" "$destPath"
     

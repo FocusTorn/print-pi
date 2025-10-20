@@ -17,7 +17,9 @@ Create a concise, high-level summary of the conversation topics.
 3. **Identify main topics**: Extract the key discussion themes (exclude summary requests)
 4. **Create summary**: Write a brief, bullet-point summary
 5. **Output**: Save to **SUMMARY_OUTPUT**
-6. **Display outline** → MANDATORY: Show ONLY the `### Outline` section from the created summary file in a copy-pasteable markdown code block with:
+6. **Display summary** → MANDATORY: Show the ENTIRE summary file in a copy-pasteable markdown code block with:
+    - **Top-level fence**: Use TRIPLE BACKTICKS with markdown language identifier (```markdown)
+    - **Nested fences INSIDE the summary file**: Use TRIPLE TILDES (~~~bash, ~~~markdown) for code blocks within the summary content to allow proper rendering
     - STRICT 2-space indentation (no tabs, exactly 2 spaces per level)
     - FORMATTING RULES for display block:
         - Make items concise first, use sub-bullets only when conciseness isn't possible
@@ -57,6 +59,59 @@ Create a concise, high-level summary of the conversation topics.
 ## Summary Text
 
 [Timestamp]: Conversation summary created covering [X] messages.
+
+---
+
+## Filesystem Modifications Outside ~/
+
+### Directories/Files Created or Modified
+
+[List any directories or files created/modified outside of /home/pi/, or state "None"]
+
+### System Files Modified
+
+[List any system files modified outside of user directory, or state "None"]
+
+---
+
+## Package Installations
+
+### System Packages Installed
+
+~~~bash
+[Commands used to install system packages]
+~~~
+
+**Packages installed:**
+- [Package name and version]
+
+### Git Repositories Cloned
+
+~~~bash
+[Commands used to clone repositories]
+~~~
+
+### Configuration Files Created/Modified
+
+**Created:**
+- [File paths and descriptions]
+
+**Modified:**
+- [File paths and descriptions]
+
+### Shell Changes Attempted
+
+~~~bash
+[Commands for shell changes]
+~~~
+
+---
+
+## Git Configuration Changes
+
+~~~bash
+[Git configuration commands executed]
+~~~
 ```
 
 ## Usage
