@@ -1,0 +1,17 @@
+# Rust build artifacts
+/target/
+Cargo.lock
+
+# Runtime data directories
+/data/
+
+# Backup files
+*.bak
+*~
+
+# IDE/Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+

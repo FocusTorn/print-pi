@@ -1,57 +1,189 @@
 
+
+
+
+
 title_bar:
     display: "ChaMon - File Change Monitor (Watching)"
-    background: "#FF0000"
+
+
+baseline:
+    # Path remapping: scan one path but store as another
+    # Example: scan "/media/pi/clean-pi/rootfs" but store paths as if from "/"
+    # When creating initial baseline, you'll be prompted for the scan path,
+    # and can optionally specify a remap_to path (defaults to scan path if not specified)
+    # This is stored PER baseline, not globally
+    
+    # Directories to completely skip (don't even scan inside)
+    exclude_directories:
+        - "/dev"
+        - "/proc"
+        - "/run"
+        - "/srv"
+        - "/sys"
+        - "/tmp"
+        - "/var"
+        - "/.cursor-server"
+        - "/bin"
+        - "/lib"
+        - "/sbin"
+        - "/.local"
+        - "/home/pi"            # Covered by git repo + gitignore
+        
+        - "/media"              # Skip mounted drives
+        - "/mnt"                # Skip mount points
+    
+    # Directories where files are tracked by EXISTENCE only (no checksums)
+    # Perfect for binaries - just care if they exist, not their content
+    existence_only_directories:
+        - "/opt"
+    
+    # File extensions to treat as binaries (existence only, no checksum)
+    existence_only_extensions:
+        - ".so"
+        - ".a"
+        - ".bin"
+        - ".pyc"
+        - ".o"
+        - ".exe"
+        - ".dll"
+    
+    # Files larger than this are tracked by existence only (in bytes)
+    # All files under this limit get FULL content stored for diffing
+    content_size_limit: 102400  # 100KB
+    
+    # Log file path for tracking excluded files
+    exclusion_log: "data/baselines/size-exclusions.log"
+
+
+
+
+
+
+    
+    
+    
+    
+
 
 commands_view:
-    commands:
-        - name: "Refresh Files [B]aseline"
-          key: "b"
-          desc: "Refresh baseline checksums of system files"
-          command: "refresh"
-        
-        - name: "Show [D]ifferences"
+    select_indicator: "►"
+
+    changes_commands: #>
+        - name: "[D]iff View"
           key: "d"
           desc: "Show git diff for selected file"
           command: "diff"
-        
+
         - name: "[V]iew File"
           key: "v"
-          desc: "Open file in default editor ($EDITOR or nano)"
+          desc: "Open file in editor"
           command: "view"
-        
-        - name: "[G]enerate Change Report"
-          key: "g"
-          desc: "Generate a detailed change report"
-          command: "report"
-        
+
+        - name: "[R]efresh Changes"
+          key: "r"
+          desc: "Refresh file change list"
+          command: "refresh"
+
         - name: "[T]rack File"
           key: "t"
-          desc: "Add file to git tracking (git add)"
+          desc: "Add file to git tracking"
           command: "track"
-        
+
         - name: "[U]ntrack File"
           key: "u"
-          desc: "Remove file from git tracking (git rm --cached)"
-          command: "untrack"
+          desc: "Remove file from git tracking"
+          command: "untrack" 
+          
+    #<===================================================================
+
+    baseline_commands: #>
+        - name: "[G]enerate Baseline"
+          key: "g"
+          desc: "Create new baseline snapshot"
+          command: "baseline:generate"
+        
+
+        
+        - name: "[A]ctivate Baseline"
+          key: "a"
+          desc: "Set selected as active baseline"
+          command: "baseline:activate"
+          select: true
+        
+        - name: "[C]ompare with Active"
+          key: "c"
+          desc: "Compare current system with active baseline"
+          command: "baseline:compare"
+          select: true
+
+        - name: "[R]emove Baseline"
+          key: "r"
+          desc: "Delete selected baseline"
+          command: "baseline:remove"
+          select: true
+          
+        - name: "[O]verwrite Initial"
+          key: "o"
+          desc: "Create new initial baseline from directory"
+          command: "baseline:initialize"
+    
+    #<===================================================================
+    
+files_panel:
+    help_line: #>
+        pre_text: ""
+        post_text: ""
+        bindings:
+            - name: "[O]verwrite Initial"
+              command: baseline:remove
+              key: "del"
+        
+            - name: "[Del]: Remove Baseline"
+              key: "del"
+              command: baseline:remove
+              
+    #<===================================================================
+
+    toggles: #>
+        - name: "[F]iltered"
+          key: "f"
+          command: show:onlyFiltered
+
+    #<===================================================================
+
+    view_type: #>
+        - name: "Tracked"
+          command: "show:tracked"
+
+        - name: "Untracked"
+          command: "show:untracked"
+
+        - name: "All"
+          command: "show:all"
+
+    #<===================================================================
 
     
-    
-    
-    
-files_view:
-    tab1:
-        name: "Filtered"
-    
-    tab2:
-        name: "All"
+baseline_panel:
+    help_line: #>
+        pre_text: ""
+        post_text: ""
+        bindings:
+            - name: "[O]verwrite Initial"
+              key: "o"
+              command: "baseline:initialize"
+        
+            - name: "[Del]: Remove"
+              key: "del"
+              command: "baseline:remove"
 
+    #<===================================================================
+
+
+#  [PgUp]/[PgDn]: Cycle between file views
 
 help_line:
-    text: "↕ commands ←→ files [Q]uit [W]atch [H]elp [PgUp]/[PgDn]: Cycle between file views   "
-
-
-    
-    
+    text: "↕ commands ←→ files [Q]uit [H]elp"
     
     

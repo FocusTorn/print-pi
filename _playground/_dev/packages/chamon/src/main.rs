@@ -78,8 +78,11 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     Ok(())
 }
 
-fn run_app<B: Backend>(terminal: &mut Terminal<B>, app: &mut App) -> io::Result<()> { //>
+fn run_app<B: Backend>(terminal: &mut Terminal<B>, app: &mut App) -> io::Result<()> {
     loop {
+        // Check for fake async baseline completion
+        app.check_baseline_creation();
+        
         terminal.draw(|f| ui::ui(f, app))?;
 
         if events::handle_events(app)? {
@@ -87,7 +90,7 @@ fn run_app<B: Backend>(terminal: &mut Terminal<B>, app: &mut App) -> io::Result<
         }
     }
     Ok(())
-} //<
+}
 
 fn print_help() {
     println!("Chamon - System Monitoring TUI");
@@ -104,8 +107,8 @@ fn print_help() {
     println!("    system status, and git repository management.");
     println!();
     println!("CONTROLS:");
-    println!("    Tab           - Cycle through tabs");
+    println!("    Arrow Keys    - Navigate columns and selections");
+    println!("    Enter         - Execute selected command");
     println!("    q/Esc         - Quit the application");
-    println!("    Arrow Keys    - Navigate within tabs");
     println!();
 }
