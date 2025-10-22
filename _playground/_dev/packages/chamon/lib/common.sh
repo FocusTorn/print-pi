@@ -4,10 +4,13 @@
 # Shared utilities for system-monitor and system-tracker
 
 # Configuration
-export PLAYGROUND_DIR="${PLAYGROUND_DIR:-/home/pi/_playground}"
-export MONITOR_DIR="$PLAYGROUND_DIR/system-monitor"
-export SYSTEM_TRACK_DIR="$PLAYGROUND_DIR/system-files"
-export TRACKING_LIST="$PLAYGROUND_DIR/.system-track-list"
+# Detect script location for proper data directory placement
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." 2>/dev/null && pwd)"
+export CHAMON_DIR="${CHAMON_DIR:-$SCRIPT_DIR}"
+export CHAMON_DATA_DIR="$CHAMON_DIR/data"
+export MONITOR_DIR="$CHAMON_DATA_DIR/system-monitor"
+export SYSTEM_TRACK_DIR="$CHAMON_DATA_DIR/system-files"
+export TRACKING_LIST="$CHAMON_DATA_DIR/.system-track-list"
 
 # Output modes
 export OUTPUT_MODE="${OUTPUT_MODE:-human}"  # human, json, quiet
