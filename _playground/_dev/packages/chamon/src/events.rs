@@ -33,7 +33,12 @@ fn handle_keyboard_input(app: &mut App, key: KeyEvent) {
     
     match key_code {
         KeyCode::Char('q') | KeyCode::Esc => { //>
-            app.should_quit = true;
+            // If baseline is being created, cancel it instead of quitting
+            if app.creating_baseline {
+                app.cancel_baseline_generation();
+            } else {
+                app.should_quit = true;
+            }
         } //<
         KeyCode::Up => { //>
             app.move_up();

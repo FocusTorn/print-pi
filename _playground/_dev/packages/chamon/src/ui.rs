@@ -38,10 +38,9 @@ pub fn ui(f: &mut Frame, app: &mut App) { //>
     let content_y = title_area.y + title_area.height;
     let content_height = area.height.saturating_sub(title_area.height + 5);
     
-    // Calculate Column 1 width based on view names
-    let views = vec!["[C]hanges", "[B]aseline"];
-    let max_view_width = views.iter()
-        .map(|v| v.len())
+    // Calculate Column 1 width based on primary command names
+    let max_view_width = app.primary_commands.iter()
+        .map(|cmd| cmd.name.len())
         .max()
         .unwrap_or(10);
     let col1_width = (max_view_width + 4) as u16; // +1 left space, +1 right space, +2 borders
@@ -114,7 +113,7 @@ pub fn ui(f: &mut Frame, app: &mut App) { //>
                 hex_color(0x444444) // Dark grey when not selected and not active
             };
             
-            let indicator = Paragraph::new(&*app.config.commands_view.select_indicator)
+            let indicator = Paragraph::new(&*app.config.secondary_commands_panel.select_indicator)
                 .style(Style::default().fg(color));
             f.render_widget(indicator, Rect {
                 x: indicator_x,
@@ -292,7 +291,7 @@ fn draw_bottom_status(f: &mut Frame, area: Rect, app: &mut App, col3_x: u16) { /
         height: 1,
     });
     
-    // Line 4: Dynamic description
+    // Line 4: Dynamic description (removed progress bar - now shown in progress panel)
     let description = app.get_current_command_description();
     let desc_line = format!(" {:<width$} ", description, width = area.width as usize - 2);
     let desc_color = if popup_visible { hex_color(0x444444) } else { Color::White };
@@ -356,8 +355,6 @@ fn draw_minimal_ui(f: &mut Frame, _app: &mut App) { //>
 } //<
 
 fn draw_view_selector(f: &mut Frame, area: Rect, app: &mut App) { //>
-    let views = vec!["[C]hanges", "[B]aseline"];
-    
     let popup_visible = app.popup.is_some();
     let is_active = app.active_column == ActiveColumn::ViewSelector && !popup_visible;
     
@@ -378,12 +375,12 @@ fn draw_view_selector(f: &mut Frame, area: Rect, app: &mut App) { //>
     };
     
     // Calculate max width for padding
-    let max_width = views.iter().map(|v| v.len()).max().unwrap_or(10);
+    let max_width = app.primary_commands.iter().map(|cmd| cmd.name.len()).max().unwrap_or(10);
     
-    let items: Vec<ListItem> = views.iter().map(|view| {
+    let items: Vec<ListItem> = app.primary_commands.iter().map(|cmd| {
         // One space before, pad to max width, one space after
-        let padding = max_width - view.len();
-        let padded = format!(" {}{} ", view, " ".repeat(padding));
+        let padding = max_width - cmd.name.len();
+        let padded = format!(" {}{} ", cmd.name, " ".repeat(padding));
         ListItem::new(padded).style(Style::default().fg(text_color))
     }).collect();
     
@@ -442,7 +439,15 @@ fn draw_commands_column(f: &mut Frame, area: Rect, app: &mut App) { //>
         // One space before, pad to max width, one space after
         let padding = max_width - cmd.name.len();
         let padded = format!(" {}{} ", cmd.name, " ".repeat(padding));
-        ListItem::new(padded).style(Style::default().fg(text_color))
+        
+        // Gray out baseline:generate if no initial baseline exists
+        let item_color = if cmd.command == "baseline:generate" && app.initial_baseline_path.is_none() {
+            hex_color(0x444444) // Grayed out
+        } else {
+            text_color
+        };
+        
+        ListItem::new(padded).style(Style::default().fg(item_color))
     }).collect();
     
     // Show/hide selection based on active column
@@ -494,6 +499,12 @@ fn draw_content_column(f: &mut Frame, area: Rect, app: &mut App) { //>
 fn draw_file_changes(f: &mut Frame, area: Rect, app: &mut App) { //>
     let popup_visible = app.popup.is_some();
     let is_active = app.active_column == ActiveColumn::Content && !popup_visible;
+    
+    // Clear the entire area first to prevent leftover text
+    f.render_widget(
+        Paragraph::new("").style(Style::default().bg(hex_color(0x0A0A0A))),
+        area
+    );
     
     let border_style = if is_active {
         Style::default().fg(Color::White)
@@ -659,6 +670,36 @@ fn draw_baseline_list(f: &mut Frame, area: Rect, app: &mut App) { //>
     let popup_visible = app.popup.is_some();
     let is_active = app.active_column == ActiveColumn::Content && !popup_visible;
     
+    // Clear the entire area first to prevent leftover text
+    f.render_widget(
+        Paragraph::new("").style(Style::default().bg(hex_color(0x0A0A0A))),
+        area
+    );
+    
+    // If creating baseline, show split progress panels instead of baseline list
+    if app.creating_baseline {
+        // Split area vertically: top 30% for workers, bottom 70% for completed (scrollable)
+        let worker_height = (area.height as f32 * 0.3).max(8.0) as u16; // At least 8 lines for workers
+        
+        let worker_area = Rect {
+            x: area.x,
+            y: area.y,
+            width: area.width,
+            height: worker_height,
+        };
+        
+        let completed_area = Rect {
+            x: area.x,
+            y: area.y + worker_height,
+            width: area.width,
+            height: area.height.saturating_sub(worker_height),
+        };
+        
+        draw_worker_panel(f, worker_area, app);
+        draw_completed_panel(f, completed_area, app);
+        return;
+    }
+    
     let border_style = if is_active {
         Style::default().fg(Color::White)
     } else if popup_visible {
@@ -775,23 +816,37 @@ fn draw_popup(f: &mut Frame, area: Rect, app: &App) { //>
                 ];
                 draw_confirmation_popup(f, area, &lines, *selected_option);
             }
-            PopupType::ConfirmOverwriteInitial { selected_option, from_remove } => {
+            PopupType::ConfirmOverwriteInitial { selected_option, from_remove, has_deltas } => {
                 let lines = if *from_remove {
                     // User tried to remove Initial Baseline
-                    vec![
-                        "Cannot Delete Initial Baseline".to_string(),
-                        "".to_string(),
-                        "Would you like to overwrite it instead?".to_string(),
-                        "".to_string(),
-                        "WARNING: This will delete ALL generated baselines!".to_string(),
-                    ]
+                    if *has_deltas {
+                        vec![
+                            "Cannot Delete Initial Baseline".to_string(),
+                            "".to_string(),
+                            "Would you like to overwrite it instead?".to_string(),
+                            "".to_string(),
+                            "WARNING: This will delete ALL generated baselines!".to_string(),
+                        ]
+                    } else {
+                        vec![
+                            "Cannot Delete Initial Baseline".to_string(),
+                            "".to_string(),
+                            "Would you like to overwrite it instead?".to_string(),
+                        ]
+                    }
                 } else {
                     // User clicked "Overwrite Initial" command
-                    vec![
-                        "Overwrite Initial Baseline?".to_string(),
-                        "".to_string(),
-                        "WARNING: This will delete ALL generated baselines!".to_string(),
-                    ]
+                    if *has_deltas {
+                        vec![
+                            "Overwrite Initial Baseline?".to_string(),
+                            "".to_string(),
+                            "WARNING: This will delete ALL generated baselines!".to_string(),
+                        ]
+                    } else {
+                        vec![
+                            "Overwrite Initial Baseline?".to_string(),
+                        ]
+                    }
                 };
                 draw_confirmation_popup(f, area, &lines, *selected_option);
             }
@@ -997,7 +1052,195 @@ fn draw_input_popup(f: &mut Frame, area: Rect, prompt: &str, input: &str, cursor
     f.render_widget(popup, popup_area);
 } //<
 
+fn draw_worker_panel(f: &mut Frame, area: Rect, app: &App) { //>
+    let popup_visible = app.popup.is_some();
+    
+    let border_style = if popup_visible {
+        Style::default().fg(hex_color(0x222222))
+    } else {
+        Style::default().fg(Color::Yellow) // Yellow border during scanning
+    };
+    let border_type = BorderType::Rounded;
+    
+    // Title with summary
+    let active_files: usize = app.baseline_progress.iter().map(|(_, count, _)| count).sum();
+    let completed_files: usize = app.baseline_completed.iter().map(|(_, count)| count).sum();
+    let total_files = active_files + completed_files;
+    
+    let title = if app.creating_initial {
+        format!(" Creating Initial | {} files | {} workers active ", total_files, app.baseline_progress.len())
+    } else {
+        format!(" Generating Delta | {} files | {} workers active ", total_files, app.baseline_progress.len())
+    };
+    
+    let block = Block::default()
+        .title(title)
+        .borders(Borders::ALL)
+        .border_type(border_type)
+        .border_style(border_style);
+    
+    f.render_widget(block, area);
+    
+    // Content area (inside border)
+    let content_area = Rect {
+        x: area.x + 1,
+        y: area.y + 1,
+        width: area.width.saturating_sub(2),
+        height: area.height.saturating_sub(2),
+    };
+    
+    let mut lines = Vec::new();
+    
+    // Show active threads or completion message
+    if !app.baseline_progress.is_empty() {
+        for (thread_name, file_count, current_path) in &app.baseline_progress {
+            let thread_color = if popup_visible { hex_color(0x555555) } else { hex_color(0xAAFFAA) };
+            let path_color = if popup_visible { hex_color(0x333333) } else { hex_color(0x888888) };
+            
+            // Get throbber
+            let throbber = app.get_throbber();
+            
+            // Calculate space for path truncation
+            let prefix_len = thread_name.len() + file_count.to_string().len() + 15; // throbber + ": " + " files | "
+            let max_path_len = (content_area.width as usize).saturating_sub(prefix_len);
+            let display_path = if current_path.len() > max_path_len {
+                format!("...{}", &current_path[current_path.len().saturating_sub(max_path_len.saturating_sub(3))..])
+            } else {
+                current_path.clone()
+            };
+            
+            // All on one line: throbber + thread_name + file_count + path
+            lines.push(Line::from(vec![
+                Span::styled(format!("{} ", throbber), Style::default().fg(Color::Yellow)),
+                Span::styled(
+                    format!("{}: ", thread_name),
+                    Style::default().fg(thread_color).add_modifier(Modifier::BOLD)
+                ),
+                Span::styled(
+                    format!("{} files", file_count),
+                    Style::default().fg(Color::White)
+                ),
+                Span::styled(
+                    format!(" | {}", display_path),
+                    Style::default().fg(path_color).add_modifier(Modifier::DIM)
+                ),
+            ]));
+        }
+        
+        let paragraph = Paragraph::new(lines)
+            .alignment(Alignment::Left);
+        
+        f.render_widget(paragraph, content_area);
+    } else if app.creating_baseline {
+        // All directories completed, waiting for final results
+        let throbber = app.get_throbber();
+        let lines = vec![
+            Line::from(Span::styled(
+                format!("{} Finalizing baseline...", throbber),
+                Style::default().fg(Color::Yellow).add_modifier(Modifier::BOLD)
+            )),
+        ];
+        
+        let paragraph = Paragraph::new(lines)
+            .alignment(Alignment::Center);
+        
+        f.render_widget(paragraph, Rect {
+            x: content_area.x,
+            y: content_area.y + content_area.height / 2,
+            width: content_area.width,
+            height: 1,
+        });
+    } else {
+        // Not creating baseline, show "no progress" message
+        let lines = vec![
+            Line::from(Span::styled(
+                "No baseline creation in progress",
+                Style::default().fg(hex_color(0x666666)).add_modifier(Modifier::DIM)
+            )),
+        ];
+        
+        let paragraph = Paragraph::new(lines)
+            .alignment(Alignment::Center);
+        
+        f.render_widget(paragraph, Rect {
+            x: content_area.x,
+            y: content_area.y + content_area.height / 2,
+            width: content_area.width,
+            height: 1,
+        });
+    }
+} //<
 
+fn draw_completed_panel(f: &mut Frame, area: Rect, app: &App) { //>
+    let popup_visible = app.popup.is_some();
+    
+    let border_style = if popup_visible {
+        Style::default().fg(hex_color(0x222222))
+    } else {
+        Style::default().fg(hex_color(0x44AA44)) // Green border for completed
+    };
+    let border_type = BorderType::Rounded;
+    
+    // Title with count
+    let title = format!(" Completed ({}) ", app.baseline_completed.len());
+    
+    let block = Block::default()
+        .title(title)
+        .borders(Borders::ALL)
+        .border_type(border_type)
+        .border_style(border_style);
+    
+    f.render_widget(block, area);
+    
+    // Content area (inside border)
+    let content_area = Rect {
+        x: area.x + 1,
+        y: area.y + 1,
+        width: area.width.saturating_sub(2),
+        height: area.height.saturating_sub(2),
+    };
+    
+    if !app.baseline_completed.is_empty() {
+        let completed_color = if popup_visible { hex_color(0x444444) } else { hex_color(0x44AA44) };
+        
+        let items: Vec<ListItem> = app.baseline_completed.iter().map(|(dir_name, file_count)| {
+            let line = Line::from(vec![
+                Span::styled("  ✓ ", Style::default().fg(Color::Green)),
+                Span::styled(
+                    format!("{}: ", dir_name),
+                    Style::default().fg(completed_color)
+                ),
+                Span::styled(
+                    format!("{} files", file_count),
+                    Style::default().fg(hex_color(0x888888))
+                ),
+            ]);
+            ListItem::new(line)
+        }).collect();
+        
+        // TODO: Add scrolling support with ListState if needed
+        let list = List::new(items);
+        f.render_widget(list, content_area);
+    } else {
+        // No completed yet
+        let lines = vec![
+            Line::from(Span::styled(
+                "No directories completed yet",
+                Style::default().fg(hex_color(0x666666)).add_modifier(Modifier::DIM)
+            )),
+        ];
+        
+        let paragraph = Paragraph::new(lines)
+            .alignment(Alignment::Center);
+        
+        f.render_widget(paragraph, Rect {
+            x: content_area.x,
+            y: content_area.y + content_area.height / 2,
+            width: content_area.width,
+            height: 1,
+        });
+    }
+} //<
 
 
 
