@@ -14,9 +14,12 @@ path = "src/main.rs"
 [dependencies]
 chrono = "0.4"
 crossterm = "0.29.0"
+dashmap = "6.1"
 md5 = "0.7"
 notify = "8.2.0"
+num_cpus = "1.16"
 ratatui = "0.29.0"
+rayon = "1.10"
 serde = { version = "1.0.228", features = ["derive"] }
 serde_json = "1.0.145"
 serde_yaml = "0.9.34"

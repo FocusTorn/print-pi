@@ -1,10 +1,12 @@
 use serde::{Deserialize, Serialize};
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 use std::fs::{self, File};
 use std::io::{self, BufReader, BufWriter, Read};
 use std::path::{Path, PathBuf};
 use std::time::SystemTime;
 use std::os::unix::fs::MetadataExt;
+use std::sync::{Arc, Mutex};
+use std::sync::atomic::{AtomicBool, Ordering};
 use crate::config::BaselineConfig;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -53,7 +55,20 @@ pub struct Baseline {
     pub file_count: usize,
     pub is_delta: bool,         // True if this is a delta (only changed files)
     pub files: HashMap<String, FileEntry>,  // For delta: only changed/added files
+    pub changed_files: Vec<String>,         // For delta: files that existed in initial and changed
+    pub new_files_manual: Vec<String>,      // For delta: NEW files (manual install)
+    pub new_files_package: HashMap<String, String>,  // For delta: NEW files from packages (path -> package name)
     pub deleted_files: Vec<String>,         // For delta: files deleted since initial
+    pub packages_added_manual: Vec<String>,     // For delta: NEW packages (manually installed)
+    pub packages_added_auto: Vec<String>,       // For delta: NEW packages (auto dependencies)
+    pub packages_removed: Vec<String>,          // For delta: Packages removed
+    pub packages_upgraded: Vec<String>,         // For delta: Packages upgraded (version changed)
+    
+    // Package snapshot (for both initial and delta)
+    #[serde(default)]
+    pub installed_packages: HashMap<String, String>,  // package_name -> version
+    #[serde(default)]
+    pub manual_packages: Vec<String>,  // List of manually installed packages (not auto-deps)
 }
 
 #[derive(Debug, Clone)]
@@ -78,8 +93,18 @@ impl Baseline {
     /// * `remap_to` - Logical path to remap to (e.g., "/"). If empty, uses scan_path.
     /// * `config` - Baseline configuration
     pub fn create(scan_path: &str, remap_to: &str, config: &BaselineConfig) -> io::Result<Self> {
+        let cancel_flag = Arc::new(AtomicBool::new(false));
+        Self::create_with_progress(scan_path, remap_to, config, cancel_flag, |_, _, _| {})
+    }
+    
+    pub fn create_with_progress<F>(scan_path: &str, remap_to: &str, config: &BaselineConfig, cancel_flag: Arc<AtomicBool>, progress_callback: F) -> io::Result<Self> 
+    where F: FnMut(&str, usize, &str) + Send + 'static,
+    {
         let mut files = HashMap::new();
         let mut size_excluded = Vec::new(); // Track files excluded by size
+        
+        // Wrap callback in Arc<Mutex> for scan_parallel
+        let callback = Arc::new(Mutex::new(progress_callback));
         
         // Normalize paths (remove trailing slashes, except for root "/")
         let scan_path_normalized = if scan_path == "/" {
@@ -99,13 +124,14 @@ impl Baseline {
         // Scan the specified directory
         let scan_path_obj = Path::new(scan_path_normalized);
         if scan_path_obj.exists() {
-            Self::scan_directory_recursive(
+            let callback_clone = Arc::clone(&callback);
+            (files, size_excluded) = Self::scan_parallel(
                 scan_path_obj,
-                &mut files,
-                &mut size_excluded,
                 config,
                 scan_path_normalized,
                 remap_to_normalized,
+                cancel_flag,
+                callback_clone,
             )?;
         }
         
@@ -115,6 +141,19 @@ impl Baseline {
         }
 
         let file_count = files.len();
+        
+        // Capture package state at baseline creation
+        if let Ok(mut cb) = callback.lock() {
+            cb("Capturing package state", file_count, "Querying dpkg and apt-mark...");
+        }
+        // Query packages from the scan_path root, not the live system
+        let (installed_packages, manual_package_set) = Self::get_installed_packages_from_root(Some(&scan_path_normalized));
+        let manual_packages: Vec<String> = manual_package_set.into_iter().collect();
+        
+        if let Ok(mut cb) = callback.lock() {
+            cb("Package snapshot complete", installed_packages.len(), &format!("Captured {} packages", installed_packages.len()));
+        }
+        
         let created_at = SystemTime::now()
             .duration_since(SystemTime::UNIX_EPOCH)
             .unwrap()
@@ -130,14 +169,57 @@ impl Baseline {
             file_count,
             is_delta: false,
             files,
+            changed_files: vec![],           // Not a delta
+            new_files_manual: vec![],        // Not a delta
+            new_files_package: HashMap::new(),  // Not a delta
             deleted_files: vec![],
+            packages_added_manual: vec![],   // Not a delta
+            packages_added_auto: vec![],     // Not a delta
+            packages_removed: vec![],        // Not a delta
+            packages_upgraded: vec![],       // Not a delta
+            installed_packages,
+            manual_packages,
         })
     }
 
     /// Create a delta baseline by comparing current state to initial baseline
     pub fn create_delta(data_dir: &Path, config: &BaselineConfig) -> io::Result<Self> {
+        let cancel_flag = Arc::new(AtomicBool::new(false));
+        Self::create_delta_with_progress(data_dir, config, cancel_flag, |_, _, _| {})
+    }
+    
+    pub fn create_delta_with_progress<F>(data_dir: &Path, config: &BaselineConfig, cancel_flag: Arc<AtomicBool>, progress_callback: F) -> io::Result<Self>
+    where F: FnMut(&str, usize, &str) + Send + 'static,
+    {
         // Load initial baseline
         let initial = Self::load_initial(data_dir)?;
+        
+        // Wrap callback in Arc<Mutex> for shared access
+        let callback = Arc::new(Mutex::new(progress_callback));
+        
+        // Build package database for filtering (one-time cost, ~30+ seconds)
+        // Create a progress callback wrapper that works with build_package_database's signature
+        let callback_clone = Arc::clone(&callback);
+        let cancel_clone = Arc::clone(&cancel_flag);
+        let (package_file_set, file_to_package_map) = Self::build_package_database(cancel_clone, Arc::new(Mutex::new(move |current, _total, status: String| {
+            if let Ok(mut cb) = callback_clone.lock() {
+                cb("Building package database", current, &status);
+            }
+        })))?;
+        
+        // Notify database build complete
+        if let Ok(mut cb) = callback.lock() {
+            cb("Package database ready", package_file_set.len(), "Querying current packages...");
+        }
+        
+        // Get current package list to compare against initial baseline
+        let (current_packages, current_manual_packages) = Self::get_installed_packages();
+        
+        if let Ok(mut cb) = callback.lock() {
+            cb("Package queries complete", current_packages.len(), "Starting filesystem scan...");
+        }
+        let initial_packages = &initial.installed_packages;
+        let initial_manual_packages: HashSet<String> = initial.manual_packages.iter().cloned().collect();
         
         // Scan LIVE filesystem (remap_to path) to compare against initial
         // Example: initial was scanned from /media/pi/clean-pi/rootfs (clean reference)
@@ -146,13 +228,17 @@ impl Baseline {
         let mut size_excluded = Vec::new();
         let live_path = Path::new(&initial.remap_to);
         if live_path.exists() {
-            Self::scan_directory_recursive(
+            // Clone callback Arc for scan_parallel
+            let callback_clone = Arc::clone(&callback);
+            
+            // Use parallel scanning for delta too
+            (current_files, size_excluded) = Self::scan_parallel(
                 live_path,
-                &mut current_files,
-                &mut size_excluded,
                 config,
-                &initial.remap_to,  // Scan the live system
-                &initial.remap_to,  // Store paths as-is (no remapping for delta)
+                &initial.remap_to,
+                &initial.remap_to,
+                cancel_flag,
+                callback_clone,
             )?;
         }
         
@@ -161,8 +247,11 @@ impl Baseline {
             Self::write_exclusion_log(&size_excluded, config)?;
         }
         
-        // Find changes
-        let mut changed_files = HashMap::new();
+        // Find changes - separate changed, new manual, and new package files
+        let mut all_files = HashMap::new();
+        let mut changed_file_paths = Vec::new();
+        let mut new_manual_paths = Vec::new();
+        let mut new_package_file_map = HashMap::new();  // path -> package name
         let mut deleted_files = Vec::new();
         
         // Check for modified and deleted files
@@ -170,7 +259,8 @@ impl Baseline {
             if let Some(current_entry) = current_files.get(path) {
                 // File exists, check if changed
                 if Self::has_changed(&initial_entry.track_mode, &current_entry.track_mode) {
-                    changed_files.insert(path.clone(), current_entry.clone());
+                    all_files.insert(path.clone(), current_entry.clone());
+                    changed_file_paths.push(path.clone());
                 }
             } else {
                 // File was deleted
@@ -178,19 +268,94 @@ impl Baseline {
             }
         }
         
-        // Check for new files
+        // Check for new files (didn't exist in initial)
+        // Separate manual vs package-managed files
+        if let Ok(mut cb) = callback.lock() {
+            cb("Analyzing changes", all_files.len(), "Checking package database...");
+        }
+        
         for (path, current_entry) in &current_files {
             if !initial.files.contains_key(path) {
-                // New file
-                changed_files.insert(path.clone(), current_entry.clone());
+                // New file - check if it's package-managed
+                let is_package_db = package_file_set.contains(path);
+                let is_package_heuristic = Self::is_likely_package_file(path, &package_file_set);
+                
+                if is_package_db || is_package_heuristic {
+                    // Package-managed file - store with package name
+                    all_files.insert(path.clone(), current_entry.clone());
+                    let package_name = file_to_package_map.get(path)
+                        .cloned()
+                        .unwrap_or_else(|| "raspi-firmware".to_string()); // Default for /boot/firmware
+                    new_package_file_map.insert(path.clone(), package_name);
+                } else {
+                    // Truly new file (manual install)
+                    all_files.insert(path.clone(), current_entry.clone());
+                    new_manual_paths.push(path.clone());
+                }
             }
         }
         
-        let file_count = changed_files.len() + deleted_files.len();
+        // Compare packages (added/removed/upgraded) - separate manual vs auto
+        let mut packages_added_manual = Vec::new();
+        let mut packages_added_auto = Vec::new();
+        let mut packages_removed = Vec::new();
+        let mut packages_upgraded = Vec::new();
+        
+        // Find added and upgraded packages
+        for (pkg, version) in &current_packages {
+            if let Some(initial_version) = initial_packages.get(pkg) {
+                // Package existed in initial baseline - check if upgraded
+                if version != initial_version {
+                    packages_upgraded.push(format!("{}: {} -> {}", pkg, initial_version, version));
+                }
+            } else {
+                // NEW package (not in initial baseline at all)
+                let pkg_str = format!("{} ({})", pkg, version);
+                
+                // For NEW packages, categorize by manual vs auto
+                // A package is "manual" if it's currently manual AND wasn't manual in initial baseline
+                let is_currently_manual = current_manual_packages.contains(pkg);
+                let was_initially_manual = initial_manual_packages.contains(pkg);
+                
+                if is_currently_manual && !was_initially_manual {
+                    // NEWLY manual (user installed this)
+                    packages_added_manual.push(pkg_str);
+                } else {
+                    // Auto dependency (even if currently marked manual, it was in initial baseline)
+                    packages_added_auto.push(pkg_str);
+                }
+            }
+        }
+        
+        // Find removed packages
+        for (pkg, version) in initial_packages {
+            if !current_packages.contains_key(pkg) {
+                packages_removed.push(format!("{} ({})", pkg, version));
+            }
+        }
+        
+        // Sort the lists for consistency
+        changed_file_paths.sort();
+        new_manual_paths.sort();
+        deleted_files.sort();
+        packages_added_manual.sort();
+        packages_added_auto.sort();
+        packages_removed.sort();
+        packages_upgraded.sort();
+        
+        // Send final progress update
+        if let Ok(mut cb) = callback.lock() {
+            cb("Analysis complete", all_files.len(), &format!("Found {} changes", all_files.len()));
+        }
+        
+        let file_count = all_files.len() + deleted_files.len();
         let created_at = SystemTime::now()
             .duration_since(SystemTime::UNIX_EPOCH)
             .unwrap()
             .as_secs();
+        
+        // Convert current package sets to storable format
+        let current_manual_packages_vec: Vec<String> = current_manual_packages.into_iter().collect();
         
         Ok(Baseline {
             created_at,
@@ -201,8 +366,17 @@ impl Baseline {
             remap_to: initial.remap_to.clone(),   // No remapping for delta (already at target)
             file_count,
             is_delta: true,
-            files: changed_files,
+            files: all_files,
+            changed_files: changed_file_paths,
+            new_files_manual: new_manual_paths,
+            new_files_package: new_package_file_map,
             deleted_files,
+            packages_added_manual,
+            packages_added_auto,
+            packages_removed,
+            packages_upgraded,
+            installed_packages: current_packages,
+            manual_packages: current_manual_packages_vec,
         })
     }
 
@@ -253,6 +427,204 @@ impl Baseline {
         }
 
         Ok(())
+    }
+    
+    /// Scan directory recursively with streaming progress (single pass, no pre-counting)
+    fn scan_directory_recursive_streaming<F>(
+        path: &Path,
+        results: &mut HashMap<String, FileEntry>,
+        size_excluded: &mut Vec<(String, u64)>,
+        config: &BaselineConfig,
+        scan_path: &str,
+        remap_to: &str,
+        progress_callback: &mut F,
+        current_count: usize,
+    ) -> io::Result<usize>
+    where F: FnMut(usize, usize, &str),
+    {
+        let mut processed_count = current_count;
+        
+        // Check if this directory should be excluded (check against REMAPPED path)
+        if let Some(path_str) = path.to_str() {
+            let remapped_path = Self::remap_path(path_str, scan_path, remap_to);
+            for exclude in &config.exclude_directories {
+                if remapped_path.starts_with(exclude.as_str()) {
+                    return Ok(processed_count);
+                }
+            }
+        }
+
+        if path.is_file() {
+            // Process this file
+            match Self::process_file(path, config, scan_path, remap_to) {
+                Ok((file_entry, excluded_info)) => {
+                    let file_path = file_entry.path.clone();
+                    results.insert(file_entry.path.clone(), file_entry);
+                    if let Some((path, size)) = excluded_info {
+                        size_excluded.push((path, size));
+                    }
+                    
+                    // Update progress (use 0 for total since we don't know yet - streaming mode)
+                    processed_count += 1;
+                    progress_callback(processed_count, 0, &file_path);
+                }
+                Err(_) => {
+                    // Skip files we can't read
+                }
+            }
+        } else if path.is_dir() {
+            // Recursively scan subdirectories
+            if let Ok(entries) = fs::read_dir(path) {
+                for entry in entries.flatten() {
+                    let entry_path = entry.path();
+                    // Avoid following symlinks to prevent cycles
+                    if let Ok(metadata) = fs::symlink_metadata(&entry_path) {
+                        if !metadata.is_symlink() {
+                            processed_count = Self::scan_directory_recursive_streaming(
+                                &entry_path, 
+                                results, 
+                                size_excluded, 
+                                config, 
+                                scan_path, 
+                                remap_to,
+                                progress_callback,
+                                processed_count,
+                            )?;
+                        }
+                    }
+                }
+            }
+        }
+
+        Ok(processed_count)
+    }
+    
+    /// Parallel scanning with rayon - automatic work stealing and thread management
+    fn scan_parallel<F>(
+        scan_path: &Path,
+        config: &BaselineConfig,
+        scan_path_str: &str,
+        remap_to_str: &str,
+        cancel_flag: Arc<AtomicBool>,
+        callback: Arc<Mutex<F>>,
+    ) -> io::Result<(HashMap<String, FileEntry>, Vec<(String, u64)>)>
+    where F: FnMut(&str, usize, &str) + Send + 'static,
+    {
+        use rayon::prelude::*;
+        use dashmap::DashMap;
+        // Check if cancelled before starting
+        if cancel_flag.load(Ordering::Relaxed) {
+            return Err(io::Error::new(io::ErrorKind::Interrupted, "Scan cancelled"));
+        }
+        
+        // Thread-safe collections using dashmap (no locks needed!)
+        let files = Arc::new(DashMap::new());
+        let size_excluded = Arc::new(Mutex::new(Vec::new()));
+        
+        // Get top-level directories for parallel scanning
+        let mut top_level_dirs = Vec::new();
+        if let Ok(entries) = fs::read_dir(scan_path) {
+            for entry in entries.flatten() {
+                let path = entry.path();
+                if path.is_dir() {
+                    // Check if not excluded (use ONLY remapped path for remap feature)
+                    if let Some(path_str) = path.to_str() {
+                        let remapped = Self::remap_path(path_str, scan_path_str, remap_to_str);
+                        let mut excluded = false;
+                        for exclude in &config.exclude_directories {
+                            if remapped.starts_with(exclude.as_str()) {
+                                excluded = true;
+                                break;
+                            }
+                        }
+                        if !excluded {
+                            top_level_dirs.push(path);
+                        }
+                    }
+                }
+            }
+        }
+        
+        if top_level_dirs.is_empty() {
+            // No subdirectories, just scan root (single-threaded)
+            let mut local_files = HashMap::new();
+            let mut local_size_excluded = Vec::new();
+            Self::scan_directory_recursive_streaming(
+                scan_path,
+                &mut local_files,
+                &mut local_size_excluded,
+                config,
+                scan_path_str,
+                remap_to_str,
+                &mut |_count, _total, path| {
+                    if let Ok(mut cb) = callback.lock() {
+                        cb(scan_path_str, _count, path);
+                    }
+                },
+                0,
+            )?;
+            Ok((local_files, local_size_excluded))
+        } else {
+            // RAYON PARALLEL SCANNING - automatic work stealing!
+            // Scan directories in parallel using rayon
+            let result: Result<(), io::Error> = top_level_dirs.par_iter().try_for_each(|dir| {
+                // Check cancellation
+                if cancel_flag.load(Ordering::Relaxed) {
+                    return Err(io::Error::new(io::ErrorKind::Interrupted, "Cancelled"));
+                }
+                
+                let physical_path = dir.to_string_lossy().to_string();
+                let display_path = Self::remap_path(&physical_path, scan_path_str, remap_to_str);
+                
+                // Recursively scan this directory
+                let mut local_files = HashMap::new();
+                let mut local_size_excluded = Vec::new();
+                let local_file_count = Self::scan_directory_recursive_streaming(
+                    dir,
+                    &mut local_files,
+                    &mut local_size_excluded,
+                    config,
+                    scan_path_str,
+                    remap_to_str,
+                    &mut |count, _total, path| {
+                        if let Ok(mut cb) = callback.lock() {
+                            cb(&display_path, count, path);
+                        }
+                    },
+                    0,
+                )?;
+                
+                // Merge results into shared collections
+                for (path, entry) in local_files {
+                    files.insert(path, entry);
+                }
+                
+                        if let Ok(mut excluded) = size_excluded.lock() {
+                    excluded.extend(local_size_excluded);
+                    }
+                    
+                // Notify completion
+                    if let Ok(mut cb) = callback.lock() {
+                    cb(&format!("DONE:{}", display_path), local_file_count, "");
+                }
+                
+                Ok(())
+            });
+            
+            // Check if cancelled or error
+            result?;
+            
+            // Extract results from dashmap - no Arc::try_unwrap needed!
+            let final_files: HashMap<String, FileEntry> = files.iter()
+                .map(|entry| (entry.key().clone(), entry.value().clone()))
+                .collect();
+            
+            let final_size_excluded = size_excluded.lock()
+                .map_err(|e| io::Error::new(io::ErrorKind::Other, format!("Lock poisoned: {:?}", e)))?
+                .clone();
+            
+            Ok((final_files, final_size_excluded))
+        }
     }
     
     /// Write exclusion log for files that were too large
@@ -377,7 +749,19 @@ impl Baseline {
             }
         }
 
-        // Rule 3: Check if file is too large (existence only + LOG IT)
+        // Rule 3: Check for extensionless binaries (executable bit check)
+        // This covers the "missing case" - files with no extension that are binaries
+        if path.extension().is_none() && Self::is_executable(&metadata) {
+            return Ok((TrackMode::Exists {
+                size,
+                modified,
+                permissions,
+                owner,
+                group,
+            }, false)); // Not excluded by size
+        }
+
+        // Rule 4: Check if file is too large (existence only + LOG IT)
         if size > config.content_size_limit {
             return Ok((TrackMode::Exists {
                 size,
@@ -420,6 +804,17 @@ impl Baseline {
                 }, false))
             }
         }
+    }
+
+    /// Check if a file is executable (has executable bit set)
+    /// This is a fast stat() call - much faster than file type detection
+    fn is_executable(metadata: &std::fs::Metadata) -> bool {
+        use std::os::unix::fs::PermissionsExt;
+        let permissions = metadata.permissions();
+        let mode = permissions.mode();
+        
+        // Check for any executable bit (user, group, or other)
+        (mode & 0o111) != 0
     }
 
     /// Save baseline to file
@@ -583,6 +978,381 @@ impl Baseline {
             }
             _ => true, // Different tracking modes = changed
         }
+    }
+    
+    /// Get list of installed packages with versions and install type
+    /// Returns (all_packages, manually_installed_set)
+    fn get_installed_packages() -> (HashMap<String, String>, std::collections::HashSet<String>) {
+        Self::get_installed_packages_from_root(None)
+    }
+    
+    fn get_installed_packages_from_root(root_path: Option<&str>) -> (HashMap<String, String>, std::collections::HashSet<String>) {
+        use std::process::Command;
+        use std::collections::HashSet;
+        use std::thread;
+        
+        // Spawn parallel workers for package queries
+        let root_clone = root_path.map(|s| s.to_string());
+        let all_packages_handle = thread::spawn(move || {
+            let mut packages = HashMap::new();
+            let mut cmd = Command::new("dpkg-query");
+            
+            // Add --root flag if scanning from a different root
+            if let Some(root) = root_clone {
+                cmd.arg(format!("--root={}", root));
+            }
+            
+            let output = cmd
+                .arg("-W")
+                .arg("-f=${Package}\\t${Version}\\n")
+                .output();
+            
+            if let Ok(result) = output {
+                if result.status.success() {
+                    let stdout = String::from_utf8_lossy(&result.stdout);
+                    for line in stdout.lines() {
+                        let parts: Vec<&str> = line.split('\t').collect();
+                        if parts.len() == 2 {
+                            packages.insert(parts[0].to_string(), parts[1].to_string());
+                        }
+                    }
+                }
+            }
+            packages
+        });
+        
+        let root_clone2 = root_path.map(|s| s.to_string());
+        let manual_packages_handle = thread::spawn(move || {
+            let mut manually_installed = HashSet::new();
+            
+            // If we have a root path, we need to read the apt/dpkg database from that root
+            if let Some(root) = root_clone2 {
+                // Read /var/lib/apt/extended_states from the alternate root
+                let states_path = format!("{}/var/lib/apt/extended_states", root);
+                if let Ok(content) = std::fs::read_to_string(&states_path) {
+                    let mut current_package = String::new();
+                    let mut is_auto = false;
+                    
+                    for line in content.lines() {
+                        if line.starts_with("Package: ") {
+                            current_package = line[9..].trim().to_string();
+                            is_auto = false;
+                        } else if line.starts_with("Auto-Installed: 1") {
+                            is_auto = true;
+                        } else if line.is_empty() && !current_package.is_empty() {
+                            if !is_auto {
+                                manually_installed.insert(current_package.clone());
+                            }
+                            current_package.clear();
+                        }
+                    }
+                }
+            } else {
+                // Use apt-mark for live system
+                let output = Command::new("apt-mark")
+                    .arg("showmanual")
+                    .output();
+                
+                if let Ok(result) = output {
+                    if result.status.success() {
+                        let stdout = String::from_utf8_lossy(&result.stdout);
+                        for line in stdout.lines() {
+                            let trimmed = line.trim();
+                            if !trimmed.is_empty() {
+                                manually_installed.insert(trimmed.to_string());
+                            }
+                        }
+                    }
+                }
+            }
+            manually_installed
+        });
+        
+        // Wait for both workers to complete
+        let all_packages = all_packages_handle.join().unwrap_or_default();
+        let manually_installed = manual_packages_handle.join().unwrap_or_default();
+        
+        (all_packages, manually_installed)
+    }
+    
+    /// Build a fast package file database (one-time cost)
+    /// Returns (HashSet of files, HashMap of file->package mappings)
+    fn build_package_database<F>(cancel_flag: Arc<AtomicBool>, progress_callback: Arc<Mutex<F>>) -> io::Result<(std::collections::HashSet<String>, HashMap<String, String>)>
+    where F: FnMut(usize, usize, String) + Send + 'static
+    {
+        use std::process::Command;
+        use std::collections::HashSet;
+        use rayon::prelude::*;
+        use dashmap::DashMap;
+        use std::sync::atomic::{AtomicUsize, Ordering};
+        
+        // Get all installed packages
+        let (packages, _manually_installed) = Self::get_installed_packages();
+        let total_packages = packages.len();
+        
+        // Get rayon thread pool info
+        let num_threads = rayon::current_num_threads();
+        
+        if let Ok(mut cb) = progress_callback.lock() {
+            cb(0, total_packages, format!("Starting parallel build with {} threads...", num_threads));
+        }
+        
+        // Convert to vec for parallel iteration
+        let packages_vec: Vec<(String, String)> = packages.into_iter().collect();
+        
+        // Thread-safe containers
+        let file_to_package_map = DashMap::new();
+        let processed_count = Arc::new(AtomicUsize::new(0));
+        
+        // Spawn a progress reporter thread that periodically checks the counter
+        let processed_clone = Arc::clone(&processed_count);
+        let progress_clone = Arc::clone(&progress_callback);
+        let cancel_clone = Arc::clone(&cancel_flag);
+        let progress_handle = std::thread::spawn(move || {
+            let mut last_reported = 0;
+            loop {
+                if cancel_clone.load(Ordering::Relaxed) {
+                    break;
+                }
+                
+                let current = processed_clone.load(Ordering::Relaxed);
+                if current != last_reported {
+                    if let Ok(mut cb) = progress_clone.lock() {
+                        cb(current, total_packages, format!("Processing dpkg -L ({}/{})", current, total_packages));
+                    }
+                    last_reported = current;
+                }
+                
+                if current >= total_packages {
+                    break;
+                }
+                
+                std::thread::sleep(std::time::Duration::from_millis(100));
+            }
+        });
+        
+        // Process packages in parallel using rayon
+        let processed_for_closure = Arc::clone(&processed_count);
+        let result = packages_vec.par_iter().try_for_each(|(package, _version)| -> Result<(), ()> {
+            // Check for cancellation
+            if cancel_flag.load(Ordering::Relaxed) {
+                return Err(()); // Stop processing
+            }
+            let output = Command::new("dpkg")
+                .arg("-L")
+                .arg(package)
+                .output();
+            
+            if let Ok(result) = output {
+                if result.status.success() {
+                    let stdout = String::from_utf8_lossy(&result.stdout);
+                    for line in stdout.lines() {
+                        let trimmed = line.trim();
+                        if !trimmed.is_empty() && trimmed.starts_with('/') {
+                            file_to_package_map.insert(trimmed.to_string(), package.clone());
+                        }
+                    }
+                }
+            }
+            
+            // Update progress counter (but don't call callback from parallel context)
+            let _ = processed_for_closure.fetch_add(1, Ordering::Relaxed);
+            
+            Ok(())
+        });
+        
+        // Wait for progress thread to finish
+        let _ = progress_handle.join();
+        
+        // Check if cancelled
+        if cancel_flag.load(Ordering::Relaxed) {
+            return Err(io::Error::new(io::ErrorKind::Interrupted, "Operation cancelled"));
+        }
+        
+        // Update progress after parallel processing
+        let processed = processed_count.load(Ordering::Relaxed);
+        if let Ok(mut cb) = progress_callback.lock() {
+            cb(processed, total_packages, format!("Processed {} packages in parallel...", processed));
+        }
+        
+        // Convert DashMap to regular HashMap and HashSet
+        let mut package_files = HashSet::new();
+        let mut file_to_package = HashMap::new();
+        
+        for entry in file_to_package_map.iter() {
+            let path = entry.key().clone();
+            let pkg = entry.value().clone();
+            package_files.insert(path.clone());
+            file_to_package.insert(path, pkg);
+        }
+        
+        if let Ok(mut cb) = progress_callback.lock() {
+            cb(total_packages, total_packages, format!("Complete! Indexed {} files", package_files.len()));
+        }
+        
+        Ok((package_files, file_to_package))
+    }
+    
+    /// Check if a file is likely package-managed using database + heuristics
+    /// Combines dpkg database lookup with pattern-based rules for files dpkg doesn't track
+    fn is_likely_package_file(path: &str, package_db: &std::collections::HashSet<String>) -> bool {
+        // First check dpkg database
+        if package_db.contains(path) {
+            return true;
+        }
+        
+        // Fallback heuristics for files dpkg doesn't track (like /boot/firmware)
+        
+        // Boot firmware files (raspi-firmware package, but dpkg doesn't track them)
+        if path.starts_with("/boot/firmware/") {
+            // Firmware binaries and device trees are package-managed
+            if path.ends_with(".dtb") || path.ends_with(".dtbo") ||
+               path.ends_with(".bin") || path.ends_with(".dat") ||
+               path.ends_with(".img") || path.ends_with(".elf") ||
+               path.contains("/overlays/") ||
+               path.contains("kernel") || path.contains("initramfs") ||
+               path.contains("fixup") || path.contains("bootcode") ||
+               path.ends_with("LICENCE.broadcom") || path.ends_with("issue.txt") {
+                return true;
+            }
+            
+            // Config files and custom files are manual
+            if path.ends_with("config.txt") || path.ends_with("cmdline.txt") ||
+               path.ends_with("ssh") || path.ends_with("wpa_supplicant.conf") {
+                return false;
+            }
+        }
+        
+        // Default: not a package file
+        false
+    }
+    
+    /// Export delta baseline changes to a text file
+    /// Uses pre-computed lists from delta creation (already verified against dpkg)
+    pub fn export_delta(&self, export_dir: &Path) -> io::Result<PathBuf> {
+        use std::io::Write;
+        
+        if !self.is_delta {
+            return Err(io::Error::new(
+                io::ErrorKind::InvalidInput,
+                "Can only export delta baselines"
+            ));
+        }
+        
+        fs::create_dir_all(export_dir)?;
+        
+        let filename = format!("changes-{}.txt", self.version);
+        let filepath = export_dir.join(&filename);
+        let mut file = File::create(&filepath)?;
+        
+        let total_changes = self.changed_files.len() + self.new_files_manual.len() + self.new_files_package.len() + self.deleted_files.len();
+        
+        // Write header
+        writeln!(file, "# Delta Baseline Export")?;
+        writeln!(file, "# Version: {}", self.version)?;
+        writeln!(file, "# Generated: {}", chrono::Local::now().format("%Y-%m-%d %H:%M:%S"))?;
+        writeln!(file, "#")?;
+        writeln!(file, "# Summary - FILES:")?;
+        writeln!(file, "#   Changed:           {}", self.changed_files.len())?;
+        writeln!(file, "#   New (Manual):      {} ⚠️  <- Manually installed/created", self.new_files_manual.len())?;
+        writeln!(file, "#   New (Package):     {} ℹ️  <- From apt/dpkg packages", self.new_files_package.len())?;
+        writeln!(file, "#   Deleted:           {}", self.deleted_files.len())?;
+        writeln!(file, "#   Total Files:       {}", total_changes)?;
+        writeln!(file, "#")?;
+        writeln!(file, "# Summary - PACKAGES:")?;
+        writeln!(file, "#   Added (Manual):    {} ⚠️  <- You installed these", self.packages_added_manual.len())?;
+        writeln!(file, "#   Added (Auto):      {} ℹ️  <- Dependencies", self.packages_added_auto.len())?;
+        writeln!(file, "#   Removed:           {}", self.packages_removed.len())?;
+        writeln!(file, "#   Upgraded:          {}", self.packages_upgraded.len())?;
+        writeln!(file, "")?;
+        
+        // Write package changes first (most important for restoration)
+        if !self.packages_added_manual.is_empty() {
+            writeln!(file, "## PACKAGES ADDED (MANUAL) ({})", self.packages_added_manual.len())?;
+            writeln!(file, "# ⚠️  These are packages YOU installed manually")?;
+            writeln!(file, "# Install these with: sudo apt install <package-name>")?;
+            writeln!(file, "")?;
+            for pkg in &self.packages_added_manual {
+                writeln!(file, "+ {}", pkg)?;
+            }
+            writeln!(file, "")?;
+        }
+        
+        if !self.packages_added_auto.is_empty() {
+            writeln!(file, "## PACKAGES ADDED (AUTO-DEPENDENCIES) ({})", self.packages_added_auto.len())?;
+            writeln!(file, "# ℹ️  These are dependencies automatically installed")?;
+            writeln!(file, "# Usually don't need manual intervention")?;
+            writeln!(file, "")?;
+            for pkg in &self.packages_added_auto {
+                writeln!(file, "+ {}", pkg)?;
+            }
+            writeln!(file, "")?;
+        }
+        
+        if !self.packages_upgraded.is_empty() {
+            writeln!(file, "## PACKAGES UPGRADED ({})", self.packages_upgraded.len())?;
+            writeln!(file, "")?;
+            for pkg in &self.packages_upgraded {
+                writeln!(file, "U {}", pkg)?;
+            }
+            writeln!(file, "")?;
+        }
+        
+        if !self.packages_removed.is_empty() {
+            writeln!(file, "## PACKAGES REMOVED ({})", self.packages_removed.len())?;
+            writeln!(file, "")?;
+            for pkg in &self.packages_removed {
+                writeln!(file, "- {}", pkg)?;
+            }
+            writeln!(file, "")?;
+        }
+        
+        // Write changed files
+        if !self.changed_files.is_empty() {
+            writeln!(file, "## MODIFIED FILES ({})", self.changed_files.len())?;
+            writeln!(file, "")?;
+            for path in &self.changed_files {
+                writeln!(file, "M  {}", path)?;
+            }
+            writeln!(file, "")?;
+        }
+        
+        // Write new MANUAL files (most important - these need tracking!)
+        if !self.new_files_manual.is_empty() {
+            writeln!(file, "## NEW FILES - MANUAL INSTALL ({}) ⚠️", self.new_files_manual.len())?;
+            writeln!(file, "# These files were NOT installed by packages - manually created/installed")?;
+            writeln!(file, "")?;
+            for path in &self.new_files_manual {
+                writeln!(file, "N  {}", path)?;
+            }
+            writeln!(file, "")?;
+        }
+        
+        // Write new PACKAGE files (installed by apt/dpkg) with package names
+        if !self.new_files_package.is_empty() {
+            writeln!(file, "## NEW FILES - FROM PACKAGES ({}) ℹ️", self.new_files_package.len())?;
+            writeln!(file, "# These files were installed by apt/dpkg")?;
+            writeln!(file, "")?;
+            // Sort by package name for better readability
+            let mut package_file_list: Vec<_> = self.new_files_package.iter().collect();
+            package_file_list.sort_by_key(|(_, pkg)| pkg.as_str());
+            for (path, package) in package_file_list {
+                writeln!(file, "P  {} ({})", path, package)?;
+            }
+            writeln!(file, "")?;
+        }
+        
+        // Write deleted files
+        if !self.deleted_files.is_empty() {
+            writeln!(file, "## DELETED FILES ({})", self.deleted_files.len())?;
+            writeln!(file, "")?;
+            for path in &self.deleted_files {
+                writeln!(file, "D  {}", path)?;
+            }
+            writeln!(file, "")?;
+        }
+        
+        Ok(filepath)
     }
 }
 

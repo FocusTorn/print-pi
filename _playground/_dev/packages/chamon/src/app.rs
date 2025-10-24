@@ -6,12 +6,16 @@ use std::process::Command;
 use std::time::Instant;
 use serde_json::Value;
 use std::sync::mpsc;
+use std::sync::atomic::{AtomicBool, Ordering};
+use std::sync::Arc;
 
 // Message sent from background baseline generation task to UI
 #[derive(Debug)]
 pub enum BaselineMessage {
     InitialComplete { baseline: Baseline, path: String },
     DeltaComplete { baseline: Baseline },
+    Progress { thread_name: String, file_count: usize, current_path: String },
+    DirectoryComplete { thread_name: String, file_count: usize }, // Directory finished
     Error { message: String },
 }
 
@@ -51,7 +55,7 @@ pub enum FileStatus { //>
     Modified,
 } //<
 
-#[derive(Clone, PartialEq)]
+#[derive(Copy, Clone, PartialEq)]
 pub enum ViewMode {
     Changes,
     Baseline,
@@ -67,7 +71,7 @@ pub enum ActiveColumn {
 #[derive(Clone, PartialEq)]
 pub enum PopupType {
     ConfirmDeleteBaseline { version: String, selected_option: usize }, // 0=Yes, 1=No
-    ConfirmOverwriteInitial { selected_option: usize, from_remove: bool }, // from_remove: was triggered by trying to delete
+    ConfirmOverwriteInitial { selected_option: usize, from_remove: bool, has_deltas: bool }, // from_remove: was triggered by trying to delete
     InputDirectory { prompt: String, input: String, cursor_pos: usize },
     InputRemapPath { prompt: String, input: String, cursor_pos: usize, scan_path: String }, // scan_path stored from first input
 }
@@ -87,6 +91,9 @@ pub struct App { //>
     pub view_mode: ViewMode,
     pub selected_view: usize,
     pub view_state: ListState,
+    
+    // Column 1: Primary commands (view selector)
+    pub primary_commands: Vec<ActionItem>,
     
     // Column 2: Commands (contextual based on view_mode)
     pub changes_commands: Vec<ActionItem>,
@@ -118,6 +125,10 @@ pub struct App { //>
     pub baseline_create_frame: usize, // For throbber animation
     pub baseline_tx: mpsc::Sender<BaselineMessage>, // Channel to send to background threads
     pub baseline_rx: mpsc::Receiver<BaselineMessage>, // Background thread completion channel
+    pub baseline_cancel: Arc<AtomicBool>, // Cancellation flag for background threads
+    pub baseline_progress: Vec<(String, usize, String)>, // Vec of (thread_name, file_count, current_path)
+    pub baseline_completed: Vec<(String, usize)>, // Vec of (dir_name, file_count) - completed dirs
+    pub baseline_pending_dirs: std::collections::HashSet<String>, // Track all directories added to queue
     pub initial_baseline_path: Option<String>, // Physical path scanned for initial baseline
     pub initial_baseline_remap_to: Option<String>, // Logical path it remaps to
     pub initial_baseline_file_count: Option<usize>, // File count for initial baseline
@@ -130,6 +141,10 @@ pub struct App { //>
     
     // Popup state
     pub popup: Option<Popup>,
+    
+    // Auto-prompt state (tracks pending auto-prompts after manual confirmation)
+    pub pending_auto_scan_path: Option<String>,
+    pub pending_auto_redirect_path: Option<String>,
     
     // System state
     pub should_quit: bool,
@@ -145,8 +160,19 @@ impl App {
         // Build file views from config
         let file_views = Self::build_file_views_from_config(&config);
         
-        // Build command lists from config
-        let changes_commands = config.commands_view.changes_commands.iter().map(|cmd| {
+        // Build primary commands (Column 1) from config
+        let primary_commands: Vec<ActionItem> = config.primary_commands_panel.primary_commands.iter().map(|cmd| {
+            ActionItem {
+                name: cmd.name.clone(),
+                description: cmd.desc.clone(),
+                command: cmd.command.clone(),
+                key: cmd.key.chars().next(),
+                select: None,  // Primary commands don't use select indicator
+            }
+        }).collect();
+        
+        // Build secondary command lists (Column 2) from config
+        let changes_commands = config.secondary_commands_panel.changes_commands.iter().map(|cmd| {
             ActionItem {
                 name: cmd.name.clone(),
                 description: cmd.desc.clone(),
@@ -156,7 +182,7 @@ impl App {
             }
         }).collect();
         
-        let baseline_commands = config.commands_view.baseline_commands.iter().map(|cmd| {
+        let baseline_commands = config.secondary_commands_panel.baseline_commands.iter().map(|cmd| {
             ActionItem {
                 name: cmd.name.clone(),
                 description: cmd.desc.clone(),
@@ -201,15 +227,26 @@ impl App {
         
         // Create channel for background baseline generation
         let (baseline_tx, baseline_rx) = mpsc::channel();
+        let baseline_cancel = Arc::new(AtomicBool::new(false));
+        
+        // Determine initial view mode from first primary command
+        let initial_view_mode = primary_commands.get(0)
+            .and_then(|cmd| match cmd.command.as_str() {
+                "changes" => Some(ViewMode::Changes),
+                "baseline" => Some(ViewMode::Baseline),
+                _ => None,
+            })
+            .unwrap_or(ViewMode::Changes);
         
         let mut app = App {
             config,
             data_dir,
             
-            view_mode: ViewMode::Changes,
+            view_mode: initial_view_mode,
             selected_view: 0,
             view_state,
             
+            primary_commands,
             changes_commands,
             baseline_commands,
             selected_command: 0,
@@ -236,6 +273,10 @@ impl App {
             baseline_create_frame: 0,
             baseline_tx,
             baseline_rx,
+            baseline_cancel,
+            baseline_progress: Vec::new(),
+            baseline_completed: Vec::new(),
+            baseline_pending_dirs: std::collections::HashSet::new(),
             initial_baseline_path,
             initial_baseline_remap_to,
             initial_baseline_file_count,
@@ -246,6 +287,9 @@ impl App {
             active_column: ActiveColumn::ViewSelector,
             
             popup: None,
+            
+            pending_auto_scan_path: None,
+            pending_auto_redirect_path: None,
             
             should_quit: false,
             last_check: None,
@@ -524,12 +568,14 @@ impl App {
                 if self.selected_view > 0 {
                     self.selected_view -= 1;
                     self.view_state.select(Some(self.selected_view));
-                    // Switch view mode
-                    self.view_mode = if self.selected_view == 0 {
-                        ViewMode::Changes
-                    } else {
-                        ViewMode::Baseline
-                    };
+                    // Switch view mode based on primary command
+                    if let Some(cmd) = self.primary_commands.get(self.selected_view) {
+                        self.view_mode = match cmd.command.as_str() {
+                            "changes" => ViewMode::Changes,
+                            "baseline" => ViewMode::Baseline,
+                            _ => self.view_mode, // Keep current if unknown
+                        };
+                    }
                     // Reset command selection when switching views
                     self.selected_command = 0;
                     self.last_selected_command = 0;
@@ -568,15 +614,18 @@ impl App {
     pub fn move_down(&mut self) { //>
         match self.active_column {
             ActiveColumn::ViewSelector => {
-                if self.selected_view < 1 {  // Only 2 views: Changes (0) and Baseline (1)
+                let max_views = self.primary_commands.len().saturating_sub(1);
+                if self.selected_view < max_views {
                     self.selected_view += 1;
                     self.view_state.select(Some(self.selected_view));
-                    // Switch view mode
-                    self.view_mode = if self.selected_view == 0 {
-                        ViewMode::Changes
-                    } else {
-                        ViewMode::Baseline
-                    };
+                    // Switch view mode based on primary command
+                    if let Some(cmd) = self.primary_commands.get(self.selected_view) {
+                        self.view_mode = match cmd.command.as_str() {
+                            "changes" => ViewMode::Changes,
+                            "baseline" => ViewMode::Baseline,
+                            _ => self.view_mode, // Keep current if unknown
+                        };
+                    }
                     // Reset command selection when switching views
                     self.selected_command = 0;
                     self.last_selected_command = 0;
@@ -640,7 +689,13 @@ impl App {
             "untrack" => self.remove_selected_file(),
             
             // Baseline view commands
-            "baseline:generate" => self.create_baseline(),
+            "baseline:generate" => {
+                if self.initial_baseline_path.is_none() {
+                    self.last_check = Some("✗ Cannot generate baseline: No initial baseline exists".to_string());
+                    return;
+                }
+                self.create_baseline();
+            },
             "baseline:activate" => {
                 // Set selected baseline as active
                 // Initial Baseline is at index = baseline_versions.len() (last index)
@@ -663,11 +718,93 @@ impl App {
                 }
             },
             "baseline:compare" => self.compare_baseline(),
+            "baseline:export" => self.export_baseline(),
             "baseline:initialize" => {
-                // Show confirmation popup warning about deleting all delta baselines
+                // Check if auto-prompts are enabled
+                if self.config.debugging.auto_prompts.enabled {
+                    // Auto-apply prompts from config
+                    let auto_prompts = &self.config.debugging.auto_prompts.initial_baseline;
+                    
+                    // Check if initial baseline exists OR if deltas exist (either requires confirmation)
+                    let needs_overwrite_confirm = self.initial_baseline_path.is_some() || !self.baseline_versions.is_empty();
+                    
+                    if needs_overwrite_confirm {
+                        if !auto_prompts.overwrite_confirmation.apply {
+                            // apply = false - show manual popup, but store auto-paths if they're apply:true
+                            let has_deltas = !self.baseline_versions.is_empty();
+                            
+                            // Store auto-prompt paths for after confirmation
+                            self.pending_auto_scan_path = if auto_prompts.scan_path.apply {
+                                Some(auto_prompts.scan_path.value.clone())
+                            } else {
+                                None
+                            };
+                            self.pending_auto_redirect_path = if auto_prompts.redirect_path.apply {
+                                Some(auto_prompts.redirect_path.value.clone())
+                            } else {
+                                None
+                            };
+                            
+                            self.popup = Some(Popup {
+                                popup_type: PopupType::ConfirmOverwriteInitial {
+                                    selected_option: 1, // Default to No
+                                    from_remove: false,
+                                    has_deltas,
+                                },
+                                visible: true,
+                            });
+                            return;
+                        } else {
+                            // apply = true - auto-apply overwrite decision
+                            if auto_prompts.overwrite_confirmation.value.to_lowercase() == "yes" {
+                                // Auto-confirm overwrite - proceed
+                                self.last_check = Some("[AUTO] Overwrite confirmed".to_string());
+                            } else {
+                                // Auto-decline - abort
+                                self.last_check = Some("[AUTO] Overwrite declined".to_string());
+                                return;
+                            }
+                        }
+                    }
+                    
+                    // Check if we need to show prompts for scan/redirect paths
+                    if !auto_prompts.scan_path.apply || !auto_prompts.redirect_path.apply {
+                        // At least one path needs manual input - show popup
+                        // Pre-fill with config defaults, or prior paths, or "/"
+                        let default_scan = if !self.config.debugging.scan_path.is_empty() {
+                            self.config.debugging.scan_path.clone()
+                        } else {
+                            self.initial_baseline_path.clone().unwrap_or_else(|| "/".to_string())
+                        };
+                        
+                        self.popup = Some(Popup {
+                            popup_type: PopupType::InputDirectory {
+                                prompt: "Enter directory path to scan:".to_string(),
+                                input: default_scan.clone(),
+                                cursor_pos: default_scan.len(),
+                            },
+                            visible: true,
+                        });
+                        return;
+                    }
+                    
+                    // Both paths are apply:true - auto-fill and create baseline
+                    let scan_path = auto_prompts.scan_path.value.clone();
+                    let redirect_path = auto_prompts.redirect_path.value.clone();
+                    
+                    self.last_check = Some(format!("[AUTO] Using paths: {} -> {}", scan_path, redirect_path));
+                    self.create_initial_baseline_with_remap(&scan_path, &redirect_path);
+                    return;
+                }
+                
+                // Manual mode - show popups
                 if self.baseline_versions.is_empty() {
-                    // No deltas, just show input (pre-populate with current initial path if exists)
-                    let default_input = self.initial_baseline_path.clone().unwrap_or_else(|| "/".to_string());
+                    // No deltas, just show input (pre-populate with debug config or current initial path)
+                    let default_input = if !self.config.debugging.scan_path.is_empty() {
+                        self.config.debugging.scan_path.clone()
+                    } else {
+                        self.initial_baseline_path.clone().unwrap_or_else(|| "/".to_string())
+                    };
                     self.popup = Some(Popup {
                         popup_type: PopupType::InputDirectory {
                             prompt: "Enter directory path to scan:".to_string(),
@@ -678,10 +815,12 @@ impl App {
                     });
                 } else {
                     // Has deltas, warn first (from_remove: false = user clicked Overwrite)
+                    let has_deltas = !self.baseline_versions.is_empty();
                     self.popup = Some(Popup {
                         popup_type: PopupType::ConfirmOverwriteInitial {
                             selected_option: 1, // Default to No
                             from_remove: false,
+                            has_deltas,
                         },
                         visible: true,
                     });
@@ -693,10 +832,12 @@ impl App {
                 let initial_index = self.baseline_versions.len();
                 if self.selected_baseline == initial_index {
                     // Cannot delete Initial Baseline - ask if they want to overwrite instead
+                    let has_deltas = !self.baseline_versions.is_empty();
                     self.popup = Some(Popup {
                         popup_type: PopupType::ConfirmOverwriteInitial {
                             selected_option: 1, // Default to No
                             from_remove: true, // User tried to delete it
+                            has_deltas,
                         },
                         visible: true,
                     });
@@ -812,8 +953,26 @@ impl App {
                         // Reload to clear the list
                         self.baseline_versions = Baseline::list_versions(&self.data_dir).unwrap_or_default();
                         
-                        // Show input dialog for path (pre-populate with current initial path)
-                        let default_input = self.initial_baseline_path.clone().unwrap_or_else(|| "/".to_string());
+                        // Check if we have pending auto-paths (both must be present to auto-apply)
+                        if let (Some(scan_path), Some(redirect_path)) = 
+                            (self.pending_auto_scan_path.take(), self.pending_auto_redirect_path.take()) 
+                        {
+                            // Both paths are auto-filled - create baseline immediately
+                            self.last_check = Some(format!("[AUTO] Using paths: {} -> {}", scan_path, redirect_path));
+                            self.create_initial_baseline_with_remap(&scan_path, &redirect_path);
+                            return;
+                        }
+                        
+                        // Clear any remaining pending paths
+                        self.pending_auto_scan_path = None;
+                        self.pending_auto_redirect_path = None;
+                        
+                        // Show input dialog for path (pre-populate with debug config or current initial path)
+                        let default_input = if !self.config.debugging.scan_path.is_empty() {
+                            self.config.debugging.scan_path.clone()
+                        } else {
+                            self.initial_baseline_path.clone().unwrap_or_else(|| "/".to_string())
+                        };
                         self.popup = Some(Popup {
                             popup_type: PopupType::InputDirectory {
                                 prompt: "Enter directory path to scan:".to_string(),
@@ -824,13 +983,20 @@ impl App {
                         });
                         return; // Don't revert command selection yet
                     } else {
+                        // User cancelled - clear pending auto-paths
+                        self.pending_auto_scan_path = None;
+                        self.pending_auto_redirect_path = None;
                         self.last_check = Some("Overwrite cancelled".to_string());
                     }
                 }
                 PopupType::InputDirectory { input, .. } => {
                     // After getting scan path, show popup for remap_to path
                     let scan_path = input.clone();
-                    let default_remap = scan_path.clone();
+                    let default_remap = if !self.config.debugging.redirect_path.is_empty() {
+                        self.config.debugging.redirect_path.clone()
+                    } else {
+                        scan_path.clone()
+                    };
                     self.popup = Some(Popup {
                         popup_type: PopupType::InputRemapPath {
                             prompt: "Enter remap path (or leave as-is):".to_string(),
@@ -881,6 +1047,18 @@ impl App {
         self.baseline_create_start = Some(Instant::now());
         self.initial_baseline_path = Some(scan_path.to_string());
         self.initial_baseline_remap_to = Some(remap_to.to_string());
+        
+        // Clear all existing deltas when creating new initial baseline
+        // First, physically delete the delta baseline files
+        for metadata in &self.baseline_versions {
+            let baseline_path = self.data_dir.join("baselines").join(format!("baseline-{}.json", metadata.version));
+            let _ = std::fs::remove_file(&baseline_path); // Ignore errors if file doesn't exist
+        }
+        
+        // Then clear the in-memory list
+        self.baseline_versions.clear();
+        self.baseline_list_state = ListState::default();
+        self.selected_baseline = 0;
         
         if scan_path == remap_to {
             self.last_check = Some(format!("Creating initial baseline from: {}", scan_path));
@@ -958,19 +1136,25 @@ impl App {
             self.baseline_create_start = None; // Don't spawn again
         }
         
-        // Check for completion messages from async task
-        if let Ok(msg) = self.baseline_rx.try_recv() {
+        // Check for ALL messages from async task (drain the channel)
+        // This prevents message queue buildup and memory leaks
+        while let Ok(msg) = self.baseline_rx.try_recv() {
             self.handle_baseline_completion(msg);
         }
     } //<
     
     fn spawn_baseline_task(&mut self) { //>
         let data_dir = self.data_dir.clone();
-        let config = self.config.baseline.clone();
+        let config = self.config.baseline_panel.baseline_generation.clone();
         let tx = self.baseline_tx.clone();
+        let tx2 = tx.clone(); // Clone for second callback
         let is_initial = self.creating_initial;
         let scan_path = self.initial_baseline_path.clone();
         let remap_to = self.initial_baseline_remap_to.clone();
+        let cancel_flag = Arc::clone(&self.baseline_cancel);
+        
+        // Reset cancellation flag for new task
+        self.baseline_cancel.store(false, Ordering::Relaxed);
         
         // Spawn background thread
         std::thread::spawn(move || {
@@ -978,7 +1162,14 @@ impl App {
                 let scan_path_str = scan_path.as_deref().unwrap_or("/");
                 let remap_to_str = remap_to.as_deref().unwrap_or(scan_path_str);
                 
-                match Baseline::create(scan_path_str, remap_to_str, &config) {
+                match Baseline::create_with_progress(scan_path_str, remap_to_str, &config, cancel_flag.clone(), move |thread_name, file_count, current_path| {
+                    if thread_name.starts_with("DONE:") {
+                        let dir_name = thread_name.strip_prefix("DONE:").unwrap().to_string();
+                        let _ = tx2.send(BaselineMessage::DirectoryComplete { thread_name: dir_name, file_count });
+                    } else {
+                        let _ = tx2.send(BaselineMessage::Progress { thread_name: thread_name.to_string(), file_count, current_path: current_path.to_string() });
+                    }
+                }) {
                     Ok(baseline) => {
                         BaselineMessage::InitialComplete {
                             baseline,
@@ -990,7 +1181,14 @@ impl App {
                     },
                 }
             } else {
-                match Baseline::create_delta(&data_dir, &config) {
+                match Baseline::create_delta_with_progress(&data_dir, &config, cancel_flag, move |thread_name, file_count, current_path| {
+                    if thread_name.starts_with("DONE:") {
+                        let dir_name = thread_name.strip_prefix("DONE:").unwrap().to_string();
+                        let _ = tx2.send(BaselineMessage::DirectoryComplete { thread_name: dir_name, file_count });
+                    } else {
+                        let _ = tx2.send(BaselineMessage::Progress { thread_name: thread_name.to_string(), file_count, current_path: current_path.to_string() });
+                    }
+                }) {
                     Ok(baseline) => BaselineMessage::DeltaComplete { baseline },
                     Err(e) => BaselineMessage::Error {
                         message: format!("Failed to create delta baseline: {}", e),
@@ -1030,6 +1228,10 @@ impl App {
                         self.last_check = Some(format!("✗ Failed to save initial baseline: {}", e));
                     }
                 }
+                self.creating_baseline = false;
+                self.creating_initial = false;
+                self.baseline_create_frame = 0;
+                self.baseline_progress.clear();
             }
             BaselineMessage::DeltaComplete { baseline } => {
                 match baseline.save(&self.data_dir, false) {
@@ -1045,15 +1247,39 @@ impl App {
                         self.last_check = Some(format!("✗ Failed to save baseline: {}", e));
                     }
                 }
+                self.creating_baseline = false;
+                self.creating_initial = false;
+                self.baseline_create_frame = 0;
+                self.baseline_progress.clear();
+                self.baseline_completed.clear();
+            }
+            BaselineMessage::Progress { thread_name, file_count, current_path } => {
+                // Update or add progress for this thread
+                if let Some(entry) = self.baseline_progress.iter_mut().find(|(name, _, _)| name == &thread_name) {
+                    entry.1 = file_count;
+                    entry.2 = current_path;
+                } else {
+                    self.baseline_progress.push((thread_name, file_count, current_path));
+                }
+            }
+            BaselineMessage::DirectoryComplete { thread_name, file_count } => {
+                // Move from progress to completed list
+                self.baseline_progress.retain(|(name, _, _)| name != &thread_name);
+                self.baseline_completed.push((thread_name.clone(), file_count));
+                // Collapse siblings into parent if enabled in config
+                if self.config.baseline_panel.baseline_generation.collapse_completed_dirs {
+                    self.collapse_completed_directories();
+                }
             }
             BaselineMessage::Error { message } => {
                 self.last_check = Some(format!("✗ {}", message));
+                self.creating_baseline = false;
+                self.creating_initial = false;
+                self.baseline_create_frame = 0;
+                self.baseline_progress.clear();
+                self.baseline_completed.clear();
             }
         }
-        
-        self.creating_baseline = false;
-        self.creating_initial = false;
-        self.baseline_create_frame = 0;
     } //<
     
     pub fn get_throbber(&self) -> &'static str { //>
@@ -1117,7 +1343,7 @@ impl App {
                     self.baseline_versions.get(self.active_baseline).map(|m| m.version.as_str()).unwrap_or("unknown")
                 };
                 
-                match baseline.compare(&self.config.baseline, &self.data_dir) {
+                match baseline.compare(&self.config.baseline_panel.baseline_generation, &self.data_dir) {
                     Ok(comparison) => {
                         let _total_changes = comparison.changed.len() + comparison.new.len() + comparison.deleted.len();
                         self.last_check = Some(format!(
@@ -1140,6 +1366,51 @@ impl App {
         }
     } //<
     
+    pub fn export_baseline(&mut self) { //>
+        // Export the selected baseline (delta baselines export instantly, initial baseline exports via comparison)
+        let initial_index = self.baseline_versions.len();
+        
+        if self.selected_baseline == initial_index {
+            // Cannot export initial baseline directly - need to compare it first
+            self.last_check = Some("✗ Cannot export initial baseline - use Compare first, then export that result".to_string());
+            return;
+        }
+        
+        // Load the selected delta baseline
+        if let Some(metadata) = self.baseline_versions.get(self.selected_baseline) {
+            match Baseline::load(&self.data_dir, &metadata.version) {
+                Ok(baseline) => {
+                    if !baseline.is_delta {
+                        self.last_check = Some("✗ Selected baseline is not a delta".to_string());
+                        return;
+                    }
+                    
+                    let total_changes = baseline.changed_files.len() + baseline.new_files_manual.len() + baseline.new_files_package.len() + baseline.deleted_files.len();
+                    
+                    // Export to file in the chamon directory (same as config.yaml)
+                    let export_dir = std::env::current_dir().unwrap_or_else(|_| self.data_dir.clone());
+                    match baseline.export_delta(&export_dir) {
+                        Ok(filepath) => {
+                            self.last_check = Some(format!(
+                                "✓ Exported {} changes to: {}",
+                                total_changes,
+                                filepath.display()
+                            ));
+                        }
+                        Err(e) => {
+                            self.last_check = Some(format!("✗ Failed to export: {}", e));
+                        }
+                    }
+                }
+                Err(e) => {
+                    self.last_check = Some(format!("✗ Failed to load baseline: {}", e));
+                }
+            }
+        } else {
+            self.last_check = Some("✗ No baseline selected".to_string());
+        }
+    } //<
+    
     pub fn list_baselines(&mut self) { //>
         match Baseline::list_versions(&self.data_dir) {
             Ok(versions) => {
@@ -1159,4 +1430,74 @@ impl App {
     } //<
     
     //--------------------------------------------------------------------<<
+    
+    /// Cancel any running baseline generation (called on quit/error)
+    pub fn cancel_baseline_generation(&mut self) {
+        if self.creating_baseline {
+            self.baseline_cancel.store(true, Ordering::Relaxed);
+            self.creating_baseline = false;
+            self.creating_initial = false;
+            self.baseline_progress.clear();
+            self.baseline_completed.clear();
+            self.last_check = Some("✗ Baseline generation cancelled".to_string());
+        }
+    }
+    
+    /// Collapse completed subdirectories into their parent when all siblings are done
+    fn collapse_completed_directories(&mut self) {
+        use std::collections::HashMap;
+        
+        // Group completed directories by parent
+        let mut parent_map: HashMap<String, Vec<(String, usize)>> = HashMap::new();
+        
+        for (dir_name, file_count) in &self.baseline_completed {
+            // Extract parent directory
+            if let Some(last_slash) = dir_name.rfind('/') {
+                let parent = if last_slash == 0 {
+                    "/".to_string()
+                } else {
+                    dir_name[..last_slash].to_string()
+                };
+                parent_map.entry(parent).or_insert_with(Vec::new).push((dir_name.clone(), *file_count));
+            }
+        }
+        
+        // Check each parent to see if all its children are complete
+        for (parent, children) in parent_map {
+            // Check if any siblings are still in progress or pending
+            let mut all_siblings_complete = true;
+            
+            // Check if any siblings are still being processed
+            for (thread_name, _, _) in &self.baseline_progress {
+                if thread_name.starts_with(&format!("{}/", parent)) || 
+                   (parent == "/" && thread_name.starts_with('/') && thread_name.matches('/').count() == 1) {
+                    all_siblings_complete = false;
+                    break;
+                }
+            }
+            
+            // Only collapse if:
+            // 1. No siblings are still in progress
+            // 2. At least 3 children completed (prevents collapsing single dirs up to root)
+            if all_siblings_complete && children.len() >= 3 {
+                // Calculate total file count for parent
+                let total_files: usize = children.iter().map(|(_, count)| count).sum();
+                
+                // Remove all children from completed list
+                for (child_name, _) in &children {
+                    self.baseline_completed.retain(|(name, _)| name != child_name);
+                }
+                
+                // Add parent with aggregated count
+                self.baseline_completed.push((parent, total_files));
+            }
+        }
+    }
+}
+
+impl Drop for App {
+    fn drop(&mut self) {
+        // Signal cancellation to any running background tasks
+        self.baseline_cancel.store(true, Ordering::Relaxed);
+    }
 }

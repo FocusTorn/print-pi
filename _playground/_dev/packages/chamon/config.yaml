@@ -3,72 +3,77 @@
 
 
 
+
+debugging: #>
+    ##>
+     # Default values for input fields
+     # These pre-fill the prompt inputs when apply: false
+     # If empty (""), falls back to: prior paths used, or "/" as last resort
+     #<
+    scan_path: "/media/pi/clean-pi/rootfs"
+    redirect_path: "/"
+    
+    ##>
+     # Auto-prompts: Automatically answer prompts without showing popups
+     # enabled: true  - Use auto-prompts (no popups for apply:true prompts)
+     # enabled: false - Always show popups (manual mode)
+     # 
+     # Individual prompt behavior:
+     #   apply: true  - Auto-fill with 'value', skip popup
+     #   apply: false - Show popup, pre-fill with scan_path/redirect_path above
+     #<
+    auto_prompts:
+        enabled: true  # Master switch - set to false to disable all auto-prompts
+        
+        ##>
+         # Initial baseline generation prompts
+         #<
+        initial_baseline: #>
+            overwrite_confirmation:  # "Delete existing initial baseline? (yes/no)"
+                apply: true
+                value: "yes"
+            
+            scan_path:              # "Enter path to scan:"
+                apply: true
+                value: "/media/pi/clean-pi/rootfs"
+            
+            redirect_path:          # "Enter path to remap to (or press Enter for same):"
+                apply: true
+                value: "/"
+        #<
+        
+        ##>
+         # Delta baseline generation prompts
+         #<
+        delta_baseline: #>
+            # No prompts currently - delta uses initial baseline settings
+        #<
+
+#<=======================================================================================
+
+    
 title_bar:
     display: "ChaMon - File Change Monitor (Watching)"
 
-
-baseline:
-    # Path remapping: scan one path but store as another
-    # Example: scan "/media/pi/clean-pi/rootfs" but store paths as if from "/"
-    # When creating initial baseline, you'll be prompted for the scan path,
-    # and can optionally specify a remap_to path (defaults to scan path if not specified)
-    # This is stored PER baseline, not globally
     
-    # Directories to completely skip (don't even scan inside)
-    exclude_directories:
-        - "/dev"
-        - "/proc"
-        - "/run"
-        - "/srv"
-        - "/sys"
-        - "/tmp"
-        - "/var"
-        - "/.cursor-server"
-        - "/bin"
-        - "/lib"
-        - "/sbin"
-        - "/.local"
-        - "/home/pi"            # Covered by git repo + gitignore
-        
-        - "/media"              # Skip mounted drives
-        - "/mnt"                # Skip mount points
-    
-    # Directories where files are tracked by EXISTENCE only (no checksums)
-    # Perfect for binaries - just care if they exist, not their content
-    existence_only_directories:
-        - "/opt"
-    
-    # File extensions to treat as binaries (existence only, no checksum)
-    existence_only_extensions:
-        - ".so"
-        - ".a"
-        - ".bin"
-        - ".pyc"
-        - ".o"
-        - ".exe"
-        - ".dll"
-    
-    # Files larger than this are tracked by existence only (in bytes)
-    # All files under this limit get FULL content stored for diffing
-    content_size_limit: 102400  # 100KB
-    
-    # Log file path for tracking excluded files
-    exclusion_log: "data/baselines/size-exclusions.log"
-
-
-
-
-
-
-    
-    
-    
-    
-
-
-commands_view:
+primary_commands_panel:
     select_indicator: "►"
+    primary_commands: #>
+        - name: "[B]aseline"
+          key: "b"
+          desc: "Manage baseline snapshots"
+          command: "baseline"
+        
+        - name: "[C]hanges"
+          key: "c"
+          desc: "View file changes and modifications"
+          command: "changes"
 
+    #<===================================================================
+
+
+secondary_commands_panel:
+    select_indicator: "►"
     changes_commands: #>
         - name: "[D]iff View"
           key: "d"
@@ -96,14 +101,16 @@ commands_view:
           command: "untrack" 
           
     #<===================================================================
-
     baseline_commands: #>
+        - name: "[O]verwrite Initial"
+          key: "o"
+          desc: "Create new initial baseline from directory"
+          command: "baseline:initialize"
+
         - name: "[G]enerate Baseline"
           key: "g"
           desc: "Create new baseline snapshot"
           command: "baseline:generate"
-        
-
         
         - name: "[A]ctivate Baseline"
           key: "a"
@@ -116,6 +123,12 @@ commands_view:
           desc: "Compare current system with active baseline"
           command: "baseline:compare"
           select: true
+        
+        - name: "[E]xport Changes"
+          key: "e"
+          desc: "Export detected changes to file"
+          command: "baseline:export"
+          select: true
 
         - name: "[R]emove Baseline"
           key: "r"
@@ -123,12 +136,9 @@ commands_view:
           command: "baseline:remove"
           select: true
           
-        - name: "[O]verwrite Initial"
-          key: "o"
-          desc: "Create new initial baseline from directory"
-          command: "baseline:initialize"
     
     #<===================================================================
+    
     
 files_panel:
     help_line: #>
@@ -144,14 +154,12 @@ files_panel:
               command: baseline:remove
               
     #<===================================================================
-
     toggles: #>
         - name: "[F]iltered"
           key: "f"
           command: show:onlyFiltered
 
     #<===================================================================
-
     view_type: #>
         - name: "Tracked"
           command: "show:tracked"
@@ -179,6 +187,119 @@ baseline_panel:
               command: "baseline:remove"
 
     #<===================================================================
+    baseline_generation: #>
+        ##>
+        # Directories to completely skip (100% safe exclusions - never manually modified)
+        # PERFORMANCE: These exclusions provide MASSIVE performance gains by avoiding
+        # scanning of tens of thousands of package-managed files
+        #<
+        exclude_directories: #>
+            
+            # Virtual filesystems (kernel interfaces)
+            - "/dev"
+            - "/proc" 
+            - "/sys"
+            
+            # Temporary/runtime data (cleared on reboot)
+            - "/run"
+            - "/tmp"
+            - "/srv"
+            
+            # Constantly changing during operation
+            - "/var"
+            
+            # 100% package-managed directories (never manually modified)
+            - "/usr/lib"           # Shared libraries (50,000+ files)
+            - "/usr/include"       # C/C++ header files (thousands of files) - 100% packages
+            - "/usr/src"           # Kernel sources (if present)
+            - "/usr/share"         # Shared package data (thousands of files)
+            - "/usr/libexec"       # Helper executables (100% packages)
+            - "/usr/bin"           # System binaries (3,000+ files)
+            - "/usr/sbin"          # System admin binaries (100% packages)
+            - "/usr/games"         # Game binaries (100% packages)
+            
+            # Package management directories (100% safe)
+            - "/var/lib/dpkg"
+            - "/var/lib/apt"
+            - "/var/cache/apt"
+            - "/var/log/apt"
+            
+            # Symlinks
+            - "/.cursor-server"
+            - "/bin"               # Points to /usr/bin
+            - "/lib"               # Points to /usr/lib
+            - "/sbin"              # Points to /usr/sbin
+            - "/.local"            # User-specific, covered by git
+            
+            # Covered by git repo + gitignore
+            - "/home/pi"           
+            
+            # Mount points (external drives)
+            - "/media"              
+            - "/mnt"                
+        
+        #<=======================================================================================
+            
+        ##>
+        # Maximum files in a directory before treating it as "package-managed" (existence only)
+        # Directories with more than this many IMMEDIATE children are tracked but not scanned
+        # Set to 0 to disable this feature
+        #<
+        max_directory_files: 0  # DISABLED - use explicit exclusions instead
+        
+        ##>
+        # Collapse completed sibling directories into parent (reduces clutter with 500+ dirs)
+        # Set to false to see ALL individual directory completions (useful for debugging file counts)
+        #<
+        collapse_completed_dirs: false
+        
+        ##> 
+        # Directories where files are tracked by EXISTENCE only (no checksums)
+        # Perfect for binaries - just care if they exist, not their content
+        #<
+        existence_only_directories: #>
+            - "/opt"                # Self-contained applications
+            - "/usr/local/bin"      # Local tools (mostly binaries)
+            - "/usr/local/sbin"     # Local admin tools
+            - "/usr/local/lib"      # Local libraries (mostly binaries)
+            
+        #<=======================================================================================
+        
+        ##>
+        # File extensions to treat as binaries (existence only, no checksum)
+        # NOTE: Extensionless binaries are now handled by executable bit check (Rule 3)
+        #<
+        existence_only_extensions:
+            - ".so"                 # Shared libraries
+            - ".a"                  # Static libraries
+            - ".bin"                # Binary files
+            - ".pyc"                # Python bytecode
+            - ".o"                  # Object files
+            - ".exe"                # Executables
+            - ".dll"                # Windows libraries
+            - ".dylib"              # macOS libraries
+            - ".so.*"               # Versioned shared libraries
+        
+        ##>
+        # Files larger than this are tracked by existence only (in bytes)
+        # All files under this limit get FULL content stored for diffing
+        #<
+        content_size_limit: 102400  # 100KB
+        
+        # Log file path for tracking excluded files
+        exclusion_log: "data/baselines/size-exclusions.log"
+
+        ##> 
+        # Example: scan "/media/pi/clean-pi/rootfs" but store paths as if from "/"
+        # When creating initial baseline, you'll be prompted for the scan path,
+        # and can optionally specify a remap_to path (defaults to scan path if not specified)
+        # This is stored PER baseline, not globally
+        # Path remapping: scan one path but store as another
+        #<
+        # Path remapping: scan one path but store as another
+        
+    #<===================================================================
+
 
 
 #  [PgUp]/[PgDn]: Cycle between file views

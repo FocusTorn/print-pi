@@ -55,8 +55,8 @@ ZSH_THEME_GIT_PROMPT_UNTRACKED="%F{#999999} %{…%G%}"
 ZSH_THEME_GIT_PROMPT_STAGED="%F{#F951FF} %{↑%G%}" # ●🡅
 
 ZSH_THEME_GIT_PROMPT_CONFLICTS="%{$fg_bold[red]%} %{✖%G%}"
-ZSH_THEME_GIT_PROMPT_CHANGED="%{$fg_bold[blue]%} %{✚%G%}"
-ZSH_THEME_GIT_PROMPT_DELETED="%{$fg_bold[blue]%} %{-%G%}"
+ZSH_THEME_GIT_PROMPT_CHANGED="%{$fg_bold[yellow]%} %{+%G%}" #✚
+ZSH_THEME_GIT_PROMPT_DELETED="%{$fg_bold[yellow]%} %{-%G%}"
 # ZSH_THEME_GIT_PROMPT_BEHIND="%{↓%G%}"
 # ZSH_THEME_GIT_PROMPT_AHEAD="%{↑%G%}"
 ZSH_THEME_GIT_PROMPT_STASHED="%{$fg_bold[blue]%} %{⚑%G%}"
