@@ -1,7 +1,7 @@
 {
     "files.exclude": {
         
-        ".oh-my-zsh": true,
+        // ".oh-my-zsh": true,
         "_playground": true,
         
         ".cursor-server": true,
@@ -11,7 +11,7 @@
 
         // OEM Directories
         ".cache": true,
-        ".config": true,
+        // ".config": true,
         ".ssh": true,
         "bin": true,
         "Desktop": true,

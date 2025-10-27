@@ -1133,7 +1133,7 @@ impl Baseline {
         
         // Process packages in parallel using rayon
         let processed_for_closure = Arc::clone(&processed_count);
-        let result = packages_vec.par_iter().try_for_each(|(package, _version)| -> Result<(), ()> {
+        let _ = packages_vec.par_iter().try_for_each(|(package, _version)| -> Result<(), ()> {
             // Check for cancellation
             if cancel_flag.load(Ordering::Relaxed) {
                 return Err(()); // Stop processing
@@ -1248,40 +1248,80 @@ impl Baseline {
         let total_changes = self.changed_files.len() + self.new_files_manual.len() + self.new_files_package.len() + self.deleted_files.len();
         
         // Write header
-        writeln!(file, "# Delta Baseline Export")?;
-        writeln!(file, "# Version: {}", self.version)?;
-        writeln!(file, "# Generated: {}", chrono::Local::now().format("%Y-%m-%d %H:%M:%S"))?;
-        writeln!(file, "#")?;
-        writeln!(file, "# Summary - FILES:")?;
-        writeln!(file, "#   Changed:           {}", self.changed_files.len())?;
-        writeln!(file, "#   New (Manual):      {} ⚠️  <- Manually installed/created", self.new_files_manual.len())?;
-        writeln!(file, "#   New (Package):     {} ℹ️  <- From apt/dpkg packages", self.new_files_package.len())?;
-        writeln!(file, "#   Deleted:           {}", self.deleted_files.len())?;
-        writeln!(file, "#   Total Files:       {}", total_changes)?;
-        writeln!(file, "#")?;
-        writeln!(file, "# Summary - PACKAGES:")?;
-        writeln!(file, "#   Added (Manual):    {} ⚠️  <- You installed these", self.packages_added_manual.len())?;
-        writeln!(file, "#   Added (Auto):      {} ℹ️  <- Dependencies", self.packages_added_auto.len())?;
-        writeln!(file, "#   Removed:           {}", self.packages_removed.len())?;
-        writeln!(file, "#   Upgraded:          {}", self.packages_upgraded.len())?;
+        writeln!(file, "Delta Baseline Export")?;
+        writeln!(file, "Version: {}", self.version)?;
+        writeln!(file, "Generated: {}", chrono::Local::now().format("%Y-%m-%d %H:%M:%S"))?;
+        writeln!(file, "")?;
+        writeln!(file, "Summary - FILES:")?;
+        writeln!(file, "  - Changed:           {}", self.changed_files.len())?;
+        writeln!(file, "  - New (Manual):      {} ⚠️  <- Manually installed/created", self.new_files_manual.len())?;
+        writeln!(file, "  - New (Package):     {} ℹ️  <- From apt/dpkg packages", self.new_files_package.len())?;
+        writeln!(file, "  - Deleted:           {}", self.deleted_files.len())?;
+        writeln!(file, "  - Total Files:       {}", total_changes)?;
+        writeln!(file, "")?;
+        writeln!(file, "Summary - PACKAGES:")?;
+        writeln!(file, "  - Added (Manual):    {} ⚠️  <- You installed these", self.packages_added_manual.len())?;
+        writeln!(file, "  - Added (Auto):      {} ℹ️  <- Dependencies", self.packages_added_auto.len())?;
+        writeln!(file, "  - Removed:           {}", self.packages_removed.len())?;
+        writeln!(file, "  - Upgraded:          {}", self.packages_upgraded.len())?;
+        writeln!(file, "")?;
+        
+        // Write packages section with nice box
+        writeln!(file, "┌────────────────────────────────────────────────────────────────────────────────────────────────┐")?;
+        writeln!(file, "│                                           PACKAGES                                             │")?;
+        writeln!(file, "└────────────────────────────────────────────────────────────────────────────────────────────────┘")?;
         writeln!(file, "")?;
         
         // Write package changes first (most important for restoration)
         if !self.packages_added_manual.is_empty() {
-            writeln!(file, "## PACKAGES ADDED (MANUAL) ({})", self.packages_added_manual.len())?;
-            writeln!(file, "# ⚠️  These are packages YOU installed manually")?;
-            writeln!(file, "# Install these with: sudo apt install <package-name>")?;
-            writeln!(file, "")?;
+            writeln!(file, "┌── MANUAL ADD ({}) ─────────────────────────────────────────", self.packages_added_manual.len())?;
             for pkg in &self.packages_added_manual {
-                writeln!(file, "+ {}", pkg)?;
+                writeln!(file, "  + {}", pkg)?;
             }
             writeln!(file, "")?;
         }
         
+        if !self.packages_removed.is_empty() {
+            writeln!(file, "┌── REMOVED ({}) ────────────────────────────────────────────", self.packages_removed.len())?;
+            for pkg in &self.packages_removed {
+                writeln!(file, "  - {}", pkg)?;
+            }
+            writeln!(file, "")?;
+        }
+        
+        // Write files section with nice box
+        writeln!(file, "┌────────────────────────────────────────────────────────────────────────────────────────────────┐")?;
+        writeln!(file, "│                                             FILES                                              │")?;
+        writeln!(file, "└────────────────────────────────────────────────────────────────────────────────────────────────┘")?;
+        writeln!(file, "")?;
+        
+        // Write new MANUAL files (most important - these need tracking!)
+        if !self.new_files_manual.is_empty() {
+            writeln!(file, "┌── MANUAL ADD ({}) ──────────────────────────────────────────", self.new_files_manual.len())?;
+            for path in &self.new_files_manual {
+                writeln!(file, "  N  {}", path)?;
+            }
+            writeln!(file, "")?;
+        }
+        
+        // Write changed files
+        if !self.changed_files.is_empty() {
+            writeln!(file, "┌── MODIFIED ({}) ──────────────────────────────────────────", self.changed_files.len())?;
+            for path in &self.changed_files {
+                writeln!(file, "  M  {}", path)?;
+            }
+            writeln!(file, "")?;
+        }
+        
+        // Write system modified section with nice box
+        writeln!(file, "┌────────────────────────────────────────────────────────────────────────────────────────────────┐")?;
+        writeln!(file, "│                                        SYSTEM MODIFIED                                         │")?;
+        writeln!(file, "└────────────────────────────────────────────────────────────────────────────────────────────────┘")?;
+        writeln!(file, "")?;
+        
         if !self.packages_added_auto.is_empty() {
             writeln!(file, "## PACKAGES ADDED (AUTO-DEPENDENCIES) ({})", self.packages_added_auto.len())?;
             writeln!(file, "# ℹ️  These are dependencies automatically installed")?;
-            writeln!(file, "# Usually don't need manual intervention")?;
             writeln!(file, "")?;
             for pkg in &self.packages_added_auto {
                 writeln!(file, "+ {}", pkg)?;
@@ -1294,36 +1334,6 @@ impl Baseline {
             writeln!(file, "")?;
             for pkg in &self.packages_upgraded {
                 writeln!(file, "U {}", pkg)?;
-            }
-            writeln!(file, "")?;
-        }
-        
-        if !self.packages_removed.is_empty() {
-            writeln!(file, "## PACKAGES REMOVED ({})", self.packages_removed.len())?;
-            writeln!(file, "")?;
-            for pkg in &self.packages_removed {
-                writeln!(file, "- {}", pkg)?;
-            }
-            writeln!(file, "")?;
-        }
-        
-        // Write changed files
-        if !self.changed_files.is_empty() {
-            writeln!(file, "## MODIFIED FILES ({})", self.changed_files.len())?;
-            writeln!(file, "")?;
-            for path in &self.changed_files {
-                writeln!(file, "M  {}", path)?;
-            }
-            writeln!(file, "")?;
-        }
-        
-        // Write new MANUAL files (most important - these need tracking!)
-        if !self.new_files_manual.is_empty() {
-            writeln!(file, "## NEW FILES - MANUAL INSTALL ({}) ⚠️", self.new_files_manual.len())?;
-            writeln!(file, "# These files were NOT installed by packages - manually created/installed")?;
-            writeln!(file, "")?;
-            for path in &self.new_files_manual {
-                writeln!(file, "N  {}", path)?;
             }
             writeln!(file, "")?;
         }

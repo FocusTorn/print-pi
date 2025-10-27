@@ -1,0 +1,12 @@
+program_options:
+  # Disable the tray icon
+  tray: false
+  # Disable pop-up notifications
+  notify: false
+
+
+device_config:
+  - id_uuid: "/dev/disk/by-id/usb-Mass_Storage_Device_121220160204-0:0-part1"
+    automount: true
+  - id_uuid: "/dev/disk/by-id/usb-Mass_Storage_Device_121220160204-0:0-part2"
+    automount: true

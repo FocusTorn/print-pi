@@ -94,6 +94,8 @@ ZSH_THEME="focused"
  # Add wisely, as too many plugins slow down shell startup.
  #<
 plugins=( #>
+  aliases
+  debian
   git
   git-prompt
   python
