@@ -1,6 +1,8 @@
 // UI rendering for detour TUI - Horizontal 3-column layout
 
 use crate::app::{App, ActiveColumn, ViewMode};
+use crate::popup;
+use crate::diff;
 use ratatui::{
     layout::{Alignment, Rect},
     style::{Color, Modifier, Style},
@@ -87,6 +89,16 @@ pub fn ui(f: &mut Frame, app: &mut App) {
         height: 5,
     };
     draw_bottom_status(f, status_area, app);
+    
+    // Draw diff viewer (overlays everything except popup)
+    if let Some(diff) = &app.diff_viewer {
+        diff::draw_diff(f, area, diff);
+    }
+    
+    // Draw popup last (overlays everything)
+    if let Some(popup) = &app.popup {
+        popup::draw_popup(f, area, popup);
+    }
 }
 
 fn calculate_view_width(app: &App) -> u16 {
@@ -331,7 +343,7 @@ fn draw_detours_list(f: &mut Frame, area: Rect, app: &mut App) {
     } else {
         app.detours.iter().map(|detour| {
             let status_icon = if detour.active { "✓" } else { "○" };
-            let line1 = format!("{} {} → {}", 
+            let line1 = format!("{} {} ← {}", 
                 status_icon,
                 detour.original,
                 detour.custom
@@ -402,54 +414,325 @@ fn draw_detours_add(f: &mut Frame, area: Rect, _app: &App) {
     f.render_widget(paragraph, content_area);
 }
 
-fn draw_includes_list(f: &mut Frame, area: Rect, _app: &App) {
-    let block = Block::default()
-        .title(" Includes ")
-        .borders(Borders::ALL)
-        .border_style(Style::default().fg(hex_color(0x333333)));
+fn draw_includes_list(f: &mut Frame, area: Rect, app: &mut App) {
+    let is_active = app.active_column == ActiveColumn::Content;
     
-    f.render_widget(block, area);
+    let border_style = if is_active {
+        Style::default().fg(Color::White)
+    } else {
+        Style::default().fg(hex_color(0x333333))
+    };
+    let border_type = if is_active { BorderType::Thick } else { BorderType::Plain };
+    let text_color = if is_active {
+        hex_color(0xFFFFFF)
+    } else {
+        hex_color(0x777777)
+    };
+    
+    let title = format!(" Includes ({}) ", app.includes.len());
+    
+    let items: Vec<ListItem> = if app.includes.is_empty() {
+        vec![ListItem::new(" No includes configured").style(Style::default().fg(Color::DarkGray))]
+    } else {
+        app.includes.iter().map(|include| {
+            let status_icon = if include.active { "✓" } else { "○" };
+            let line1 = format!("{} {} ← {}", 
+                status_icon,
+                include.target,
+                include.include_file
+            );
+            ListItem::new(line1).style(Style::default().fg(text_color))
+        }).collect()
+    };
+    
+    let highlight_style = if is_active {
+        Style::default()
+            .bg(hex_color(0x2A2A2A))
+            .fg(hex_color(0xFFFFFF))
+            .add_modifier(Modifier::BOLD)
+    } else {
+        Style::default()
+            .bg(hex_color(0x1A1A1A))
+            .fg(hex_color(0xAAAAAA))
+    };
+    
+    let list = List::new(items)
+        .block(Block::default()
+            .title(title)
+            .borders(Borders::ALL)
+            .border_type(border_type)
+            .border_style(border_style))
+        .highlight_style(highlight_style);
+    
+    f.render_stateful_widget(list, area, &mut app.include_state);
 }
 
-fn draw_services_list(f: &mut Frame, area: Rect, _app: &App) {
-    let block = Block::default()
-        .title(" Services ")
-        .borders(Borders::ALL)
-        .border_style(Style::default().fg(hex_color(0x333333)));
+fn draw_services_list(f: &mut Frame, area: Rect, app: &mut App) {
+    let is_active = app.active_column == ActiveColumn::Content;
     
-    f.render_widget(block, area);
+    let border_style = if is_active {
+        Style::default().fg(Color::White)
+    } else {
+        Style::default().fg(hex_color(0x333333))
+    };
+    let border_type = if is_active { BorderType::Thick } else { BorderType::Plain };
+    let text_color = if is_active {
+        hex_color(0xFFFFFF)
+    } else {
+        hex_color(0x777777)
+    };
+    
+    let title = format!(" Services ({}) ", app.services.len());
+    
+    let items: Vec<ListItem> = if app.services.is_empty() {
+        vec![ListItem::new(" No services configured").style(Style::default().fg(Color::DarkGray))]
+    } else {
+        app.services.iter().map(|service| {
+            let line1 = format!("{} → {}", service.name, service.action);
+            let line2 = format!("   Status: {}", service.status);
+            ListItem::new(vec![
+                Line::from(line1),
+                Line::from(Span::styled(line2, Style::default().fg(hex_color(0x888888)))),
+            ]).style(Style::default().fg(text_color))
+        }).collect()
+    };
+    
+    let highlight_style = if is_active {
+        Style::default()
+            .bg(hex_color(0x2A2A2A))
+            .fg(hex_color(0xFFFFFF))
+            .add_modifier(Modifier::BOLD)
+    } else {
+        Style::default()
+            .bg(hex_color(0x1A1A1A))
+            .fg(hex_color(0xAAAAAA))
+    };
+    
+    let list = List::new(items)
+        .block(Block::default()
+            .title(title)
+            .borders(Borders::ALL)
+            .border_type(border_type)
+            .border_style(border_style))
+        .highlight_style(highlight_style);
+    
+    f.render_stateful_widget(list, area, &mut app.service_state);
 }
 
-fn draw_status_overview(f: &mut Frame, area: Rect, _app: &App) {
+fn draw_status_overview(f: &mut Frame, area: Rect, app: &App) {
     let block = Block::default()
         .title(" System Status ")
         .borders(Borders::ALL)
-        .border_style(Style::default().fg(hex_color(0x333333)));
+        .border_type(BorderType::Rounded)
+        .border_style(Style::default().fg(Color::White));
     
     f.render_widget(block, area);
+    
+    let content_area = Rect {
+        x: area.x + 2,
+        y: area.y + 2,
+        width: area.width.saturating_sub(4),
+        height: area.height.saturating_sub(4),
+    };
+    
+    let active_count = app.detours.iter().filter(|d| d.active).count();
+    let total_count = app.detours.len();
+    let include_count = app.includes.iter().filter(|i| i.active).count();
+    let service_count = app.services.len();
+    
+    let overall_status = if active_count == total_count && total_count > 0 {
+        ("✓ All Active", Color::Green)
+    } else if active_count > 0 {
+        ("⚠ Partial", Color::Yellow)
+    } else {
+        ("○ None Active", Color::DarkGray)
+    };
+    
+    let lines = vec![
+        Line::from(vec![
+            Span::styled("Overall: ", Style::default().fg(hex_color(0x888888))),
+            Span::styled(overall_status.0, Style::default().fg(overall_status.1).add_modifier(Modifier::BOLD)),
+        ]),
+        Line::from(""),
+        Line::from(vec![
+            Span::styled("Detours:  ", Style::default().fg(hex_color(0x888888))),
+            Span::styled(format!("{}/{} active", active_count, total_count), Style::default().fg(Color::White)),
+        ]),
+        Line::from(vec![
+            Span::styled("Includes: ", Style::default().fg(hex_color(0x888888))),
+            Span::styled(format!("{} active", include_count), Style::default().fg(Color::White)),
+        ]),
+        Line::from(vec![
+            Span::styled("Services: ", Style::default().fg(hex_color(0x888888))),
+            Span::styled(format!("{} configured", service_count), Style::default().fg(Color::White)),
+        ]),
+        Line::from(""),
+        Line::from(vec![
+            Span::styled("Profile:  ", Style::default().fg(hex_color(0x888888))),
+            Span::styled(&app.profile, Style::default().fg(Color::Cyan)),
+        ]),
+        Line::from(vec![
+            Span::styled("Config:   ", Style::default().fg(hex_color(0x888888))),
+            Span::styled(&app.config_path, Style::default().fg(hex_color(0x666666))),
+        ]),
+    ];
+    
+    let paragraph = Paragraph::new(lines);
+    f.render_widget(paragraph, content_area);
 }
 
-fn draw_logs_live(f: &mut Frame, area: Rect, _app: &App) {
+fn draw_logs_live(f: &mut Frame, area: Rect, app: &App) {
     let block = Block::default()
-        .title(" Detour Logs ")
+        .title(format!(" Logs ({}) ", app.logs.len()))
         .borders(Borders::ALL)
-        .border_style(Style::default().fg(hex_color(0x333333)));
+        .border_type(BorderType::Rounded)
+        .border_style(Style::default().fg(Color::White));
     
     f.render_widget(block, area);
+    
+    let content_area = Rect {
+        x: area.x + 1,
+        y: area.y + 1,
+        width: area.width.saturating_sub(2),
+        height: area.height.saturating_sub(2),
+    };
+    
+    if app.logs.is_empty() {
+        let message = Paragraph::new(" No logs yet")
+            .style(Style::default().fg(Color::DarkGray));
+        f.render_widget(message, content_area);
+    } else {
+        // Show last N logs that fit in the area
+        let max_logs = content_area.height as usize;
+        let start_idx = if app.logs.len() > max_logs {
+            app.logs.len() - max_logs
+        } else {
+            0
+        };
+        
+        let log_lines: Vec<Line> = app.logs[start_idx..].iter().map(|log| {
+            let level_color = match log.level.as_str() {
+                "ERROR" => Color::Red,
+                "WARN" => Color::Yellow,
+                "SUCCESS" => Color::Green,
+                _ => hex_color(0x888888),
+            };
+            
+            Line::from(vec![
+                Span::styled(&log.timestamp, Style::default().fg(hex_color(0x666666))),
+                Span::raw(" "),
+                Span::styled(format!("[{}]", log.level), Style::default().fg(level_color)),
+                Span::raw(" "),
+                Span::styled(&log.message, Style::default().fg(Color::White)),
+            ])
+        }).collect();
+        
+        let paragraph = Paragraph::new(log_lines);
+        f.render_widget(paragraph, content_area);
+    }
 }
 
-fn draw_config_edit(f: &mut Frame, area: Rect, _app: &App) {
+fn draw_config_edit(f: &mut Frame, area: Rect, app: &App) {
     let block = Block::default()
-        .title(" Configuration ")
+        .title(format!(" Configuration - {} ", app.config_path))
         .borders(Borders::ALL)
-        .border_style(Style::default().fg(hex_color(0x333333)));
+        .border_type(BorderType::Rounded)
+        .border_style(Style::default().fg(Color::White));
     
     f.render_widget(block, area);
+    
+    let content_area = Rect {
+        x: area.x + 2,
+        y: area.y + 2,
+        width: area.width.saturating_sub(4),
+        height: area.height.saturating_sub(4),
+    };
+    
+    // Read config file and display
+    let config_content = std::fs::read_to_string(&app.config_path)
+        .unwrap_or_else(|_| "# Config file not found\n# Create ~/.detour.conf to get started".to_string());
+    
+    let lines: Vec<Line> = config_content.lines()
+        .take(content_area.height as usize)
+        .enumerate()
+        .map(|(idx, line)| {
+            let line_num = format!("{:>4} │ ", idx + 1);
+            let color = if line.trim().starts_with('#') {
+                hex_color(0x666666)
+            } else if line.trim().starts_with("detour ") {
+                Color::Cyan
+            } else if line.trim().starts_with("include ") {
+                Color::Green
+            } else if line.trim().starts_with("service ") {
+                Color::Yellow
+            } else {
+                Color::White
+            };
+            
+            Line::from(vec![
+                Span::styled(line_num, Style::default().fg(hex_color(0x444444))),
+                Span::styled(line, Style::default().fg(color)),
+            ])
+        }).collect();
+    
+    let paragraph = Paragraph::new(lines);
+    f.render_widget(paragraph, content_area);
+}
+
+fn get_context_help(app: &App) -> String {
+    match app.view_mode {
+        ViewMode::DetoursList => {
+            "[Tab] Next  [↑↓/jk] Navigate  [Enter] Select  [Space] Toggle  [d] Diff  [r] Reload  [q] Quit".to_string()
+        }
+        ViewMode::IncludesList => {
+            "[Tab] Next  [↑↓/jk] Navigate  [Space] Toggle  [r] Reload  [q] Quit".to_string()
+        }
+        ViewMode::ServicesList => {
+            "[Tab] Next  [↑↓/jk] Navigate  [Enter] Manage  [r] Reload  [q] Quit".to_string()
+        }
+        ViewMode::LogsLive => {
+            "[Tab] Next  [c] Clear  [s] Save  [q] Quit".to_string()
+        }
+        ViewMode::ConfigEdit => {
+            "[Tab] Next  [r] Reload  [v] Validate  [q] Quit".to_string()
+        }
+        ViewMode::StatusOverview => {
+            "[Tab] Next  [r] Reload  [a] Apply All  [s] Stop All  [q] Quit".to_string()
+        }
+        _ => {
+            "[Tab] Next  [↑↓/jk] Navigate  [Enter] Select  [Esc] Back  [q] Quit".to_string()
+        }
+    }
 }
 
 fn draw_bottom_status(f: &mut Frame, area: Rect, app: &App) {
-    // Line 1: Navigation hints
-    let nav_text = "[Tab] Next  [↑↓/jk] Navigate  [Enter] Select  [?] Help  [q] Quit";
+    // Line 0: Status message (if any)
+    if let Some(status_msg) = &app.status_message {
+        let status_paragraph = Paragraph::new(Span::styled(
+            format!(" ✓ {} ", status_msg),
+            Style::default().fg(Color::Green).add_modifier(Modifier::BOLD)
+        ));
+        f.render_widget(status_paragraph, Rect {
+            x: area.x,
+            y: area.y,
+            width: area.width,
+            height: 1,
+        });
+    } else if let Some(error_msg) = &app.error_message {
+        let error_paragraph = Paragraph::new(Span::styled(
+            format!(" ✗ {} ", error_msg),
+            Style::default().fg(Color::Red).add_modifier(Modifier::BOLD)
+        ));
+        f.render_widget(error_paragraph, Rect {
+            x: area.x,
+            y: area.y,
+            width: area.width,
+            height: 1,
+        });
+    }
+    
+    // Line 1: Navigation hints (context-specific)
+    let nav_text = get_context_help(app);
     let nav_paragraph = Paragraph::new(nav_text)
         .style(Style::default().fg(Color::DarkGray));
     f.render_widget(nav_paragraph, Rect {

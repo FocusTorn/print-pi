@@ -5,10 +5,12 @@
 pub mod app;
 pub mod events;
 pub mod ui;
+pub mod popup;
+pub mod diff;
 
-// Core functionality modules (to be implemented)
-// pub mod config;
-// pub mod detour;
-// pub mod include;
-// pub mod service;
+// Core functionality modules
+pub mod config;
+pub mod manager;
+// pub mod include;  // TODO: Implement
+// pub mod service;  // TODO: Implement
 

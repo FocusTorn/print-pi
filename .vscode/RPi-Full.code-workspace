@@ -1,8 +1,8 @@
 {
     "folders": [
         {
-            "name": "Home",
-            "path": ".."
+            "name": "home/pi",
+            "path": "/home/pi"
         },
         {
             "name": "_playground",
@@ -110,6 +110,19 @@
 
 
 
+    // Git settings to reduce errors and memory usage
+    "git.enabled": true,
+    "git.autorefresh": false,  // Stop constant polling
+    "git.scanRepositories": [],  // Don't scan for repos
+    "git.detectSubmodules": false,
+    "git.ignoredRepositories": [
+        "/home/pi/.oh-my-zsh",
+        "/home/pi/.cargo",
+        "/home/pi/.local"
+    ],
+    "git.untrackedChanges": "separate",
+    "git.enableSmartCommit": false,
+    "git.autofetch": false
 
 
     }

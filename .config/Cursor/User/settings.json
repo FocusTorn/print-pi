@@ -1,0 +1,12 @@
+{
+    // Global user settings - NOT committed to git
+    // Home Assistant long-lived access token (keep this secure!)
+    "homeAssistant.longLivedAccessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiIzYzVjYTNjM2E2MmM0ZWIzYjE3NDNlNDk4YmU4MjU5ZSIsImlhdCI6MTc2MTczMjQ3OSwiZXhwIjoyMDc3MDkyNDc5fQ.4_ta37XOAH_y5FSpUgSA7hmBfQ_qIks7d04seJw5NKc"
+}
+
+
+
+
+
+
+

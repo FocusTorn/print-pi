@@ -8,9 +8,7 @@ use crossterm::{
 use ratatui::{backend::CrosstermBackend, Terminal};
 use std::io;
 
-mod app;
-mod events;
-mod ui;
+use detour::{app, events, ui};
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     // Check if running in TUI mode or CLI mode
