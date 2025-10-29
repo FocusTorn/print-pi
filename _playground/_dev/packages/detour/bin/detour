@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+# Detour - File overlay/detour management system
+# Wrapper script that calls the core library
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+LIB_DIR="${SCRIPT_DIR}/lib"
+
+# Source the core library
+if [ -f "${LIB_DIR}/detour-core.sh" ]; then
+    source "${LIB_DIR}/detour-core.sh"
+else
+    echo "Error: detour-core.sh not found at ${LIB_DIR}/detour-core.sh"
+    exit 1
+fi
+
+

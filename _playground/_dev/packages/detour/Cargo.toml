@@ -1,0 +1,23 @@
+[package]
+name = "detour"
+version = "0.1.0"
+edition = "2021"
+authors = ["Your Name <your.email@example.com>"]
+description = "File overlay/detour management system with TUI"
+
+[dependencies]
+# TUI dependencies
+ratatui = "0.26"
+crossterm = "0.27"
+serde = { version = "1.0", features = ["derive"] }
+serde_yaml = "0.9"
+# clap = { version = "4.5", features = ["derive"] }  # For future CLI expansion
+
+[[bin]]
+name = "detour"
+path = "src/main.rs"
+
+[lib]
+name = "detour"
+path = "src/lib.rs"
+
