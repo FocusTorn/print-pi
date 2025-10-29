@@ -1,8 +1,8 @@
 {
     "folders": [
         {
-            "name": "home/pi",
-            "path": "/home/pi"
+            "name": "home",
+            "path": ".."
         },
         {
             "name": "_playground",
