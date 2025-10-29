@@ -1,33 +1,48 @@
 {
-    "folders": [ //>
+    "folders": [
         {
-            "name": "root (printy-pi)",
-            "path": "../../.."
-        },
-        {
-            "name": "~ (home/pi)",
+            "name": "Home",
             "path": ".."
         },
         {
             "name": "_playground",
             "path": "../_playground"
+        },
+        {
+            "name": "Root",
+            "path": "/",
+            "settings": {
+                // Disable HA extension for root folder
+                "files.associations": {
+                    "*.yaml": "yaml",
+                    "*.yml": "yaml"
+                },
+                // Prevent HA extension from activating
+                "workbench.editorAssociations": {
+                    "*.yaml": "default",
+                    "*.yml": "default"
+                }
+            }
         }
     ], //<
 
     "settings": {
 
         // [ json ] ===========================================================>> 
-        
+
         "json.format.enable": true,
         "json.format.keepLines": true,
-        
+
         "[json]": {
             "editor.defaultFormatter": "vscode.json-language-features"
         },
 
         //========================================================================================<<
-        
+
         // TERMINAL ===========================================================>> 
+
+
+        "terminal.integrated.cwd": "/home/pi",
 
         "terminal.integrated.defaultProfile.linux": "printy",
 
@@ -60,9 +75,11 @@
 
         //==========================================================================================<<
 
-        "files.exclude": { //>
+        "files.associations": { //>
+            "*.yaml": "home-assistant"
+        }, //<
 
-           
+        "files.exclude": { //>
 
             //= [~] dotfiles ==================================================== 
             "home/pi/.sudo_as_admin_successful": true,
@@ -81,8 +98,6 @@
             "home/pi/.zcompdump*": true,
 
 
-            // "klipper": true,
-            // "klippy-env": true,
 
 
 
@@ -94,7 +109,8 @@
         }, //<
 
 
-        
+
+
 
     }
 

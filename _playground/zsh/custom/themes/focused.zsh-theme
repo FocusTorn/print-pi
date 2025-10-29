@@ -98,19 +98,27 @@ PROMPT=$'
 
 RPROMPT='$(focused_git_status)'
 
-ZSH_THEME_GIT_PROMPT_STAGED="%F{#06d6a0} %{%G%}" # 76FF03 F951FF
-
 ZSH_THEME_GIT_PROMPT_PREFIX="%F{#D500F9}"
 ZSH_THEME_GIT_PROMPT_SEPARATOR=""
 ZSH_THEME_GIT_PROMPT_SUFFIX="%F{#D500F9}"
+
+
+
+ZSH_THEME_GIT_PROMPT_STAGED="%F{#06d6a0} %{%G%}" # 76FF03 F951FF
+ZSH_THEME_GIT_PROMPT_CHANGED="%F{#ffd166} %{%G%}" # F93827 FF1212 
+ZSH_THEME_GIT_PROMPT_DELETED="%F{#ef476f} %{✘%G%}"
+ZSH_THEME_GIT_PROMPT_UNTRACKED="%F{#ABABAB} %{Ø%G%}"
+
+
+ZSH_THEME_GIT_PROMPT_STASHED="%{$fg_bold[blue]%} %{󰴮%G%}%{$reset_color%}" # ⚑
+
 
 ZSH_THEME_GIT_PROMPT_BRANCH="%F{#3574AC}%B %{%G%}%b"
 
 
 
-ZSH_THEME_GIT_PROMPT_UNTRACKED="%F{#ABABAB} %{Ø%G%}"
-
-
+# # ZSH_THEME_GIT_PROMPT_BEHIND="%{↓%G%}"
+# # ZSH_THEME_GIT_PROMPT_AHEAD="%{↑%G%}"
 
 
 
@@ -118,14 +126,9 @@ ZSH_THEME_GIT_PROMPT_UNTRACKED="%F{#ABABAB} %{Ø%G%}"
 # ZSH_THEME_GIT_PROMPT_CONFLICTS="%{$fg_bold[red]%} %{✖%G%}%{$reset_color%}"
 
 # # ZSH_THEME_GIT_PROMPT_CHANGED="%F{#FFFF00}%b %{%G%}%f"
-ZSH_THEME_GIT_PROMPT_CHANGED="%F{#ffd166} %{%G%}" # F93827 FF1212 
 
 
 
-ZSH_THEME_GIT_PROMPT_DELETED="%F{#ef476f} %{✘%G%}"
-# # ZSH_THEME_GIT_PROMPT_BEHIND="%{↓%G%}"
-# # ZSH_THEME_GIT_PROMPT_AHEAD="%{↑%G%}"
-ZSH_THEME_GIT_PROMPT_STASHED="%{$fg_bold[blue]%} %{󰴮%G%}%{$reset_color%}" # ⚑
 # ZSH_THEME_GIT_PROMPT_CLEAN="%{$fg_bold[green]%} %{✔%G%}%{$reset_color%}"
 
 # Enable caching for better performance

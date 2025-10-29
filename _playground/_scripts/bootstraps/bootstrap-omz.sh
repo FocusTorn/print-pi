@@ -38,9 +38,12 @@ echo "🔗 Setting up custom directory symlink..."
 rm -rf "$HOME/.oh-my-zsh/custom"
 ln -s "$CUSTOM_DIR" "$HOME/.oh-my-zsh/custom"
 
-# Remove git tracking and contributor cruft to keep it clean
+# Configure git to ignore the symlinked custom directory
+echo "⚙️  Configuring git to ignore custom directory..."
+echo "custom/" >> "$HOME/.oh-my-zsh/.git/info/exclude"
+
+# Remove contributor cruft to keep it clean
 echo "🧹 Cleaning up unnecessary files..."
-rm -rf "$HOME/.oh-my-zsh/.git"
 rm -rf "$HOME/.oh-my-zsh/.github"
 rm -f "$HOME/.oh-my-zsh/"{CODE_OF_CONDUCT,CONTRIBUTING,SECURITY}.md
 rm -f "$HOME/.oh-my-zsh/README.md"
@@ -53,4 +56,7 @@ echo "🔗 Symlink: ~/.oh-my-zsh/custom -> $CUSTOM_DIR"
 ls -la "$HOME/.oh-my-zsh/custom"
 echo ""
 echo "⚙️  Make sure your .zshrc is properly configured"
+echo ""
+echo "📝 Note: OMZ updates will work normally (git ignores symlinked custom/)"
+echo "   To update: omz update"
 
