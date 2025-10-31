@@ -87,8 +87,11 @@ $DOCKER_CMD run -d \
   --name homeassistant \
   --privileged \
   --restart=unless-stopped \
+  --cap-add=NET_ADMIN \
+  --cap-add=NET_RAW \
   -e TZ="$TIMEZONE" \
   -v /home/pi/homeassistant:/config \
+  -v /run/dbus:/run/dbus:ro \
   --network=host \
   ghcr.io/home-assistant/home-assistant:stable
 
@@ -396,7 +399,7 @@ sudo chown -R pi:pi /home/pi/homeassistant
 if [ ! -f /home/pi/.local/bin/ha ]; then
     echo "🔗 Setting up 'ha' command..."
     mkdir -p /home/pi/.local/bin
-    ln -sf /home/pi/_playground/_scripts/ha-helper.sh /home/pi/.local/bin/ha
+    ln -sf /home/pi/_playground/home-assistant/ha-helper.sh /home/pi/.local/bin/ha
     echo "✅ 'ha' command available globally"
 fi
 

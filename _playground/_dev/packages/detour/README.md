@@ -66,33 +66,33 @@ detour/
 
 ## Configuration
 
-Detours are defined in `~/.detour.conf` (or `/etc/detour.conf` for system-wide).
+The detour system uses **two separate configuration files**:
 
-### Syntax
+### 1. Runtime Detours Mapping: `~/.detour.yaml`
 
-```bash
-# File detour: Redirect file reads
-detour /path/to/original = /path/to/custom
+This is where you define which files to overlay, include, and which services to manage.
 
-# Include directive: Insert file into another
-include /path/to/target : /path/to/include
+**Example:**
+```yaml
+detours:
+  - original: /home/pi/printer_data/config/printer.cfg
+    custom: /home/pi/_playground/klipper/printer.cfg
+    description: Custom Klipper configuration
 
-# Service management: Control services
-service service_name : restart
+includes:
+  - target: /home/pi/printer_data/config/printer.cfg
+    include: /home/pi/_playground/klipper/macros.cfg
+    description: Custom macro definitions
+
+services:
+  - name: klipper
+    action: restart
+    description: Restart Klipper after config changes
 ```
 
-### Example
+### 2. TUI Build Configuration: `config.yaml`
 
-```bash
-# Redirect Klipper config to custom version
-detour /home/pi/printer_data/config/printer.cfg = /home/pi/_playground/klipper/printer.cfg
-
-# Include custom macros into main config
-include /home/pi/printer_data/config/printer.cfg : /home/pi/_playground/klipper/macros.cfg
-
-# Restart Klipper after changes
-service klipper : restart
-```
+Located in the detour package directory, this controls the TUI's appearance and behavior (similar to chamon's config). You only need to edit this if customizing the TUI itself.
 
 ## Features
 
@@ -157,9 +157,13 @@ The Rust implementation will:
 
 - [x] Shell script implementation
 - [x] Project structure setup
-- [ ] Rust config parser
-- [ ] Rust core logic
-- [ ] TUI implementation
+- [x] Rust config parser (YAML)
+- [x] Rust core logic
+- [x] TUI implementation (horizontal 3-column layout)
+- [x] Navigation and keybindings
+- [x] Diff viewer
+- [x] Popup system
+- [ ] Advanced features (profiles, rollback)
 - [ ] Testing and validation
 - [ ] Migration guide
 

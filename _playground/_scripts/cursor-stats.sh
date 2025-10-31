@@ -82,3 +82,6 @@ free -h | awk '/^Mem:/ {printf "System RAM: %s used / %s total (%.1f%%)\n", $3, 
 
 
 
+
+
+

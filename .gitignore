@@ -112,3 +112,4 @@ _removed
 test-source.txt
 .symlink-db
 homeassistant
+_ha-backups

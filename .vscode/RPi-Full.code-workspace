@@ -2,27 +2,11 @@
     "folders": [
         {
             "name": "home",
-            "path": ".."
+            "path": "/home/pi"
         },
         {
             "name": "_playground",
-            "path": "../_playground"
-        },
-        {
-            "name": "Root",
-            "path": "/",
-            "settings": {
-                // Disable HA extension for root folder
-                "files.associations": {
-                    "*.yaml": "yaml",
-                    "*.yml": "yaml"
-                },
-                // Prevent HA extension from activating
-                "workbench.editorAssociations": {
-                    "*.yaml": "default",
-                    "*.yml": "default"
-                }
-            }
+            "path": "/home/pi/_playground"
         }
     ], //<
 
@@ -111,9 +95,9 @@
 
 
     // Git settings to reduce errors and memory usage
+    "git.path": "/usr/bin/git",
     "git.enabled": true,
-    "git.autorefresh": false,  // Stop constant polling
-    "git.scanRepositories": [],  // Don't scan for repos
+    "git.autorefresh": true,
     "git.detectSubmodules": false,
     "git.ignoredRepositories": [
         "/home/pi/.oh-my-zsh",

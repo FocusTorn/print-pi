@@ -72,3 +72,6 @@ echo -e "${YELLOW}Only extensions with separate language servers show individual
 
 
 
+
+
+

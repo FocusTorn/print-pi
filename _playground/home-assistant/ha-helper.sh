@@ -461,8 +461,11 @@ cmd_update() {
       --name "${HA_CONTAINER}" \
       --privileged \
       --restart=unless-stopped \
+      --cap-add=NET_ADMIN \
+      --cap-add=NET_RAW \
       -e TZ="$TIMEZONE" \
       -v "${HA_CONFIG_DIR}:/config" \
+      -v /run/dbus:/run/dbus:ro \
       --network=host \
       ghcr.io/home-assistant/home-assistant:stable
     

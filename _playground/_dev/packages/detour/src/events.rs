@@ -1,27 +1,59 @@
 // Event handling for detour TUI
 
-use crossterm::event::{self, Event, KeyCode, KeyEvent, KeyModifiers};
+use crossterm::event::{self, Event, KeyCode, KeyEvent, KeyModifiers, MouseEvent, MouseEventKind};
 use std::time::Duration;
 
 pub fn handle_events(app: &mut crate::app::App) -> std::io::Result<()> {
+    // Check for auto-dismiss of toasts (2.5 seconds)
+    app.toasts.retain(|toast| toast.shown_at.elapsed().as_secs_f32() <= 2.5);
+    
     if event::poll(Duration::from_millis(100))? {
-        if let Event::Key(key) = event::read()? {
-            handle_key_event(key, app);
+        match event::read()? {
+            Event::Key(key) => {
+                handle_key_event(key, app);
+            }
+            Event::Mouse(mouse) => {
+                handle_mouse_event(mouse, app);
+            }
+            _ => {}
         }
     }
     Ok(())
 }
 
 fn handle_key_event(key: KeyEvent, app: &mut crate::app::App) {
+    // If file browser is open, handle browser-specific keys
+    if app.file_browser.is_some() {
+        handle_file_browser_keys(key, app);
+        return;
+    }
+    
     // If popup is open, handle popup-specific keys
     if app.popup.is_some() {
         handle_popup_keys(key, app);
         return;
     }
     
+    // If validation report is open, handle validation report keys
+    if app.validation_report.is_some() {
+        handle_validation_report_keys(key, app);
+        return;
+    }
+    
     // If diff viewer is open, handle diff-specific keys
     if app.diff_viewer.is_some() {
         handle_diff_keys(key, app);
+        return;
+    }
+    
+    // If in Add/Edit Detour form OR Includes add form AND Column 3 is active, handle form-specific keys
+    if (app.view_mode == crate::app::ViewMode::DetoursAdd || app.view_mode == crate::app::ViewMode::DetoursEdit || app.view_mode == crate::app::ViewMode::IncludesAdd)
+        && app.active_column == crate::app::ActiveColumn::Content {
+        if app.view_mode == crate::app::ViewMode::IncludesAdd {
+            handle_includes_form_keys(key, app);
+        } else {
+            handle_form_keys(key, app);
+        }
         return;
     }
     
@@ -46,17 +78,13 @@ fn handle_key_event(key: KeyEvent, app: &mut crate::app::App) {
         KeyCode::Left | KeyCode::Char('h') => {
             app.navigate_prev_column();
         }
-        KeyCode::Right | KeyCode::Char('l') => {
-            // Right arrow also selects items (like Enter)
+        KeyCode::Right => {
+            // Right arrow moves focus (like Enter)
             app.handle_enter();
         }
-        
-        // Tab navigation
-        KeyCode::Tab => {
-            app.navigate_next_column();
-        }
-        KeyCode::BackTab => {
-            app.navigate_prev_column();
+        KeyCode::Char('l') => {
+            // 'l' also moves focus (vim-style)
+            app.handle_enter();
         }
         
         // Actions
@@ -69,21 +97,58 @@ fn handle_key_event(key: KeyEvent, app: &mut crate::app::App) {
         
         // Quick actions
         KeyCode::Char('a') => {
-            app.view_mode = crate::app::ViewMode::DetoursAdd;
-            app.active_column = crate::app::ActiveColumn::Content;
+            // Add works regardless of column focus
+            if app.view_mode == crate::app::ViewMode::DetoursList {
+                app.view_mode = crate::app::ViewMode::DetoursAdd;
+                app.add_form = crate::app::AddDetourForm::default();
+                app.active_column = crate::app::ActiveColumn::Content;
+            } else if app.view_mode == crate::app::ViewMode::IncludesList {
+                app.view_mode = crate::app::ViewMode::IncludesAdd;
+                app.include_form = crate::app::AddIncludeForm::default();
+                app.active_column = crate::app::ActiveColumn::Content;
+            }
+        }
+        KeyCode::Char('e') => {
+            // Edit requires selection (Column 3 focused)
+            if app.active_column == crate::app::ActiveColumn::Content {
+                if app.view_mode == crate::app::ViewMode::DetoursList {
+                    app.edit_selected_detour();
+                } else if app.view_mode == crate::app::ViewMode::IncludesList {
+                    app.edit_selected_include();
+                }
+            }
+        }
+        KeyCode::Delete => {
+            // Delete requires selection (Column 3 focused)
+            if app.active_column == crate::app::ActiveColumn::Content {
+                if app.view_mode == crate::app::ViewMode::DetoursList {
+                    app.delete_selected_detour();
+                } else if app.view_mode == crate::app::ViewMode::IncludesList {
+                    app.delete_selected_include();
+                }
+            }
         }
         KeyCode::Char('r') => {
             app.reload_config();
         }
         KeyCode::Char('v') => {
-            app.show_info("Validate", "Config validation coming soon!");
+            if app.active_column == crate::app::ActiveColumn::Content {
+                if app.view_mode == crate::app::ViewMode::DetoursList {
+                    let idx = app.selected_detour;
+                    app.validate_single_detour(idx);
+                } else if app.view_mode == crate::app::ViewMode::IncludesList {
+                    let idx = app.selected_include;
+                    app.validate_single_include(idx);
+                }
+            }
         }
         KeyCode::Char('s') => {
             app.view_mode = crate::app::ViewMode::StatusOverview;
         }
         KeyCode::Char('d') => {
-            // Show diff for selected detour
-            if app.view_mode == crate::app::ViewMode::DetoursList {
+            // Show diff requires selection (Column 3 focused)
+            if app.view_mode == crate::app::ViewMode::DetoursList 
+                && app.active_column == crate::app::ActiveColumn::Content {
                 if let Some(detour) = app.detours.get(app.selected_detour) {
                     let original = detour.original.clone();
                     let custom = detour.custom.clone();
@@ -129,10 +194,28 @@ fn handle_popup_keys(key: KeyEvent, app: &mut crate::app::App) {
                 match popup {
                     Popup::Confirm { .. } => {
                         if popup.is_yes_selected() {
-                            // Execute the confirmed action
+                            // Execute pending action if any
+                            let action = app.pending_action.take();
                             app.close_popup();
-                            // The specific action will be handled by the context that created the popup
+                            
+                                if let Some(pending) = action {
+                                    match pending {
+                                        crate::app::PendingAction::CreateFileAndSaveDetour => {
+                                            app.create_custom_file_and_save();
+                                        }
+                                        crate::app::PendingAction::DeleteDetour(index) => {
+                                            app.confirm_delete_detour(index);
+                                        }
+                                        crate::app::PendingAction::DeleteInclude(index) => {
+                                            app.confirm_delete_include(index);
+                                        }
+                                        crate::app::PendingAction::CreateIncludeFileAndSave => {
+                                            app.create_include_file_and_save();
+                                        }
+                                    }
+                                }
                         } else {
+                            app.pending_action = None;
                             app.close_popup();
                         }
                     }
@@ -172,6 +255,230 @@ fn handle_diff_keys(key: KeyEvent, app: &mut crate::app::App) {
             app.scroll_diff_page_down();
         }
         _ => {}
+    }
+}
+
+fn handle_includes_form_keys(key: KeyEvent, app: &mut crate::app::App) {
+    match key.code {
+        KeyCode::Esc => {
+            app.includes_form_cancel();
+        }
+        KeyCode::Enter => {
+            app.includes_form_submit();
+        }
+        KeyCode::Char('f') if key.modifiers.contains(KeyModifiers::CONTROL) => {
+            app.includes_form_open_file_browser();
+        }
+        KeyCode::Char('v') if key.modifiers.contains(KeyModifiers::CONTROL) => {
+            app.includes_form_paste_clipboard();
+        }
+        KeyCode::Tab => {
+            app.includes_form_complete_path();
+        }
+        KeyCode::Backspace => {
+            app.includes_form_backspace();
+        }
+        KeyCode::Left => {
+            app.includes_form_move_cursor_left();
+        }
+        KeyCode::Right => {
+            app.includes_form_move_cursor_right();
+        }
+        KeyCode::Up => {
+            app.includes_form_prev_field();
+        }
+        KeyCode::Down => {
+            app.includes_form_next_field();
+        }
+        KeyCode::Char(c) if !key.modifiers.contains(KeyModifiers::CONTROL) => {
+            app.includes_form_handle_char(c);
+        }
+        _ => {}
+    }
+}
+
+fn handle_form_keys(key: KeyEvent, app: &mut crate::app::App) {
+    match key.code {
+        // Cancel/Go back
+        KeyCode::Esc => {
+            app.form_cancel();
+        }
+        
+        // Save detour
+        KeyCode::Enter => {
+            app.form_save_detour();
+        }
+        
+        // Open file browser
+        KeyCode::Char('f') if key.modifiers.contains(KeyModifiers::CONTROL) => {
+            app.form_open_file_browser();
+        }
+        
+        // Paste from clipboard
+        KeyCode::Char('v') if key.modifiers.contains(KeyModifiers::CONTROL) => {
+            app.form_paste_clipboard();
+        }
+        
+        // Path completion or next field
+        KeyCode::Tab => {
+            // If in description field, just move to next field
+            // If in path fields, do completion first, then move to next field
+            if app.add_form.active_field == 2 {
+                app.form_next_field();
+            } else {
+                app.form_complete_path();
+            }
+        }
+        
+        // Text input
+        KeyCode::Char(c) if !key.modifiers.contains(KeyModifiers::CONTROL) => {
+            app.form_handle_char(c);
+        }
+        
+        // Backspace
+        KeyCode::Backspace => {
+            app.form_handle_backspace();
+        }
+        
+        // Cursor movement (left/right within field)
+        KeyCode::Left => {
+            if app.add_form.cursor_pos > 0 {
+                app.add_form.cursor_pos -= 1;
+            }
+        }
+        KeyCode::Right => {
+            let field_len = match app.add_form.active_field {
+                0 => app.add_form.original_path.len(),
+                1 => app.add_form.custom_path.len(),
+                2 => app.add_form.description.len(),
+                _ => 0,
+            };
+            if app.add_form.cursor_pos < field_len {
+                app.add_form.cursor_pos += 1;
+            }
+        }
+        
+        // Field navigation (up/down between fields)
+        KeyCode::Up => {
+            if app.add_form.active_field > 0 {
+                app.add_form.active_field -= 1;
+                let field_len = match app.add_form.active_field {
+                    0 => app.add_form.original_path.len(),
+                    1 => app.add_form.custom_path.len(),
+                    2 => app.add_form.description.len(),
+                    _ => 0,
+                };
+                app.add_form.cursor_pos = field_len;
+            }
+        }
+        KeyCode::Down => {
+            if app.add_form.active_field < 2 {
+                app.add_form.active_field += 1;
+                let field_len = match app.add_form.active_field {
+                    0 => app.add_form.original_path.len(),
+                    1 => app.add_form.custom_path.len(),
+                    2 => app.add_form.description.len(),
+                    _ => 0,
+                };
+                app.add_form.cursor_pos = field_len;
+            }
+        }
+        
+        KeyCode::Home => {
+            app.add_form.cursor_pos = 0;
+        }
+        KeyCode::End => {
+            let field_len = match app.add_form.active_field {
+                0 => app.add_form.original_path.len(),
+                1 => app.add_form.custom_path.len(),
+                2 => app.add_form.description.len(),
+                _ => 0,
+            };
+            app.add_form.cursor_pos = field_len;
+        }
+        
+        _ => {}
+    }
+}
+
+fn handle_file_browser_keys(key: KeyEvent, app: &mut crate::app::App) {
+    if let Some(browser) = &mut app.file_browser {
+        match key.code {
+            // Close browser without selection
+            KeyCode::Esc => {
+                if app.view_mode == crate::app::ViewMode::IncludesAdd {
+                    app.includes_form_close_file_browser(None);
+                } else {
+                    app.form_close_file_browser(None);
+                }
+            }
+            
+            // Select file/directory
+            KeyCode::Enter => {
+                if let Some(entry) = browser.entries.get(browser.selected_index) {
+                    if entry.is_dir {
+                        // Enter directory
+                        browser.enter_directory();
+                    } else {
+                        // Select file
+                        let path = browser.get_selected_path();
+                        if app.view_mode == crate::app::ViewMode::IncludesAdd {
+                            app.includes_form_close_file_browser(path);
+                        } else {
+                            app.form_close_file_browser(path);
+                        }
+                    }
+                }
+            }
+            
+            // Navigation
+            KeyCode::Up | KeyCode::Char('k') => {
+                browser.navigate_up();
+            }
+            KeyCode::Down | KeyCode::Char('j') => {
+                browser.navigate_down();
+            }
+            
+            // Right arrow: enter directory
+            KeyCode::Right => {
+                if let Some(entry) = browser.entries.get(browser.selected_index) {
+                    if entry.is_dir {
+                        browser.enter_directory();
+                    }
+                }
+            }
+            
+            // Left arrow: go to parent directory
+            KeyCode::Left => {
+                browser.go_to_parent();
+            }
+            
+            _ => {}
+        }
+    }
+}
+
+fn handle_validation_report_keys(key: KeyEvent, app: &mut crate::app::App) {
+    match key.code {
+        KeyCode::Enter | KeyCode::Esc | KeyCode::Char('q') => {
+            app.close_validation_report();
+        }
+        _ => {}
+    }
+}
+
+fn handle_mouse_event(mouse: MouseEvent, app: &mut crate::app::App) {
+    // Only handle mouse events in file browser for now
+    if let Some(browser) = &mut app.file_browser {
+        match mouse.kind {
+            MouseEventKind::ScrollUp => {
+                browser.scroll_up();
+            }
+            MouseEventKind::ScrollDown => {
+                browser.scroll_down();
+            }
+            _ => {}
+        }
     }
 }
 

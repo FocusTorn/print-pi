@@ -4,6 +4,9 @@
 **Version:** 0.2.0 (Feature Complete!)  
 **Build Status:** ✅ Compiled Successfully (21MB binary)
 
+## 📚 Documentation
+- ✅ **RUST-TUI-FORMATTING.md** - Complete visual design system, color palette, and formatting guide
+
 ## 🎉 ALL FEATURES COMPLETE! (10/10 TODOs Done)
 
 ## ✅ What's Working
@@ -48,7 +51,8 @@
 ## ✅ COMPLETED Features
 
 ### Core Functionality
-- ✅ **Config file parsing** - Reads `.detour.conf` with full syntax support
+- ✅ **Config file parsing** - Reads `~/.detour.yaml` with full YAML syntax support
+- ✅ **Two-config system** - Runtime mapping (`~/.detour.yaml`) + TUI build config (`config.yaml`)
 - ✅ **Apply detours** - Calls shell script for bind mounts
 - ✅ **Remove detours** - Unmounts via shell script
 - ✅ **Validate detours** - Checks file existence and permissions
@@ -72,7 +76,8 @@
 - ✅ **Reload config** - Live config reloading
 
 ### Integration
-- ✅ **Config parsing** - Reads existing `.detour.conf` format
+- ✅ **Config parsing** - Reads YAML config from `~/.detour.yaml`
+- ✅ **TUI configuration** - Separate `config.yaml` for TUI settings (like chamon)
 - ✅ **Shell script integration** - Calls `lib/detour-core.sh` for operations
 - ✅ **Mount checking** - Verifies active detours via `mount` command
 - ✅ **File system ops** - Gets file metadata, reads files, etc.
@@ -251,8 +256,9 @@ cd /home/pi/_playground/_dev/packages/detour
 - Chamon-inspired design
 
 ### 2. **Smart Config Loading**
-- Auto-detects `~/.detour.conf`
-- Parses detour/include/service directives
+- Reads `~/.detour.yaml` for runtime detours mapping
+- Reads `config.yaml` for TUI build configuration
+- Parses YAML detour/include/service directives
 - Shows real file info (size, timestamps)
 - Checks mount status
 

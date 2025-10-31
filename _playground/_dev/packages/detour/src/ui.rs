@@ -7,7 +7,7 @@ use ratatui::{
     layout::{Alignment, Rect},
     style::{Color, Modifier, Style},
     text::{Line, Span},
-    widgets::{Block, Borders, List, ListItem, Paragraph, BorderType},
+    widgets::{Block, Borders, List, ListItem, Paragraph, BorderType, Clear},
     Frame,
 };
 
@@ -19,6 +19,23 @@ fn hex_color(hex: u32) -> Color {
     )
 }
 
+// Universal selection highlighting for all columns
+fn get_selection_style(is_active: bool) -> Style {
+    if is_active {
+        // Cyan when focused
+        Style::default()
+            .bg(hex_color(0x1A2A2A))  // Dim cyan background
+            .fg(Color::Cyan)           // Cyan text
+    } else {
+        // Grey when not focused (matches Column 1 and 2)
+        Style::default()
+            .bg(hex_color(0x151515))  // Very subtle highlight
+            .fg(hex_color(0x777777))  // Grey text
+    }
+}
+
+// Accent color moved to form_panel component
+
 pub fn ui(f: &mut Frame, app: &mut App) {
     let area = f.size();
     
@@ -29,7 +46,7 @@ pub fn ui(f: &mut Frame, app: &mut App) {
     );
     
     // Check minimum size
-    if area.width < 120 || area.height < 20 {
+    if area.width < 120 || area.height < 16 {
         draw_minimal_ui(f, app);
         return;
     }
@@ -90,7 +107,14 @@ pub fn ui(f: &mut Frame, app: &mut App) {
     };
     draw_bottom_status(f, status_area, app);
     
-    // Draw diff viewer (overlays everything except popup)
+    // No global overlay; dimming handled by widgets based on is_modal_visible()
+
+    // Draw validation report (overlays everything except popup and file browser)
+    if let Some(report) = &app.validation_report {
+        draw_validation_report(f, area, report);
+    }
+    
+    // Draw diff viewer (overlays everything except popup and validation report)
     if let Some(diff) = &app.diff_viewer {
         diff::draw_diff(f, area, diff);
     }
@@ -99,7 +123,115 @@ pub fn ui(f: &mut Frame, app: &mut App) {
     if let Some(popup) = &app.popup {
         popup::draw_popup(f, area, popup);
     }
+    
+    // Draw file browser (overlays everything)
+    if let Some(browser) = &mut app.file_browser {
+        let browser_area = centered_rect(70, 88, area);
+        browser.render(f, area, browser_area);
+    }
 }
+
+// Helper function to create a centered rectangle
+fn draw_toasts(f: &mut Frame, area: Rect, app: &crate::app::App) {
+    use crate::app::ToastType;
+    
+    if app.toasts.is_empty() {
+        return;
+    }
+    
+    // Calculate the maximum width of all toasts
+    let mut max_width = 0usize;
+    let mut toast_data: Vec<(String, Color, String)> = Vec::new();
+    
+    for toast in &app.toasts {
+        let (icon, fg_color) = match toast.toast_type {
+            ToastType::Success => ("✓", Color::Green),
+            ToastType::Error => ("✗", Color::Red),
+            ToastType::Info => ("ℹ", Color::Cyan),
+        };
+        
+        let content = format!("{} {}", icon, toast.message);
+        max_width = max_width.max(content.len());
+        toast_data.push((content, fg_color, icon.to_string()));
+    }
+    
+    // Add 3 spaces total for padding (2 on left, 1 on right minimum)
+    max_width += 3;
+    
+    // Position offsets: start 1 line lower (down), very close to right edge
+    let y_start_offset = 1u16;  // Move down (add to y)
+    let x_padding_from_edge = 0u16;  // Right at the edge
+    
+    // Start from the bottom, going up
+    let mut y_offset = 0u16;
+    
+    for (content, fg_color, _) in toast_data.iter().rev() {
+        // Left-pad content to match max width, ensuring 2 col minimum left padding
+        // The format adds 1 space on the right
+        let content_len = content.len();
+        let left_padding = max_width.saturating_sub(content_len).saturating_sub(1).max(2);
+        
+        // Ensure the text exactly fills the width
+        let mut padded_text = format!("{}{} ", " ".repeat(left_padding), content);
+        
+        // Pad to exact width if needed
+        while padded_text.len() < max_width {
+            padded_text.push(' ');
+        }
+        // Trim if too long
+        if padded_text.len() > max_width {
+            padded_text.truncate(max_width);
+        }
+        
+        let toast_height = 1u16;
+        
+        // Position on bottom right with offsets
+        let toast_area = Rect {
+            x: area.width.saturating_sub(max_width as u16 + x_padding_from_edge),
+            y: (area.y + y_start_offset).saturating_sub(y_offset + toast_height),
+            width: max_width as u16,
+            height: toast_height,
+        };
+        
+        // Clear the area first to prevent color bleeding
+        f.render_widget(Clear, toast_area);
+        
+        // Render with background covering the entire width
+        let toast_widget = Paragraph::new(padded_text)
+            .style(Style::default()
+                .fg(*fg_color)
+                .bg(hex_color(0x0A0A0A))  // Match UI background
+                .add_modifier(Modifier::BOLD));
+        
+        f.render_widget(toast_widget, toast_area);
+        
+        y_offset += toast_height;  // No gap between toasts
+    }
+}
+
+fn centered_rect(percent_x: u16, percent_y: u16, r: Rect) -> Rect {
+    use ratatui::layout::{Constraint, Direction, Layout};
+    
+    let popup_layout = Layout::default()
+        .direction(Direction::Vertical)
+        .constraints([
+            Constraint::Percentage((100 - percent_y) / 2),
+            Constraint::Percentage(percent_y),
+            Constraint::Percentage((100 - percent_y) / 2),
+        ])
+        .split(r);
+    
+    Layout::default()
+        .direction(Direction::Horizontal)
+        .constraints([
+            Constraint::Percentage((100 - percent_x) / 2),
+            Constraint::Percentage(percent_x),
+            Constraint::Percentage((100 - percent_x) / 2),
+        ])
+        .split(popup_layout[1])[1]
+}
+
+//
 
 fn calculate_view_width(app: &App) -> u16 {
     let max_len = app.views
@@ -128,7 +260,7 @@ fn draw_minimal_ui(f: &mut Frame, _app: &mut App) {
         area,
     );
     
-    let message = "Terminal too small! Minimum: 120x20";
+    let message = "Terminal too small! Minimum: 120x16";
     let message_para = Paragraph::new(message)
         .alignment(Alignment::Center)
         .style(Style::default().fg(Color::Red).add_modifier(Modifier::BOLD));
@@ -166,6 +298,8 @@ fn draw_minimal_ui(f: &mut Frame, _app: &mut App) {
 }
 
 fn draw_title(f: &mut Frame, area: Rect, app: &App) {
+    let modal_visible = app.is_modal_visible();
+    
     let title_text = format!(
         " Detour  |  Profile: {}  |  {} active  |  Status: {} ",
         app.profile,
@@ -173,8 +307,16 @@ fn draw_title(f: &mut Frame, area: Rect, app: &App) {
         app.status_icon()
     );
     
-    let border_color = hex_color(0x666666);
-    let text_color = hex_color(0xBBBBBB);
+    let border_color = if modal_visible {
+        hex_color(0x222222)
+    } else {
+        hex_color(0x666666)
+    };
+    let text_color = if modal_visible {
+        hex_color(0x444444)
+    } else {
+        hex_color(0xBBBBBB)
+    };
     
     let title_block = Block::default()
         .borders(Borders::ALL)
@@ -190,35 +332,43 @@ fn draw_title(f: &mut Frame, area: Rect, app: &App) {
 }
 
 fn draw_view_column(f: &mut Frame, area: Rect, app: &mut App) {
-    let is_active = app.active_column == ActiveColumn::Views;
+    let modal_visible = app.is_modal_visible();
+    let is_active = app.active_column == ActiveColumn::Views && !modal_visible;
     
-    let border_style = if is_active {
+    let border_style = if modal_visible {
+        Style::default().fg(hex_color(0x222222)) // Dimmed when modal visible
+    } else if is_active {
         Style::default().fg(Color::White)
     } else {
         Style::default().fg(hex_color(0x333333))
     };
     let border_type = if is_active { BorderType::Thick } else { BorderType::Plain };
-    let text_color = if is_active {
+    let text_color = if modal_visible {
+        hex_color(0x444444) // Dimmed when modal visible
+    } else if is_active {
         hex_color(0xFFFFFF)
     } else {
         hex_color(0x777777)
     };
     
-    // Calculate max width for padding
+    // All views have associated panels, so all get arrows with proper padding
     let max_width = app.views.iter().map(|v| v.len()).max().unwrap_or(8);
-    
     let items: Vec<ListItem> = app.views.iter().map(|view| {
         let padding = max_width - view.len();
-        let padded = format!(" {}{} ", view, " ".repeat(padding));
-        ListItem::new(padded).style(Style::default().fg(text_color))
+        let display = format!(" {}{} ► ", view, " ".repeat(padding));
+        ListItem::new(display).style(Style::default().fg(text_color))
     }).collect();
     
     let mut state = app.view_state.clone();
     
-    let highlight_style = Style::default()
-        .bg(hex_color(0x2A2A2A))
-        .fg(hex_color(0xFFFFFF))
-        .add_modifier(Modifier::BOLD);
+    // When modal is visible, use the dimmed inactive style
+    let highlight_style = if modal_visible {
+        Style::default()
+            .bg(hex_color(0x0D0D0D))  // Nearly invisible highlight
+            .fg(hex_color(0x444444))  // Dimmed grey text
+    } else {
+        get_selection_style(is_active)
+    };
     
     let list = List::new(items)
         .block(Block::default()
@@ -231,112 +381,104 @@ fn draw_view_column(f: &mut Frame, area: Rect, app: &mut App) {
 }
 
 fn draw_action_column(f: &mut Frame, area: Rect, app: &mut App) {
+    let modal_visible = app.is_modal_visible();
     let actions = app.get_current_actions();
-    let is_active = app.active_column == ActiveColumn::Actions;
-    let is_content_active = app.active_column == ActiveColumn::Content;
+    let is_active = app.active_column == ActiveColumn::Actions && !modal_visible;
     
-    let border_style = if is_active {
+    let border_style = if modal_visible {
+        Style::default().fg(hex_color(0x222222))
+    } else if is_active {
         Style::default().fg(Color::White)
     } else {
         Style::default().fg(hex_color(0x333333))
     };
     let border_type = if is_active { BorderType::Thick } else { BorderType::Plain };
-    let text_color = if is_active {
+    let text_color = if modal_visible {
+        hex_color(0x444444)
+    } else if is_active {
         hex_color(0xFFFFFF)
     } else {
         hex_color(0x777777)
     };
     
-    // Calculate max width for padding
+    // Actions that open sub-panels get arrows with proper padding
     let max_width = actions.iter().map(|a| a.len()).max().unwrap_or(15);
-    
     let items: Vec<ListItem> = actions.iter().map(|action| {
+        let has_subpanel = matches!(action.as_str(),
+            "List" | "Add" | "Edit" | "Add Include" | "Export"
+        );
         let padding = max_width - action.len();
-        let padded = format!(" {}{} ", action, " ".repeat(padding));
-        ListItem::new(padded).style(Style::default().fg(text_color))
+        let display = if has_subpanel {
+            format!(" {}{} ► ", action, " ".repeat(padding))
+        } else {
+            format!(" {}{}", action, " ".repeat(padding))
+        };
+        ListItem::new(display).style(Style::default().fg(text_color))
     }).collect();
     
-    let show_highlight = app.active_column != ActiveColumn::Views;
+    // Selection in column 2 uses subtle cyan highlight, no arrow indicator
     let mut state = app.action_state.clone();
     
-    let highlight_style = if is_active || is_content_active {
+    // When modal is visible, use the dimmed inactive style
+    let highlight_style = if modal_visible {
         Style::default()
-            .bg(hex_color(0x2A2A2A))
-            .fg(hex_color(0xFFFFFF))
-            .add_modifier(Modifier::BOLD)
-    } else if show_highlight {
-        Style::default()
-            .bg(hex_color(0x1A1A1A))
-            .fg(hex_color(0xAAAAAA))
+            .bg(hex_color(0x0D0D0D))  // Nearly invisible highlight
+            .fg(hex_color(0x444444))  // Dimmed grey text
     } else {
-        Style::default()
+        get_selection_style(is_active)
     };
-    
-    if !show_highlight {
-        state.select(None);
-    }
     
     let list = List::new(items)
         .block(Block::default()
             .borders(Borders::ALL)
             .border_type(border_type)
             .border_style(border_style))
-        .highlight_style(highlight_style);
+        .highlight_style(highlight_style)
+        .highlight_symbol("");  // Empty string = no arrow indicator
     
     f.render_stateful_widget(list, area, &mut state);
-    
-    // Draw select indicator
-    for (idx, _action) in actions.iter().enumerate() {
-        if idx == app.selected_action {
-            let indicator_x = area.x + area.width - 3;
-            let indicator_y = area.y + (idx as u16) + 1;
-            
-            let color = if is_active || is_content_active {
-                Color::White
-            } else {
-                hex_color(0x666666)
-            };
-            
-            let indicator = Paragraph::new("◄")
-                .style(Style::default().fg(color));
-            f.render_widget(indicator, Rect {
-                x: indicator_x,
-                y: indicator_y,
-                width: 2,
-                height: 1,
-            });
-        }
-    }
 }
 
 fn draw_content_column(f: &mut Frame, area: Rect, app: &mut App) {
+    let modal_visible = app.is_modal_visible();
+    
     match app.view_mode {
-        ViewMode::DetoursList => draw_detours_list(f, area, app),
-        ViewMode::DetoursAdd => draw_detours_add(f, area, app),
-        ViewMode::IncludesList => draw_includes_list(f, area, app),
-        ViewMode::ServicesList => draw_services_list(f, area, app),
-        ViewMode::StatusOverview => draw_status_overview(f, area, app),
-        ViewMode::LogsLive => draw_logs_live(f, area, app),
-        ViewMode::ConfigEdit => draw_config_edit(f, area, app),
+        ViewMode::DetoursList => draw_detours_list(f, area, app, modal_visible),
+        ViewMode::DetoursAdd => draw_detours_add(f, area, app, modal_visible),
+        ViewMode::DetoursEdit => draw_detours_edit(f, area, app, modal_visible),
+        ViewMode::IncludesAdd => draw_includes_add(f, area, app, modal_visible),
+        ViewMode::IncludesList => draw_includes_list(f, area, app, modal_visible),
+        ViewMode::ServicesList => draw_services_list(f, area, app, modal_visible),
+        ViewMode::StatusOverview => draw_status_overview(f, area, app, modal_visible),
+        ViewMode::LogsLive => draw_logs_live(f, area, app, modal_visible),
+        ViewMode::ConfigEdit => draw_config_edit(f, area, app),  // Already has modal_visible
     }
 }
 
-fn draw_detours_list(f: &mut Frame, area: Rect, app: &mut App) {
-    let is_active = app.active_column == ActiveColumn::Content;
+fn draw_detours_list(f: &mut Frame, area: Rect, app: &mut App, modal_visible: bool) {
+    let is_active = app.active_column == ActiveColumn::Content && !modal_visible;
     
-    let border_style = if is_active {
+    let border_style = if modal_visible {
+        Style::default().fg(hex_color(0x222222))
+    } else if is_active {
         Style::default().fg(Color::White)
     } else {
         Style::default().fg(hex_color(0x333333))
     };
     let border_type = if is_active { BorderType::Thick } else { BorderType::Plain };
-    let text_color = if is_active {
+    let text_color = if modal_visible {
+        hex_color(0x444444)
+    } else if is_active {
         hex_color(0xFFFFFF)
     } else {
         hex_color(0x777777)
     };
     
-    let title = format!(" Active Detours ({}) ", app.detours.len());
+    // Title color matches focus state
+    let title = Span::styled(
+        format!(" Active Detours ({}) ", app.detours.len()),
+        Style::default().fg(if is_active { Color::Cyan } else { text_color })
+    );
     
     let items: Vec<ListItem> = if app.detours.is_empty() {
         vec![ListItem::new(" No detours configured").style(Style::default().fg(Color::DarkGray))]
@@ -360,15 +502,12 @@ fn draw_detours_list(f: &mut Frame, area: Rect, app: &mut App) {
         }).collect()
     };
     
-    let highlight_style = if is_active {
+    let highlight_style = if modal_visible {
         Style::default()
-            .bg(hex_color(0x2A2A2A))
-            .fg(hex_color(0xFFFFFF))
-            .add_modifier(Modifier::BOLD)
+            .bg(hex_color(0x0D0D0D))
+            .fg(hex_color(0x444444))
     } else {
-        Style::default()
-            .bg(hex_color(0x1A1A1A))
-            .fg(hex_color(0xAAAAAA))
+        get_selection_style(is_active)
     };
     
     let list = List::new(items)
@@ -382,107 +521,127 @@ fn draw_detours_list(f: &mut Frame, area: Rect, app: &mut App) {
     f.render_stateful_widget(list, area, &mut app.detour_state);
 }
 
-fn draw_detours_add(f: &mut Frame, area: Rect, _app: &App) {
-    let block = Block::default()
-        .title(" Add New Detour ")
-        .borders(Borders::ALL)
-        .border_type(BorderType::Rounded)
-        .border_style(Style::default().fg(Color::White));
-    
-    f.render_widget(block, area);
-    
-    let content_area = Rect {
-        x: area.x + 2,
-        y: area.y + 2,
-        width: area.width.saturating_sub(4),
-        height: area.height.saturating_sub(4),
-    };
-    
-    let lines = vec![
-        Line::from(""),
-        Line::from("Original Path:  /home/pi/homeassistant/configuration.yaml█"),
-        Line::from("                [Tab] suggestions  [Ctrl+F] Browse"),
-        Line::from(""),
-        Line::from("Custom Path:    /home/pi/_playground/homeassistant/configuration.yaml"),
-        Line::from(Span::styled("                ✓ File exists (3.8 KB, modified today)", Style::default().fg(Color::Green))),
-        Line::from(""),
-        Line::from(""),
-        Line::from("              [Esc] Cancel          [Enter] Apply Detour"),
+fn draw_detours_add(f: &mut Frame, area: Rect, app: &App, modal_visible: bool) {
+    let is_active = app.active_column == ActiveColumn::Content && !modal_visible;
+    let fields = vec![
+        crate::components::form_panel::FormField { label: "Original Path:".to_string(), value: app.add_form.original_path.clone(), placeholder: "/path/to/original/file".to_string() },
+        crate::components::form_panel::FormField { label: "Custom Path:".to_string(), value: app.add_form.custom_path.clone(), placeholder: "/path/to/custom/file".to_string() },
+        crate::components::form_panel::FormField { label: "Description (optional):".to_string(), value: app.add_form.description.clone(), placeholder: "Brief description of this detour".to_string() },
     ];
-    
-    let paragraph = Paragraph::new(lines);
-    f.render_widget(paragraph, content_area);
+    let state = crate::components::form_panel::FormState { active_field: app.add_form.active_field, cursor_pos: app.add_form.cursor_pos };
+    let title = if app.add_form.editing_index.is_some() {
+        " Edit Detour "
+    } else {
+        " Add New Detour "
+    };
+    crate::components::form_panel::draw_form_panel(
+        f,
+        area,
+        title,
+        &fields,
+        &state,
+        is_active,
+        modal_visible,
+    );
 }
 
-fn draw_includes_list(f: &mut Frame, area: Rect, app: &mut App) {
-    let is_active = app.active_column == ActiveColumn::Content;
-    
-    let border_style = if is_active {
-        Style::default().fg(Color::White)
+fn draw_detours_edit(f: &mut Frame, area: Rect, app: &App, modal_visible: bool) {
+    // Reuse the same form component, title will be set based on editing_index
+    draw_detours_add(f, area, app, modal_visible);
+}
+
+fn draw_includes_add(f: &mut Frame, area: Rect, app: &App, modal_visible: bool) {
+    let is_active = app.active_column == ActiveColumn::Content && !modal_visible;
+    let fields = vec![
+        crate::components::form_panel::FormField { label: "Target Path:".to_string(), value: app.include_form.target_path.clone(), placeholder: "/path/to/target".to_string() },
+        crate::components::form_panel::FormField { label: "Include File:".to_string(), value: app.include_form.include_path.clone(), placeholder: "/path/to/include.yaml".to_string() },
+        crate::components::form_panel::FormField { label: "Description (optional):".to_string(), value: app.include_form.description.clone(), placeholder: "Brief description of this include".to_string() },
+    ];
+    let state = crate::components::form_panel::FormState { active_field: app.include_form.active_field, cursor_pos: app.include_form.cursor_pos };
+    let title = if app.include_form.editing_index.is_some() {
+        " Edit Include "
     } else {
-        Style::default().fg(hex_color(0x333333))
+        " Add Include "
     };
-    let border_type = if is_active { BorderType::Thick } else { BorderType::Plain };
-    let text_color = if is_active {
-        hex_color(0xFFFFFF)
+    crate::components::form_panel::draw_form_panel(
+        f,
+        area,
+        title,
+        &fields,
+        &state,
+        is_active,
+        modal_visible,
+    );
+}
+
+fn draw_includes_list(f: &mut Frame, area: Rect, app: &mut App, modal_visible: bool) {
+    let is_active = app.active_column == ActiveColumn::Content && !modal_visible;
+    let items: Vec<crate::components::list_panel::ItemRow> = if app.includes.is_empty() {
+        vec![]
     } else {
-        hex_color(0x777777)
-    };
-    
-    let title = format!(" Includes ({}) ", app.includes.len());
-    
-    let items: Vec<ListItem> = if app.includes.is_empty() {
-        vec![ListItem::new(" No includes configured").style(Style::default().fg(Color::DarkGray))]
-    } else {
-        app.includes.iter().map(|include| {
-            let status_icon = if include.active { "✓" } else { "○" };
-            let line1 = format!("{} {} ← {}", 
-                status_icon,
-                include.target,
-                include.include_file
-            );
-            ListItem::new(line1).style(Style::default().fg(text_color))
+        app.includes.iter().map(|inc| {
+            // Get file info for the include file
+            let file_info = app.detour_manager.get_file_info(&inc.include_file);
+            let modified = if let Some(info) = &file_info {
+                crate::app::App::time_ago(info.modified_secs)
+            } else {
+                "Never".to_string()
+            };
+            let size_str = if let Some(info) = &file_info {
+                if info.size > 1024 * 1024 {
+                    format!("{:.1} MB", info.size as f64 / 1024.0 / 1024.0)
+                } else if info.size > 1024 {
+                    format!("{:.1} KB", info.size as f64 / 1024.0)
+                } else {
+                    format!("{} B", info.size)
+                }
+            } else {
+                "—".to_string()
+            };
+            let status_text = if inc.active { "✓ Active" } else { "○ Inactive" };
+            crate::components::list_panel::ItemRow {
+                line1: format!("{} ← {}", inc.target, inc.include_file),
+                line2: Some(format!("   📝 {}  |  📏 {}  |  {}", modified, size_str, status_text)),
+                status_icon: Some(if inc.active { "✓".to_string() } else { "○".to_string() }),
+            }
         }).collect()
     };
-    
-    let highlight_style = if is_active {
-        Style::default()
-            .bg(hex_color(0x2A2A2A))
-            .fg(hex_color(0xFFFFFF))
-            .add_modifier(Modifier::BOLD)
-    } else {
-        Style::default()
-            .bg(hex_color(0x1A1A1A))
-            .fg(hex_color(0xAAAAAA))
-    };
-    
-    let list = List::new(items)
-        .block(Block::default()
-            .title(title)
-            .borders(Borders::ALL)
-            .border_type(border_type)
-            .border_style(border_style))
-        .highlight_style(highlight_style);
-    
-    f.render_stateful_widget(list, area, &mut app.include_state);
+
+    crate::components::list_panel::draw_list_panel(
+        f,
+        area,
+        &format!(" Includes ({}) ", app.includes.len()),
+        &items,
+        &mut app.include_state,
+        is_active,
+        modal_visible,
+        &crate::components::list_panel::ListPanelTheme::default(),
+    );
 }
 
-fn draw_services_list(f: &mut Frame, area: Rect, app: &mut App) {
-    let is_active = app.active_column == ActiveColumn::Content;
+fn draw_services_list(f: &mut Frame, area: Rect, app: &mut App, modal_visible: bool) {
+    let is_active = app.active_column == ActiveColumn::Content && !modal_visible;
     
-    let border_style = if is_active {
+    let border_style = if modal_visible {
+        Style::default().fg(hex_color(0x222222))
+    } else if is_active {
         Style::default().fg(Color::White)
     } else {
         Style::default().fg(hex_color(0x333333))
     };
     let border_type = if is_active { BorderType::Thick } else { BorderType::Plain };
-    let text_color = if is_active {
+    let text_color = if modal_visible {
+        hex_color(0x444444)
+    } else if is_active {
         hex_color(0xFFFFFF)
     } else {
         hex_color(0x777777)
     };
     
-    let title = format!(" Services ({}) ", app.services.len());
+    let title = Span::styled(
+        format!(" Services ({}) ", app.services.len()),
+        Style::default().fg(if is_active { Color::Cyan } else { text_color })
+    );
     
     let items: Vec<ListItem> = if app.services.is_empty() {
         vec![ListItem::new(" No services configured").style(Style::default().fg(Color::DarkGray))]
@@ -497,15 +656,12 @@ fn draw_services_list(f: &mut Frame, area: Rect, app: &mut App) {
         }).collect()
     };
     
-    let highlight_style = if is_active {
+    let highlight_style = if modal_visible {
         Style::default()
-            .bg(hex_color(0x2A2A2A))
-            .fg(hex_color(0xFFFFFF))
-            .add_modifier(Modifier::BOLD)
+            .bg(hex_color(0x0D0D0D))
+            .fg(hex_color(0x444444))
     } else {
-        Style::default()
-            .bg(hex_color(0x1A1A1A))
-            .fg(hex_color(0xAAAAAA))
+        get_selection_style(is_active)
     };
     
     let list = List::new(items)
@@ -519,12 +675,18 @@ fn draw_services_list(f: &mut Frame, area: Rect, app: &mut App) {
     f.render_stateful_widget(list, area, &mut app.service_state);
 }
 
-fn draw_status_overview(f: &mut Frame, area: Rect, app: &App) {
+fn draw_status_overview(f: &mut Frame, area: Rect, app: &App, modal_visible: bool) {
+    let border_color = if modal_visible {
+        hex_color(0x222222)
+    } else {
+        Color::White
+    };
+    
     let block = Block::default()
         .title(" System Status ")
         .borders(Borders::ALL)
         .border_type(BorderType::Rounded)
-        .border_style(Style::default().fg(Color::White));
+        .border_style(Style::default().fg(border_color));
     
     f.render_widget(block, area);
     
@@ -581,12 +743,18 @@ fn draw_status_overview(f: &mut Frame, area: Rect, app: &App) {
     f.render_widget(paragraph, content_area);
 }
 
-fn draw_logs_live(f: &mut Frame, area: Rect, app: &App) {
+fn draw_logs_live(f: &mut Frame, area: Rect, app: &App, modal_visible: bool) {
+    let border_color = if modal_visible {
+        hex_color(0x222222)
+    } else {
+        Color::White
+    };
+    
     let block = Block::default()
         .title(format!(" Logs ({}) ", app.logs.len()))
         .borders(Borders::ALL)
         .border_type(BorderType::Rounded)
-        .border_style(Style::default().fg(Color::White));
+        .border_style(Style::default().fg(border_color));
     
     f.render_widget(block, area);
     
@@ -633,11 +801,18 @@ fn draw_logs_live(f: &mut Frame, area: Rect, app: &App) {
 }
 
 fn draw_config_edit(f: &mut Frame, area: Rect, app: &App) {
+    let modal_visible = app.is_modal_visible();
+    let border_color = if modal_visible {
+        hex_color(0x222222)
+    } else {
+        Color::White
+    };
+    
     let block = Block::default()
         .title(format!(" Configuration - {} ", app.config_path))
         .borders(Borders::ALL)
         .border_type(BorderType::Rounded)
-        .border_style(Style::default().fg(Color::White));
+        .border_style(Style::default().fg(border_color));
     
     f.render_widget(block, area);
     
@@ -679,73 +854,142 @@ fn draw_config_edit(f: &mut Frame, area: Rect, app: &App) {
     f.render_widget(paragraph, content_area);
 }
 
-fn get_context_help(app: &App) -> String {
+fn draw_validation_report(f: &mut Frame, area: Rect, report: &crate::app::ValidationReport) {
+    use ratatui::layout::{Constraint, Direction, Layout};
+    
+    // Create centered panel (80% width, ~89% height - one more line at bottom)
+    let popup_layout = Layout::default()
+        .direction(Direction::Vertical)
+        .constraints([
+            Constraint::Percentage(6),
+            Constraint::Percentage(89),
+            Constraint::Percentage(5),
+        ])
+        .split(area);
+    
+    let popup_area = Layout::default()
+        .direction(Direction::Horizontal)
+        .constraints([
+            Constraint::Percentage(10),
+            Constraint::Percentage(80),
+            Constraint::Percentage(10),
+        ])
+        .split(popup_layout[1])[1];
+    
+    // Clear the area
+    f.render_widget(Clear, popup_area);
+    
+    // Title and border color based on issues
+    let (title, border_color) = if report.has_issues {
+        (" Validation Issues Found ", Color::Red)
+    } else {
+        (" Validation Passed ✓ ", Color::Green)
+    };
+    
+    // Create bordered block with double border
+    let block = Block::default()
+        .title(title)
+        .title_alignment(Alignment::Center)
+        .borders(Borders::ALL)
+        .border_type(BorderType::Double)
+        .border_style(Style::default().fg(border_color));
+    
+    let inner_area = block.inner(popup_area);
+    f.render_widget(block, popup_area);
+    
+    // Add 1 column padding on left and right
+    let padded_area = Rect {
+        x: inner_area.x + 1,
+        y: inner_area.y,
+        width: inner_area.width.saturating_sub(2),
+        height: inner_area.height,
+    };
+    
+    // Render content
+    let paragraph = Paragraph::new(report.content.clone())
+        .style(Style::default().fg(Color::White))
+        .alignment(Alignment::Left);
+    
+    f.render_widget(paragraph, padded_area);
+    
+    // Help text at bottom
+    let help_text = " Press [Enter] to close ";
+    let help_area = Rect {
+        x: popup_area.x + (popup_area.width.saturating_sub(help_text.len() as u16)) / 2,
+        y: popup_area.y + popup_area.height.saturating_sub(1),
+        width: help_text.len() as u16,
+        height: 1,
+    };
+    
+    let help_widget = Paragraph::new(help_text)
+        .style(Style::default().fg(Color::DarkGray));
+    
+    f.render_widget(help_widget, help_area);
+}
+
+fn get_panel_help(app: &App) -> String {
     match app.view_mode {
         ViewMode::DetoursList => {
-            "[Tab] Next  [↑↓/jk] Navigate  [Enter] Select  [Space] Toggle  [d] Diff  [r] Reload  [q] Quit".to_string()
+            match app.active_column {
+                ActiveColumn::Views => "[a] Add".to_string(),
+                ActiveColumn::Actions => "[a] Add  [v] Validate All".to_string(),
+                ActiveColumn::Content => "[Space] Toggle  [a] Add  [e] Edit  [Del] Remove  [d] Diff  [v] Validate".to_string(),
+            }
         }
         ViewMode::IncludesList => {
-            "[Tab] Next  [↑↓/jk] Navigate  [Space] Toggle  [r] Reload  [q] Quit".to_string()
+            match app.active_column {
+                ActiveColumn::Views => "[a] Add".to_string(),
+                ActiveColumn::Actions => "[a] Add  [v] Validate All".to_string(),
+                ActiveColumn::Content => "[Space] Toggle  [a] Add  [e] Edit  [Del] Remove  [v] Validate".to_string(),
+            }
         }
         ViewMode::ServicesList => {
-            "[Tab] Next  [↑↓/jk] Navigate  [Enter] Manage  [r] Reload  [q] Quit".to_string()
+            "[Enter] Manage  [r] Reload".to_string()
         }
         ViewMode::LogsLive => {
-            "[Tab] Next  [c] Clear  [s] Save  [q] Quit".to_string()
+            "[c] Clear  [s] Save".to_string()
         }
         ViewMode::ConfigEdit => {
-            "[Tab] Next  [r] Reload  [v] Validate  [q] Quit".to_string()
+            "[r] Reload  [v] Validate".to_string()
         }
         ViewMode::StatusOverview => {
-            "[Tab] Next  [r] Reload  [a] Apply All  [s] Stop All  [q] Quit".to_string()
+            "[a] Apply All  [s] Stop All".to_string()
         }
-        _ => {
-            "[Tab] Next  [↑↓/jk] Navigate  [Enter] Select  [Esc] Back  [q] Quit".to_string()
+        ViewMode::DetoursAdd | ViewMode::DetoursEdit => {
+            "[Tab] Next Field  [Ctrl+F] Browse  [Ctrl+V] Paste  [Enter] Save  [Esc] Cancel".to_string()
+        }
+        ViewMode::IncludesAdd => {
+            "[Tab] Complete  [Ctrl+F] Browse  [Ctrl+V] Paste  [Enter] Save  [Esc] Cancel".to_string()
         }
     }
 }
 
 fn draw_bottom_status(f: &mut Frame, area: Rect, app: &App) {
-    // Line 0: Status message (if any)
-    if let Some(status_msg) = &app.status_message {
-        let status_paragraph = Paragraph::new(Span::styled(
-            format!(" ✓ {} ", status_msg),
-            Style::default().fg(Color::Green).add_modifier(Modifier::BOLD)
-        ));
-        f.render_widget(status_paragraph, Rect {
-            x: area.x,
-            y: area.y,
-            width: area.width,
-            height: 1,
-        });
-    } else if let Some(error_msg) = &app.error_message {
-        let error_paragraph = Paragraph::new(Span::styled(
-            format!(" ✗ {} ", error_msg),
-            Style::default().fg(Color::Red).add_modifier(Modifier::BOLD)
-        ));
-        f.render_widget(error_paragraph, Rect {
-            x: area.x,
-            y: area.y,
-            width: area.width,
-            height: 1,
-        });
-    }
+    let modal_visible = app.is_modal_visible();
     
-    // Line 1: Navigation hints (context-specific)
-    let nav_text = get_context_help(app);
-    let nav_paragraph = Paragraph::new(nav_text)
-        .style(Style::default().fg(Color::DarkGray));
-    f.render_widget(nav_paragraph, Rect {
-        x: area.x,
-        y: area.y + 1,
-        width: area.width,
-        height: 1,
-    });
+    // Draw toast notifications stacked on bottom right
+    draw_toasts(f, area, app);
+    
+    // Line 1: Global (grey) + Panel-specific (white) bindings
+    let global_text = "[arrows] Navigate  [r] Refresh  [q] Quit  [?] Help";
+    let panel_text = get_panel_help(app);
+    let spans = vec![
+        Span::styled(global_text, Style::default().fg(if modal_visible { hex_color(0x333333) } else { hex_color(0x777777) })),
+        Span::raw("  "),
+        Span::styled(panel_text, Style::default().fg(if modal_visible { hex_color(0x444444) } else { Color::White })),
+    ];
+    let nav_paragraph = Paragraph::new(Line::from(spans));
+    f.render_widget(nav_paragraph, Rect { x: area.x, y: area.y + 1, width: area.width, height: 1 });
     
     // Line 2: Horizontal divider
     let divider_line = "─".repeat(area.width as usize);
+    let divider_color = if modal_visible {
+        hex_color(0x222222)
+    } else {
+        Color::White
+    };
     let divider_paragraph = Paragraph::new(divider_line)
-        .style(Style::default().fg(Color::White));
+        .style(Style::default().fg(divider_color));
     f.render_widget(divider_paragraph, Rect {
         x: area.x,
         y: area.y + 2,
@@ -756,8 +1000,13 @@ fn draw_bottom_status(f: &mut Frame, area: Rect, app: &App) {
     // Line 3: Dynamic description
     let description = app.get_current_description();
     let desc_line = format!(" {:<width$} ", description, width = area.width as usize - 2);
+    let desc_color = if modal_visible {
+        hex_color(0x333333)
+    } else {
+        Color::White
+    };
     let desc_paragraph = Paragraph::new(desc_line)
-        .style(Style::default().fg(Color::White));
+        .style(Style::default().fg(desc_color));
     f.render_widget(desc_paragraph, Rect {
         x: area.x,
         y: area.y + 3,

@@ -55,6 +55,38 @@ impl DetourManager {
         self.call_script("remove")
     }
     
+    pub fn apply_detour(&self, original: &str, custom: &str) -> Result<String, String> {
+        // Create a bind mount for a specific detour
+        let output = Command::new("sudo")
+            .arg("mount")
+            .arg("--bind")
+            .arg(custom)
+            .arg(original)
+            .output()
+            .map_err(|e| format!("Failed to mount detour: {}", e))?;
+        
+        if output.status.success() {
+            Ok(format!("Mounted {} → {}", custom, original))
+        } else {
+            Err(String::from_utf8_lossy(&output.stderr).to_string())
+        }
+    }
+    
+    pub fn remove_detour(&self, original: &str) -> Result<String, String> {
+        // Remove a bind mount for a specific detour
+        let output = Command::new("sudo")
+            .arg("umount")
+            .arg(original)
+            .output()
+            .map_err(|e| format!("Failed to unmount detour: {}", e))?;
+        
+        if output.status.success() {
+            Ok(format!("Unmounted {}", original))
+        } else {
+            Err(String::from_utf8_lossy(&output.stderr).to_string())
+        }
+    }
+    
     pub fn get_status(&self) -> Result<Vec<DetourStatus>, String> {
         // Check which detours are actually mounted
         let mounts = self.get_active_mounts()?;

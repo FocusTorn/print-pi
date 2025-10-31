@@ -1,7 +1,10 @@
 #!/bin/bash
 
 # Detour Installation Script
-# Installs detour package to ~/.local/share/detour and creates symlink in ~/.local/bin
+# Installs:
+#   - TUI binary (compiled from Rust)
+#   - Runtime config (~/.detour.yaml)
+#   - Shell scripts (lib/detour-core.sh)
 
 set -e  # Exit on any error
 
@@ -11,6 +14,7 @@ GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 PURPLE='\033[0;35m'
+CYAN='\033[0;36m'
 NC='\033[0m' # No Color
 
 # Parse command line arguments
@@ -69,12 +73,26 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # Configuration
 INSTALL_DIR="$HOME/.local/share/detour"
 BIN_DIR="$HOME/.local/bin"
-EXAMPLE_CONFIG="$SCRIPT_DIR/examples/detour.conf.example"
-USER_CONFIG="$HOME/.detour.conf"
+EXAMPLE_CONFIG="$SCRIPT_DIR/examples/detour.yaml.example"
+USER_CONFIG="$HOME/.detour.yaml"
+TUI_CONFIG="$SCRIPT_DIR/config.yaml"  # TUI build config - NEVER copy/modify
+WRAPPER_SCRIPT="$SCRIPT_DIR/bin/detour-wrapper"
 
 # Verify we're in the correct package structure
-if [[ ! -f "$SCRIPT_DIR/bin/detour" || ! -d "$SCRIPT_DIR/lib" ]]; then
-    print_error "Invalid package structure. Expected bin/detour and lib/ directory."
+if [[ ! -d "$SCRIPT_DIR/lib" ]]; then
+    print_error "Invalid package structure. Expected lib/ directory."
+    exit 1
+fi
+
+# Check if wrapper script exists
+if [[ ! -f "$WRAPPER_SCRIPT" ]]; then
+    print_error "Wrapper script not found: $WRAPPER_SCRIPT"
+    exit 1
+fi
+
+# Check if at least one binary exists
+if [[ ! -f "$SCRIPT_DIR/target/release/detour" && ! -f "$SCRIPT_DIR/target/debug/detour" ]]; then
+    print_error "No detour binary found. Build it first with: cargo build --release"
     exit 1
 fi
 
@@ -94,51 +112,91 @@ if [[ "$DRY_RUN" != true ]]; then
 fi
 
 # Copy package structure to install directory
-print_info "Copying package files to $INSTALL_DIR..."
+print_info "Installing smart wrapper to $INSTALL_DIR..."
 if [[ "$DRY_RUN" != true ]]; then
-    # Copy bin/
-    cp -r "$SCRIPT_DIR/bin" "$INSTALL_DIR/"
+    # Create bin directory
+    mkdir -p "$INSTALL_DIR/bin"
     
-    # Copy lib/
+    # Copy lib/ (shell scripts)
     cp -r "$SCRIPT_DIR/lib" "$INSTALL_DIR/"
     
     # Copy examples/
-    cp -r "$SCRIPT_DIR/examples" "$INSTALL_DIR/"
-    
-    # Make detour executable
-    chmod +x "$INSTALL_DIR/bin/detour"
+    if [[ -d "$SCRIPT_DIR/examples" ]]; then
+        cp -r "$SCRIPT_DIR/examples" "$INSTALL_DIR/"
+    fi
 fi
 
-# Create symlink in bin directory
-print_info "Creating symlink in $BIN_DIR..."
-if [[ -L "$BIN_DIR/detour" ]]; then
-    print_warning "Symlink already exists, removing..."
+# Create symlink to wrapper script
+print_info "Creating smart symlink in $BIN_DIR..."
+if [[ -L "$BIN_DIR/detour" || -f "$BIN_DIR/detour" ]]; then
+    print_warning "Existing detour command found, removing..."
     if [[ "$DRY_RUN" != true ]]; then
         rm "$BIN_DIR/detour"
     fi
 fi
 if [[ "$DRY_RUN" != true ]]; then
-    ln -s "$INSTALL_DIR/bin/detour" "$BIN_DIR/detour"
+    ln -s "$WRAPPER_SCRIPT" "$BIN_DIR/detour"
 fi
 
-# Create user config if it doesn't exist
-if [[ ! -f "$USER_CONFIG" ]]; then
-    print_info "Creating example config at $USER_CONFIG..."
+# Handle user config (~/.detour.yaml)
+if [[ -f "$USER_CONFIG" ]]; then
+    print_warning "Config file already exists: $USER_CONFIG"
     if [[ "$DRY_RUN" != true ]]; then
-        cp "$EXAMPLE_CONFIG" "$USER_CONFIG"
+        read -p "$(echo -e ${CYAN}Overwrite it? [y/N]: ${NC})" -n 1 -r
+        echo
+        if [[ $REPLY =~ ^[Yy]$ ]]; then
+            print_info "Backing up existing config to ${USER_CONFIG}.backup"
+            cp "$USER_CONFIG" "${USER_CONFIG}.backup"
+            if [[ -f "$EXAMPLE_CONFIG" ]]; then
+                cp "$EXAMPLE_CONFIG" "$USER_CONFIG"
+                print_success "Config overwritten (backup saved)"
+            else
+                print_warning "No example config found to copy"
+            fi
+        else
+            print_info "Keeping existing config"
+        fi
+    else
+        print_info "Would prompt to overwrite existing config"
     fi
-    print_info "Edit $USER_CONFIG to add your detour rules"
 else
-    print_info "Config already exists at $USER_CONFIG (not overwriting)"
+    print_info "Creating config at $USER_CONFIG..."
+    if [[ "$DRY_RUN" != true ]]; then
+        if [[ -f "$EXAMPLE_CONFIG" ]]; then
+            cp "$EXAMPLE_CONFIG" "$USER_CONFIG"
+            print_success "Config created from example"
+        else
+            # Create minimal config if no example exists
+            cat > "$USER_CONFIG" << 'EOF'
+detours: []
+includes: []
+services: []
+EOF
+            print_success "Created minimal config"
+        fi
+    fi
 fi
 
 print_success "Detour installed successfully!"
 echo
 print_info "📁 Package installed to: $INSTALL_DIR"
-print_info "🔗 Executable: detour (via $BIN_DIR/detour)"
-print_info "⚙️  Config: $USER_CONFIG"
-print_info "📚 Examples: $INSTALL_DIR/examples/"
+print_info "🔗 Smart wrapper: $BIN_DIR/detour → $WRAPPER_SCRIPT"
+print_info "🎯 Automatically uses most recently built binary (debug or release)"
+print_info "⚡ Just run 'detour b' or 'detour br' to rebuild"
+print_info "⚙️  Runtime config: $USER_CONFIG"
+print_info "🎨 TUI config: $TUI_CONFIG (for development only)"
+if [[ -d "$INSTALL_DIR/examples" ]]; then
+    print_info "📚 Examples: $INSTALL_DIR/examples/"
+fi
 print_info "📖 Docs: $SCRIPT_DIR/README.md"
+echo
+print_info "${CYAN}Usage:${NC}"
+print_info "  detour           - Launch TUI"
+print_info "  detour b         - Build (dev mode)"
+print_info "  detour br        - Build (release mode)"
+print_info "  detour rb        - Build (dev) + launch TUI"
+print_info "  detour rbr       - Build (release) + launch TUI"
+print_info "  detour --help    - Show all options"
 
 # Check if ~/.local/bin is in PATH
 if [[ ":$PATH:" != *":$BIN_DIR:"* ]]; then

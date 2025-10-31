@@ -2,7 +2,7 @@
 
 use ratatui::{
     layout::{Alignment, Rect},
-    style::{Color, Modifier, Style},
+    style::{Color, Style},
     text::{Line, Span},
     widgets::{Block, Borders, Paragraph, BorderType, Clear},
     Frame,
@@ -14,6 +14,39 @@ fn hex_color(hex: u32) -> Color {
         ((hex >> 8) & 0xFF) as u8,
         (hex & 0xFF) as u8,
     )
+}
+
+// Helper function to wrap text to a given width
+fn wrap_text(text: &str, max_width: usize) -> Vec<String> {
+    let mut lines = Vec::new();
+    
+    for paragraph in text.split('\n') {
+        if paragraph.is_empty() {
+            lines.push(String::new());
+            continue;
+        }
+        
+        let words: Vec<&str> = paragraph.split_whitespace().collect();
+        let mut current_line = String::new();
+        
+        for word in words {
+            if current_line.is_empty() {
+                current_line = word.to_string();
+            } else if current_line.len() + 1 + word.len() <= max_width {
+                current_line.push(' ');
+                current_line.push_str(word);
+            } else {
+                lines.push(current_line);
+                current_line = word.to_string();
+            }
+        }
+        
+        if !current_line.is_empty() {
+            lines.push(current_line);
+        }
+    }
+    
+    lines
 }
 
 #[derive(Debug, Clone)]
@@ -36,6 +69,7 @@ pub enum Popup {
     Info {
         title: String,
         message: String,
+        shown_at: std::time::Instant,  // For auto-dismiss
     },
 }
 
@@ -68,6 +102,7 @@ impl Popup {
         Popup::Info {
             title: title.into(),
             message: message.into(),
+            shown_at: std::time::Instant::now(),
         }
     }
     
@@ -141,9 +176,7 @@ impl Popup {
 }
 
 pub fn draw_popup(f: &mut Frame, area: Rect, popup: &Popup) {
-    // Darken background
-    let bg = Block::default().style(Style::default().bg(hex_color(0x000000)));
-    f.render_widget(bg, area);
+    // Background dimming handled by global overlay in ui.rs
     
     match popup {
         Popup::Confirm { title, message, selected } => {
@@ -155,15 +188,26 @@ pub fn draw_popup(f: &mut Frame, area: Rect, popup: &Popup) {
         Popup::Error { title, message } => {
             draw_message_popup(f, area, title, message, Color::Red);
         }
-        Popup::Info { title, message } => {
+        Popup::Info { title, message, .. } => {
             draw_message_popup(f, area, title, message, Color::Cyan);
         }
     }
 }
 
 fn draw_confirm_popup(f: &mut Frame, area: Rect, title: &str, message: &str, selected: usize) {
-    let popup_width = message.len().max(30).min(area.width as usize - 4) as u16 + 4;
-    let popup_height = 9u16;
+    // Calculate width based on longest line + buttons width, with reasonable limits
+    let max_line_len = message.lines().map(|l| l.len()).max().unwrap_or(30);
+    let min_width_for_buttons = 30; // "    [ Yes ]    [ No ]"
+    let content_width = max_line_len.max(min_width_for_buttons);
+    let popup_width = (content_width as u16 + 8).max(40).min((area.width as f32 * 0.60) as u16).min(area.width - 4);
+    
+    // Wrap text to fit within popup width (accounting for padding)
+    let max_text_width = popup_width.saturating_sub(8) as usize;
+    let wrapped_lines = wrap_text(message, max_text_width);
+    
+    // Calculate height: border (2) + top padding (1) + content + spacing (1) + buttons (1) + bottom padding (1) + border (already counted)
+    // Total: content_lines + 7 (1 top pad + content + 1 spacing + 1 buttons + 1 bottom pad + 2 borders + 1 for the block itself)
+    let popup_height = (wrapped_lines.len() as u16 + 7).min(area.height - 4);
     
     let popup_x = (area.width.saturating_sub(popup_width)) / 2;
     let popup_y = (area.height.saturating_sub(popup_height)) / 2;
@@ -197,29 +241,37 @@ fn draw_confirm_popup(f: &mut Frame, area: Rect, title: &str, message: &str, sel
     };
     
     let yes_style = if selected == 0 {
-        Style::default().fg(Color::Green).add_modifier(Modifier::BOLD)
+        // Selected Yes - bright green text on very subtle green background
+        Style::default()
+            .fg(Color::Green)
+            .bg(hex_color(0x0F1F0F))  // Very subtle green background
     } else {
+        // Unselected Yes - grey text, no background
         Style::default().fg(hex_color(0x666666))
     };
     
     let no_style = if selected == 1 {
-        Style::default().fg(Color::Red).add_modifier(Modifier::BOLD)
+        // Selected No - brighter red text on very subtle red background
+        Style::default()
+            .fg(hex_color(0xFF4444))  // Brighter red
+            .bg(hex_color(0x1F0F0F))  // Very subtle red background
     } else {
+        // Unselected No - grey text, no background
         Style::default().fg(hex_color(0x666666))
     };
     
-    let lines = vec![
-        Line::from(""),
-        Line::from(Span::styled(message, Style::default().fg(Color::White))),
-        Line::from(""),
-        Line::from(""),
-        Line::from(vec![
-            Span::raw("    "),
-            Span::styled("[ Yes ]", yes_style),
-            Span::raw("    "),
-            Span::styled("[ No ]", no_style),
-        ]),
-    ];
+    // Build lines with wrapped text (compact spacing)
+    let mut lines = vec![Line::from("")]; // Top padding
+    for wrapped_line in wrapped_lines {
+        lines.push(Line::from(Span::styled(wrapped_line, Style::default().fg(Color::White))));
+    }
+    lines.push(Line::from("")); // Spacing before buttons
+    lines.push(Line::from(vec![
+        Span::raw("    "),
+        Span::styled("[ Yes ]", yes_style),
+        Span::raw("    "),
+        Span::styled("[ No ]", no_style),
+    ]));
     
     let paragraph = Paragraph::new(lines).alignment(Alignment::Center);
     f.render_widget(paragraph, content_area);
@@ -286,8 +338,16 @@ fn draw_input_popup(f: &mut Frame, area: Rect, title: &str, prompt: &str, input:
 }
 
 fn draw_message_popup(f: &mut Frame, area: Rect, title: &str, message: &str, color: Color) {
-    let popup_width = message.len().max(30).min(area.width as usize - 4) as u16 + 4;
-    let popup_height = 7u16;
+    // Calculate width based on content, with reasonable limits
+    let max_line_len = message.lines().map(|l| l.len()).max().unwrap_or(30);
+    let popup_width = (max_line_len as u16 + 8).max(40).min((area.width as f32 * 0.60) as u16).min(area.width - 4);
+    
+    // Wrap text to fit within popup width (accounting for padding)
+    let max_text_width = popup_width.saturating_sub(8) as usize;
+    let wrapped_lines = wrap_text(message, max_text_width);
+    
+    // Calculate height: top padding (1) + content + spacing (1) + help (1) + borders/padding (4)
+    let popup_height = (wrapped_lines.len() as u16 + 7).min(area.height - 4);
     
     let popup_x = (area.width.saturating_sub(popup_width)) / 2;
     let popup_y = (area.height.saturating_sub(popup_height)) / 2;
@@ -320,16 +380,20 @@ fn draw_message_popup(f: &mut Frame, area: Rect, title: &str, message: &str, col
         height: popup_area.height.saturating_sub(4),
     };
     
-    let lines = vec![
-        Line::from(""),
-        Line::from(Span::styled(message, Style::default().fg(Color::White))),
-        Line::from(""),
-        Line::from(Span::styled("[Enter] to close", Style::default().fg(hex_color(0x666666)))),
-    ];
+    // Build lines with wrapped text (compact spacing)
+    let mut lines = vec![Line::from("")]; // Top padding
+    for wrapped_line in wrapped_lines {
+        lines.push(Line::from(Span::styled(wrapped_line, Style::default().fg(Color::White))));
+    }
+    lines.push(Line::from("")); // Spacing before help
+    lines.push(Line::from(Span::styled("[Enter] to close", Style::default().fg(hex_color(0x666666)))));
     
     let paragraph = Paragraph::new(lines).alignment(Alignment::Center);
     f.render_widget(paragraph, content_area);
 }
+
+
+
 
 
 

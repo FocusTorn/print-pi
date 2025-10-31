@@ -84,23 +84,172 @@ rm -f "${DOWNLOAD_DIR}/bambu_lab.zip"
 echo ""
 echo "✅ Bambu Lab integration installation complete!"
 echo ""
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo ""
+echo "🔧 Configure Printer"
+echo ""
+echo "You can configure the A1 printer now or later via web UI:"
+echo ""
+read -p "Configure printer now? (y/N): " -n 1 -r
+echo
+if [[ $REPLY =~ ^[Yy]$ ]]; then
+    echo ""
+    echo "📝 Printer Configuration"
+    echo ""
+    
+    # Get connection type
+    echo "Connection Type:"
+    echo "  1) LAN Mode (Direct IP, recommended for automation)"
+    echo "  2) Cloud Mode (Bambu Cloud, requires account)"
+    echo "  3) Skip (configure via web UI later)"
+    read -p "Choose (1/2/3): " -n 1 -r
+    CONNECTION_TYPE="$REPLY"
+    echo ""
+    echo ""
+    
+    if [[ "$CONNECTION_TYPE" == "1" ]]; then
+        # LAN Mode configuration
+        echo "LAN Mode Setup:"
+        read -p "Printer Serial Number (e.g., 03919D532705945): " SERIAL
+        read -p "Printer IP Address (e.g., 192.168.1.163): " HOST
+        read -p "Access Code (8 digits from printer settings): " ACCESS_CODE
+        read -p "Printer Name (optional, default: A1): " PRINTER_NAME
+        PRINTER_NAME="${PRINTER_NAME:-A1}"
+        
+        echo ""
+        echo "📋 Configuration Summary:"
+        echo "   Serial: $SERIAL"
+        echo "   IP: $HOST"
+        echo "   Access Code: $ACCESS_CODE"
+        echo "   Name: $PRINTER_NAME"
+        echo ""
+        read -p "Create configuration entry? (y/N): " -n 1 -r
+        echo ""
+        
+        if [[ $REPLY =~ ^[Yy]$ ]]; then
+            echo "💾 Creating configuration entry..."
+            
+            # Generate entry_id (simplified - HA will regenerate if needed)
+            ENTRY_ID=$(python3 -c "import secrets; print(secrets.token_urlsafe(16))" | head -c 25)
+            TIMESTAMP=$(python3 -c "from datetime import datetime; print(datetime.utcnow().isoformat() + '+00:00')")
+            
+            # Create config entry JSON structure
+            python3 << PYEOF
+import json
+import sys
+from datetime import datetime
+
+config_file = "${HA_CONFIG_DIR}/.storage/core.config_entries"
+
+try:
+    # Read existing config
+    with open(config_file, 'r') as f:
+        data = json.load(f)
+    
+    # Check if entry already exists
+    existing = False
+    for entry in data['data']['entries']:
+        if entry.get('domain') == 'bambu_lab' and entry.get('data', {}).get('serial') == '${SERIAL}':
+            print(f"⚠️  Configuration entry already exists for serial ${SERIAL}")
+            existing = True
+            break
+    
+    if not existing:
+        # Create new entry
+        new_entry = {
+            "created_at": "${TIMESTAMP}",
+            "data": {
+                "device_type": "A1",
+                "serial": "${SERIAL}"
+            },
+            "disabled_by": None,
+            "discovery_keys": {},
+            "domain": "bambu_lab",
+            "entry_id": "${ENTRY_ID}",
+            "minor_version": 1,
+            "modified_at": "${TIMESTAMP}",
+            "options": {
+                "access_code": "${ACCESS_CODE}",
+                "auth_token": "",
+                "disable_ssl_verify": False,
+                "email": "",
+                "enable_firmware_update": False,
+                "force_ip": False,
+                "host": "${HOST}",
+                "local_mqtt": True,
+                "name": "${PRINTER_NAME}",
+                "print_cache_count": 100,
+                "region": "",
+                "timelapse_cache_count": 1,
+                "usage_hours": 0.0,
+                "username": ""
+            },
+            "pref_disable_new_entities": False,
+            "pref_disable_polling": False,
+            "source": "user",
+            "subentries": [],
+            "title": "${SERIAL}",
+            "unique_id": None,
+            "version": 2
+        }
+        
+        data['data']['entries'].append(new_entry)
+        
+        # Backup original
+        import shutil
+        shutil.copy(config_file, config_file + '.bak')
+        
+        # Write updated config
+        with open(config_file, 'w') as f:
+            json.dump(data, f)
+        
+        print("✅ Configuration entry created!")
+        print("   Note: You may need to restart HA and verify connection in web UI")
+    else:
+        print("   Use web UI to update existing entry if needed")
+        
+except Exception as e:
+    print(f"❌ Error creating config entry: {e}")
+    print("   You can configure via web UI instead")
+    sys.exit(1)
+PYEOF
+            
+            if [ $? -eq 0 ]; then
+                echo ""
+                echo "✅ Configuration saved!"
+                echo "   The entry will be validated when Home Assistant restarts"
+            fi
+        fi
+        
+    elif [[ "$CONNECTION_TYPE" == "2" ]]; then
+        echo ""
+        echo "⚠️  Cloud Mode requires interactive authentication"
+        echo "   Please configure via web UI:"
+        echo "   Settings → Devices & Services → Add Integration → Bambu Lab"
+        echo ""
+    fi
+else
+    echo ""
+    echo "📋 Configuration can be done later via web UI"
+fi
+
+echo ""
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo ""
 echo "📋 Next Steps:"
 echo "   1. Restart Home Assistant:"
 echo "      ha restart"
 echo ""
 echo "   2. Clear browser cache (Ctrl+Shift+R)"
 echo ""
-echo "   3. Add Bambu Lab integration:"
-echo "      • Go to Settings → Devices & Services"
-echo "      • Click '+ Add Integration'"
-echo "      • Search for 'Bambu Lab'"
-echo "      • Enter your printer's IP address or cloud credentials"
-echo ""
-echo "   4. Configure printer:"
-echo "      • Device serial number (on printer)"
-echo "      • Access code (in printer settings)"
-echo "      • Connection type: LAN or Cloud"
-echo ""
+if [[ "$CONNECTION_TYPE" != "1" ]] || [[ ! $REPLY =~ ^[Yy]$ ]]; then
+    echo "   3. Add Bambu Lab integration (if not configured above):"
+    echo "      • Go to Settings → Devices & Services"
+    echo "      • Click '+ Add Integration'"
+    echo "      • Search for 'Bambu Lab'"
+    echo "      • Enter your printer's IP address or cloud credentials"
+    echo ""
+fi
 echo "📖 Documentation:"
 echo "   • GitHub: https://github.com/greghesp/ha-bambulab"
 echo "   • Bambu Wiki: https://wiki.bambulab.com/"
