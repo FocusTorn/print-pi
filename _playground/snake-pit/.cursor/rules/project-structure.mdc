@@ -1,0 +1,130 @@
+---
+description: Project structure and organization guidelines for snake-pit
+globs: ["**"]
+alwaysApply: true
+---
+
+# Snake Pit Project Structure
+
+## Directory Layout
+
+```
+snake-pit/
+├── .cursor/rules/           # Cursor AI rules (this directory)
+├── .venv/                   # Shared virtual environment
+├── .gitignore               # Git ignore patterns
+├── README.md                # Project documentation
+├── requirements.txt         # Shared dependencies
+└── projects/                # Individual Python projects
+    ├── bme680-monitor/
+    │   ├── venv/           # Project-specific venv (optional)
+    │   ├── requirements.txt
+    │   ├── README.md
+    │   └── [source files]
+    └── [other projects]/
+```
+
+## Project Naming
+
+- **Lowercase with hyphens**: `bme680-monitor`, `printer-control`
+- **Descriptive**: Names should clearly indicate project purpose
+- **Consistent**: Follow established naming patterns
+
+## File Organization
+
+### Required Files Per Project
+
+- `README.md`: Project documentation and setup instructions
+- `requirements.txt`: Project-specific dependencies (if using project venv)
+
+### Recommended Files Per Project
+
+- `config.yaml` or `settings.toml`: Configuration files
+- `.env`: Environment variables (add to `.gitignore`)
+- `main.py` or `app.py`: Entry point
+
+### Optional Files
+
+- `tests/`: Unit and integration tests
+- `docs/`: Additional documentation
+- `scripts/`: Utility scripts
+
+## Virtual Environment Strategy
+
+### Use Root `.venv/` When:
+
+- Dependencies are shared across multiple projects
+- No version conflicts exist
+- Simple dependency resolution
+
+### Create Project `venv/` When:
+
+- Hardware-specific libraries with complex dependencies
+- Version conflicts with shared dependencies
+- Project needs complete isolation
+- Testing different package versions
+
+## Running Projects
+
+**Always run from snake-pit root or project directory:**
+```bash
+# Shared venv
+cd /home/pi/_playground/snake-pit
+uv run python projects/my-project/main.py
+
+# Project venv
+cd projects/my-project
+uv run python main.py
+```
+
+## Documentation
+
+- Each project must have a README.md
+- Document hardware requirements (sensors, GPIO pins)
+- Include setup and usage instructions
+- Note any system dependencies (apt packages, services)
+
+## Git Strategy
+
+- Track all source code and configuration
+- Ignore virtual environments and caches
+- Track requirements.txt for reproducibility
+- Use git submodules only if necessary
+
+## Integration with Workspace Architecture
+
+**This project follows the `_playground/` vs `~/` separation:**
+
+- **snake-pit location**: `/home/pi/_playground/snake-pit/` (tracked)
+- **Virtual environments**: Should remain in snake-pit directory
+- **System integrations**: If projects need systemd services, configs in `~/`, etc:
+  - Create bootstrap script in `_playground/_scripts/bootstraps/bootstrap-snake-pit.sh`
+  - Use detour system if overriding framework files
+  - Runtime data goes to `~/` but scripts/configs stay in `_playground/`
+
+**Example**: If BME680 monitor needs a systemd service:
+- Service file template: `_playground/snake-pit/projects/bme680-monitor/bme680-monitor.service`
+- Bootstrap script: `_playground/_scripts/bootstraps/bootstrap-bme680-monitor.sh`
+- Runtime service: `~/.config/systemd/user/bme680-monitor.service` (symlink or copy)
+
+**⚠️ CRITICAL: Bootstrap Script Maintenance ⚠️**
+
+- **KEEP BOOTSTRAP SCRIPTS UP TO DATE** whenever you add/modify system integrations
+- Bootstrap script: `_playground/_scripts/bootstraps/bootstrap-snake-pit.sh`
+- Bootstrap scripts are the ONLY way to set up projects on fresh systems
+- If you add systemd services, paths, or dependencies → UPDATE THE BOOTSTRAP SCRIPT
+- Test bootstrap scripts on fresh systems to ensure they work end-to-end
+- Bootstrap scripts must be idempotent (safe to run multiple times)
+
+**Fresh install process:**
+```bash
+# 1. Clone repository (gets _playground/)
+git clone <repo>
+
+# 2. Run bootstrap script
+_playground/_scripts/bootstraps/bootstrap-snake-pit.sh
+
+# 3. snake-pit is ready to use!
+cd _playground/snake-pit
+uv run python projects/my-project/app.py
+```

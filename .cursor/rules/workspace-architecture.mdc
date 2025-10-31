@@ -1,0 +1,277 @@
+---
+description: Defines the separation between _playground (tracked) and ~/ (runtime) directories, and how detour bridges them
+alwaysApply: true
+---
+
+# Workspace Architecture Rules
+
+## Core Principle: Separation of Tracked Customizations and Runtime Installs
+
+This workspace follows a **separation of concerns** architecture where:
+- **`_playground/`** = All tracked customizations (git-managed, version-controlled)
+- **`~/`** = Runtime installations (can be removed/reinstalled, not tracked)
+- **`detour`** = Bridge between `_playground` and `~/`
+
+---
+
+## Directory Structure
+
+### `_playground/` - Tracked Customizations
+**Purpose:** Contains ALL modifications, customizations, and tracked files that should persist across system rebuilds.
+
+**Structure:**
+```
+_playground/
+├── _scripts/              # Bootstrap scripts, helpers
+│   └── bootstraps/        # Installation scripts (bootstrap-*.sh)
+├── home-assistant/        # Home Assistant customizations
+│   └── ha-helper.sh       # Helper script source
+├── _dev/                  # Development packages
+│   └── packages/
+│       └── detour/        # Detour file overlay system
+└── [other services]/      # Other service customizations
+```
+
+**Rules:**
+- ✅ All files here are tracked in git
+- ✅ Can be safely cloned to fresh systems
+- ✅ Contains bootstrap scripts for installing services
+- ✅ Contains custom configs, helpers, documentation
+- ❌ Does NOT contain runtime data or installed binaries
+
+### `~/` - Runtime Installations
+**Purpose:** Where actual services run, data is stored, and binaries are installed.
+
+**Structure:**
+```
+~/ (home directory)
+├── homeassistant/         # Home Assistant runtime (can be removed)
+├── .local/bin/            # User binaries (symlinks to _playground)
+├── .config/               # Application configs (some detoured)
+├── printer_data/          # Klipper runtime (can be removed)
+└── [other services]/      # Other service runtimes
+```
+
+**Rules:**
+- ✅ Can be completely removed and recreated
+- ✅ Contains runtime data, databases, logs
+- ✅ Installed via bootstrap scripts from `_playground/`
+- ✅ Can have files detoured to `_playground/` versions
+- ❌ Should NOT be directly tracked in git (use `.gitignore`)
+
+---
+
+## Detour System
+
+**Purpose:** Bridges `_playground` customizations to runtime `~/` locations.
+
+### How It Works
+
+1. **Detours (File Overlays):**
+   - Maps `~/path/to/file` → `_playground/path/to/file`
+   - Uses bind mounts or symlinks to redirect
+   - Original file is preserved, overlaid with custom version
+
+2. **Includes:**
+   - Adds content from `_playground` into existing files
+   - Appends/prepends custom sections without replacing entire file
+
+3. **Services:**
+   - Manages service restarts after applying detours
+
+### Configuration
+- **Runtime Config:** `~/.detour.yaml` - Maps `_playground` → `~/`
+- **TUI Config:** `_playground/_dev/packages/detour/config.yaml` - UI settings
+
+### Example Flow:
+```
+_playground/home-assistant/automations.yaml  (tracked)
+         ↓ (detour applies)
+~/homeassistant/automations.yaml             (runtime, points to _playground)
+```
+
+---
+
+## Workflow Principles
+
+### When Making Changes
+
+1. **Customizations:**
+   - ✅ Edit files in `_playground/`
+   - ✅ Run `detour apply` to sync to `~/`
+   - ✅ Commit changes in `_playground/`
+
+2. **Bootstrap Scripts:**
+   - ✅ Always update scripts in `_playground/_scripts/bootstraps/`
+   - ✅ Scripts install services to `~/`
+   - ✅ Scripts can optionally configure via CLI
+
+3. **Fresh Install Process:**
+   ```
+   1. Clone repo → Gets _playground/
+   2. Run bootstrap scripts → Installs to ~/
+   3. Run detour apply → Applies customizations
+   4. Services run with customizations active
+   ```
+
+### When Editing Files
+
+**Ask yourself:**
+- Is this a **customization** I want to track? → Edit in `_playground/`
+- Is this **runtime data** that gets regenerated? → Edit in `~/` (or ignore)
+- Does this need to **persist across rebuilds**? → Must be in `_playground/`
+
+**Examples:**
+- ✅ Home Assistant config changes → `_playground/home-assistant/`
+- ✅ Bootstrap script updates → `_playground/_scripts/bootstraps/`
+- ✅ Helper scripts → `_playground/_scripts/` or `_playground/home-assistant/`
+- ❌ HA database, logs → `~/homeassistant/` (not tracked)
+- ❌ Installed binaries → `~/` (reinstalled via bootstrap)
+
+---
+
+## Bootstrap Scripts
+
+**Location:** `_playground/_scripts/bootstraps/*.sh`
+
+**Purpose:** Automated installation and setup of services.
+
+**Conventions:**
+- Install services to `~/` (runtime locations)
+- Can create symlinks from `~/` to `_playground/`
+- Can optionally configure services via CLI during bootstrap
+- Should be idempotent (safe to run multiple times)
+
+**Current Scripts:**
+- `bootstrap-home-assistant.sh` - Installs HA with Bluetooth support
+- `bootstrap-hacs.sh` - Installs HACS integration store
+- `bootstrap-bambulab.sh` - Installs Bambu Lab integration + optional CLI config
+- `bootstrap-snake-pit.sh` - Installs Python ecosystem (uv, venv, dependencies)
+
+### **⚠️ CRITICAL: Bootstrap Script Maintenance ⚠️**
+
+- **KEEP BOOTSTRAP SCRIPTS UP TO DATE** - Bootstrap scripts are the ONLY way to set up services on fresh systems
+- If you add new integrations, dependencies, or configurations → UPDATE THE BOOTSTRAP SCRIPT
+- If you modify helper scripts, systemd services, or paths → UPDATE THE BOOTSTRAP SCRIPT
+- Test bootstrap scripts on fresh systems to ensure they work end-to-end
+- Bootstrap scripts must be idempotent (safe to run multiple times)
+- Bootstrap scripts should install everything needed: services, dependencies, detours, systemd services
+
+---
+
+## File Locations Reference
+
+### Helper Scripts
+- Source: `_playground/home-assistant/ha-helper.sh`
+- Runtime: `~/.local/bin/ha` (symlink to source)
+
+### Bootstrap Scripts
+- All in: `_playground/_scripts/bootstraps/`
+
+### Home Assistant
+- Customizations: `_playground/home-assistant/`
+- Runtime: `~/homeassistant/`
+- Detours: See `~/.detour.yaml`
+
+### Detour System
+- Package: `_playground/_dev/packages/detour/`
+- Config: `~/.detour.yaml` (runtime mappings)
+- TUI Config: `_playground/_dev/packages/detour/config.yaml`
+
+---
+
+## Git Strategy
+
+### Tracked (in `_playground/`)
+- ✅ All bootstrap scripts
+- ✅ Custom configuration files
+- ✅ Helper scripts and utilities
+- ✅ Documentation
+- ✅ Detour package code
+- ✅ Development packages
+
+### Ignored (in `.gitignore`)
+- ❌ `homeassistant/` (runtime)
+- ❌ `printer_data/` (runtime)
+- ❌ `_ha-backups/` (runtime backups)
+- ❌ `.local/share/` (runtime data)
+- ❌ Any runtime installation directories
+
+### Fresh Clone → Full Setup
+```bash
+# 1. Clone repository (gets _playground/)
+git clone <repo>
+
+# 2. Run bootstrap scripts (in order)
+_playground/_scripts/bootstraps/bootstrap-home-assistant.sh  # Base HA
+_playground/_scripts/bootstraps/bootstrap-hacs.sh            # Integration store
+_playground/_scripts/bootstraps/bootstrap-bambulab.sh        # Bambu Lab
+_playground/_scripts/bootstraps/bootstrap-snake-pit.sh       # Python tools (optional)
+
+# 3. Apply detours
+detour apply
+
+# 4. Everything is configured and running!
+```
+
+---
+
+## AI Assistant Guidelines
+
+When suggesting changes or edits:
+
+1. **Identify the file location:**
+   - Tracked customization? → Edit in `_playground/`
+   - Runtime data? → Edit in `~/` (or suggest detour)
+
+2. **When updating bootstrap scripts:**
+   - Always edit in `_playground/_scripts/bootstraps/`
+   - Ensure changes will work on fresh installs
+   - Consider CLI vs Web UI configuration options
+
+3. **When creating new features:**
+   - Ask: Should this persist across rebuilds?
+   - Yes → Create in `_playground/` + add detour if needed
+   - No → Create in `~/` (document but don't track)
+
+4. **When fixing issues:**
+   - Check if fix belongs in `_playground/` (bootstrap, helpers)
+   - Or if it's runtime-only (logs, databases)
+   - Apply fixes to tracked versions so they persist
+
+5. **When explaining architecture:**
+   - Always reference the separation: `_playground/` (tracked) vs `~/` (runtime)
+   - Explain how detour bridges the two
+   - Emphasize that fresh installs restore from `_playground/` only
+
+---
+
+## Key Benefits
+
+1. **Portability:** Clone repo → Run bootstrap → Everything works
+2. **Version Control:** Only track what matters, ignore runtime data
+3. **Clean Separation:** Customizations vs installed services
+4. **Easy Rebuild:** Delete `~/` → Re-run bootstrap → Back to working state
+5. **Development:** Edit tracked files, detour applies to runtime
+
+---
+
+## Quick Reference Commands
+
+```bash
+# Apply all detours
+detour apply
+
+# Check detour status
+detour status
+
+# Run bootstrap
+_playground/_scripts/bootstraps/bootstrap-<service>.sh
+
+# Edit tracked customization
+# (Edit in _playground/, then detour apply)
+
+# View detour mappings
+cat ~/.detour.yaml
+```
+

@@ -1,0 +1,129 @@
+---
+description: Raspberry Pi hardware integration guidelines
+globs: ["projects/**/*.py", "**/hardware*.py", "**/sensor*.py"]
+alwaysApply: true
+---
+
+# Raspberry Pi Hardware Integration
+
+## Hardware Access
+
+### I2C Sensors
+
+- **Default I2C bus**: `/dev/i2c-1` on Raspberry Pi 4
+- **Enable I2C**: `sudo raspi-config` → Interface Options → I2C
+- **I2C tools**: Install with `sudo apt install i2c-tools`
+- **Scan I2C devices**: `i2cdetect -y 1`
+- **Libraries**: Use `adafruit-blinka` for Adafruit CircuitPython compatibility
+
+### GPIO Pins
+
+- **Library**: `RPi.GPIO` or `gpiozero` for direct GPIO access
+- **Document pin usage**: Always document which GPIO pins are used
+- **Pin numbering**: Use BCM numbering consistently
+- **Cleanup**: Always cleanup GPIO on exit
+
+### SPI Sensors
+
+- **Default SPI bus**: `/dev/spidev0.0`, `/dev/spidev0.1`
+- **Enable SPI**: `sudo raspi-config` → Interface Options → SPI
+- **Libraries**: Use `adafruit-blinka` with Adafruit libraries
+
+## Common Sensors
+
+### BME680
+- **I2C address**: 0x76 or 0x77
+- **Library**: `adafruit-circuitpython-bme680`
+- **Pins**: SDA (GPIO 2), SCL (GPIO 3)
+- **Capabilities**: Temperature, Humidity, Pressure, VOC/IAQ
+
+### SHT21/HTU21
+- **I2C address**: 0x40
+- **Library**: Use Adafruit SHT3x-D library or custom I2C
+- **Pins**: SDA (GPIO 2), SCL (GPIO 3)
+- **Capabilities**: Temperature, Humidity
+
+## Error Handling
+
+### Hardware Communication Failures
+
+```python
+from typing import Optional
+import busio
+import board
+from adafruit_bme680 import Adafruit_BME680_I2C
+
+def safe_sensor_read() -> Optional[float]:
+    """Read sensor with error handling."""
+    try:
+        i2c = busio.I2C(board.SCL, board.SDA)
+        sensor = Adafruit_BME680_I2C(i2c)
+        return sensor.temperature
+    except (OSError, RuntimeError, ValueError) as e:
+        logger.error(f"Sensor read failed: {e}")
+        return None
+```
+
+### Retry Logic
+
+- Implement exponential backoff for transient failures
+- Maximum 3 retries for critical operations
+- Log all failures for debugging
+
+## Performance
+
+- **Don't block**: Use async/await for I/O operations when possible
+- **Sampling rates**: Respect sensor minimum sampling intervals
+- **Threading**: Use threading for sensor polling without blocking
+- **Resources**: Clean up connections properly
+
+## Testing Without Hardware
+
+- **Mock classes**: Create mock sensor classes for development
+- **Unit tests**: Test logic without hardware dependencies
+- **CI/CD**: Run tests in environments without GPIO/I2C
+
+## Example Structure
+
+```python
+from pathlib import Path
+from typing import Optional
+import busio
+import board
+from adafruit_bme680 import Adafruit_BME680_I2C
+
+class BMESensor:
+    """BME680 sensor wrapper with error handling."""
+    
+    def __init__(self, i2c_address: int = 0x76):
+        """Initialize sensor.
+        
+        Args:
+            i2c_address: I2C address (0x76 or 0x77)
+        """
+        self.i2c_address = i2c_address
+        self.sensor: Optional[Adafruit_BME680_I2C] = None
+        self._init_sensor()
+    
+    def _init_sensor(self) -> None:
+        """Initialize sensor hardware connection."""
+        try:
+            i2c = busio.I2C(board.SCL, board.SDA)
+            self.sensor = Adafruit_BME680_I2C(i2c, address=self.i2c_address)
+        except Exception as e:
+            print(f"Failed to initialize BME680: {e}")
+    
+    def is_connected(self) -> bool:
+        """Check if sensor is connected."""
+        return self.sensor is not None
+    
+    def read_voc(self) -> Optional[float]:
+        """Read VOC/IAQ index."""
+        if not self.is_connected():
+            return None
+        try:
+            return self.sensor.gas
+        except Exception as e:
+            print(f"Sensor read error: {e}")
+            return None
+```

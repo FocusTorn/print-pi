@@ -1,0 +1,20 @@
+# Snake Pit virtual environments
+snake-pit/.venv/
+snake-pit/projects/*/venv/
+snake-pit/**/__pycache__/
+snake-pit/**/*.pyc
+
+# Development packages build artifacts
+_dev/packages/*/target/
+_dev/packages/*/dist/
+
+# Script backups and temp files
+_scripts/**/*.bak
+_scripts/**/*.tmp
+
+# Python and Rust build artifacts
+**/__pycache__/
+**/*.pyc
+**/*.rs.bk
+**/target/
+

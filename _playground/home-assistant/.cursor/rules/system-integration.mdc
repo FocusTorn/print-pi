@@ -1,0 +1,210 @@
+---
+description: System-level integration rules for Home Assistant (systemd, paths, permissions)
+globs: ["**/*.service", "**/bootstrap*.sh", "**/*.conf"]
+alwaysApply: true
+---
+
+# Home Assistant System Integration
+
+## Systemd Services
+
+### Service File Location
+
+**Tracked**: `_playground/home-assistant/home-assistant.service` (if created)
+**Runtime**: `~/.config/systemd/user/home-assistant.service` (installed by bootstrap)
+
+### Service File Pattern
+
+If creating a custom systemd service:
+
+```ini
+[Unit]
+Description=Home Assistant
+After=network-online.target
+
+[Service]
+Type=simple
+User=pi
+WorkingDirectory=/home/pi/homeassistant
+ExecStart=/home/pi/.local/bin/python3 -m homeassistant --config /home/pi/homeassistant
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=default.target
+```
+
+**Important**: 
+- Service files should be installed via bootstrap script
+- Do not create services directly in `~/.config/systemd/` without bootstrap
+- Use detour if customizing service files after installation
+
+## Bootstrap Scripts
+
+### Location
+
+All bootstrap scripts in: `_playground/_scripts/bootstraps/`
+
+### Home Assistant Bootstrap
+
+- `bootstrap-home-assistant.sh` - Main HA installation
+- `bootstrap-hacs.sh` - HACS integration store
+- `bootstrap-bambulab.sh` - Bambu Lab integration
+
+### Bootstrap Script Rules
+
+**When creating/modifying bootstrap scripts:**
+
+1. ✅ Install to `~/homeassistant/` (runtime)
+2. ✅ Create symlinks from runtime to tracked if needed
+3. ✅ Apply detours after installation
+4. ✅ Make scripts idempotent (safe to run multiple times)
+5. ✅ Use absolute paths for all file operations
+
+**⚠️ CRITICAL: Bootstrap Script Maintenance ⚠️**
+
+- **KEEP BOOTSTRAP SCRIPTS UP TO DATE** - Bootstrap scripts are the ONLY way to set up Home Assistant on fresh systems
+- If you add new integrations, dependencies, or configurations → UPDATE THE BOOTSTRAP SCRIPT
+- If you modify helper scripts, systemd services, or paths → UPDATE THE BOOTSTRAP SCRIPT
+- Test bootstrap scripts on fresh systems to ensure they work end-to-end
+- Bootstrap scripts should install everything needed: HA, HACS, integrations, detours, services
+
+**Example pattern:**
+```bash
+#!/bin/bash
+# Bootstrap Home Assistant
+
+HA_DIR="${HOME}/homeassistant"
+PLAYGROUND="${HOME}/_playground"
+
+# Create runtime directory
+mkdir -p "${HA_DIR}"
+
+# Install Home Assistant (example)
+python3 -m venv "${HA_DIR}"
+"${HA_DIR}/bin/pip" install homeassistant
+
+# Apply detours after installation
+if command -v detour &> /dev/null; then
+    detour apply
+fi
+```
+
+## Path Conventions
+
+### Tracked Locations (`_playground/`)
+
+- **Config files**: `/home/pi/_playground/home-assistant/*.yaml`
+- **Helper scripts**: `/home/pi/_playground/home-assistant/ha-helper.sh`
+- **Bootstrap scripts**: `/home/pi/_playground/_scripts/bootstraps/bootstrap-*.sh`
+
+### Runtime Locations (`~/`)
+
+- **Home Assistant**: `~/homeassistant/`
+- **Systemd service**: `~/.config/systemd/user/home-assistant.service`
+- **Helper symlink**: `~/.local/bin/ha` → `_playground/home-assistant/ha-helper.sh`
+- **Data/database**: `~/.homeassistant/` or `~/homeassistant/` (HA data)
+
+## Helper Scripts
+
+### ha-helper.sh
+
+**Source**: `_playground/home-assistant/ha-helper.sh`
+**Symlink**: `~/.local/bin/ha`
+
+**Symlink creation** (in bootstrap script):
+```bash
+mkdir -p ~/.local/bin
+ln -sf "${HOME}/_playground/home-assistant/ha-helper.sh" ~/.local/bin/ha
+chmod +x ~/.local/bin/ha
+```
+
+**To modify helper**: Edit `_playground/home-assistant/ha-helper.sh`, symlink automatically uses new version.
+
+## Permissions
+
+### File Permissions
+
+- **Config files**: `644` (readable by HA user)
+- **Scripts**: `755` (executable)
+- **Sensitive files**: `600` (secrets.yaml)
+
+### User/Group
+
+- **Default user**: `pi`
+- **Home Assistant runs as**: `pi` (for user systemd services)
+- **Group**: Usually user's primary group
+
+## Environment Variables
+
+### HA Configuration
+
+If setting environment variables for Home Assistant:
+
+**Option 1: Service file** (recommended)
+```ini
+[Service]
+Environment="HOMEASSISTANT_CONFIG=/home/pi/homeassistant"
+```
+
+**Option 2: Shell profile** (if needed globally)
+- Edit: `_playground/_scripts/setup-env.sh` (if exists)
+- Or add to: `~/.profile` or `~/.bashrc` (runtime, not tracked)
+
+## Detour for System Files
+
+### When to Use Detour
+
+**Use detour when:**
+- Customizing systemd service files
+- Overriding configuration files in `/etc/` (rare)
+- Modifying files in `~/.config/` that are framework-managed
+
+**Don't use detour for:**
+- Runtime data (databases, logs, caches)
+- Files that are regenerated automatically
+- Files in `~/homeassistant/` that are directly managed by HA
+
+### Detour Configuration
+
+Add to `~/.detour.yaml`:
+
+```yaml
+detours:
+  - source: /home/pi/_playground/home-assistant/home-assistant.service
+    target: /home/pi/.config/systemd/user/home-assistant.service
+```
+
+Then:
+```bash
+detour apply
+systemctl --user daemon-reload
+systemctl --user restart home-assistant
+```
+
+## Fresh Install Checklist
+
+When setting up on new system:
+
+1. ✅ Clone repository → Gets `_playground/`
+2. ✅ Run bootstrap scripts → Installs to `~/`
+3. ✅ Apply detours → Maps `_playground/` to `~/`
+4. ✅ Enable systemd service (if applicable)
+5. ✅ Start Home Assistant
+6. ✅ Verify customizations are active
+
+## Troubleshooting
+
+### Service Won't Start
+
+1. Check service file syntax: `systemctl --user status home-assistant`
+2. Verify paths in service file point to correct locations
+3. Check permissions on files and directories
+4. Verify detours are applied: `detour status`
+
+### Configuration Not Loading
+
+1. Verify detour applied: `detour status`
+2. Check file exists: `ls -la ~/homeassistant/automations.yaml`
+3. Verify symlink: `readlink ~/homeassistant/automations.yaml`
+4. Check HA logs: `ha logs` or `journalctl --user -u home-assistant`

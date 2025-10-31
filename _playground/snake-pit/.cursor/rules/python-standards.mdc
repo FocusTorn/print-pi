@@ -1,0 +1,96 @@
+---
+description: Python coding standards and best practices for snake-pit projects
+globs: ["**/*.py"]
+alwaysApply: true
+---
+
+# Python Standards for Snake Pit
+
+## Code Style
+
+- **PEP 8 compliant**: Follow Python PEP 8 style guidelines
+- **Black formatting**: Code should be Black-formatted (line length: 88)
+- **Type hints**: Use type hints for function signatures and class attributes
+- **Docstrings**: Include docstrings for all public functions, classes, and modules
+  - Use Google-style docstrings
+- **Import organization**: Use `isort` with Black-compatible settings
+
+## Project Structure
+
+- **Monorepo pattern**: Follow NX-style monorepo approach
+  - Shared dependencies in root `.venv/`
+  - Project-specific dependencies in `projects/*/venv/` when needed
+- **Project isolation**: Each project in `projects/` should be independently runnable
+- **Requirements files**: Maintain `requirements.txt` in root and project directories
+
+## Dependencies
+
+- **Shared packages**: Install common libraries in root `.venv/`
+  - Examples: `requests`, `click`, `rich`, `pydantic`, `loguru`
+- **Project packages**: Install hardware-specific or conflicting deps in project venvs
+  - Examples: `adafruit-circuitpython-bme680`, sensor libraries
+- **Lock files**: Use `uv pip freeze > requirements.txt` to lock versions
+
+## Error Handling
+
+- **Exceptions**: Use specific exception types, not bare `except:`
+- **Logging**: Use `loguru` or `logging` module for structured logging
+- **Graceful degradation**: Handle hardware failures gracefully (sensors may disconnect)
+
+## Hardware Integration
+
+- **GPIO/I2C**: Use `adafruit-blinka` for hardware access on Raspberry Pi
+- **Sensor libraries**: Prefer Adafruit CircuitPython libraries for sensors
+- **I2C addresses**: Document all I2C addresses used by sensors
+- **Error recovery**: Implement retry logic for hardware communication failures
+
+## Running Code
+
+**Preferred methods:**
+```bash
+# From root with shared venv
+cd /home/pi/_playground/snake-pit
+uv run python projects/my-project/app.py
+
+# With project-specific venv
+cd projects/my-project
+uv run python app.py
+```
+
+## Examples
+
+**Good:**
+```python
+from typing import Optional
+from pathlib import Path
+import logging
+
+logger = logging.getLogger(__name__)
+
+def read_sensor_data(sensor_path: Path) -> Optional[dict[str, float]]:
+    """Read sensor data from specified path.
+    
+    Args:
+        sensor_path: Path to sensor data file
+        
+    Returns:
+        Dictionary of sensor readings or None if error
+    """
+    try:
+        # Implementation
+        return data
+    except FileNotFoundError:
+        logger.error(f"Sensor data file not found: {sensor_path}")
+        return None
+```
+
+**Bad:**
+```python
+def read_data(p):
+    try:
+        # No type hints, no docstring, generic except
+        data = something()
+        return data
+    except:
+        return None
+```

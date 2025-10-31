@@ -1,1 +1,40 @@
-# Add directories or file patterns to ignore during indexing (e.g. foo/ or *.csv)
+# Cursor ignore patterns
+# These patterns prevent Cursor from indexing these directories/files
+
+# Large media directories
+Videos/
+Downloads/
+Pictures/
+Music/
+
+# Runtime data (already ignored by .gitignore, but explicitly here for Cursor)
+homeassistant/
+_ha-backups/
+printer_data/
+
+# System and cache directories
+.cache/
+.cargo/
+.ssh/
+.oh-my-zsh/
+target/
+
+# IDE server files
+.cursor-server/
+
+# Build artifacts and temporary files
+*.log
+*.tmp
+*.temp
+*~
+*.pyc
+__pycache__/
+
+# Sensitive credentials
+*.key
+*.pem
+*.crt
+.secrets/
+
+# Already tracked in separate projects
+# _playground/ is indexed, everything else is ignored

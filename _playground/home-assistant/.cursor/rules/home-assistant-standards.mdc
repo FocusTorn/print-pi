@@ -1,0 +1,120 @@
+---
+description: Home Assistant configuration standards and best practices
+globs: ["**/*.yaml", "**/*.yml"]
+alwaysApply: true
+---
+
+# Home Assistant Configuration Standards
+
+## YAML Formatting
+
+- **Indentation**: Use 2 spaces (never tabs)
+- **Quotes**: Use quotes for strings with special characters or when needed
+- **Lists**: Use hyphen format for lists in YAML
+- **Comments**: Use `#` for inline comments
+- **Validation**: Always validate YAML syntax before applying
+
+## File Organization
+
+### Standard Structure
+
+```
+_playground/home-assistant/
+├── automations.yaml        # All automations
+├── scenes.yaml             # Scene definitions
+├── configuration.yaml      # Main config (if customized)
+└── [custom files].yaml     # Sensors, groups, etc.
+```
+
+### Best Practices
+
+- **One purpose per file**: Keep related configurations together
+- **Descriptive filenames**: `sensors.yaml`, `groups.yaml`, `input_booleans.yaml`
+- **Include in configuration.yaml**: Reference custom files with `!include`
+
+## Configuration Patterns
+
+### Automations
+
+```yaml
+- id: 'unique_automation_id'
+  alias: 'Descriptive Name'
+  description: 'What this automation does'
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.motion
+      to: 'on'
+  condition:
+    - condition: state
+      entity_id: light.living_room
+      state: 'off'
+  action:
+    - service: light.turn_on
+      target:
+        entity_id: light.living_room
+```
+
+### Scenes
+
+```yaml
+- name: Evening
+  entities:
+    light.living_room:
+      state: on
+      brightness: 180
+      color_temp: 370
+    light.kitchen:
+      state: on
+      brightness: 120
+```
+
+## Documentation
+
+- **Add descriptions**: Include `description:` fields in automations
+- **Alias names**: Use clear, descriptive aliases
+- **Comments**: Document complex logic or non-obvious configurations
+- **README**: Maintain README for project-specific customizations
+
+## Entity Naming
+
+- **Use underscores**: `light_living_room` not `light-living-room`
+- **Be descriptive**: `sensor.temperature_bedroom` not `sensor.temp1`
+- **Consistent prefixes**: Use standard prefixes (binary_sensor, sensor, switch, etc.)
+
+## Error Prevention
+
+### Validation
+
+Before applying changes:
+1. Check YAML syntax
+2. Validate entity IDs exist
+3. Test automation logic in UI first (if possible)
+4. Use `ha core check` or `ha config check` if available
+
+### Testing
+
+```bash
+# Check Home Assistant configuration
+ha core check
+
+# Or using helper script
+ha check
+```
+
+## Integration with Detour
+
+**Remember**: All YAML files should be in `_playground/home-assistant/` and detoured to `~/homeassistant/`
+
+**Workflow:**
+1. Edit in `_playground/home-assistant/`
+2. Validate YAML syntax
+3. Run `detour apply`
+4. Restart Home Assistant
+5. Test in UI
+
+## Version Control
+
+- ✅ Track all `.yaml` files in `_playground/home-assistant/`
+- ❌ Never track runtime files in `~/homeassistant/`
+- ✅ Include changes in git commits
+- ✅ Document breaking changes or migration requirements

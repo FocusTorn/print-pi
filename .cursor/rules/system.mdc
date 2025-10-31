@@ -1,0 +1,194 @@
+---
+description: System configuration and hardware information
+alwaysApply: true
+---
+
+# System Configuration
+
+**Raspberry Pi 4 Model B Rev 1.5** running **Debian 13 (trixie)**
+
+## Hardware Specs
+
+- **CPU**: Cortex-A72, 4 cores @ 1.8 GHz, arm64 architecture
+- **RAM**: 3.7 GB (GPU: 76M, ARM: 948M)
+- **Storage**: 29G SD card (36% used, 18G available)
+- **Kernel**: 6.12.47+rpt-rpi-v8
+
+## Development Environment
+
+### Languages & Tools
+- **Python**: 3.13.5 (default)
+- **Rust**: 1.85.0 with cargo
+- **GCC**: 14.2.0
+- **Git**: 2.47.3
+- **Shell**: zsh (default), bash available
+
+### Package Managers
+- `apt` for system packages
+- `pip3` for Python packages  
+- `cargo` for Rust crates
+- **Node/npm**: Not installed
+
+## System Configuration
+
+### User Environment
+- **User**: `pi` (UID 1000)
+- **Home**: `/home/pi`
+- **Groups**: sudo, gpio, i2c, spi, dialout (hardware access)
+- **Sudo**: Passwordless enabled
+- **Shell Config**: `.zshrc`, `.bashrc`, `.profile`
+
+### Key Directories
+- `/home/pi/_playground` (769M) - Development scripts and tools
+- `/home/pi/3dp-mods` (4.0K) - 3D printer modifications (empty/planned)
+- `/boot/firmware/config.txt` - Boot configuration
+
+### Network
+- **Hostname**: `MyP` (MyP.local via Avahi)
+- **Connection**: WiFi on wlan0 (192.168.1.159/24)
+- **Gateway**: 192.168.1.254
+- **DNS**: 192.168.1.254
+
+### Services
+- **SSH**: Active (remote access enabled)
+- **Klipper/Moonraker**: Not installed
+- **Nginx**: Not installed
+
+## Important Paths
+
+### Custom Scripts
+Location: `/home/pi/_playground/_scripts/`
+
+Key tools available:
+- `system-info-gatherer.sh` - System documentation generator
+- `slink` - Symlink manager
+- `doGit.sh` - Git automation
+- `detect-modified-system-files*.sh` - System file change detection
+- `network-blink.sh` - Network status indicator
+
+### Global Commands Status
+The following planned commands are **not yet installed**:
+- `overlay` - File overlay manager
+- `system-track` - System file tracker
+- `chamon` - Change monitor
+- `system-monitor` - System monitoring
+
+## Filesystem Notes
+
+- Root filesystem: ext4, 29G total
+- Boot partition: vfat @ `/boot/firmware` (510M)
+- No active bind mounts or overlays currently configured
+- Standard tmpfs mounts on `/tmp`, `/run`, `/dev/shm`
+
+## Git Configuration
+
+- **User**: FocusTorn <FocusTorn@gmail.com>
+- **Repositories**: None in standard locations yet
+
+## Performance
+
+- **Uptime**: 5+ days typical
+- **Load**: Low (0.23, 0.43, 0.37)
+- **CPU Temp**: ~43°C idle
+- **Processes**: ~237 total
+
+## Notable System State
+
+- Fresh Debian 13 installation with development tools
+- No 3D printing software installed yet (directories prepared)
+- Overlay/redirection system planned but not implemented
+- No custom systemd services active
+- Standard Raspberry Pi OS configuration preserved
+# System Configuration
+
+**Raspberry Pi 4 Model B Rev 1.5** running **Debian 13 (trixie)**
+
+## Hardware Specs
+
+- **CPU**: Cortex-A72, 4 cores @ 1.8 GHz, arm64 architecture
+- **RAM**: 3.7 GB (GPU: 76M, ARM: 948M)
+- **Storage**: 29G SD card (36% used, 18G available)
+- **Kernel**: 6.12.47+rpt-rpi-v8
+
+## Development Environment
+
+### Languages & Tools
+- **Python**: 3.13.5 (default)
+- **Rust**: 1.85.0 with cargo
+- **GCC**: 14.2.0
+- **Git**: 2.47.3
+- **Shell**: zsh (default), bash available
+
+### Package Managers
+- `apt` for system packages
+- `pip3` for Python packages  
+- `cargo` for Rust crates
+- **Node/npm**: Not installed
+
+## System Configuration
+
+### User Environment
+- **User**: `pi` (UID 1000)
+- **Home**: `/home/pi`
+- **Groups**: sudo, gpio, i2c, spi, dialout (hardware access)
+- **Sudo**: Passwordless enabled
+- **Shell Config**: `.zshrc`, `.bashrc`, `.profile`
+
+### Key Directories
+- `/home/pi/_playground` (769M) - Development scripts and tools
+- `/home/pi/3dp-mods` (4.0K) - 3D printer modifications (empty/planned)
+- `/boot/firmware/config.txt` - Boot configuration
+
+### Network
+- **Hostname**: `MyP` (MyP.local via Avahi)
+- **Connection**: WiFi on wlan0 (192.168.1.159/24)
+- **Gateway**: 192.168.1.254
+- **DNS**: 192.168.1.254
+
+### Services
+- **SSH**: Active (remote access enabled)
+- **Klipper/Moonraker**: Not installed
+- **Nginx**: Not installed
+
+## Important Paths
+
+### Custom Scripts
+Location: `/home/pi/_playground/_scripts/`
+
+Key tools available:
+- `system-info-gatherer.sh` - System documentation generator
+- `slink` - Symlink manager
+- `doGit.sh` - Git automation
+- `detect-modified-system-files*.sh` - System file change detection
+- `network-blink.sh` - Network status indicator
+
+### Global Commands Status
+The following planned commands are **not yet installed**:
+- `overlay` - File overlay manager
+- `system-track` - System file tracker
+- `chamon` - Change monitor
+- `system-monitor` - System monitoring
+
+## Filesystem Notes
+
+- Root filesystem: ext4, 29G total
+- Boot partition: vfat @ `/boot/firmware` (510M)
+- No active bind mounts or overlays currently configured
+- Standard tmpfs mounts on `/tmp`, `/run`, `/dev/shm`
+
+## Git Configuration
+
+- **User**: FocusTorn <FocusTorn@gmail.com>
+- **Repositories**: None in standard locations yet
+
+## Performance 
+
+- **Uptime**: 5+ days typical
+- **Load**: Low (0.23, 0.43, 0.37)
+- **CPU Temp**: ~43°C idle
+- **Processes**: ~237 total
+
+## Notable System State
+
+- Fresh Debian 13 installation with development tools
+- Standard Raspberry Pi OS configuration preserved
