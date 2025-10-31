@@ -100,9 +100,6 @@ printer_data
 
 
 
-idle_state.json
-
-
 
 .config/labwc/environment
 
@@ -113,3 +110,5 @@ test-source.txt
 .symlink-db
 homeassistant
 _ha-backups
+.ssh
+ide_state.json
