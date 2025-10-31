@@ -1,0 +1,40 @@
+#!/bin/bash
+# Smart wrapper for detour - automatically uses the most recently built binary
+
+# Get the real path of this script (resolving symlinks)
+SCRIPT_PATH="$(readlink -f "${BASH_SOURCE[0]}")"
+SCRIPT_DIR="$(dirname "$SCRIPT_PATH")"
+PACKAGE_ROOT="$(dirname "$SCRIPT_DIR")"
+DEBUG_BIN="$PACKAGE_ROOT/target/debug/detour"
+RELEASE_BIN="$PACKAGE_ROOT/target/release/detour"
+
+# Function to get file modification time (seconds since epoch)
+get_mtime() {
+    if [[ -f "$1" ]]; then
+        stat -c %Y "$1" 2>/dev/null || stat -f %m "$1" 2>/dev/null || echo 0
+    else
+        echo 0
+    fi
+}
+
+DEBUG_TIME=$(get_mtime "$DEBUG_BIN")
+RELEASE_TIME=$(get_mtime "$RELEASE_BIN")
+
+# Use whichever was built most recently
+if [[ $RELEASE_TIME -gt $DEBUG_TIME ]]; then
+    BINARY="$RELEASE_BIN"
+elif [[ $DEBUG_TIME -gt 0 ]]; then
+    BINARY="$DEBUG_BIN"
+elif [[ $RELEASE_TIME -gt 0 ]]; then
+    BINARY="$RELEASE_BIN"
+else
+    echo "Error: No detour binary found. Build it first with:" >&2
+    echo "  cargo build --release" >&2
+    echo "  or" >&2
+    echo "  cargo build" >&2
+    exit 1
+fi
+
+# Execute the binary with all arguments passed through
+exec "$BINARY" "$@"
+

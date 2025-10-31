@@ -1,0 +1,9 @@
+detours:
+- original: /home/pi/homeassistant/automations.yaml
+  custom: /home/pi/_playground/home-assistant/automations.yaml
+  description: null
+includes:
+- target: /home/pi/homeassistant/scenes.yaml
+  include: /home/pi/_playground/home-assistant/scenes.yaml
+  description: null
+services: []

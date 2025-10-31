@@ -1,0 +1,45 @@
+# Detour Runtime Configuration Example
+# Copy this to ~/.detour.yaml and customize for your setup
+
+# Detours: File overlays using bind mounts
+detours:
+  - original: /home/pi/printer_data/config/printer.cfg
+    custom: /home/pi/_playground/klipper/printer.cfg
+    description: Custom Klipper configuration
+    enabled: false
+  
+  - original: /etc/nginx/nginx.conf
+    custom: /home/pi/_playground/nginx/nginx.conf
+    description: Custom Nginx configuration
+    enabled: false
+  
+  - original: /home/pi/homeassistant/.vscode/settings.json
+    custom: /home/pi/_playground/homeassistant/.vscode/settings.json
+    description: VS Code settings for Home Assistant
+    enabled: false
+
+# Includes: Add custom includes to target files
+includes:
+  - target: /home/pi/printer_data/config/printer.cfg
+    include: /home/pi/_playground/klipper/macros.cfg
+    description: Custom macro definitions
+    enabled: false
+
+# Services: Restart services after config changes
+services:
+  - name: klipper
+    action: restart
+    description: Restart Klipper after config changes
+    enabled: false
+  
+  - name: nginx
+    action: reload
+    description: Reload Nginx after config changes
+    enabled: false
+
+# Notes:
+# - Set enabled: true to activate a detour/include/service
+# - Use absolute paths for all file references
+# - The 'custom' file must exist before activating a detour
+# - Toggle detours on/off in the TUI with the Space key
+

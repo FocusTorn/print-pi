@@ -1,0 +1,204 @@
+# Detour TUI - Build Configuration
+# This file controls the TUI application's behavior, appearance, and keybindings
+# This is NOT the detours mapping file (see ~/.detour.yaml for that)
+
+# ┌────────────────────────────────────────────────────────────────────────────┐
+# │                            RUNTIME SETTINGS                                │
+# └────────────────────────────────────────────────────────────────────────────┘
+runtime:
+  # Path to the detours mapping file (runtime configuration)
+  detours_config: "~/.detour.yaml"
+  
+  # Path to the detour shell script backend
+  script_paths:
+    - "/home/pi/_playground/_dev/packages/detour/scripts/detour.sh"
+    - "/home/pi/.local/bin/detour"
+    - "/usr/local/bin/detour"
+  
+  # Auto-reload detours config when file changes detected
+  auto_reload: true
+  
+  # Show confirmation prompts for destructive actions
+  confirm_destructive: true
+
+
+# ┌────────────────────────────────────────────────────────────────────────────┐
+# │                              UI SETTINGS                                   │
+# └────────────────────────────────────────────────────────────────────────────┘
+ui:
+  title_bar:
+    display: "Detour - File Overlay Manager"
+  
+  
+  
+  
+  
+  # 3-column horizontal layout (optimized for wide, short terminals)  
+  # Needs to take either a col total as it is, 
+  # or a +# to add dynamic padding added to the length of the logest visable item in the panel  
+  layout: 
+    views_column_width: 20      # Left column: Views list
+    actions_column_width: 25    # Middle column: Actions/commands
+    content_column_min: 40      # Right column: Main content (flexible)  
+    
+    
+    
+    
+  
+  select_indicator: "►"
+  
+  # Color theme (uses ratatui color names)
+  theme:
+    selected: "Cyan"
+    active: "Green"
+    inactive: "Gray"
+    error: "Red"
+    warning: "Yellow"
+    info: "Blue"
+
+
+# ┌────────────────────────────────────────────────────────────────────────────┐
+# │                          VIEWS (Left Column)                               │
+# └────────────────────────────────────────────────────────────────────────────┘
+views:
+  - name: "[D]etours"
+    key: "d"
+    description: "View and manage file detours"
+  
+  - name: "[I]ncludes"
+    key: "i"
+    description: "View and manage include directives"
+  
+  - name: "[S]ervices"
+    key: "s"
+    description: "View and manage services"
+  
+  - name: "Sta[t]us"
+    key: "t"
+    description: "System status overview"
+  
+  - name: "[L]ogs"
+    key: "l"
+    description: "Live operation logs"
+  
+  - name: "[C]onfig"
+    key: "c"
+    description: "Edit detours configuration"
+
+
+# ┌────────────────────────────────────────────────────────────────────────────┐
+# │                        ACTIONS (Middle Column)                             │
+# └────────────────────────────────────────────────────────────────────────────┘
+actions:
+  global:
+    - name: "[A]pply All"
+      key: "a"
+      command: "apply_all"
+      description: "Apply all detours, includes, and services"
+    
+    - name: "[R]emove All"
+      key: "r"
+      command: "remove_all"
+      description: "Remove all active detours"
+    
+    - name: "Re[l]oad Config"
+      key: "l"
+      command: "reload"
+      description: "Reload detours from ~/.detour.yaml"
+  
+  detours:
+    - name: "[Space] Toggle"
+      key: "space"
+      command: "toggle_detour"
+      description: "Apply/remove selected detour"
+    
+    - name: "[D]iff View"
+      key: "d"
+      command: "diff_detour"
+      description: "Compare original vs custom file"
+    
+    - name: "[E]dit Custom"
+      key: "e"
+      command: "edit_custom"
+      description: "Open custom file in editor"
+    
+    - name: "[V]iew Original"
+      key: "v"
+      command: "view_original"
+      description: "View original file"
+  
+  includes:
+    - name: "[Space] Toggle"
+      key: "space"
+      command: "toggle_include"
+      description: "Add/remove include directive"
+    
+    - name: "[E]dit Include"
+      key: "e"
+      command: "edit_include"
+      description: "Edit include file"
+  
+  services:
+    - name: "[Space] Execute"
+      key: "space"
+      command: "execute_service"
+      description: "Execute service action"
+    
+    - name: "[S]tatus"
+      key: "s"
+      command: "service_status"
+      description: "Check service status"
+
+
+# ┌────────────────────────────────────────────────────────────────────────────┐
+# │                          KEYBINDINGS (Global)                              │
+# └────────────────────────────────────────────────────────────────────────────┘
+keybindings:
+  navigation:
+    quit:
+      - "q"
+      - "Esc"
+    
+    column_left: "h"
+    column_right: "l"
+    item_up: "k"
+    item_down: "j"
+    
+    page_up: "PageUp"
+    page_down: "PageDown"
+    
+    home: "Home"
+    end: "End"
+  
+  help:
+    show_help: "?"
+    show_keybindings: "h"
+
+
+# ┌────────────────────────────────────────────────────────────────────────────┐
+# │                            LOGGING SETTINGS                                │
+# └────────────────────────────────────────────────────────────────────────────┘
+logging:
+  # Maximum number of log entries to keep in memory
+  max_entries: 500
+  
+  # Log levels to display: trace, debug, info, warn, error
+  level: "info"
+  
+  # Log file path (optional)
+  # file: "/var/log/detour/detour-tui.log"
+
+
+# ┌────────────────────────────────────────────────────────────────────────────┐
+# │                          DIFF VIEWER SETTINGS                              │
+# └────────────────────────────────────────────────────────────────────────────┘
+diff:
+  # Syntax highlighting (future feature)
+  syntax_highlighting: false
+  
+  # Context lines around changes
+  context_lines: 3
+  
+  # Side-by-side or unified diff
+  mode: "unified"  # unified | side-by-side
+
