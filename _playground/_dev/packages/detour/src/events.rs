@@ -5,7 +5,9 @@ use std::time::Duration;
 
 pub fn handle_events(app: &mut crate::app::App) -> std::io::Result<()> {
     // Check for auto-dismiss of toasts (2.5 seconds)
-    app.toasts.retain(|toast| toast.shown_at.elapsed().as_secs_f32() <= 2.5);
+    app.toasts.retain(|toast| {
+        toast.shown_at.elapsed().map(|d| d.as_secs_f32() <= 2.5).unwrap_or(false)
+    });
     
     if event::poll(Duration::from_millis(100))? {
         match event::read()? {
@@ -104,7 +106,15 @@ fn handle_key_event(key: KeyEvent, app: &mut crate::app::App) {
                 app.active_column = crate::app::ActiveColumn::Content;
             } else if app.view_mode == crate::app::ViewMode::IncludesList {
                 app.view_mode = crate::app::ViewMode::IncludesAdd;
-                app.include_form = crate::app::AddIncludeForm::default();
+                // Set default values for include form
+                app.include_form = crate::app::AddIncludeForm {
+                    target_path: "/boot/firmware/config.txt".to_string(),
+                    include_path: "/home/pi/_playground/root/boot/firmware-config.txt".to_string(),
+                    description: String::new(),
+                    active_field: 0,
+                    cursor_pos: 0,
+                    editing_index: None,
+                };
                 app.active_column = crate::app::ActiveColumn::Content;
             }
         }
@@ -193,30 +203,55 @@ fn handle_popup_keys(key: KeyEvent, app: &mut crate::app::App) {
             if let Some(popup) = &app.popup {
                 match popup {
                     Popup::Confirm { .. } => {
-                        if popup.is_yes_selected() {
+                        let is_yes = popup.is_yes_selected();
+                        let action = app.pending_action.take();
+                        app.close_popup();
+                        
+                        if is_yes {
                             // Execute pending action if any
-                            let action = app.pending_action.take();
-                            app.close_popup();
-                            
-                                if let Some(pending) = action {
-                                    match pending {
-                                        crate::app::PendingAction::CreateFileAndSaveDetour => {
-                                            app.create_custom_file_and_save();
-                                        }
-                                        crate::app::PendingAction::DeleteDetour(index) => {
-                                            app.confirm_delete_detour(index);
-                                        }
-                                        crate::app::PendingAction::DeleteInclude(index) => {
-                                            app.confirm_delete_include(index);
-                                        }
-                                        crate::app::PendingAction::CreateIncludeFileAndSave => {
-                                            app.create_include_file_and_save();
-                                        }
+                            if let Some(pending) = action {
+                                match pending {
+                                    crate::app::PendingAction::CreateFileAndSaveDetour => {
+                                        app.create_custom_file_and_save();
+                                    }
+                                    crate::app::PendingAction::DeleteDetour(index) => {
+                                        app.confirm_delete_detour(index);
+                                    }
+                                    crate::app::PendingAction::DeleteDetourAndFile(index, custom_path) => {
+                                        app.delete_detour_and_file(index, custom_path, true);
+                                    }
+                                    crate::app::PendingAction::DeleteInclude(index) => {
+                                        app.confirm_delete_include(index);
+                                    }
+                                    crate::app::PendingAction::DeleteIncludeAndFile(index, include_file_path) => {
+                                        app.delete_include_and_file(index, include_file_path, true);
+                                    }
+                                    crate::app::PendingAction::CreateIncludeFileAndSave => {
+                                        app.create_include_file_and_save();
                                     }
                                 }
+                            }
                         } else {
-                            app.pending_action = None;
-                            app.close_popup();
+                            // User selected "No" - handle accordingly
+                            match action {
+                                Some(crate::app::PendingAction::DeleteDetourAndFile(_index, _)) => {
+                                    // Don't delete file, just reload config (detour already deleted from config)
+                                    app.reload_config();
+                                    if app.selected_detour >= app.detours.len() && app.selected_detour > 0 {
+                                        app.selected_detour -= 1;
+                                        app.detour_state.select(Some(app.selected_detour));
+                                    }
+                                }
+                                Some(crate::app::PendingAction::DeleteIncludeAndFile(_index, _)) => {
+                                    // Don't delete file, just reload config (include already deleted from config)
+                                    app.reload_config();
+                                    if app.selected_include >= app.includes.len() && app.selected_include > 0 {
+                                        app.selected_include -= 1;
+                                        app.include_state.select(Some(app.selected_include));
+                                    }
+                                }
+                                _ => {}
+                            }
                         }
                     }
                     Popup::Input { .. } => {

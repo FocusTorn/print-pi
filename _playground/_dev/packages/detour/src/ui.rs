@@ -457,68 +457,38 @@ fn draw_content_column(f: &mut Frame, area: Rect, app: &mut App) {
 
 fn draw_detours_list(f: &mut Frame, area: Rect, app: &mut App, modal_visible: bool) {
     let is_active = app.active_column == ActiveColumn::Content && !modal_visible;
-    
-    let border_style = if modal_visible {
-        Style::default().fg(hex_color(0x222222))
-    } else if is_active {
-        Style::default().fg(Color::White)
-    } else {
-        Style::default().fg(hex_color(0x333333))
-    };
-    let border_type = if is_active { BorderType::Thick } else { BorderType::Plain };
-    let text_color = if modal_visible {
-        hex_color(0x444444)
-    } else if is_active {
-        hex_color(0xFFFFFF)
-    } else {
-        hex_color(0x777777)
-    };
-    
-    // Title color matches focus state
-    let title = Span::styled(
-        format!(" Active Detours ({}) ", app.detours.len()),
-        Style::default().fg(if is_active { Color::Cyan } else { text_color })
-    );
-    
-    let items: Vec<ListItem> = if app.detours.is_empty() {
-        vec![ListItem::new(" No detours configured").style(Style::default().fg(Color::DarkGray))]
+    let items: Vec<crate::components::list_panel::ItemRow> = if app.detours.is_empty() {
+        vec![]
     } else {
         app.detours.iter().map(|detour| {
-            let status_icon = if detour.active { "✓" } else { "○" };
-            let line1 = format!("{} {} ← {}", 
-                status_icon,
-                detour.original,
-                detour.custom
-            );
-            let line2 = format!("   📝 {}  |  📏 {}  |  {}", 
-                detour.modified_ago(),
-                detour.size_display(),
-                detour.status_text()
-            );
-            ListItem::new(vec![
-                Line::from(line1),
-                Line::from(Span::styled(line2, Style::default().fg(hex_color(0x888888)))),
-            ]).style(Style::default().fg(text_color))
+            let size_str = detour.size_display();
+            let status_text = detour.status_text();
+            crate::components::list_panel::ItemRow {
+                line1: format!("{} {} ← {}", 
+                    if detour.active { "✓" } else { "○" },
+                    detour.original,
+                    detour.custom
+                ),
+                line2: Some(format!("   📝 {}  |  📏 {}  |  {}", 
+                    detour.modified_ago(),
+                    size_str,
+                    status_text
+                )),
+                status_icon: Some(if detour.active { "✓".to_string() } else { "○".to_string() }),
+            }
         }).collect()
     };
-    
-    let highlight_style = if modal_visible {
-        Style::default()
-            .bg(hex_color(0x0D0D0D))
-            .fg(hex_color(0x444444))
-    } else {
-        get_selection_style(is_active)
-    };
-    
-    let list = List::new(items)
-        .block(Block::default()
-            .title(title)
-            .borders(Borders::ALL)
-            .border_type(border_type)
-            .border_style(border_style))
-        .highlight_style(highlight_style);
-    
-    f.render_stateful_widget(list, area, &mut app.detour_state);
+
+    crate::components::list_panel::draw_list_panel(
+        f,
+        area,
+        &format!(" Detours ({}) ", app.detours.len()),
+        &items,
+        &mut app.detour_state,
+        is_active,
+        modal_visible,
+        &crate::components::list_panel::ListPanelTheme::default(),
+    );
 }
 
 fn draw_detours_add(f: &mut Frame, area: Rect, app: &App, modal_visible: bool) {
@@ -580,28 +550,18 @@ fn draw_includes_list(f: &mut Frame, area: Rect, app: &mut App, modal_visible: b
         vec![]
     } else {
         app.includes.iter().map(|inc| {
-            // Get file info for the include file
-            let file_info = app.detour_manager.get_file_info(&inc.include_file);
-            let modified = if let Some(info) = &file_info {
-                crate::app::App::time_ago(info.modified_secs)
+            // Use cached values (only updated on reload)
+            let size_str = if inc.size > 1024 * 1024 {
+                format!("{:.1} MB", inc.size as f64 / 1024.0 / 1024.0)
+            } else if inc.size > 1024 {
+                format!("{:.1} KB", inc.size as f64 / 1024.0)
             } else {
-                "Never".to_string()
-            };
-            let size_str = if let Some(info) = &file_info {
-                if info.size > 1024 * 1024 {
-                    format!("{:.1} MB", info.size as f64 / 1024.0 / 1024.0)
-                } else if info.size > 1024 {
-                    format!("{:.1} KB", info.size as f64 / 1024.0)
-                } else {
-                    format!("{} B", info.size)
-                }
-            } else {
-                "—".to_string()
+                format!("{} B", inc.size)
             };
             let status_text = if inc.active { "✓ Active" } else { "○ Inactive" };
             crate::components::list_panel::ItemRow {
                 line1: format!("{} ← {}", inc.target, inc.include_file),
-                line2: Some(format!("   📝 {}  |  📏 {}  |  {}", modified, size_str, status_text)),
+                line2: Some(format!("   📝 {}  |  📏 {}  |  {}", inc.modified, size_str, status_text)),
                 status_icon: Some(if inc.active { "✓".to_string() } else { "○".to_string() }),
             }
         }).collect()

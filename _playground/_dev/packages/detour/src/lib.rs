@@ -12,7 +12,10 @@ pub mod filebrowser;
 // Core functionality modules
 pub mod config;
 pub mod manager;
+pub mod include;
 pub mod components;
-// pub mod include;  // TODO: Implement
+pub mod forms;
+pub mod operations;
+pub mod validation;
 // pub mod service;  // TODO: Implement
 
