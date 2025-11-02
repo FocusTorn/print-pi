@@ -7,6 +7,9 @@
         {
             "name": "_playground",
             "path": "/home/pi/_playground"
+        },
+        {
+            "path": "../../.."
         }
     ], //<
 
