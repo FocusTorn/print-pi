@@ -1,0 +1,115 @@
+title: Tiles Modern Dashboard
+views:
+  - title: Dashboard
+    path: dashboard
+    icon: mdi:view-dashboard
+    background: center / cover no-repeat url("/local/background.jpg") fixed
+    cards:
+      # Main content grid
+      - type: custom:mushroom-chips-card
+        chips:
+          - type: entity
+            entity: sensor.temperature
+            icon_color: orange
+          - type: entity
+            entity: sensor.humidity
+            icon_color: blue
+          - type: entity
+            entity: binary_sensor.motion
+            icon_color: purple
+      
+      # Large tiles
+      - type: grid
+        square: false
+        columns: 2
+        cards:
+          - type: custom:mushroom-template-card
+            primary: '{{ states("sun.sun") }}'
+            secondary: '{{ states.sun.sun.attributes.elevation }}°'
+            icon: '{{ state_attr("sun.sun", "elevation") | round(0) >= 0 }}'
+            icon_color: '{{ "#FF9800" if state_attr("sun.sun", "elevation") | round(0) >= 0 else "#1976D2" }}'
+            tap_action:
+              action: navigate
+              navigation_path: weather
+          
+          - type: custom:mushroom-template-card
+            primary: '{{ states("person." + user_id) }}'
+            secondary: Last seen
+            icon: mdi:account
+            icon_color: teal
+            tap_action:
+              action: navigate
+              navigation_path: persons
+      
+      # Device cards in grid
+      - type: grid
+        square: true
+        columns: 3
+        cards:
+          - type: custom:mushroom-light-card
+            entity: light.living_room
+            icon: mdi:ceiling-light
+            use_light_color: true
+          
+          - type: custom:mushroom-light-card
+            entity: light.bedroom
+            icon: mdi:bed
+            use_light_color: true
+          
+          - type: custom:mushroom-light-card
+            entity: light.kitchen
+            icon: mdi:chef-hat
+            use_light_color: true
+          
+          - type: custom:mushroom-fan-card
+            entity: fan.living_room
+            icon: mdi:fan
+          
+          - type: custom:mushroom-entity-card
+            entity: switch.smart_plug
+            icon: mdi:power-socket-us
+            tap_action:
+              action: toggle
+          
+          - type: custom:mushroom-climate-card
+            entity: climate.thermostat
+            icon: mdi:thermostat
+            hvac_modes:
+              - heat
+              - cool
+              - off
+
+  - title: Weather
+    path: weather
+    icon: mdi:weather-partly-cloudy
+    cards:
+      - type: custom:mushroom-title-card
+        title: Weather
+      
+      - type: custom:mushroom-weather-card
+        entity: weather.home
+        icon: mdi:weather-partly-cloudy
+        primary_info: temperature
+        secondary_info: apparent_temperature
+        forecast_days: 5
+
+  - title: Persons
+    path: persons
+    icon: mdi:account-multiple
+    cards:
+      - type: custom:mushroom-title-card
+        title: People
+      
+      - type: vertical-stack
+        cards:
+          - type: custom:mushroom-person-card
+            entity: person.you
+            icon: mdi:account
+            primary_info: state
+            secondary_info: last-changed
+          
+          - type: custom:mushroom-entity-card
+            entity: device_tracker.your_phone
+            icon: mdi:cellphone
+            secondary_info: state
+

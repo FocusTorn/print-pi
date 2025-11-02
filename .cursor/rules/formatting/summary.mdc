@@ -1,8 +1,7 @@
 ---
 description: "Summary structure and formatting template"
-globs: ["**/*"]
+alwaysApply: false
 ---
-
 # Summary Formatting Rules
 
 ## 1. :: Summary Structure Template

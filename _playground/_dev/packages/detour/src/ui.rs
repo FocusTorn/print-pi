@@ -442,16 +442,52 @@ fn draw_action_column(f: &mut Frame, area: Rect, app: &mut App) {
 fn draw_content_column(f: &mut Frame, area: Rect, app: &mut App) {
     let modal_visible = app.is_modal_visible();
     
-    match app.view_mode {
+    // Determine what to render based on active column and selection
+    let current_view_mode = app.view_mode;
+    let mode_to_render = match app.active_column {
+        crate::app::ActiveColumn::Views => {
+            // Column 1 (Views) is active - show preview based on selected view
+            // Use helper to map index to ViewMode (matches app.rs logic)
+            use crate::app::App;
+            App::view_mode_from_index(app.selected_view)
+        }
+        crate::app::ActiveColumn::Actions => {
+            // Column 2 (Actions) is active - show preview based on selected action
+            let actions = app.get_current_actions();
+            if let Some(selected_action) = actions.get(app.selected_action) {
+                match selected_action.as_str() {
+                    "List" => current_view_mode,  // Show the list view
+                    "Verify All" | "Activate All" => {
+                        // For other actions, show the list view
+                        match current_view_mode {
+                            ViewMode::DetoursList => ViewMode::DetoursList,
+                            ViewMode::InjectionsList => ViewMode::InjectionsList,
+                            ViewMode::MirrorsList => ViewMode::MirrorsList,
+                            ViewMode::ServicesList => ViewMode::ServicesList,
+                            _ => current_view_mode,
+                        }
+                    }
+                    _ => current_view_mode,
+                }
+            } else {
+                current_view_mode
+            }
+        }
+        _ => current_view_mode,  // Column 3 (Content) or other - use current view mode
+    };
+    
+    // Render based on the determined mode
+    match mode_to_render {
         ViewMode::DetoursList => draw_detours_list(f, area, app, modal_visible),
         ViewMode::DetoursAdd => draw_detours_add(f, area, app, modal_visible),
         ViewMode::DetoursEdit => draw_detours_edit(f, area, app, modal_visible),
-        ViewMode::IncludesAdd => draw_includes_add(f, area, app, modal_visible),
-        ViewMode::IncludesList => draw_includes_list(f, area, app, modal_visible),
+        ViewMode::InjectionsAdd => draw_injections_add(f, area, app, modal_visible),
+        ViewMode::InjectionsList => draw_injections_list(f, area, app, modal_visible),
+        ViewMode::MirrorsList => draw_mirrors_list(f, area, app, modal_visible),
         ViewMode::ServicesList => draw_services_list(f, area, app, modal_visible),
         ViewMode::StatusOverview => draw_status_overview(f, area, app, modal_visible),
         ViewMode::LogsLive => draw_logs_live(f, area, app, modal_visible),
-        ViewMode::ConfigEdit => draw_config_edit(f, area, app),  // Already has modal_visible
+        ViewMode::ConfigEdit => draw_config_edit(f, area, app),
     }
 }
 
@@ -520,18 +556,18 @@ fn draw_detours_edit(f: &mut Frame, area: Rect, app: &App, modal_visible: bool) 
     draw_detours_add(f, area, app, modal_visible);
 }
 
-fn draw_includes_add(f: &mut Frame, area: Rect, app: &App, modal_visible: bool) {
+fn draw_injections_add(f: &mut Frame, area: Rect, app: &App, modal_visible: bool) {
     let is_active = app.active_column == ActiveColumn::Content && !modal_visible;
     let fields = vec![
-        crate::components::form_panel::FormField { label: "Target Path:".to_string(), value: app.include_form.target_path.clone(), placeholder: "/path/to/target".to_string() },
-        crate::components::form_panel::FormField { label: "Include File:".to_string(), value: app.include_form.include_path.clone(), placeholder: "/path/to/include.yaml".to_string() },
-        crate::components::form_panel::FormField { label: "Description (optional):".to_string(), value: app.include_form.description.clone(), placeholder: "Brief description of this include".to_string() },
+        crate::components::form_panel::FormField { label: "Target Path:".to_string(), value: app.injection_form.target_path.clone(), placeholder: "/path/to/target".to_string() },
+        crate::components::form_panel::FormField { label: "Injection File:".to_string(), value: app.injection_form.include_path.clone(), placeholder: "/path/to/injection.yaml".to_string() },
+        crate::components::form_panel::FormField { label: "Description (optional):".to_string(), value: app.injection_form.description.clone(), placeholder: "Brief description of this injection".to_string() },
     ];
-    let state = crate::components::form_panel::FormState { active_field: app.include_form.active_field, cursor_pos: app.include_form.cursor_pos };
-    let title = if app.include_form.editing_index.is_some() {
-        " Edit Include "
+    let state = crate::components::form_panel::FormState { active_field: app.injection_form.active_field, cursor_pos: app.injection_form.cursor_pos };
+    let title = if app.injection_form.editing_index.is_some() {
+        " Edit Injection "
     } else {
-        " Add Include "
+        " Add Injection "
     };
     crate::components::form_panel::draw_form_panel(
         f,
@@ -544,12 +580,12 @@ fn draw_includes_add(f: &mut Frame, area: Rect, app: &App, modal_visible: bool) 
     );
 }
 
-fn draw_includes_list(f: &mut Frame, area: Rect, app: &mut App, modal_visible: bool) {
+fn draw_injections_list(f: &mut Frame, area: Rect, app: &mut App, modal_visible: bool) {
     let is_active = app.active_column == ActiveColumn::Content && !modal_visible;
-    let items: Vec<crate::components::list_panel::ItemRow> = if app.includes.is_empty() {
+    let items: Vec<crate::components::list_panel::ItemRow> = if app.injections.is_empty() {
         vec![]
     } else {
-        app.includes.iter().map(|inc| {
+        app.injections.iter().map(|inc| {
             // Use cached values (only updated on reload)
             let size_str = if inc.size > 1024 * 1024 {
                 format!("{:.1} MB", inc.size as f64 / 1024.0 / 1024.0)
@@ -570,9 +606,47 @@ fn draw_includes_list(f: &mut Frame, area: Rect, app: &mut App, modal_visible: b
     crate::components::list_panel::draw_list_panel(
         f,
         area,
-        &format!(" Includes ({}) ", app.includes.len()),
+        &format!(" Injections ({}) ", app.injections.len()),
         &items,
-        &mut app.include_state,
+        &mut app.injection_state,
+        is_active,
+        modal_visible,
+        &crate::components::list_panel::ListPanelTheme::default(),
+    );
+}
+
+fn draw_mirrors_list(f: &mut Frame, area: Rect, app: &mut App, modal_visible: bool) {
+    let is_active = app.active_column == ActiveColumn::Content && !modal_visible;
+    let items: Vec<crate::components::list_panel::ItemRow> = if app.mirrors.is_empty() {
+        vec![]
+    } else {
+        app.mirrors.iter().map(|mirror| {
+            let size_str = if mirror.size > 1024 * 1024 {
+                format!("{:.1} MB", mirror.size as f64 / 1024.0 / 1024.0)
+            } else if mirror.size > 1024 {
+                format!("{:.1} KB", mirror.size as f64 / 1024.0)
+            } else {
+                format!("{} B", mirror.size)
+            };
+            let status_text = if mirror.active { "✓ Active" } else { "○ Inactive" };
+            crate::components::list_panel::ItemRow {
+                line1: format!("{} {} → {}", 
+                    if mirror.active { "✓" } else { "○" },
+                    mirror.source,
+                    mirror.target
+                ),
+                line2: Some(format!("   📝 {}  |  📏 {}  |  {}", mirror.modified, size_str, status_text)),
+                status_icon: Some(if mirror.active { "✓".to_string() } else { "○".to_string() }),
+            }
+        }).collect()
+    };
+
+    crate::components::list_panel::draw_list_panel(
+        f,
+        area,
+        &format!(" Mirrors ({}) ", app.mirrors.len()),
+        &items,
+        &mut app.mirror_state,
         is_active,
         modal_visible,
         &crate::components::list_panel::ListPanelTheme::default(),
@@ -659,7 +733,7 @@ fn draw_status_overview(f: &mut Frame, area: Rect, app: &App, modal_visible: boo
     
     let active_count = app.detours.iter().filter(|d| d.active).count();
     let total_count = app.detours.len();
-    let include_count = app.includes.iter().filter(|i| i.active).count();
+    let injection_count = app.injections.iter().filter(|i| i.active).count();
     let service_count = app.services.len();
     
     let overall_status = if active_count == total_count && total_count > 0 {
@@ -681,8 +755,8 @@ fn draw_status_overview(f: &mut Frame, area: Rect, app: &App, modal_visible: boo
             Span::styled(format!("{}/{} active", active_count, total_count), Style::default().fg(Color::White)),
         ]),
         Line::from(vec![
-            Span::styled("Includes: ", Style::default().fg(hex_color(0x888888))),
-            Span::styled(format!("{} active", include_count), Style::default().fg(Color::White)),
+            Span::styled("Injections: ", Style::default().fg(hex_color(0x888888))),
+            Span::styled(format!("{} active", injection_count), Style::default().fg(Color::White)),
         ]),
         Line::from(vec![
             Span::styled("Services: ", Style::default().fg(hex_color(0x888888))),
@@ -891,16 +965,23 @@ fn get_panel_help(app: &App) -> String {
     match app.view_mode {
         ViewMode::DetoursList => {
             match app.active_column {
-                ActiveColumn::Views => "[a] Add".to_string(),
-                ActiveColumn::Actions => "[a] Add  [v] Validate All".to_string(),
-                ActiveColumn::Content => "[Space] Toggle  [a] Add  [e] Edit  [Del] Remove  [d] Diff  [v] Validate".to_string(),
+                ActiveColumn::Views => "[n] New  [v] Verify All  [a] Activate All".to_string(),
+                ActiveColumn::Actions => "[n] New  [v] Verify All  [a] Activate All".to_string(),
+                ActiveColumn::Content => "[Space] Toggle  [n] New  [e] Edit  [Del] Remove  [d] Diff  [v] Verify".to_string(),
             }
         }
-        ViewMode::IncludesList => {
+        ViewMode::InjectionsList => {
             match app.active_column {
-                ActiveColumn::Views => "[a] Add".to_string(),
-                ActiveColumn::Actions => "[a] Add  [v] Validate All".to_string(),
-                ActiveColumn::Content => "[Space] Toggle  [a] Add  [e] Edit  [Del] Remove  [v] Validate".to_string(),
+                ActiveColumn::Views => "[n] New".to_string(),
+                ActiveColumn::Actions => "[n] New".to_string(),
+                ActiveColumn::Content => "[Space] Toggle  [n] New  [e] Edit  [Del] Remove  [v] Verify".to_string(),
+            }
+        }
+        ViewMode::MirrorsList => {
+            match app.active_column {
+                ActiveColumn::Views => "[n] New".to_string(),
+                ActiveColumn::Actions => "[n] New".to_string(),
+                ActiveColumn::Content => "[Space] Toggle  [n] New  [e] Edit  [Del] Remove".to_string(),
             }
         }
         ViewMode::ServicesList => {
@@ -913,12 +994,12 @@ fn get_panel_help(app: &App) -> String {
             "[r] Reload  [v] Validate".to_string()
         }
         ViewMode::StatusOverview => {
-            "[a] Apply All  [s] Stop All".to_string()
+            "[s] Stop All".to_string()
         }
         ViewMode::DetoursAdd | ViewMode::DetoursEdit => {
             "[Tab] Next Field  [Ctrl+F] Browse  [Ctrl+V] Paste  [Enter] Save  [Esc] Cancel".to_string()
         }
-        ViewMode::IncludesAdd => {
+        ViewMode::InjectionsAdd => {
             "[Tab] Complete  [Ctrl+F] Browse  [Ctrl+V] Paste  [Enter] Save  [Esc] Cancel".to_string()
         }
     }
@@ -931,10 +1012,13 @@ fn draw_bottom_status(f: &mut Frame, area: Rect, app: &App) {
     draw_toasts(f, area, app);
     
     // Line 1: Global (grey) + Panel-specific (white) bindings
-    let global_text = "[arrows] Navigate  [r] Refresh  [q] Quit  [?] Help";
+    let global_text = "[↑↓←→] Navigate  [Ctrl+R] Refresh  [q] Quit  [?] Help";
+    let edit_config_text = "[Ctrl+E] Edit Config";
     let panel_text = get_panel_help(app);
     let spans = vec![
         Span::styled(global_text, Style::default().fg(if modal_visible { hex_color(0x333333) } else { hex_color(0x777777) })),
+        Span::raw("  "),
+        Span::styled(edit_config_text, Style::default().fg(if modal_visible { hex_color(0x222222) } else { hex_color(0x555555) })),
         Span::raw("  "),
         Span::styled(panel_text, Style::default().fg(if modal_visible { hex_color(0x444444) } else { Color::White })),
     ];

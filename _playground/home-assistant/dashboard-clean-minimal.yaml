@@ -1,0 +1,136 @@
+title: Clean Minimal Dashboard
+views:
+  - title: Home
+    path: home
+    icon: mdi:home
+    cards:
+      # Header card with clock and date
+      - type: vertical-stack
+        cards:
+          - type: custom:mushroom-entity-card
+            name: Dashboard
+            icon: mdi:view-dashboard
+            entity: sensor.time
+            tap_action:
+              action: navigate
+              navigation_path: dashboard
+            
+      # Quick access buttons
+      - type: horizontal-stack
+        cards:
+          - type: custom:mushroom-entity-card
+            name: Living Room
+            icon: mdi:sofa-single
+            entity: light.living_room
+            tap_action:
+              action: navigate
+              navigation_path: living-room
+            secondary_info: state
+          
+          - type: custom:mushroom-entity-card
+            name: Bedroom
+            icon: mdi:bed
+            entity: light.bedroom
+            tap_action:
+              action: navigate
+              navigation_path: bedroom
+            secondary_info: state
+          
+          - type: custom:mushroom-entity-card
+            name: Kitchen
+            icon: mdi:chef-hat
+            entity: light.kitchen
+            tap_action:
+              action: navigate
+              navigation_path: kitchen
+            secondary_info: state
+
+      # Temperature sensors
+      - type: custom:mushroom-entity-card
+        entity: sensor.temperature
+        name: Temperature
+        icon: mdi:thermometer
+        secondary_info: state
+        tap_action:
+          action: navigate
+          navigation_path: climate
+
+      # Device status
+      - type: custom:mushroom-entity-card
+        entity: binary_sensor.motion
+        name: Motion
+        icon: mdi:motion-sensor
+        secondary_info: state
+        tap_action:
+          action: navigate
+          navigation_path: sensors
+
+  - title: Living Room
+    path: living-room
+    icon: mdi:sofa-single
+    cards:
+      - type: custom:mushroom-title-card
+        title: Living Room
+        subtitle: Main control area
+      
+      # Light controls
+      - type: custom:mushroom-light-card
+        entity: light.living_room
+        name: Main Light
+        icon: mdi:ceiling-light
+        show_brightness_control: true
+        show_color_temp_control: true
+      
+      # Media player
+      - type: custom:mushroom-media-player-card
+        entity: media_player.living_room_tv
+        name: TV
+        icon: mdi:television
+        show_volume_level: true
+        controls:
+          - media_play_pause
+          - volume_mute
+          - volume_down
+          - volume_up
+
+  - title: Climate
+    path: climate
+    icon: mdi:thermometer
+    cards:
+      - type: custom:mushroom-climate-card
+        entity: climate.thermostat
+        name: Thermostat
+        icon: mdi:thermostat
+        hvac_modes:
+          - heat
+          - cool
+          - heat_cool
+          - off
+
+  - title: Sensors
+    path: sensors
+    icon: mdi:motion-sensor
+    cards:
+      - type: custom:mushroom-title-card
+        title: Sensor Status
+      
+      - type: vertical-stack
+        cards:
+          - type: custom:mushroom-entity-card
+            entity: binary_sensor.motion
+            name: Motion Detector
+            icon: mdi:motion-sensor
+            secondary_info: state
+          
+          - type: custom:mushroom-entity-card
+            entity: sensor.temperature
+            name: Temperature
+            icon: mdi:thermometer
+            secondary_info: state
+          
+          - type: custom:mushroom-entity-card
+            entity: sensor.humidity
+            name: Humidity
+            icon: mdi:water-percent
+            secondary_info: state
+

@@ -67,10 +67,13 @@ ha errors
 ### Community Store
 4. **[hacs-setup.md](hacs-setup.md)** - HACS installation & usage guide ✅
 
+### Device Dashboards
+5. **[a1-dashboard-guide.md](a1-dashboard-guide.md)** - Bambu Lab A1 printer dashboard guide
+
 ### Troubleshooting
-5. **[x11-symlink-loop-fix.md](x11-symlink-loop-fix.md)** - X11 recursion issue (FIXED ✅)
-6. **[pi-memory-optimization.md](pi-memory-optimization.md)** - Memory optimization
-7. **[keeping-root-in-workspace.md](keeping-root-in-workspace.md)** - Workspace setup
+6. **[x11-symlink-loop-fix.md](x11-symlink-loop-fix.md)** - X11 recursion issue (FIXED ✅)
+7. **[pi-memory-optimization.md](pi-memory-optimization.md)** - Memory optimization
+8. **[keeping-root-in-workspace.md](keeping-root-in-workspace.md)** - Workspace setup
 
 ## Common Tasks
 

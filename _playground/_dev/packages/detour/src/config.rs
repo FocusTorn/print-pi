@@ -9,7 +9,9 @@ pub struct DetourConfig {
     #[serde(default)]
     pub detours: Vec<DetourEntry>,
     #[serde(default)]
-    pub includes: Vec<IncludeEntry>,
+    pub injections: Vec<InjectionEntry>,
+    #[serde(default)]
+    pub mirrors: Vec<MirrorEntry>,
     #[serde(default)]
     pub services: Vec<ServiceEntry>,
 }
@@ -25,10 +27,20 @@ pub struct DetourEntry {
 }
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
-pub struct IncludeEntry {
+pub struct InjectionEntry {
     pub target: String,
     #[serde(rename = "include")]
     pub include_file: String,
+    #[serde(default)]
+    pub description: Option<String>,
+    #[serde(skip)]
+    pub enabled: bool,
+}
+
+#[derive(Debug, Clone, Deserialize, Serialize)]
+pub struct MirrorEntry {
+    pub source: String,
+    pub target: String,
     #[serde(default)]
     pub description: Option<String>,
     #[serde(skip)]

@@ -1,0 +1,212 @@
+title: Horizontal Compact Dashboard
+views:
+  - title: Home
+    path: home
+    icon: mdi:home
+    cards:
+      # Header with quick info
+      - type: custom:mushroom-chips-card
+        chips:
+          - type: template
+            icon: mdi:calendar
+            icon_color: blue
+            content: '{{ now().strftime("%a %-d") }}'
+          - type: entity
+            entity: sensor.temperature
+            icon_color: orange
+          - type: entity
+            entity: sensor.humidity
+            icon_color: cyan
+          - type: entity
+            entity: binary_sensor.motion
+            icon_color: purple
+
+      # Main horizontal layout - automation status section
+      - type: horizontal-stack
+        cards:
+          - type: custom:mushroom-template-card
+            primary: Automation
+            secondary: '{{ states.automation | selectattr("state", "eq", "on") | list | count }} active'
+            icon: mdi:robot
+            icon_color: green
+            tap_action:
+              action: navigate
+              navigation_path: automations
+          
+          - type: custom:mushroom-template-card
+            primary: Scripts
+            secondary: Ready
+            icon: mdi:script-text
+            icon_color: teal
+            tap_action:
+              action: navigate
+              navigation_path: scripts
+          
+          - type: custom:mushroom-template-card
+            primary: Scenes
+            secondary: '{{ states.scene | count }} available'
+            icon: mdi:palette
+            icon_color: purple
+            tap_action:
+              action: navigate
+              navigation_path: scenes
+
+      # Devices horizontal layout
+      - type: horizontal-stack
+        cards:
+          - type: custom:mushroom-light-card
+            entity: light.living_room
+            icon: mdi:ceiling-light
+            use_light_color: true
+            show_brightness_control: false
+          
+          - type: custom:mushroom-light-card
+            entity: light.bedroom
+            icon: mdi:bed
+            use_light_color: true
+            show_brightness_control: false
+          
+          - type: custom:mushroom-light-card
+            entity: light.kitchen
+            icon: mdi:chef-hat
+            use_light_color: true
+            show_brightness_control: false
+
+      # Climate and sensors horizontal
+      - type: horizontal-stack
+        cards:
+          - type: custom:mushroom-climate-card
+            entity: climate.thermostat
+            icon: mdi:thermostat
+            hvac_modes:
+              - heat
+              - cool
+              - off
+          
+          - type: custom:mushroom-fan-card
+            entity: fan.living_room
+            icon: mdi:fan
+          
+          - type: custom:mushroom-entity-card
+            entity: switch.smart_plug
+            icon: mdi:power-socket-us
+            tap_action:
+              action: toggle
+
+      # Quick actions bar
+      - type: horizontal-stack
+        cards:
+          - type: custom:mushroom-template-card
+            primary: Security
+            secondary: Armed
+            icon: mdi:shield-check
+            icon_color: green
+            tap_action:
+              action: navigate
+              navigation_path: security
+          
+          - type: custom:mushroom-template-card
+            primary: Media
+            secondary: '{{ states.media_player.living_room_tv.attributes.media_title if is_state("media_player.living_room_tv", "playing") else "None" }}'
+            icon: mdi:play
+            icon_color: orange
+            tap_action:
+              action: navigate
+              navigation_path: media
+          
+          - type: custom:mushroom-template-card
+            primary: Energy
+            secondary: '{{ states("sensor.energy_usage") }}'
+            icon: mdi:lightning-bolt
+            icon_color: yellow
+            tap_action:
+              action: navigate
+              navigation_path: energy
+
+  - title: Automations
+    path: automations
+    icon: mdi:robot
+    cards:
+      - type: custom:mushroom-title-card
+        title: Automation Control
+      
+      - type: vertical-stack
+        cards:
+          - type: custom:mushroom-entity-card
+            entity: automation.morning_routine
+            icon: mdi:weather-sunset-up
+            tap_action:
+              action: toggle
+          
+          - type: custom:mushroom-entity-card
+            entity: automation.evening_routine
+            icon: mdi:weather-sunset-down
+            tap_action:
+              action: toggle
+          
+          - type: custom:mushroom-entity-card
+            entity: automation.motion_lights
+            icon: mdi:motion-sensor
+            tap_action:
+              action: toggle
+
+  - title: Scripts
+    path: scripts
+    icon: mdi:script-text
+    cards:
+      - type: custom:mushroom-title-card
+        title: Scripts
+      
+      - type: vertical-stack
+        cards:
+          - type: custom:mushroom-template-card
+            primary: Good Night
+            secondary: Toggle all lights off
+            icon: mdi:weather-night
+            icon_color: blue
+            tap_action:
+              action: call-service
+              service: script.good_night
+          
+          - type: custom:mushroom-template-card
+            primary: Good Morning
+            secondary: Start your day
+            icon: mdi:weather-sunny
+            icon_color: yellow
+            tap_action:
+              action: call-service
+              service: script.good_morning
+
+  - title: Scenes
+    path: scenes
+    icon: mdi:palette
+    cards:
+      - type: custom:mushroom-title-card
+        title: Scenes
+      
+      - type: grid
+        square: false
+        columns: 2
+        cards:
+          - type: custom:mushroom-template-card
+            primary: Movie Night
+            secondary: Dim lights
+            icon: mdi:movie
+            icon_color: violet
+            tap_action:
+              action: call-service
+              service: scene.turn_on
+              target:
+                entity_id: scene.movie_night
+          
+          - type: custom:mushroom-template-card
+            primary: Reading
+            secondary: Bright light
+            icon: mdi:book-open
+            icon_color: amber
+            tap_action:
+              action: call-service
+              service: scene.turn_on
+              target:
+                entity_id: scene.reading
+

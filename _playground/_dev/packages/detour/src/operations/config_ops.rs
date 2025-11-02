@@ -6,7 +6,8 @@ use crate::config::DetourConfig;
 pub fn load_config(config_path: &str) -> DetourConfig {
     DetourConfig::parse(config_path).unwrap_or_else(|_| DetourConfig {
         detours: vec![],
-        includes: vec![],
+        injections: vec![],
+        mirrors: vec![],
         services: vec![],
     })
 }

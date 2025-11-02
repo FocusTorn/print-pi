@@ -1,10 +1,10 @@
-// Include operations - file content injection
+// Injection operations - file content injection
 
 use std::path::Path;
 use std::fs;
 use std::process::Command;
 
-pub struct IncludeManager;
+pub struct InjectionManager;
 
 #[derive(Debug, Clone, Copy)]
 enum FileType {
@@ -16,7 +16,7 @@ enum FileType {
     Unknown,
 }
 
-impl IncludeManager {
+impl InjectionManager {
     pub fn new() -> Self {
         Self
     }

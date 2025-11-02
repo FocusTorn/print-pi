@@ -12,7 +12,8 @@ pub mod filebrowser;
 // Core functionality modules
 pub mod config;
 pub mod manager;
-pub mod include;
+pub mod injection;
+pub mod mirror;
 pub mod components;
 pub mod forms;
 pub mod operations;

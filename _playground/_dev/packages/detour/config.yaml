@@ -27,63 +27,53 @@ runtime:
 # └────────────────────────────────────────────────────────────────────────────┘
 ui:
   title_bar:
-    display: "Detour - File Overlay Manager"
-  
-  
-  
   
   
   # 3-column horizontal layout (optimized for wide, short terminals)  
   # Needs to take either a col total as it is, 
   # or a +# to add dynamic padding added to the length of the logest visable item in the panel  
   layout: 
-    views_column_width: 20      # Left column: Views list
-    actions_column_width: 25    # Middle column: Actions/commands
-    content_column_min: 40      # Right column: Main content (flexible)  
+    # views_column_width: 20      # Left column: Views list
+    # actions_column_width: 25    # Middle column: Actions/commands
+    # content_column_min: 40      # Right column: Main content (flexible)  
     
     
     
     
   
-  select_indicator: "►"
+  subpanel_indicator: "►"
   
   # Color theme (uses ratatui color names)
   theme:
-    selected: "Cyan"
-    active: "Green"
-    inactive: "Gray"
-    error: "Red"
-    warning: "Yellow"
-    info: "Blue"
+    # selected: "Cyan"
+    # active: "Green"
+    # inactive: "Gray"
+    # error: "Red"
+    # warning: "Yellow"
+    # info: "Blue"
 
 
 # ┌────────────────────────────────────────────────────────────────────────────┐
 # │                          VIEWS (Left Column)                               │
 # └────────────────────────────────────────────────────────────────────────────┘
 views:
-  - name: "[D]etours"
-    key: "d"
+  - name: "Detours"
     description: "View and manage file detours"
   
-  - name: "[I]ncludes"
-    key: "i"
-    description: "View and manage include directives"
+  - name: "Injections"
+    description: "View and manage file injections"
   
-  - name: "[S]ervices"
-    key: "s"
+  - name: "Mirrors"
+    description: "View and manage symlink mirrors"
+  
+  - name: "Services"
     description: "View and manage services"
   
-  - name: "Sta[t]us"
-    key: "t"
+  - name: "Status"
     description: "System status overview"
   
-  - name: "[L]ogs"
-    key: "l"
+  - name: "Logs"
     description: "Live operation logs"
-  
-  - name: "[C]onfig"
-    key: "c"
-    description: "Edit detours configuration"
 
 
 # ┌────────────────────────────────────────────────────────────────────────────┐
@@ -101,10 +91,16 @@ actions:
       command: "remove_all"
       description: "Remove all active detours"
     
-    - name: "Re[l]oad Config"
-      key: "l"
+    - name: "[Ctrl+R] Refresh"
+      key: "ctrl+r"
       command: "reload"
       description: "Reload detours from ~/.detour.yaml"
+    
+    - name: "[Ctrl+E] Edit Config"
+      key: "ctrl+e"
+      command: "edit_config"
+      description: "Open TUI config in editor"
+      style: "gray"
   
   detours:
     - name: "[Space] Toggle"
@@ -138,6 +134,17 @@ actions:
       command: "edit_include"
       description: "Edit include file"
   
+  mirrors:
+    - name: "[Space] Toggle"
+      key: "space"
+      command: "toggle_mirror"
+      description: "Create/remove symlink mirror"
+    
+    - name: "[E]dit Source"
+      key: "e"
+      command: "edit_mirror_source"
+      description: "Edit source file for mirror"
+  
   services:
     - name: "[Space] Execute"
       key: "space"
@@ -164,6 +171,12 @@ keybindings:
     item_up: "k"
     item_down: "j"
     
+    # Arrow key navigation (display only - actual keys are k/j/h/l)
+    arrow_up: "↑"
+    arrow_down: "↓"
+    arrow_left: "←"
+    arrow_right: "→"
+    
     page_up: "PageUp"
     page_down: "PageDown"
     
@@ -173,6 +186,13 @@ keybindings:
   help:
     show_help: "?"
     show_keybindings: "h"
+  
+  # Global keybindings
+  global:
+    edit_config:
+      key: "ctrl+e"
+      command: "edit_config"
+      config_file: "/home/pi/_playground/_dev/packages/detour/config.yaml"
 
 
 # ┌────────────────────────────────────────────────────────────────────────────┐

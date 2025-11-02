@@ -1,4 +1,4 @@
-// Shared activation/deactivation logic for detours and includes
+// Shared activation/deactivation logic for detours and injections
 // Note: Activation logic is tightly coupled with App state, so this module
 // provides simple helpers rather than full abstraction
 

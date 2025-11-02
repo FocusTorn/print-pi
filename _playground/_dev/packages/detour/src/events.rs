@@ -48,11 +48,11 @@ fn handle_key_event(key: KeyEvent, app: &mut crate::app::App) {
         return;
     }
     
-    // If in Add/Edit Detour form OR Includes add form AND Column 3 is active, handle form-specific keys
-    if (app.view_mode == crate::app::ViewMode::DetoursAdd || app.view_mode == crate::app::ViewMode::DetoursEdit || app.view_mode == crate::app::ViewMode::IncludesAdd)
+    // If in Add/Edit Detour form OR Injections add form AND Column 3 is active, handle form-specific keys
+    if (app.view_mode == crate::app::ViewMode::DetoursAdd || app.view_mode == crate::app::ViewMode::DetoursEdit || app.view_mode == crate::app::ViewMode::InjectionsAdd)
         && app.active_column == crate::app::ActiveColumn::Content {
-        if app.view_mode == crate::app::ViewMode::IncludesAdd {
-            handle_includes_form_keys(key, app);
+        if app.view_mode == crate::app::ViewMode::InjectionsAdd {
+            handle_injection_form_keys(key, app);
         } else {
             handle_form_keys(key, app);
         }
@@ -80,13 +80,9 @@ fn handle_key_event(key: KeyEvent, app: &mut crate::app::App) {
         KeyCode::Left | KeyCode::Char('h') => {
             app.navigate_prev_column();
         }
-        KeyCode::Right => {
-            // Right arrow moves focus (like Enter)
-            app.handle_enter();
-        }
-        KeyCode::Char('l') => {
-            // 'l' also moves focus (vim-style)
-            app.handle_enter();
+        KeyCode::Right | KeyCode::Char('l') => {
+            // Right arrow moves to next column
+            app.navigate_next_column();
         }
         
         // Actions
@@ -98,16 +94,16 @@ fn handle_key_event(key: KeyEvent, app: &mut crate::app::App) {
         }
         
         // Quick actions
-        KeyCode::Char('a') => {
-            // Add works regardless of column focus
+        KeyCode::Char('n') => {
+            // New works regardless of column focus
             if app.view_mode == crate::app::ViewMode::DetoursList {
                 app.view_mode = crate::app::ViewMode::DetoursAdd;
                 app.add_form = crate::app::AddDetourForm::default();
                 app.active_column = crate::app::ActiveColumn::Content;
-            } else if app.view_mode == crate::app::ViewMode::IncludesList {
-                app.view_mode = crate::app::ViewMode::IncludesAdd;
-                // Set default values for include form
-                app.include_form = crate::app::AddIncludeForm {
+            } else if app.view_mode == crate::app::ViewMode::InjectionsList {
+                app.view_mode = crate::app::ViewMode::InjectionsAdd;
+                // Set default values for injection form
+                app.injection_form = crate::app::AddInjectionForm {
                     target_path: "/boot/firmware/config.txt".to_string(),
                     include_path: "/home/pi/_playground/root/boot/firmware-config.txt".to_string(),
                     description: String::new(),
@@ -116,39 +112,85 @@ fn handle_key_event(key: KeyEvent, app: &mut crate::app::App) {
                     editing_index: None,
                 };
                 app.active_column = crate::app::ActiveColumn::Content;
+            } else if app.view_mode == crate::app::ViewMode::MirrorsList {
+                // For now, show message that form is not yet implemented
+                app.show_error("Not Implemented".to_string(), 
+                    "Mirror add form not yet implemented.\n\nYou can manually add mirrors to ~/.detour.yaml:\n\nmirrors:\n  - source: /home/pi/_playground/path/to/source\n    target: /path/to/target\n    description: Optional description".to_string());
             }
         }
         KeyCode::Char('e') => {
-            // Edit requires selection (Column 3 focused)
-            if app.active_column == crate::app::ActiveColumn::Content {
-                if app.view_mode == crate::app::ViewMode::DetoursList {
-                    app.edit_selected_detour();
-                } else if app.view_mode == crate::app::ViewMode::IncludesList {
-                    app.edit_selected_include();
+            if key.modifiers.contains(KeyModifiers::CONTROL) {
+                // Open config.yaml in default editor
+                let config_path = "/home/pi/_playground/_dev/packages/detour/config.yaml";
+                use std::process::Command;
+                let editor = std::env::var("EDITOR").unwrap_or_else(|_| "nano".to_string());
+                if let Err(e) = Command::new(&editor).arg(config_path).status() {
+                    app.add_toast(format!("Failed to open editor: {}", e), crate::app::ToastType::Error);
+                } else {
+                    app.add_toast("Config file opened in editor".to_string(), crate::app::ToastType::Info);
                 }
+            } else {
+                app.handle_edit_action();
             }
         }
         KeyCode::Delete => {
-            // Delete requires selection (Column 3 focused)
-            if app.active_column == crate::app::ActiveColumn::Content {
-                if app.view_mode == crate::app::ViewMode::DetoursList {
-                    app.delete_selected_detour();
-                } else if app.view_mode == crate::app::ViewMode::IncludesList {
-                    app.delete_selected_include();
-                }
-            }
+            app.handle_delete_action();
         }
-        KeyCode::Char('r') => {
+        KeyCode::Char('r') if key.modifiers.contains(KeyModifiers::CONTROL) => {
             app.reload_config();
         }
         KeyCode::Char('v') => {
-            if app.active_column == crate::app::ActiveColumn::Content {
-                if app.view_mode == crate::app::ViewMode::DetoursList {
-                    let idx = app.selected_detour;
-                    app.validate_single_detour(idx);
-                } else if app.view_mode == crate::app::ViewMode::IncludesList {
-                    let idx = app.selected_include;
-                    app.validate_single_include(idx);
+            // Verify - context aware based on column and selection
+            match app.active_column {
+                crate::app::ActiveColumn::Actions => {
+                    // In Actions column, trigger the selected action
+                    let actions = app.get_current_actions();
+                    if let Some(selected_action) = actions.get(app.selected_action) {
+                        if selected_action == "Verify All" {
+                            if app.view_mode == crate::app::ViewMode::DetoursList {
+                                app.validate_detours_all();
+                            }
+                            // For includes, if Verify All action exists, handle it here
+                        }
+                    }
+                }
+                crate::app::ActiveColumn::Views => {
+                    // In Views column, trigger verify all for the current view
+                    if app.view_mode == crate::app::ViewMode::DetoursList {
+                        app.validate_detours_all();
+                    }
+                }
+                crate::app::ActiveColumn::Content => {
+                    // In Content column, verify single selected item
+                    if app.view_mode == crate::app::ViewMode::DetoursList {
+                        let idx = app.selected_detour;
+                        app.validate_single_detour(idx);
+                    } else if app.view_mode == crate::app::ViewMode::InjectionsList {
+                        let idx = app.selected_injection;
+                        app.validate_single_injection(idx);
+                    }
+                }
+            }
+        }
+        KeyCode::Char('a') => {
+            // Activate All - context aware based on column and selection
+            match app.active_column {
+                crate::app::ActiveColumn::Actions => {
+                    // In Actions column, trigger the selected action
+                    let actions = app.get_current_actions();
+                    if let Some(selected_action) = actions.get(app.selected_action) {
+                        if selected_action == "Activate All" {
+                            if app.view_mode == crate::app::ViewMode::DetoursList {
+                                app.activate_all_detours();
+                            }
+                        }
+                    }
+                }
+                crate::app::ActiveColumn::Views | crate::app::ActiveColumn::Content => {
+                    // Activate All works from views or content (only for detours)
+                    if app.view_mode == crate::app::ViewMode::DetoursList {
+                        app.activate_all_detours();
+                    }
                 }
             }
         }
@@ -220,14 +262,17 @@ fn handle_popup_keys(key: KeyEvent, app: &mut crate::app::App) {
                                     crate::app::PendingAction::DeleteDetourAndFile(index, custom_path) => {
                                         app.delete_detour_and_file(index, custom_path, true);
                                     }
-                                    crate::app::PendingAction::DeleteInclude(index) => {
-                                        app.confirm_delete_include(index);
+                                    crate::app::PendingAction::DeleteInjection(index) => {
+                                        app.confirm_delete_injection(index);
                                     }
-                                    crate::app::PendingAction::DeleteIncludeAndFile(index, include_file_path) => {
-                                        app.delete_include_and_file(index, include_file_path, true);
+                                    crate::app::PendingAction::DeleteInjectionAndFile(index, include_file_path) => {
+                                        app.delete_injection_and_file(index, include_file_path, true);
                                     }
-                                    crate::app::PendingAction::CreateIncludeFileAndSave => {
-                                        app.create_include_file_and_save();
+                                    crate::app::PendingAction::CreateInjectionFileAndSave => {
+                                        app.create_injection_file_and_save();
+                                    }
+                                    crate::app::PendingAction::DeleteMirror(index) => {
+                                        app.confirm_delete_mirror(index);
                                     }
                                 }
                             }
@@ -242,26 +287,19 @@ fn handle_popup_keys(key: KeyEvent, app: &mut crate::app::App) {
                                         app.detour_state.select(Some(app.selected_detour));
                                     }
                                 }
-                                Some(crate::app::PendingAction::DeleteIncludeAndFile(_index, _)) => {
-                                    // Don't delete file, just reload config (include already deleted from config)
+                                Some(crate::app::PendingAction::DeleteInjectionAndFile(_index, _)) => {
+                                    // Don't delete file, just reload config (injection already deleted from config)
                                     app.reload_config();
-                                    if app.selected_include >= app.includes.len() && app.selected_include > 0 {
-                                        app.selected_include -= 1;
-                                        app.include_state.select(Some(app.selected_include));
+                                    if app.selected_injection >= app.injections.len() && app.selected_injection > 0 {
+                                        app.selected_injection -= 1;
+                                        app.injection_state.select(Some(app.selected_injection));
                                     }
                                 }
                                 _ => {}
                             }
                         }
                     }
-                    Popup::Input { .. } => {
-                        // Get the input value
-                        if let Some(_input) = popup.get_input() {
-                            app.close_popup();
-                            // The input will be processed by the context that created the popup
-                        }
-                    }
-                    Popup::Error { .. } | Popup::Info { .. } => {
+                    Popup::Input { .. } | Popup::Error { .. } | Popup::Info { .. } => {
                         app.close_popup();
                     }
                 }
@@ -293,40 +331,40 @@ fn handle_diff_keys(key: KeyEvent, app: &mut crate::app::App) {
     }
 }
 
-fn handle_includes_form_keys(key: KeyEvent, app: &mut crate::app::App) {
+fn handle_injection_form_keys(key: KeyEvent, app: &mut crate::app::App) {
     match key.code {
         KeyCode::Esc => {
-            app.includes_form_cancel();
+            app.injection_form_cancel();
         }
         KeyCode::Enter => {
-            app.includes_form_submit();
+            app.injection_form_submit();
         }
         KeyCode::Char('f') if key.modifiers.contains(KeyModifiers::CONTROL) => {
-            app.includes_form_open_file_browser();
+            app.injection_form_open_file_browser();
         }
         KeyCode::Char('v') if key.modifiers.contains(KeyModifiers::CONTROL) => {
-            app.includes_form_paste_clipboard();
+            app.injection_form_paste_clipboard();
         }
         KeyCode::Tab => {
-            app.includes_form_complete_path();
+            app.injection_form_complete_path();
         }
         KeyCode::Backspace => {
-            app.includes_form_backspace();
+            app.injection_form_backspace();
         }
         KeyCode::Left => {
-            app.includes_form_move_cursor_left();
+            app.injection_form_move_cursor_left();
         }
         KeyCode::Right => {
-            app.includes_form_move_cursor_right();
+            app.injection_form_move_cursor_right();
         }
         KeyCode::Up => {
-            app.includes_form_prev_field();
+            app.injection_form_prev_field();
         }
         KeyCode::Down => {
-            app.includes_form_next_field();
+            app.injection_form_next_field();
         }
         KeyCode::Char(c) if !key.modifiers.contains(KeyModifiers::CONTROL) => {
-            app.includes_form_handle_char(c);
+            app.injection_form_handle_char(c);
         }
         _ => {}
     }
@@ -441,8 +479,8 @@ fn handle_file_browser_keys(key: KeyEvent, app: &mut crate::app::App) {
         match key.code {
             // Close browser without selection
             KeyCode::Esc => {
-                if app.view_mode == crate::app::ViewMode::IncludesAdd {
-                    app.includes_form_close_file_browser(None);
+                if app.view_mode == crate::app::ViewMode::InjectionsAdd {
+                    app.injection_form_close_file_browser(None);
                 } else {
                     app.form_close_file_browser(None);
                 }
@@ -457,8 +495,8 @@ fn handle_file_browser_keys(key: KeyEvent, app: &mut crate::app::App) {
                     } else {
                         // Select file
                         let path = browser.get_selected_path();
-                        if app.view_mode == crate::app::ViewMode::IncludesAdd {
-                            app.includes_form_close_file_browser(path);
+                        if app.view_mode == crate::app::ViewMode::InjectionsAdd {
+                            app.injection_form_close_file_browser(path);
                         } else {
                             app.form_close_file_browser(path);
                         }
