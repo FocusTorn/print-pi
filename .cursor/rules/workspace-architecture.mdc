@@ -47,6 +47,7 @@ _playground/
 ~/ (home directory)
 ├── homeassistant/         # Home Assistant runtime (can be removed)
 ├── .local/bin/            # User binaries (symlinks to _playground)
+│                          # ⚠️ CRITICAL: Personal scripts ALWAYS go here, NEVER in /usr/local/bin
 ├── .config/               # Application configs (some detoured)
 ├── printer_data/          # Klipper runtime (can be removed)
 └── [other services]/      # Other service runtimes
@@ -58,6 +59,7 @@ _playground/
 - ✅ Installed via bootstrap scripts from `_playground/`
 - ✅ Can have files detoured to `_playground/` versions
 - ❌ Should NOT be directly tracked in git (use `.gitignore`)
+- ⚠️ **Personal binaries MUST go in `~/.local/bin/`** - Never install to `/usr/local/bin` or system directories
 
 ---
 
@@ -141,6 +143,8 @@ _playground/home-assistant/automations.yaml  (tracked)
 - Can create symlinks from `~/` to `_playground/`
 - Can optionally configure services via CLI during bootstrap
 - Should be idempotent (safe to run multiple times)
+- **User binaries:** Always create symlinks in `~/.local/bin/` pointing to `_playground/` scripts
+- ⚠️ **Never install to `/usr/local/bin`** - Keep system directories clean
 
 **Current Scripts:**
 - `bootstrap-home-assistant.sh` - Installs HA with Bluetooth support
@@ -164,6 +168,8 @@ _playground/home-assistant/automations.yaml  (tracked)
 ### Helper Scripts
 - Source: `_playground/home-assistant/ha-helper.sh`
 - Runtime: `~/.local/bin/ha` (symlink to source)
+- **Installation Pattern:** Bootstrap scripts create symlinks from `~/.local/bin/` to `_playground/` source files
+- ⚠️ **Never install personal scripts to `/usr/local/bin`** - Always use `~/.local/bin/`
 
 ### Bootstrap Scripts
 - All in: `_playground/_scripts/bootstraps/`
@@ -243,6 +249,12 @@ When suggesting changes or edits:
    - Always reference the separation: `_playground/` (tracked) vs `~/` (runtime)
    - Explain how detour bridges the two
    - Emphasize that fresh installs restore from `_playground/` only
+
+6. **When installing or creating binaries/scripts:**
+   - ⚠️ **ALWAYS use `~/.local/bin/`** for user binaries and scripts
+   - ⚠️ **NEVER install to `/usr/local/bin/`** or other system directories
+   - Create symlinks from `~/.local/bin/` to source files in `_playground/`
+   - Bootstrap scripts should handle this symlink creation automatically
 
 ---
 

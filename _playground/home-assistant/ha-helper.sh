@@ -542,6 +542,208 @@ cmd_reload() {
     print_success "Reload complete!"
 }
 
+cmd_list_entities() {
+    print_header
+    check_container_exists
+    
+    if ! check_container_running; then
+        print_error "Container must be running to list entities!"
+        echo "Start it with: ha start"
+        exit 1
+    fi
+    
+    PATTERN="${1:-}"
+    
+    if [ -z "$PATTERN" ]; then
+        print_info "Listing all entities..."
+        echo "  Usage: ha list-entities <pattern>  (e.g., 'ha list-entities a1')"
+        echo
+    else
+        print_info "Listing entities matching pattern: ${PATTERN}"
+        echo
+    fi
+    
+    # Use heredoc but pass pattern as environment variable to avoid substitution issues
+    # Read state file directly - most reliable method, no authentication needed
+    $DOCKER_CMD exec -e PATTERN_ENV="$PATTERN" "${HA_CONTAINER}" python3 -u <<'PYTHONEOF'
+import json
+import sys
+import os
+from pathlib import Path
+
+pattern = os.environ.get('PATTERN_ENV', '').lower().strip()
+
+# Read state from Home Assistant storage files
+# Try restore_state first (current running state), fallback to core.state
+state_file = Path("/config/.storage/core.restore_state")
+if not state_file.exists():
+    state_file = Path("/config/.storage/core.state")
+
+if not state_file.exists():
+    print("Error: Could not find Home Assistant state file.")
+    print("Make sure Home Assistant is fully started and has entities.")
+    sys.exit(1)
+
+try:
+    with open(state_file, 'r') as f:
+        data = json.load(f)
+    
+    # Extract states - format varies, try different locations
+    states = []
+    if isinstance(data, dict):
+        # Try different possible locations in the JSON structure
+        if 'data' in data:
+            data_content = data['data']
+            if isinstance(data_content, list):
+                # data['data'] is directly a list of states
+                states = data_content
+            elif isinstance(data_content, dict):
+                if 'states' in data_content:
+                    states = data_content['states']
+                elif 'state' in data_content:
+                    states = data_content['state']
+        elif 'states' in data:
+            states = data['states']
+    elif isinstance(data, list):
+        states = data
+    
+    # If still no states, try to extract from any structure
+    if not states:
+        # Look for entity-like structures recursively
+        def find_entities(obj, result=None):
+            if result is None:
+                result = []
+            if isinstance(obj, dict):
+                if 'entity_id' in obj:
+                    result.append(obj)
+                else:
+                    for v in obj.values():
+                        find_entities(v, result)
+            elif isinstance(obj, list):
+                for item in obj:
+                    find_entities(item, result)
+            return result
+        
+        states = find_entities(data)
+    
+    if not states:
+        print("Warning: Found state file but could not extract entity states.")
+        print("Home Assistant may still be starting up.")
+        sys.exit(0)
+    
+    entities = []
+    for state_data in states:
+        if not isinstance(state_data, dict):
+            continue
+        
+        # The state file structure has state data nested under 'state' key
+        if 'state' in state_data and isinstance(state_data['state'], dict):
+            state_obj = state_data['state']
+            entity_id = state_obj.get('entity_id', '')
+            state_value = state_obj.get('state', 'unknown')
+        elif 'entity_id' in state_data:
+            # Direct entity_id (alternative format)
+            entity_id = state_data.get('entity_id', '')
+            state_value = state_data.get('state', 'unknown')
+        else:
+            continue
+        
+        if not entity_id:
+            continue
+        
+        # Filter by pattern if provided
+        if not pattern or pattern in entity_id.lower():
+            domain = entity_id.split('.')[0] if '.' in entity_id else 'unknown'
+            entities.append({
+                'entity_id': entity_id,
+                'state': state_value,
+                'domain': domain
+            })
+    
+    # Sort by entity_id
+    entities.sort(key=lambda x: x['entity_id'])
+    
+    # Display results
+    if entities:
+        print(f"{'Entity ID':<50} {'Domain':<15} {'State':<20}")
+        print("-" * 85)
+        for e in entities:
+            print(f"{e['entity_id']:<50} {e['domain']:<15} {e['state']:<20}")
+        print(f"\nTotal: {len(entities)} entities" + (f" matching '{pattern}'" if pattern else ""))
+        sys.stdout.flush()
+    else:
+        if pattern:
+            print(f"No entities found matching pattern: '{pattern}'")
+            print("\nTip: Try 'ha list-entities' to see all entities")
+        else:
+            print("No entities found")
+        sys.stdout.flush()
+            
+except Exception as e:
+    import sys
+    import traceback
+    print(f"Error retrieving entities: {e}", file=sys.stderr)
+    traceback.print_exc(file=sys.stderr)
+    sys.exit(1)
+PYTHONEOF
+}
+
+cmd_rename_a1_entities() {
+    print_header
+    
+    # Script is in _playground, config dir is in home
+    SCRIPT_PATH="/home/pi/_playground/home-assistant/scripts/rename-a1-entities.sh"
+    
+    if [ ! -f "$SCRIPT_PATH" ]; then
+        print_error "Rename script not found: ${SCRIPT_PATH}"
+        exit 1
+    fi
+    
+    print_info "Running A1 entity rename script..."
+    echo "This will rename entities from 'a1_SERIAL_*' to 'a1_*'"
+    echo
+    
+    HA_CONFIG_DIR="$HA_CONFIG_DIR" bash "$SCRIPT_PATH"
+}
+
+cmd_fix_permissions() {
+    print_header
+    
+    if [ ! -d "$HA_CONFIG_DIR" ]; then
+        print_error "Home Assistant config directory not found: ${HA_CONFIG_DIR}"
+        exit 1
+    fi
+    
+    print_info "Fixing permissions on Home Assistant directory..."
+    echo "This will change ownership of all files to user 'pi'"
+    echo
+    
+    # Count files owned by root
+    ROOT_FILES=$(find "$HA_CONFIG_DIR" ! -user pi 2>/dev/null | wc -l)
+    
+    if [ "$ROOT_FILES" -eq 0 ]; then
+        print_success "All files are already owned by user 'pi'"
+        return 0
+    fi
+    
+    echo "Found $ROOT_FILES files/directories owned by root"
+    echo
+    
+    # Fix permissions
+    if sudo chown -R pi:pi "$HA_CONFIG_DIR"; then
+        print_success "Permissions fixed successfully!"
+        echo
+        echo "All files in ${HA_CONFIG_DIR} are now owned by user 'pi'"
+    else
+        print_error "Failed to fix permissions"
+        exit 1
+    fi
+    
+    echo
+    print_info "Note: If the container recreates files, they will be owned by root again."
+    echo "      Run this command again if needed."
+}
+
 cmd_info() {
     print_header
     
@@ -609,6 +811,9 @@ ${CYAN}Logs & Debugging:${NC}
   errors              Show only errors and warnings from logs
 
 ${CYAN}Information:${NC}
+  list-entities [pattern]  List all entities (optionally filtered by pattern)
+  rename-a1-entities       Rename A1 entities to remove serial numbers (⚠️  risky)
+  fix-permissions          Fix file ownership (change root-owned files to pi)
   info                Show HA version and system info
   help                Show this help message
 
@@ -621,6 +826,8 @@ ${CYAN}Examples:${NC}
   ha reload automations        # Reload automations without restart
   ha logs-tail 100             # Show last 100 log lines
   ha errors                    # Show recent errors
+  ha list-entities a1          # List all a1 entities
+  ha fix-permissions           # Fix file ownership issues
 
 ${CYAN}Notes:${NC}
   • Auto-backups are created before restart/restore/update operations
@@ -692,6 +899,15 @@ case "$COMMAND" in
         ;;
     reload|rel)
         cmd_reload "$@"
+        ;;
+    list-entities|entities|ent|le)
+        cmd_list_entities "$@"
+        ;;
+    rename-a1|rename-a1-entities)
+        cmd_rename_a1_entities "$@"
+        ;;
+    fix-permissions|fix-perms|fp)
+        cmd_fix_permissions "$@"
         ;;
     info|i)
         cmd_info "$@"

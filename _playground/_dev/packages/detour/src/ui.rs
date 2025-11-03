@@ -484,6 +484,8 @@ fn draw_content_column(f: &mut Frame, area: Rect, app: &mut App) {
         ViewMode::InjectionsAdd => draw_injections_add(f, area, app, modal_visible),
         ViewMode::InjectionsList => draw_injections_list(f, area, app, modal_visible),
         ViewMode::MirrorsList => draw_mirrors_list(f, area, app, modal_visible),
+        ViewMode::MirrorsAdd => draw_mirrors_add(f, area, app, modal_visible),
+        ViewMode::MirrorsEdit => draw_mirrors_edit(f, area, app, modal_visible),
         ViewMode::ServicesList => draw_services_list(f, area, app, modal_visible),
         ViewMode::StatusOverview => draw_status_overview(f, area, app, modal_visible),
         ViewMode::LogsLive => draw_logs_live(f, area, app, modal_visible),
@@ -650,6 +652,52 @@ fn draw_mirrors_list(f: &mut Frame, area: Rect, app: &mut App, modal_visible: bo
         is_active,
         modal_visible,
         &crate::components::list_panel::ListPanelTheme::default(),
+    );
+}
+
+fn draw_mirrors_add(f: &mut Frame, area: Rect, app: &App, modal_visible: bool) {
+    let is_active = app.active_column == ActiveColumn::Content && !modal_visible;
+    let fields = vec![
+        crate::components::form_panel::FormField { label: "Source Path:".to_string(), value: app.mirror_form.source_path.clone(), placeholder: "/home/pi/_playground/path/to/source".to_string() },
+        crate::components::form_panel::FormField { label: "Target Path:".to_string(), value: app.mirror_form.target_path.clone(), placeholder: "/path/to/target/symlink".to_string() },
+        crate::components::form_panel::FormField { label: "Description:".to_string(), value: app.mirror_form.description.clone(), placeholder: "Optional description".to_string() },
+    ];
+    let state = crate::components::form_panel::FormState { 
+        active_field: app.mirror_form.active_field, 
+        cursor_pos: app.mirror_form.cursor_pos 
+    };
+    
+    crate::components::form_panel::draw_form_panel(
+        f,
+        area,
+        " Add Mirror ",
+        &fields,
+        &state,
+        is_active,
+        modal_visible,
+    );
+}
+
+fn draw_mirrors_edit(f: &mut Frame, area: Rect, app: &App, modal_visible: bool) {
+    let is_active = app.active_column == ActiveColumn::Content && !modal_visible;
+    let fields = vec![
+        crate::components::form_panel::FormField { label: "Source Path:".to_string(), value: app.mirror_form.source_path.clone(), placeholder: "/home/pi/_playground/path/to/source".to_string() },
+        crate::components::form_panel::FormField { label: "Target Path:".to_string(), value: app.mirror_form.target_path.clone(), placeholder: "/path/to/target/symlink".to_string() },
+        crate::components::form_panel::FormField { label: "Description:".to_string(), value: app.mirror_form.description.clone(), placeholder: "Optional description".to_string() },
+    ];
+    let state = crate::components::form_panel::FormState { 
+        active_field: app.mirror_form.active_field, 
+        cursor_pos: app.mirror_form.cursor_pos 
+    };
+    
+    crate::components::form_panel::draw_form_panel(
+        f,
+        area,
+        " Edit Mirror ",
+        &fields,
+        &state,
+        is_active,
+        modal_visible,
     );
 }
 
@@ -983,6 +1031,9 @@ fn get_panel_help(app: &App) -> String {
                 ActiveColumn::Actions => "[n] New".to_string(),
                 ActiveColumn::Content => "[Space] Toggle  [n] New  [e] Edit  [Del] Remove".to_string(),
             }
+        }
+        ViewMode::MirrorsAdd | ViewMode::MirrorsEdit => {
+            "[Esc] Cancel  [Enter] Save  [Tab] Complete  [Ctrl+F] Browse  [Ctrl+V] Paste".to_string()
         }
         ViewMode::ServicesList => {
             "[Enter] Manage  [r] Reload".to_string()

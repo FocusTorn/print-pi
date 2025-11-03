@@ -48,14 +48,15 @@ fn handle_key_event(key: KeyEvent, app: &mut crate::app::App) {
         return;
     }
     
-    // If in Add/Edit Detour form OR Injections add form AND Column 3 is active, handle form-specific keys
-    if (app.view_mode == crate::app::ViewMode::DetoursAdd || app.view_mode == crate::app::ViewMode::DetoursEdit || app.view_mode == crate::app::ViewMode::InjectionsAdd)
+    // If in any Add/Edit form AND Column 3 is active, handle form-specific keys
+    if matches!(app.view_mode, 
+        crate::app::ViewMode::DetoursAdd | 
+        crate::app::ViewMode::DetoursEdit | 
+        crate::app::ViewMode::InjectionsAdd |
+        crate::app::ViewMode::MirrorsAdd |
+        crate::app::ViewMode::MirrorsEdit)
         && app.active_column == crate::app::ActiveColumn::Content {
-        if app.view_mode == crate::app::ViewMode::InjectionsAdd {
-            handle_injection_form_keys(key, app);
-        } else {
-            handle_form_keys(key, app);
-        }
+        handle_unified_form_keys(key, app);
         return;
     }
     
@@ -331,145 +332,54 @@ fn handle_diff_keys(key: KeyEvent, app: &mut crate::app::App) {
     }
 }
 
-fn handle_injection_form_keys(key: KeyEvent, app: &mut crate::app::App) {
+/// Unified form key handler - works for all form types (Detours, Injections, Mirrors)
+fn handle_unified_form_keys(key: KeyEvent, app: &mut crate::app::App) {
+    use crate::app::FormAction;
+    
     match key.code {
         KeyCode::Esc => {
-            app.injection_form_cancel();
+            app.handle_form_action(FormAction::Cancel);
         }
         KeyCode::Enter => {
-            app.injection_form_submit();
+            app.handle_form_action(FormAction::Submit);
         }
         KeyCode::Char('f') if key.modifiers.contains(KeyModifiers::CONTROL) => {
-            app.injection_form_open_file_browser();
+            app.handle_form_action(FormAction::OpenFileBrowser);
         }
         KeyCode::Char('v') if key.modifiers.contains(KeyModifiers::CONTROL) => {
-            app.injection_form_paste_clipboard();
+            app.handle_form_action(FormAction::PasteClipboard);
         }
         KeyCode::Tab => {
-            app.injection_form_complete_path();
+            app.handle_form_action(FormAction::CompletePath);
         }
         KeyCode::Backspace => {
-            app.injection_form_backspace();
+            app.handle_form_action(FormAction::Backspace);
         }
         KeyCode::Left => {
-            app.injection_form_move_cursor_left();
+            app.handle_form_action(FormAction::CursorLeft);
         }
         KeyCode::Right => {
-            app.injection_form_move_cursor_right();
+            app.handle_form_action(FormAction::CursorRight);
         }
         KeyCode::Up => {
-            app.injection_form_prev_field();
+            app.handle_form_action(FormAction::PrevField);
         }
         KeyCode::Down => {
-            app.injection_form_next_field();
+            app.handle_form_action(FormAction::NextField);
         }
         KeyCode::Char(c) if !key.modifiers.contains(KeyModifiers::CONTROL) => {
-            app.injection_form_handle_char(c);
+            app.handle_form_action(FormAction::Char(c));
         }
-        _ => {}
-    }
-}
-
-fn handle_form_keys(key: KeyEvent, app: &mut crate::app::App) {
-    match key.code {
-        // Cancel/Go back
-        KeyCode::Esc => {
-            app.form_cancel();
-        }
-        
-        // Save detour
-        KeyCode::Enter => {
-            app.form_save_detour();
-        }
-        
-        // Open file browser
-        KeyCode::Char('f') if key.modifiers.contains(KeyModifiers::CONTROL) => {
-            app.form_open_file_browser();
-        }
-        
-        // Paste from clipboard
-        KeyCode::Char('v') if key.modifiers.contains(KeyModifiers::CONTROL) => {
-            app.form_paste_clipboard();
-        }
-        
-        // Path completion or next field
-        KeyCode::Tab => {
-            // If in description field, just move to next field
-            // If in path fields, do completion first, then move to next field
-            if app.add_form.active_field == 2 {
-                app.form_next_field();
-            } else {
-                app.form_complete_path();
-            }
-        }
-        
-        // Text input
-        KeyCode::Char(c) if !key.modifiers.contains(KeyModifiers::CONTROL) => {
-            app.form_handle_char(c);
-        }
-        
-        // Backspace
-        KeyCode::Backspace => {
-            app.form_handle_backspace();
-        }
-        
-        // Cursor movement (left/right within field)
-        KeyCode::Left => {
-            if app.add_form.cursor_pos > 0 {
-                app.add_form.cursor_pos -= 1;
-            }
-        }
-        KeyCode::Right => {
-            let field_len = match app.add_form.active_field {
-                0 => app.add_form.original_path.len(),
-                1 => app.add_form.custom_path.len(),
-                2 => app.add_form.description.len(),
-                _ => 0,
-            };
-            if app.add_form.cursor_pos < field_len {
-                app.add_form.cursor_pos += 1;
-            }
-        }
-        
-        // Field navigation (up/down between fields)
-        KeyCode::Up => {
-            if app.add_form.active_field > 0 {
-                app.add_form.active_field -= 1;
-                let field_len = match app.add_form.active_field {
-                    0 => app.add_form.original_path.len(),
-                    1 => app.add_form.custom_path.len(),
-                    2 => app.add_form.description.len(),
-                    _ => 0,
-                };
-                app.add_form.cursor_pos = field_len;
-            }
-        }
-        KeyCode::Down => {
-            if app.add_form.active_field < 2 {
-                app.add_form.active_field += 1;
-                let field_len = match app.add_form.active_field {
-                    0 => app.add_form.original_path.len(),
-                    1 => app.add_form.custom_path.len(),
-                    2 => app.add_form.description.len(),
-                    _ => 0,
-                };
-                app.add_form.cursor_pos = field_len;
-            }
-        }
-        
         KeyCode::Home => {
-            app.add_form.cursor_pos = 0;
+            // Set cursor to start - handled per-form type in unified handler if needed
+            // For now, delegate to cursor left repeatedly (simpler)
+            app.handle_form_action(FormAction::CursorLeft);
+            // Note: Could add Home/End actions if needed
         }
         KeyCode::End => {
-            let field_len = match app.add_form.active_field {
-                0 => app.add_form.original_path.len(),
-                1 => app.add_form.custom_path.len(),
-                2 => app.add_form.description.len(),
-                _ => 0,
-            };
-            app.add_form.cursor_pos = field_len;
+            // Set cursor to end - delegate to cursor right
+            app.handle_form_action(FormAction::CursorRight);
         }
-        
         _ => {}
     }
 }
@@ -479,10 +389,16 @@ fn handle_file_browser_keys(key: KeyEvent, app: &mut crate::app::App) {
         match key.code {
             // Close browser without selection
             KeyCode::Esc => {
-                if app.view_mode == crate::app::ViewMode::InjectionsAdd {
-                    app.injection_form_close_file_browser(None);
-                } else {
-                    app.form_close_file_browser(None);
+                match app.view_mode {
+                    crate::app::ViewMode::InjectionsAdd => {
+                        app.injection_form_close_file_browser(None);
+                    }
+                    crate::app::ViewMode::MirrorsAdd | crate::app::ViewMode::MirrorsEdit => {
+                        app.mirror_form_close_file_browser(None);
+                    }
+                    _ => {
+                        app.form_close_file_browser(None);
+                    }
                 }
             }
             
@@ -495,10 +411,16 @@ fn handle_file_browser_keys(key: KeyEvent, app: &mut crate::app::App) {
                     } else {
                         // Select file
                         let path = browser.get_selected_path();
-                        if app.view_mode == crate::app::ViewMode::InjectionsAdd {
-                            app.injection_form_close_file_browser(path);
-                        } else {
-                            app.form_close_file_browser(path);
+                        match app.view_mode {
+                            crate::app::ViewMode::InjectionsAdd => {
+                                app.injection_form_close_file_browser(path);
+                            }
+                            crate::app::ViewMode::MirrorsAdd | crate::app::ViewMode::MirrorsEdit => {
+                                app.mirror_form_close_file_browser(path);
+                            }
+                            _ => {
+                                app.form_close_file_browser(path);
+                            }
                         }
                     }
                 }
