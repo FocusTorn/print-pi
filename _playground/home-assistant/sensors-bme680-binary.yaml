@@ -1,0 +1,16 @@
+# BME680 Binary Sensor Configuration for Home Assistant
+# Binary sensors for enclosure safety and status
+
+# Safe to Open (for automations)
+- platform: mqtt
+  name: "Enclosure Safe to Open"
+  unique_id: "bme680_enclosure_safe"
+  state_topic: "homeassistant/sensor/bme680/state"
+  value_template: "{{ 'ON' if value_json.safe_to_open == true else 'OFF' }}"
+  device_class: safety
+  payload_on: "true"
+  payload_off: "false"
+  icon: "mdi:shield-check"
+  json_attributes_topic: "homeassistant/sensor/bme680/state"
+  json_attributes_template: "{{ {'iaq_score': value_json.air_quality_score, 'heat_stable': value_json.heat_stable} | tojson }}"
+

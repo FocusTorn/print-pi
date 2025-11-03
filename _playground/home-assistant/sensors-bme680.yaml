@@ -1,0 +1,108 @@
+# BME680 Sensor Configuration for Home Assistant
+# Extracts individual sensor readings from MQTT JSON payload
+# This file should be included in configuration.yaml
+
+sensor:
+  # === BME680 IAQ Monitor Sensors ===
+  # Main sensor topic: homeassistant/sensor/bme680/state
+  
+  # Temperature
+  - platform: mqtt
+    name: "BME680 Temperature"
+    unique_id: "bme680_temperature"
+    state_topic: "homeassistant/sensor/bme680/state"
+    value_template: "{{ value_json.current.temperature | float }}"
+    unit_of_measurement: "°C"
+    device_class: temperature
+    state_class: measurement
+    json_attributes_topic: "homeassistant/sensor/bme680/state"
+    json_attributes_template: "{{ {'heat_stable': value_json.heat_stable, 'baseline_established': value_json.baseline_established} | tojson }}"
+    
+  # Humidity
+  - platform: mqtt
+    name: "BME680 Humidity"
+    unique_id: "bme680_humidity"
+    state_topic: "homeassistant/sensor/bme680/state"
+    value_template: "{{ value_json.current.humidity | float }}"
+    unit_of_measurement: "%"
+    device_class: humidity
+    state_class: measurement
+    json_attributes_topic: "homeassistant/sensor/bme680/state"
+    json_attributes_template: "{{ {'baseline_humidity': value_json.baseline.humidity if value_json.baseline else null} | tojson }}"
+    
+  # Pressure
+  - platform: mqtt
+    name: "BME680 Pressure"
+    unique_id: "bme680_pressure"
+    state_topic: "homeassistant/sensor/bme680/state"
+    value_template: "{{ value_json.current.pressure | float }}"
+    unit_of_measurement: "hPa"
+    device_class: pressure
+    state_class: measurement
+    
+  # Gas Resistance
+  - platform: mqtt
+    name: "BME680 Gas Resistance"
+    unique_id: "bme680_gas_resistance"
+    state_topic: "homeassistant/sensor/bme680/state"
+    value_template: "{{ value_json.current.gas | float }}"
+    unit_of_measurement: "Ω"
+    state_class: measurement
+    json_attributes_topic: "homeassistant/sensor/bme680/state"
+    json_attributes_template: "{{ {'baseline_gas': value_json.baseline.gas if value_json.baseline else null} | tojson }}"
+    
+  # Indoor Air Quality Score
+  - platform: mqtt
+    name: "BME680 IAQ Score"
+    unique_id: "bme680_iaq_score"
+    state_topic: "homeassistant/sensor/bme680/state"
+    value_template: "{{ value_json.air_quality_score | float if value_json.air_quality_score is not none else 'unknown' }}"
+    unit_of_measurement: "score"
+    icon: "mdi:air-filter"
+    state_class: measurement
+    json_attributes_topic: "homeassistant/sensor/bme680/state"
+    json_attributes_template: "{{ {'baseline_established': value_json.baseline_established, 'heat_stable': value_json.heat_stable} | tojson }}"
+    
+  # Safe to Open (Binary Sensor)
+  - platform: mqtt
+    name: "BME680 Safe to Open"
+    unique_id: "bme680_safe_to_open"
+    state_topic: "homeassistant/sensor/bme680/state"
+    value_template: "{{ 'on' if value_json.safe_to_open == true else 'off' if value_json.safe_to_open == false else 'unknown' }}"
+    device_class: safety
+    payload_on: "true"
+    payload_off: "false"
+    icon: "mdi:shield-check-outline"
+    
+  # Heat Stable Indicator
+  - platform: mqtt
+    name: "BME680 Heat Stable"
+    unique_id: "bme680_heat_stable"
+    state_topic: "homeassistant/sensor/bme680/state"
+    value_template: "{{ 'on' if value_json.heat_stable else 'off' }}"
+    device_class: connectivity
+    icon: "mdi:thermometer"
+    
+  # Baseline Established Indicator
+  - platform: mqtt
+    name: "BME680 Baseline Established"
+    unique_id: "bme680_baseline_established"
+    state_topic: "homeassistant/sensor/bme680/state"
+    value_template: "{{ 'on' if value_json.baseline_established else 'off' }}"
+    device_class: connectivity
+    icon: "mdi:chart-line"
+
+binary_sensor:
+  # Safe to Open (as binary sensor for automations)
+  - platform: mqtt
+    name: "Enclosure Safe to Open"
+    unique_id: "bme680_enclosure_safe"
+    state_topic: "homeassistant/sensor/bme680/state"
+    value_template: "{{ 'ON' if value_json.safe_to_open == true else 'OFF' }}"
+    device_class: safety
+    payload_on: "true"
+    payload_off: "false"
+    icon: "mdi:shield-check"
+    json_attributes_topic: "homeassistant/sensor/bme680/state"
+    json_attributes_template: "{{ {'iaq_score': value_json.air_quality_score, 'heat_stable': value_json.heat_stable} | tojson }}"
+

@@ -1,0 +1,339 @@
+views:
+  - title: A1 3D Printer
+    path: a1-3d-printer
+    icon: mdi:printer-3d
+    type: sections
+    max_columns: 3
+    sections:
+      - type: grid
+        cards:
+          - type: heading
+            heading: Camera
+            heading_style: title
+            icon: mdi:camera
+            badges: []
+          - show_state: false
+            show_name: false
+            camera_view: live
+            type: picture-entity
+            entity: camera.a1_camera
+            camera_image: camera.a1_camera
+            grid_options:
+              columns: full
+              rows: 12
+            tap_action:
+              action: none
+            hold_action:
+              action: none
+        column_span: 3
+      - type: grid
+        cards:
+          - type: heading
+            heading: A1 Printer
+            heading_style: title
+            icon: mdi:printer-3d
+            badges: []
+          - type: custom:mushroom-entity-card
+            entity: switch.a1_power
+            icon: mdi:power
+            name: Power
+            secondary_info: none
+            tap_action:
+              action: toggle
+          - type: tile
+            entity: sensor.a1_status
+            name: Status
+            icon: mdi:printer-3d
+          - type: custom:mushroom-template-card
+            entity: sensor.a1_filament_status
+            primary: Filament
+            secondary: '{{ states("sensor.a1_filament_status") }}'
+            icon: mdi:printer-3d-nozzle-outline
+            icon_color: blue
+            grid_options:
+              columns: 6
+              rows: 1
+          - type: horizontal-stack
+            cards:
+              - type: tile
+                entity: sensor.a1_network
+                name: Network
+                vertical: false
+              - type: custom:mushroom-template-card
+                primary: Bambu Studio
+                icon: mdi:web
+                icon_color: blue
+                tap_action:
+                  action: url
+                  url_path: https://bambustudio.bambulab.com/
+                fill_container: true
+          - type: heading
+            heading: Print Job
+            heading_style: title
+            icon: mdi:printer-3d
+            badges: []
+          - type: tile
+            entity: sensor.a1_current_file
+            icon: mdi:file
+            name: Print File
+            layout_options:
+              grid_columns: 4
+              grid_rows: 1
+          - type: horizontal-stack
+            cards:
+              - type: tile
+                entity: sensor.a1_print_time
+                name: Duration
+                vertical: false
+              - type: tile
+                entity: sensor.a1_remaining_time
+                name: ETA
+                vertical: false
+          - features:
+              - type: custom:service-call
+                entries:
+                  - type: slider
+                    entity_id: sensor.a1_print_progress
+                    range:
+                      - 0
+                      - 100
+                    tap_action:
+                      action: none
+                    step: 1
+                    thumb: flat
+            type: tile
+            name: Progress
+            color: teal
+            entity: sensor.a1_print_progress
+            features_position: inline
+            vertical: false
+            grid_options:
+              columns: 12
+              rows: 1
+          - type: tile
+            entity: sensor.a1_layer_info
+            name: Layer
+            vertical: true
+      - type: grid
+        cards:
+          - type: heading
+            heading: Control
+            heading_style: title
+            icon: mdi:printer-3d
+            badges: []
+          - type: horizontal-stack
+            cards:
+              - type: custom:mushroom-template-card
+                primary: Pause
+                icon: mdi:pause
+                icon_color: orange
+                layout: vertical
+                tap_action:
+                  action: call-service
+                  service: button.press
+                  target:
+                    entity_id: button.a1_pause
+              - type: custom:mushroom-template-card
+                primary: Resume
+                icon: mdi:play
+                icon_color: teal
+                layout: vertical
+                tap_action:
+                  action: call-service
+                  service: button.press
+                  target:
+                    entity_id: button.a1_resume
+              - type: custom:mushroom-template-card
+                primary: Cancel
+                icon: mdi:cancel
+                icon_color: red
+                layout: vertical
+                tap_action:
+                  action: call-service
+                  service: button.press
+                  target:
+                    entity_id: button.a1_cancel
+              - type: custom:mushroom-template-card
+                primary: Stop
+                icon: mdi:stop
+                icon_color: red
+                layout: vertical
+                tap_action:
+                  action: call-service
+                  service: button.press
+                  target:
+                    entity_id: button.a1_stop
+          - type: heading
+            heading: Temperatures
+            heading_style: title
+            icon: mdi:thermometer
+            badges: []
+          - features:
+              - type: custom:service-call
+                entries:
+                  - type: slider
+                    entity_id: sensor.a1_nozzle_temperature
+                    range:
+                      - 0
+                      - 300
+                    tap_action:
+                      action: none
+                    thumb: flat
+                    step: 1
+                    label: Current - {{ value | float | round(0) }}°C
+                    unit_of_measurement: °C
+            type: tile
+            color: blue
+            hide_state: false
+            name: Nozzle Current
+            entity: sensor.a1_nozzle_temperature
+            features_position: inline
+            vertical: false
+            grid_options:
+              columns: 12
+              rows: 1
+          - features:
+              - type: custom:service-call
+                entries:
+                  - type: slider
+                    entity_id: sensor.a1_nozzle_target
+                    range:
+                      - 0
+                      - 300
+                    tap_action:
+                      action: none
+                    thumb: default
+                    step: 1
+                    label: Target - {{ value | float | round(0) }}°C
+                    unit_of_measurement: °C
+            type: tile
+            color: blue
+            hide_state: false
+            name: Nozzle Target
+            entity: number.a1_nozzle_target
+            features_position: inline
+            vertical: false
+            grid_options:
+              columns: 12
+              rows: 1
+          - features:
+              - type: custom:service-call
+                entries:
+                  - type: slider
+                    entity_id: sensor.a1_bed_temperature
+                    range:
+                      - 0
+                      - 100
+                    tap_action:
+                      action: none
+                    thumb: flat
+                    step: 1
+                    label: Current - {{ value | float | round(0) }}°C
+                    unit_of_measurement: °C
+            type: tile
+            color: deep-purple
+            hide_state: false
+            name: Bed Current
+            entity: sensor.a1_bed_temperature
+            features_position: inline
+            vertical: false
+            grid_options:
+              columns: 12
+              rows: 1
+          - features:
+              - type: custom:service-call
+                entries:
+                  - type: slider
+                    entity_id: sensor.a1_bed_target
+                    range:
+                      - 0
+                      - 100
+                    tap_action:
+                      action: none
+                    thumb: default
+                    step: 1
+                    label: Target - {{ value | float | round(0) }}°C
+                    unit_of_measurement: °C
+            type: tile
+            color: deep-purple
+            hide_state: false
+            name: Bed Target
+            entity: number.a1_bed_target
+            features_position: inline
+            vertical: false
+            grid_options:
+              columns: 12
+              rows: 1
+          - features:
+              - type: custom:service-call
+                entries:
+                  - type: slider
+                    entity_id: sensor.a1_chamber_temperature
+                    range:
+                      - 0
+                      - 40
+                    tap_action:
+                      action: none
+                    thumb: flat
+                    step: 1
+                    unit_of_measurement: °C
+            type: tile
+            entity: sensor.a1_chamber_temperature
+            name: Chamber
+            color: yellow
+            features_position: inline
+            vertical: false
+            grid_options:
+              columns: 12
+              rows: 1
+          - type: heading
+            heading: Cooling
+            heading_style: title
+            icon: mdi:fan
+            badges: []
+          - type: custom:mushroom-fan-card
+            name: Aux Fan
+            icon_animation: true
+            show_percentage_control: false
+            layout: horizontal
+            collapsible_controls: false
+            tap_action:
+              action: toggle
+            entity: fan.a1_aux_fan
+          - type: custom:mushroom-fan-card
+            name: Chamber Fan
+            icon_animation: true
+            show_percentage_control: false
+            layout: horizontal
+            collapsible_controls: false
+            tap_action:
+              action: toggle
+            entity: fan.a1_chamber_fan
+            grid_options:
+              columns: 6
+              rows: 1
+          - type: heading
+            heading: Information
+            heading_style: title
+            icon: mdi:information
+            badges: []
+          - type: custom:mushroom-entity-card
+            entity: sensor.a1_filament_used
+            name: Filament Used
+          - type: custom:mushroom-entity-card
+            entity: sensor.a1_print_speed
+            name: Print Speed
+          - type: custom:mushroom-entity-card
+            entity: sensor.a1_gcode_subtitle
+            name: G-code
+          - type: history-graph
+            hours: 24
+            refresh_interval: 60
+            entities:
+              - entity: sensor.a1_nozzle_temperature
+                name: Nozzle
+              - entity: sensor.a1_bed_temperature
+                name: Bed
+              - entity: sensor.a1_chamber_temperature
+                name: Chamber
+
