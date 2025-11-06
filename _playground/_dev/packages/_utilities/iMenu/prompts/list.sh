@@ -86,11 +86,14 @@ imenu_list() {
         local keybindings
         keybindings=$(_imenu_get_keybindings "list" "$has_back")
         if [ -n "$keybindings" ]; then
-            printf '%b%s%b' "${GRAY}" "$keybindings" "${NC}" >&2
+            printf '%b%s%b\n' "${GRAY}" "$keybindings" "${NC}" >&2
+        else
+            printf '\n' >&2  # Newline if no keybindings
         fi
         
-        # Move cursor back up two lines to the input line
-        printf '\033[A\033[A' >&2
+        # Move cursor back up three lines to the input line
+        # (After printing keybindings with newline, we're 3 lines down from input line)
+        printf '\033[A\033[A\033[A' >&2
         # Position cursor at the end of the displayed text (after input)
         printf '\r' >&2  # Move to start of line
         printf '\033[%dC' "$display_len" >&2  # Move cursor right to end of display

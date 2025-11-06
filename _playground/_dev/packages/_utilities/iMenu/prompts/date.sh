@@ -43,8 +43,8 @@ imenu_date() {
     # In a full implementation, this would parse the mask and allow field-by-field editing
     local input="$date_str"
     
-    # Show cursor for input prompts
-    _imenu_show_cursor
+    # Hide cursor during input - we'll show it at the correct position
+    _imenu_hide_cursor
     
     # Calculate message lines for total count
     local message_lines=1
@@ -65,15 +65,22 @@ imenu_date() {
     local total_lines=$((message_lines + menu_lines))
     
     while true; do
-        # Display prompt with input
-        printf '%b?%b %s\n' "${CYAN}" "${NC}" "$input" >&2
+        # Display prompt with input (no newline, we'll position cursor)
+        printf '%b?%b %s' "${CYAN}" "${NC}" "$input" >&2
+        local display_len=$((2 + ${#input}))  # "? " (2 chars) + input length
         
         # Only show format hint if mask is not already in the message
         if [[ ! "$message" =~ "$mask" ]]; then
             printf '%bFormat: %s%b\n' "${DIM}" "$mask" "${NC}" >&2
+            # Move cursor down 1 line for keybindings
+            printf '\033[B' >&2
+            printf '\r' >&2  # Return to start of keybindings line
         else
             # Still need a blank line for spacing
             printf '\n' >&2
+            # Move cursor down 1 line for keybindings
+            printf '\033[B' >&2
+            printf '\r' >&2  # Return to start of keybindings line
         fi
         
         # Display keybindings
@@ -81,11 +88,33 @@ imenu_date() {
         keybindings=$(_imenu_get_keybindings "date" "$has_back")
         if [ -n "$keybindings" ]; then
             printf '%b%s%b\n' "${GRAY}" "$keybindings" "${NC}" >&2
+        else
+            printf '\n' >&2  # Newline if no keybindings
         fi
+        
+        # Move cursor back up to the input line
+        # After printing keybindings with newline, we're 2 lines down from input line
+        if [[ ! "$message" =~ "$mask" ]]; then
+            # Format hint shown: move up 2 lines (format hint + keybindings)
+            printf '\033[A\033[A' >&2
+        else
+            # No format hint: move up 2 lines (blank + keybindings)
+            printf '\033[A\033[A' >&2
+        fi
+        
+        # Position cursor at the end of the displayed text (after input)
+        printf '\r' >&2  # Move to start of line
+        printf '\033[%dC' "$display_len" >&2  # Move cursor right to end of display
+        
+        # Show cursor at the correct position for input
+        _imenu_show_cursor
         
         # Read input
         local key
         key=$(_imenu_read_char)
+        
+        # Hide cursor again immediately after reading for clean redraw
+        _imenu_hide_cursor
         
         if [ "$key" = $'\n' ] || [ "$key" = $'\r' ] || [ -z "$key" ]; then
             # Enter pressed, submit
@@ -129,6 +158,9 @@ imenu_date() {
             input="${input}${key}"
         fi
         
+        # Hide cursor again immediately after reading for clean redraw
+        _imenu_hide_cursor
+        
         # Validate if function provided
         if [ -n "$validate_func" ] && _imenu_is_function "$validate_func"; then
             local validation_result
@@ -136,12 +168,32 @@ imenu_date() {
             if [ "$validation_result" != "true" ] && [ -n "$validation_result" ]; then
                 printf '\r%b%s%b' "${RED}" "$validation_result" "${NC}" >&2
                 sleep 1
-                _imenu_clear_menu $menu_lines
-                continue
+                continue  # Will redraw on next iteration
             fi
         fi
         
-        _imenu_clear_menu $menu_lines
+        # Clear menu lines for redraw (similar to other prompts)
+        # We're at the input line, so clear downward
+        printf '\r' >&2
+        _imenu_clear_line  # Clear input line
+        if [[ ! "$message" =~ "$mask" ]]; then
+            printf '\033[B' >&2  # Move down to format hint line
+            printf '\r' >&2
+            _imenu_clear_line  # Clear format hint line
+        else
+            printf '\033[B' >&2  # Move down to blank line
+            printf '\r' >&2
+            _imenu_clear_line  # Clear blank line
+        fi
+        printf '\033[B' >&2  # Move down to keybindings line
+        printf '\r' >&2
+        _imenu_clear_line  # Clear keybindings line
+        # Move back up to input line
+        if [[ ! "$message" =~ "$mask" ]]; then
+            printf '\033[A\033[A' >&2  # Up 2 lines (format hint + keybindings)
+        else
+            printf '\033[A\033[A' >&2  # Up 2 lines (blank + keybindings)
+        fi
     done
     
     _imenu_show_cursor

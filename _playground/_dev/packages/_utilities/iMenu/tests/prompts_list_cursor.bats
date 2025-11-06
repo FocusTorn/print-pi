@@ -16,6 +16,9 @@ load 'test_helper'
     # Cursor should be positioned at end of input + "? " (2 chars)
     # "item1,item2" (11) + "? " (2) = 13
     assert_cursor_at_end "$stderr_output" "13"
+    
+    # Also verify cursor is on the correct line (vertical positioning)
+    assert_cursor_on_correct_line "$stderr_output" "newline"
 }
 
 @test "list prompt: cursor shown after positioning" {

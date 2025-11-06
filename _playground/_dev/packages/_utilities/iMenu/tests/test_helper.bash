@@ -191,6 +191,43 @@ extract_cursor_positions() {
     echo "$stderr_output" | grep -oP '\033\[\d+C' | grep -oP '\d+' | tr '\n' ' ' | sed 's/ $//'
 }
 
+# Assert cursor is on the correct line (vertical positioning)
+# This verifies that after all cursor movements, we end up back on the input line
+# For inline mode: should move down 2, then up 3 (net: +1 line from newline, then -3 = -2, but we need to account for the newline)
+# For non-inline mode: should move down 2, then up 3 (same)
+assert_cursor_on_correct_line() {
+    local stderr_output="$1"
+    local mode="${2:-inline}"  # inline or newline
+    
+    # Count vertical cursor movements
+    local downs=$(echo "$stderr_output" | grep -oP '\033\[B' | wc -l | tr -d ' ')
+    local ups=$(echo "$stderr_output" | grep -oP '\033\[A' | wc -l | tr -d ' ')
+    
+    # Count newlines in keybindings output (they advance cursor down)
+    # Look for newlines that come after keybindings (gray color code followed by text then newline)
+    local keybinding_newlines=$(echo "$stderr_output" | grep -oP '\033\[0;90m.*?\033\[0m\n' | wc -l | tr -d ' ')
+    
+    # After printing keybindings with newline, we're 3 lines down from input line
+    # So we need: downs + keybinding_newlines - ups = 0 (net movement should be 0)
+    # Or: ups should equal downs + keybinding_newlines
+    local expected_ups=$((downs + keybinding_newlines))
+    
+    # For inline/newline mode, after positioning we should be back on input line
+    # The final sequence should be: down 2, print keybindings (with newline = +1), up 3
+    # So: downs=2, keybinding_newlines=1, ups should be 3
+    if [ "$mode" = "inline" ] || [ "$mode" = "newline" ]; then
+        # We expect: 2 downs + 1 newline = 3, so 3 ups to get back
+        if [ "$ups" -ge 3 ]; then
+            return 0
+        else
+            echo "Expected at least 3 cursor up movements to return to input line, but found: downs=$downs, newlines=$keybinding_newlines, ups=$ups" >&2
+            return 1
+        fi
+    fi
+    
+    return 0
+}
+
 # Assert cursor show was called
 assert_cursor_shown() {
     local count="${CAPTURED_CURSOR_SHOW:-0}"

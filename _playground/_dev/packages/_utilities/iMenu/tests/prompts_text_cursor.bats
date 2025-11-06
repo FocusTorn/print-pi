@@ -18,6 +18,9 @@ load 'test_helper'
     # Visible text length: "? " (2 chars) + "Hello" (5 chars) = 7 chars
     # Cursor should be positioned at column 7 (end of visible text)
     assert_cursor_at_end "$stderr_output" "7"
+    
+    # Also verify cursor is on the correct line (vertical positioning)
+    assert_cursor_on_correct_line "$stderr_output" "newline"
 }
 
 @test "text prompt: cursor shown after positioning" {
@@ -60,6 +63,9 @@ load 'test_helper'
     # Visible text length: "? " (2 chars)
     # Cursor should be positioned at column 2 (end of prompt, ready for input)
     assert_cursor_at_end "$stderr_output" "2"
+    
+    # Also verify cursor is on the correct line (vertical positioning)
+    assert_cursor_on_correct_line "$stderr_output" "newline"
 }
 
 @test "text prompt: cursor positioned correctly in inline mode" {
@@ -77,6 +83,9 @@ load 'test_helper'
     # Cursor should be positioned at column 16 (end of visible text)
     # Note: ANSI color codes don't affect cursor positioning - only visible characters count
     assert_cursor_at_end "$stderr_output" "16"
+    
+    # Also verify cursor is on the correct line (vertical positioning)
+    assert_cursor_on_correct_line "$stderr_output" "inline"
 }
 
 @test "text prompt: cursor positioned correctly for empty input in inline mode" {
@@ -93,5 +102,8 @@ load 'test_helper'
     # Visible text length: "Enter name:" (11 chars) + space (1) = 12 chars
     # Cursor should be positioned at column 12 (end of message + space, ready for input)
     assert_cursor_at_end "$stderr_output" "12"
+    
+    # Also verify cursor is on the correct line (vertical positioning)
+    assert_cursor_on_correct_line "$stderr_output" "inline"
 }
 

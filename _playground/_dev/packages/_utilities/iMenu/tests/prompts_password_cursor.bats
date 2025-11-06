@@ -16,6 +16,9 @@ load 'test_helper'
     # Cursor should be positioned at end of masked input + "? " (2 chars)
     # "secret123" (9 chars) + "? " (2) = 11
     assert_cursor_at_end "$stderr_output" "11"
+    
+    # Also verify cursor is on the correct line (vertical positioning)
+    assert_cursor_on_correct_line "$stderr_output" "newline"
 }
 
 @test "password prompt: cursor shown after positioning" {
