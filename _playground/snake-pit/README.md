@@ -88,9 +88,12 @@ python app.py
 
 ## Using uv
 
+**`uv` is the standard Python package manager** - All packages are managed with `uv`, not `pip`.
+
 **Main commands:**
 - `uv venv` - Create virtual environment
-- `uv pip install <package>` - Install package
+- `uv pip install <package>` - Install package (replaces `pip install`)
+- `uv pip install -r requirements.txt` - Install from requirements file
 - `uv pip list` - List installed packages
 - `uv pip freeze > requirements.txt` - Export requirements
 - `uv run <command>` - Run command in venv without activating
@@ -107,6 +110,14 @@ cd projects/bme680-monitor
 uv venv
 uv pip install adafruit-circuitpython-bme680
 ```
+
+**Why uv?**
+- ⚡ **10-100x faster** than pip
+- 🔒 **More reliable** dependency resolution
+- 📦 **Better handling** of virtual environments
+- ✅ **Standard tool** across snake-pit and _dev packages
+
+**Migration:** All existing pip-installed packages have been migrated to uv. See `/home/pi/_playground/_scripts/migrate-pip-to-uv.sh` for migration script.
 
 ## Cursor AI Rules
 

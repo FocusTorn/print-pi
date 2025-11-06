@@ -99,7 +99,7 @@ The **Recommendation** section is provided by the AI Agent executing the command
 
 <!-- Close Fold -->
 
-## **Format Template**
+## 3. :: Format Template  <!-- Start Fold -->
 
 ```markdown
 ## [Lesson Category Name]
@@ -124,7 +124,9 @@ Benefit: [Why this approach is better]
 ---
 ```
 
-## Final Display Format
+<!-- Close Fold -->
+
+## 4. :: Final Display Format <!-- Start Fold -->
 
 After saving to file, display the lessons in a markdown code block.
 
@@ -216,3 +218,4 @@ You will understand that _add to trouble_ means to do the following:
 
 **CRITICAL**: The **Response** line MUST be EXACTLY `- **Response**: ✏️❓❌⚠️✅ No action required`
 
+<!-- Close Fold -->

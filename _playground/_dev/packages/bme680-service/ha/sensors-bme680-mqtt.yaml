@@ -1,0 +1,57 @@
+mqtt:
+  sensor:
+    - name: "BME680 Temperature"
+      state_topic: "sensors/bme680/raw"
+      value_template: "{{ value_json.current.temperature | float }}"
+      unit_of_measurement: "°C"
+      device_class: temperature
+      state_class: measurement
+
+    - name: "BME680 Humidity"
+      state_topic: "sensors/bme680/raw"
+      value_template: "{{ value_json.current.humidity | float }}"
+      unit_of_measurement: "%"
+      device_class: humidity
+      state_class: measurement
+
+    - name: "BME680 Pressure"
+      state_topic: "sensors/bme680/raw"
+      value_template: "{{ value_json.current.pressure | float }}"
+      unit_of_measurement: "hPa"
+      device_class: pressure
+      state_class: measurement
+
+    - name: "BME680 Gas Resistance"
+      state_topic: "sensors/bme680/raw"
+      value_template: "{{ value_json.current.gas | float }}"
+      unit_of_measurement: "Ω"
+      state_class: measurement
+
+    - name: "BME680 IAQ Score"
+      state_topic: "sensors/bme680/iaq"
+      value_template: "{{ value_json.air_quality_score | float if value_json.air_quality_score is not none else 0 }}"
+      icon: "mdi:air-filter"
+      state_class: measurement
+
+  binary_sensor:
+    - name: "BME680 Heat Stable"
+      state_topic: "sensors/bme680/raw"
+      value_template: "{{ value_json.heat_stable | bool }}"
+      device_class: connectivity
+
+    - name: "BME680 Safe to Open"
+      state_topic: "sensors/bme680/iaq"
+      value_template: "{{ value_json.safe_to_open | bool }}"
+      device_class: safety
+
+    - name: "BME680 HeatSoak Plateau"
+      state_topic: "sensors/bme680/heatsoak/state"
+      value_template: "{{ value_json.plateau | bool }}"
+      device_class: problem
+
+    - name: "BME680 HeatSoak Ready"
+      state_topic: "sensors/bme680/heatsoak/state"
+      value_template: "{{ value_json.ready | bool }}"
+      device_class: safety
+
+

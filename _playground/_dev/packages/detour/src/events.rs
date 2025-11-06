@@ -96,27 +96,22 @@ fn handle_key_event(key: KeyEvent, app: &mut crate::app::App) {
         
         // Quick actions
         KeyCode::Char('n') => {
-            // New works regardless of column focus
-            if app.view_mode == crate::app::ViewMode::DetoursList {
-                app.view_mode = crate::app::ViewMode::DetoursAdd;
-                app.add_form = crate::app::AddDetourForm::default();
-                app.active_column = crate::app::ActiveColumn::Content;
-            } else if app.view_mode == crate::app::ViewMode::InjectionsList {
-                app.view_mode = crate::app::ViewMode::InjectionsAdd;
-                // Set default values for injection form
-                app.injection_form = crate::app::AddInjectionForm {
-                    target_path: "/boot/firmware/config.txt".to_string(),
-                    include_path: "/home/pi/_playground/root/boot/firmware-config.txt".to_string(),
-                    description: String::new(),
-                    active_field: 0,
-                    cursor_pos: 0,
-                    editing_index: None,
-                };
-                app.active_column = crate::app::ActiveColumn::Content;
-            } else if app.view_mode == crate::app::ViewMode::MirrorsList {
-                // For now, show message that form is not yet implemented
-                app.show_error("Not Implemented".to_string(), 
-                    "Mirror add form not yet implemented.\n\nYou can manually add mirrors to ~/.detour.yaml:\n\nmirrors:\n  - source: /home/pi/_playground/path/to/source\n    target: /path/to/target\n    description: Optional description".to_string());
+            // New works from col1/2
+            match app.view_mode {
+                crate::app::ViewMode::DetoursList => {
+                    app.view_mode = crate::app::ViewMode::DetoursAdd;
+                    app.add_form = crate::app::AddDetourForm::default();
+                    app.active_column = crate::app::ActiveColumn::Content;
+                }
+                crate::app::ViewMode::InjectionsList => {
+                    app.view_mode = crate::app::ViewMode::InjectionsAdd;
+                    app.active_column = crate::app::ActiveColumn::Content;
+                }
+                crate::app::ViewMode::MirrorsList => {
+                    app.view_mode = crate::app::ViewMode::MirrorsAdd;
+                    app.active_column = crate::app::ActiveColumn::Content;
+                }
+                _ => {}
             }
         }
         KeyCode::Char('e') => {
@@ -148,17 +143,22 @@ fn handle_key_event(key: KeyEvent, app: &mut crate::app::App) {
                     let actions = app.get_current_actions();
                     if let Some(selected_action) = actions.get(app.selected_action) {
                         if selected_action == "Verify All" {
-                            if app.view_mode == crate::app::ViewMode::DetoursList {
-                                app.validate_detours_all();
+                            match app.view_mode {
+                                crate::app::ViewMode::DetoursList => app.validate_detours_all(),
+                                crate::app::ViewMode::InjectionsList => app.validate_injections_all(),
+                                crate::app::ViewMode::MirrorsList => app.validate_mirrors_all(),
+                                _ => {}
                             }
-                            // For includes, if Verify All action exists, handle it here
                         }
                     }
                 }
                 crate::app::ActiveColumn::Views => {
                     // In Views column, trigger verify all for the current view
-                    if app.view_mode == crate::app::ViewMode::DetoursList {
-                        app.validate_detours_all();
+                    match app.view_mode {
+                        crate::app::ViewMode::DetoursList => app.validate_detours_all(),
+                        crate::app::ViewMode::InjectionsList => app.validate_injections_all(),
+                        crate::app::ViewMode::MirrorsList => app.validate_mirrors_all(),
+                        _ => {}
                     }
                 }
                 crate::app::ActiveColumn::Content => {
@@ -181,16 +181,22 @@ fn handle_key_event(key: KeyEvent, app: &mut crate::app::App) {
                     let actions = app.get_current_actions();
                     if let Some(selected_action) = actions.get(app.selected_action) {
                         if selected_action == "Activate All" {
-                            if app.view_mode == crate::app::ViewMode::DetoursList {
-                                app.activate_all_detours();
+                            match app.view_mode {
+                                crate::app::ViewMode::DetoursList => app.activate_all_detours(),
+                                crate::app::ViewMode::InjectionsList => app.activate_all_injections(),
+                                crate::app::ViewMode::MirrorsList => app.activate_all_mirrors(),
+                                _ => {}
                             }
                         }
                     }
                 }
                 crate::app::ActiveColumn::Views | crate::app::ActiveColumn::Content => {
-                    // Activate All works from views or content (only for detours)
-                    if app.view_mode == crate::app::ViewMode::DetoursList {
-                        app.activate_all_detours();
+                    // Activate All works from views or content
+                    match app.view_mode {
+                        crate::app::ViewMode::DetoursList => app.activate_all_detours(),
+                        crate::app::ViewMode::InjectionsList => app.activate_all_injections(),
+                        crate::app::ViewMode::MirrorsList => app.activate_all_mirrors(),
+                        _ => {}
                     }
                 }
             }
@@ -199,13 +205,33 @@ fn handle_key_event(key: KeyEvent, app: &mut crate::app::App) {
             app.view_mode = crate::app::ViewMode::StatusOverview;
         }
         KeyCode::Char('d') => {
-            // Show diff requires selection (Column 3 focused)
-            if app.view_mode == crate::app::ViewMode::DetoursList 
-                && app.active_column == crate::app::ActiveColumn::Content {
-                if let Some(detour) = app.detours.get(app.selected_detour) {
-                    let original = detour.original.clone();
-                    let custom = detour.custom.clone();
-                    app.show_diff(&original, &custom);
+            match app.active_column {
+                crate::app::ActiveColumn::Content => {
+                    // Keep diff on Detours content only
+                    if app.view_mode == crate::app::ViewMode::DetoursList {
+                        if let Some(detour) = app.detours.get(app.selected_detour) {
+                            let original = detour.original.clone();
+                            let custom = detour.custom.clone();
+                            app.show_diff(&original, &custom);
+                        }
+                    } else {
+                        // Deactivate all for other lists from content
+                        match app.view_mode {
+                            crate::app::ViewMode::DetoursList => app.deactivate_all_detours(),
+                            crate::app::ViewMode::InjectionsList => app.deactivate_all_injections(),
+                            crate::app::ViewMode::MirrorsList => app.deactivate_all_mirrors(),
+                            _ => {}
+                        }
+                    }
+                }
+                _ => {
+                    // From Views/Actions, Deactivate All
+                    match app.view_mode {
+                        crate::app::ViewMode::DetoursList => app.deactivate_all_detours(),
+                        crate::app::ViewMode::InjectionsList => app.deactivate_all_injections(),
+                        crate::app::ViewMode::MirrorsList => app.deactivate_all_mirrors(),
+                        _ => {}
+                    }
                 }
             }
         }

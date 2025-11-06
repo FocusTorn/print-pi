@@ -23,8 +23,8 @@ bme680-service/
 ├── detectors/
 │   └── detect-bme680.sh         # Sensor detection script
 ├── services/
-│   ├── bme680-iaq.service        # IAQ monitor systemd service
-│   └── bme680-temperature.service # Temperature monitor systemd service
+│   ├── bme680-readings.service   # Sensor readings systemd service
+│   └── bme680-heat-soak.service  # Heat soak detection systemd service
 ├── install.sh                    # Installation script (root)
 ├── uninstall.sh                   # Uninstallation script (root)
 └── README.md                      # This file
@@ -43,8 +43,8 @@ When installed, the package creates a **self-contained installation**:
 └── config/                       # Configuration files (if needed)
 
 /etc/systemd/system/               # Systemd service files
-├── bme680-iaq.service
-└── bme680-temperature.service
+├── bme680-readings.service
+└── bme680-heat-soak.service
 ```
 
 **Key Features:**
@@ -88,11 +88,13 @@ cd /home/pi/_playground/_dev/packages/bme680-service
 The installer will:
 1. **Detect BME680 sensor** - Checks both I2C addresses (0x76, 0x77) and verifies chip ID
 2. **Install package files** - Copies scripts and library to `~/.local/share/bme680-service/`
-3. **Create virtual environment** - Sets up isolated Python environment
-4. **Install dependencies** - Installs Python packages (smbus2, paho-mqtt, etc.)
+3. **Create virtual environment** - Sets up isolated Python environment using `uv` (fast, reliable)
+4. **Install dependencies** - Installs Python packages (smbus2, paho-mqtt, colored) using `uv pip install`
 5. **Install systemd services** - Copies service files to `/etc/systemd/system/`
 6. **Enable services** - Enables services to start on boot
 7. **Start services** - Starts the monitoring services immediately
+
+**Note:** This package uses `uv` for Python package management (installed globally via `bootstrap-snake-pit.sh`). If `uv` is not available, it falls back to traditional `pip`.
 
 ## CLI Tool
 
@@ -117,10 +119,10 @@ bme680-cli read --humidity --json
 bme680-cli status
 
 # View service logs
-bme680-cli logs bme680-iaq
+bme680-cli logs bme680-readings
 
 # Follow logs live
-bme680-cli logs bme680-iaq --follow
+bme680-cli logs bme680-readings --follow
 
 # Calibrate baseline (do this once)
 bme680-cli calibrate
@@ -136,43 +138,43 @@ bme680-cli monitor --iaq --interval 10
 ### Check Service Status
 
 ```bash
-# IAQ Monitor
-systemctl status bme680-iaq
+# Sensor Readings service
+systemctl status bme680-readings
 
-# Temperature Monitor
-systemctl status bme680-temperature
+# Heat Soak Detection service
+systemctl status bme680-heat-soak
 ```
 
 ### View Logs
 
 ```bash
-# Follow IAQ logs
-journalctl -u bme680-iaq -f
+# Follow sensor readings logs
+journalctl -u bme680-readings -f
 
-# Follow temperature logs
-journalctl -u bme680-temperature -f
+# Follow heat soak logs
+journalctl -u bme680-heat-soak -f
 
 # View recent logs (last 50 lines)
-journalctl -u bme680-iaq -n 50
+journalctl -u bme680-readings -n 50
 ```
 
 ### Manual Service Control
 
 ```bash
 # Start service
-sudo systemctl start bme680-iaq
+sudo systemctl start bme680-readings
 
 # Stop service
-sudo systemctl stop bme680-iaq
+sudo systemctl stop bme680-readings
 
 # Restart service
-sudo systemctl restart bme680-iaq
+sudo systemctl restart bme680-readings
 
 # Disable auto-start (but don't stop now)
-sudo systemctl disable bme680-iaq
+sudo systemctl disable bme680-readings
 
 # Enable auto-start
-sudo systemctl enable bme680-iaq
+sudo systemctl enable bme680-readings
 ```
 
 ## Uninstallation
@@ -194,8 +196,8 @@ The uninstaller will:
 **Manual removal** (if needed):
 ```bash
 # Stop and disable services
-sudo systemctl stop bme680-iaq bme680-temperature
-sudo systemctl disable bme680-iaq bme680-temperature
+sudo systemctl stop bme680-readings bme680-heat-soak
+sudo systemctl disable bme680-readings bme680-heat-soak
 sudo rm /etc/systemd/system/bme680-*.service
 sudo systemctl daemon-reload
 
@@ -205,21 +207,31 @@ rm -rf ~/.local/share/bme680-service
 
 ## Service Configuration
 
-### IAQ Monitor Service
+### Sensor Readings Service (Recommended)
 
-- **Service name**: `bme680-iaq.service`
+- **Service name**: `bme680-readings.service`
 - **Script**: `monitor-iaq.py`
 - **MQTT topic**: `homeassistant/sensor/bme680/state`
+- **Readings**: ✅ Temperature, Humidity, Pressure, Gas Resistance, IAQ Score
+- **Purpose**: All sensor readings and enclosure air quality monitoring
+- **Features**: Baseline calibration, IAQ scoring, safety thresholds
 - **Auto-restart**: Yes (10 second delay)
 - **User**: `pi`
 
-### Temperature Monitor Service
+**Note**: This service provides ALL sensor readings. Most users only need this one.
 
-- **Service name**: `bme680-temperature.service`
+### Heat Soak Detection Service (Optional)
+
+- **Service name**: `bme680-heat-soak.service`
 - **Script**: `monitor-temperature.py`
 - **MQTT topic**: `homeassistant/sensor/bme680_chamber/state`
+- **Readings**: Temperature only (with heat soak detection)
+- **Purpose**: 3D printing heat soak detection (pre-heating check)
+- **Features**: Temperature smoothing, rate of change calculation, heat soak ready detection
 - **Auto-restart**: Yes (10 second delay)
 - **User**: `pi`
+
+**Note**: This is separate because it has specialized heat soak logic for 3D printing. Only install if you need heat soak detection.
 
 ## Sensor Detection
 
@@ -252,7 +264,7 @@ If no sensor is detected, the installer will show detailed diagnostics about wha
 
 2. **Check logs:**
    ```bash
-   journalctl -u bme680-iaq -n 50 --no-pager
+   journalctl -u bme680-readings -n 50 --no-pager
    ```
 
 3. **Check installation:**

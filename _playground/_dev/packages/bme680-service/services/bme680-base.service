@@ -1,6 +1,6 @@
 [Unit]
-Description=BME680 IAQ Consumer
-After=network-online.target mosquitto.service bme680-base.service
+Description=BME680 Base Readings Publisher (raw)
+After=network-online.target mosquitto.service
 Wants=network-online.target
 
 [Service]
@@ -9,7 +9,7 @@ User=pi
 Group=pi
 WorkingDirectory=/home/pi/.local/share/bme680-service
 Environment="PATH=/home/pi/.local/share/bme680-service/.venv/bin:/usr/local/bin:/usr/bin:/bin"
-ExecStart=/home/pi/.local/share/bme680-service/.venv/bin/python /home/pi/.local/share/bme680-service/iaq-consumer.py --auto-calibrate --calibrate 90 --topic-raw sensors/bme680/raw --topic-iaq sensors/bme680/iaq
+ExecStart=/home/pi/.local/share/bme680-service/.venv/bin/python /home/pi/.local/share/bme680-service/base-readings.py --mqtt-host localhost --topic-raw sensors/bme680/raw
 Restart=always
 RestartSec=5
 NoNewPrivileges=true

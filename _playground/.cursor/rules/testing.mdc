@@ -1,0 +1,295 @@
+---
+description: "Testing standards and best practices for _playground projects"
+alwaysApply: true
+---
+
+# Testing Standards and Best Practices
+
+## Overview
+
+This document defines testing standards and best practices for all projects in `_playground/`. These rules ensure consistent, reliable, and maintainable test suites across all development work.
+
+## BATS Testing Framework
+
+### Required Test Runner: `run_bats`
+
+**✅ MANDATORY**: All BATS tests MUST be run using the `run_bats` helper script.
+
+**Why `run_bats`?**
+- Ensures consistent colorized output across different terminal environments
+- Automatically sets `TERM=xterm-256color` for non-interactive terminals
+- Provides enhanced visual feedback with colored checkmarks (✔ green, ✗ red, 🞉 yellow)
+- Standardizes test execution across all projects
+
+**✅ CORRECT - Use run_bats:**
+```bash
+# From project root or tests directory
+./tests/run_bats.sh tests/
+
+# Or with specific test file
+./tests/run_bats.sh tests/prompts_text_cursor.bats
+```
+
+**❌ INCORRECT - Direct bats invocation:**
+```bash
+# Don't use bats directly - use run_bats helper instead
+bats tests/
+TERM=xterm-256color bats tests/
+```
+
+**Finding run_bats:**
+- Look for `tests/run_bats.sh` in the project directory
+- If missing, create it based on the iMenu pattern: `/home/pi/_playground/_dev/packages/_utilities/iMenu/tests/run_bats.sh`
+
+### BATS Test Structure
+
+**Required elements:**
+```bash
+#!/usr/bin/env bash
+# BATS tests for [component description]
+
+load 'test_helper'
+
+@test "test description" {
+    # Test setup
+    load_iMenu  # or appropriate setup function
+    
+    # Test execution
+    run function_under_test
+    
+    # Assertions
+    [ "$status" -eq 0 ]
+    [ "$output" = "expected" ]
+}
+```
+
+## Test Failure Investigation
+
+### ⚠️ CRITICAL: Verify Both Assertion AND Implementation
+
+**When a test fails, DO NOT automatically assume the test is wrong.**
+
+**✅ CORRECT INVESTIGATION PROCESS:**
+
+1. **Verify the Test Assertion:**
+   - Review the test logic and assertions
+   - Confirm the test is correctly written
+   - Check that test setup is appropriate
+   - Verify test expectations are reasonable
+
+2. **Verify the Implementation:**
+   - Review the actual implementation code
+   - Check if implementation matches expected behavior
+   - Look for bugs, edge cases, or incorrect logic
+   - Compare implementation against requirements/specifications
+
+3. **Determine the Root Cause:**
+   - If test is correct → Fix the implementation
+   - If test is incorrect → Fix the test
+   - If both need changes → Fix both appropriately
+   - If requirements are unclear → Clarify requirements first
+
+**❌ INCORRECT ASSUMPTIONS:**
+
+- ❌ "Test failed, so the test must be wrong" → **WRONG**
+- ❌ "Implementation works, so test needs fixing" → **WRONG**
+- ❌ "Just make the test pass" → **WRONG**
+
+**✅ CORRECT MINDSET:**
+
+- ✅ "Test failed - let me verify both the test logic AND the implementation"
+- ✅ "The test is correctly written, so the bug is likely in the implementation"
+- ✅ "The implementation looks correct, so let me verify the test expectations"
+- ✅ "Both need review - let me check requirements first"
+
+### Example Investigation Flow
+
+**Scenario:** Test fails with assertion mismatch
+
+```bash
+# Test expects cursor at column 7
+assert_cursor_at_end "$stderr_output" "7"
+
+# But implementation positions cursor at column 5
+```
+
+**Investigation Steps:**
+
+1. **Review Test:**
+   - ✅ Test calculates visible text length correctly: "? " (2) + "Hello" (5) = 7
+   - ✅ Test assertion is correct: cursor should be at end of visible text
+   - ✅ Test setup is appropriate
+
+2. **Review Implementation:**
+   - ❌ Implementation counts only "Hello" (5 chars) without prompt prefix
+   - ❌ Implementation doesn't account for "? " prefix in newline mode
+   - ❌ Bug: Missing prompt prefix in cursor calculation
+
+3. **Conclusion:**
+   - Test is correct
+   - Implementation has a bug
+   - **Fix the implementation**, not the test
+
+**Another Scenario:** Test fails with assertion mismatch
+
+```bash
+# Test expects cursor at column 16
+assert_cursor_at_end "$stderr_output" "16"
+
+# Implementation positions cursor at column 16
+```
+
+**Investigation Steps:**
+
+1. **Review Test:**
+   - ❌ Test calculates: "Enter name:" (11) + space (1) + "John" (4) = 16
+   - ❌ Test doesn't account for ANSI color codes in stderr output
+   - ❌ Test assertion may be incorrect if color codes affect positioning
+
+2. **Review Implementation:**
+   - ✅ Implementation correctly positions cursor accounting for ANSI codes
+   - ✅ Implementation strips ANSI codes before calculating position
+   - ✅ Implementation behavior is correct
+
+3. **Conclusion:**
+   - Test has incorrect expectation
+   - Implementation is correct
+   - **Fix the test**, not the implementation
+
+## Test Writing Best Practices
+
+### Test Naming
+
+**✅ CORRECT:**
+```bash
+@test "text prompt: cursor positioned at end of initial value (newline mode)" {
+    # Descriptive, includes context
+}
+
+@test "text prompt: cursor shown after positioning" {
+    # Clear, specific behavior
+}
+```
+
+**❌ INCORRECT:**
+```bash
+@test "test 1" {
+    # Too vague
+}
+
+@test "cursor test" {
+    # Not descriptive enough
+}
+```
+
+### Test Isolation
+
+- ✅ Each test should be independent
+- ✅ Use `setup()` and `teardown()` for test isolation
+- ✅ Reset environment variables between tests
+- ✅ Don't rely on test execution order
+
+### Assertions
+
+- ✅ Use clear, specific assertions
+- ✅ Include context in assertion messages
+- ✅ Test one behavior per test case
+- ✅ Use helper functions for complex assertions
+
+**Example:**
+```bash
+# ✅ Good: Clear assertion with helper
+assert_cursor_at_end "$stderr_output" "7"
+
+# ❌ Bad: Vague assertion
+[ "$cursor_pos" = "7" ]
+```
+
+## Test Coverage
+
+### What to Test
+
+- ✅ Core functionality and happy paths
+- ✅ Edge cases and boundary conditions
+- ✅ Error handling and failure modes
+- ✅ Integration between components
+- ✅ User-facing behavior (for UI components)
+
+### What NOT to Test
+
+- ❌ Implementation details (test behavior, not implementation)
+- ❌ Third-party library internals
+- ❌ Trivial getters/setters without logic
+- ❌ Framework functionality (test your code, not the framework)
+
+## Running Tests
+
+### Standard Commands
+
+```bash
+# Run all tests
+./tests/run_bats.sh tests/
+
+# Run specific test file
+./tests/run_bats.sh tests/prompts_text_cursor.bats
+
+# Run tests matching pattern
+./tests/run_bats.sh tests/ --filter "cursor"
+```
+
+### Test Output
+
+- ✅ Use `run_bats` for consistent, colorized output
+- ✅ Review test output carefully for failures
+- ✅ Check both stdout and stderr when debugging
+- ✅ Use verbose mode for detailed output: `bats --verbose tests/`
+
+## Test Maintenance
+
+### Keeping Tests Updated
+
+- ✅ Update tests when requirements change
+- ✅ Add tests for new features
+- ✅ Refactor tests when code is refactored
+- ✅ Remove obsolete tests
+
+### Test Quality
+
+- ✅ Keep tests readable and maintainable
+- ✅ Use descriptive names and comments
+- ✅ Avoid test duplication (use helper functions)
+- ✅ Keep tests fast (avoid slow operations)
+
+## Integration with CI/CD
+
+### Test Execution
+
+- ✅ Run tests before committing code
+- ✅ Ensure all tests pass before merging
+- ✅ Use JUnit XML output for CI: `bats --formatter junit tests/ > test-results.xml`
+- ✅ Set up automated test runs in CI/CD pipelines
+
+## Project-Specific Testing
+
+### iMenu Testing Pattern
+
+The iMenu project (`/home/pi/_playground/_dev/packages/_utilities/iMenu/`) provides a reference implementation:
+
+- **Test Helper**: `tests/test_helper.bash` - Common utilities and mocks
+- **Test Runner**: `tests/run_bats.sh` - Standardized test execution
+- **Test Structure**: `tests/*.bats` - Individual test files per component
+
+**Reference these files when setting up tests for new projects.**
+
+## Summary
+
+1. **Always use `run_bats`** for BATS test execution
+2. **Verify both test AND implementation** when tests fail
+3. **Don't assume tests are wrong** - investigate thoroughly
+4. **Write clear, isolated, maintainable tests**
+5. **Keep tests updated** with code changes
+6. **Use iMenu as reference** for test structure
+
+---
+
+**Remember:** Tests are documentation of expected behavior. When tests fail, they're telling you something important - listen carefully and investigate thoroughly before making changes.

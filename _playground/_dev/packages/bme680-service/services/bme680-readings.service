@@ -1,0 +1,27 @@
+[Unit]
+Description=BME680 Sensor Readings Service (Temperature, Humidity, Pressure, Gas, IAQ)
+After=network.target mqtt.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=pi
+Group=pi
+WorkingDirectory=%h/.local/share/bme680-service
+Environment="PATH=%h/.local/share/bme680-service/.venv/bin:/usr/local/bin:/usr/bin:/bin"
+ExecStart=%h/.local/share/bme680-service/.venv/bin/python %h/.local/share/bme680-service/monitor-iaq.py --monitor --mqtt
+Restart=always
+RestartSec=10
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=bme680-readings
+
+# Security settings
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=read-only
+ReadWritePaths=%h/.local/share/bme680-service
+
+[Install]
+WantedBy=multi-user.target

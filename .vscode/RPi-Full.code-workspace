@@ -9,6 +9,7 @@
             "path": "/home/pi/_playground"
         },
         {
+            "name": "root",
             "path": "../../.."
         }
     ], //<
@@ -107,7 +108,7 @@
         "/home/pi/.cargo",
         "/home/pi/.local"
     ],
-    "git.untrackedChanges": "separate",
+    "git.untrackedChanges": "mixed",
     "git.enableSmartCommit": false,
     "git.autofetch": false
 

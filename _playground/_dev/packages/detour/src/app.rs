@@ -254,6 +254,18 @@ pub struct App {
     pub mirror_form: AddMirrorForm,
     pub pending_action: Option<PendingAction>,
     pub file_browser: Option<crate::filebrowser::FileBrowser>,
+
+    // Persist column 2 selection per view (by selected_view index)
+    action_selection_by_view: std::collections::HashMap<usize, usize>,
+
+    // Settings: behavior of Actions column selection when changing views
+    action_selection_behavior: ActionSelectionBehavior,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+enum ActionSelectionBehavior {
+    PerViewPersist,
+    AlwaysList,
 }
 
 impl App {
@@ -337,6 +349,11 @@ impl App {
             mirror_form: AddMirrorForm::default(),
             pending_action: None,
             file_browser: None,
+
+            action_selection_by_view: std::collections::HashMap::new(),
+
+            // Default: Always revert to List in column 2
+            action_selection_behavior: ActionSelectionBehavior::AlwaysList,
         }
     }
     
@@ -444,9 +461,9 @@ impl App {
                     source: entry.source.clone(),
                     target: entry.target.clone(),
                     active: is_active,
-                    size: file_info.as_ref().map(|f| f.size).unwrap_or(0),
-                    modified: Self::time_ago(file_info.as_ref().map(|f| f.modified_secs).unwrap_or(0)),
-                }
+                size: file_info.as_ref().map(|f| f.size).unwrap_or(0),
+                modified: Self::time_ago(file_info.as_ref().map(|f| f.modified_secs).unwrap_or(0)),
+            }
             }).collect();
             
             // Reload services
@@ -462,7 +479,7 @@ impl App {
             // Sync mirror list state
             if !self.mirrors.is_empty() {
                 self.mirror_state.select(Some(self.selected_mirror));
-            } else {
+        } else {
                 self.mirror_state.select(None);
             }
             
@@ -510,6 +527,112 @@ impl App {
         
         // Reload config to ensure UI is up to date
         self.reload_config();
+    }
+
+    pub fn deactivate_all_detours(&mut self) {
+        // Deactivate all active detours
+        let mut deactivated_count = 0;
+        let mut errors = Vec::new();
+        for (idx, detour) in self.detours.iter_mut().enumerate() {
+            if detour.active {
+                use crate::manager::DetourManager;
+                let m = DetourManager::new();
+                match m.remove_detour(&detour.original) {
+                    Ok(_) => {
+                        detour.active = false;
+                        deactivated_count += 1;
+                        // Update config
+                        use crate::operations::config_ops;
+                        let _ = config_ops::with_config_mut(&self.config_path, |config| {
+                            if let Some(entry) = config.detours.get_mut(idx) {
+                                entry.enabled = false;
+                            }
+                            Ok(())
+                        });
+                    }
+                    Err(e) => errors.push(format!("{}: {}", detour.original, e)),
+                }
+            }
+        }
+        if deactivated_count > 0 { self.add_toast(format!("Deactivated {} detours", deactivated_count), ToastType::Success); }
+        if !errors.is_empty() { self.add_toast(format!("{} errors during deactivation", errors.len()), ToastType::Error); }
+    }
+
+    pub fn validate_injections_all(&mut self) {
+        for i in 0..self.injections.len() {
+            self.validate_single_injection(i);
+        }
+        self.add_toast("Validated injections".to_string(), ToastType::Info);
+    }
+
+    pub fn activate_all_injections(&mut self) {
+        use crate::injection::InjectionManager;
+        let manager = InjectionManager::new();
+        let mut count = 0;
+        for inj in self.injections.iter_mut() {
+            if !inj.active {
+                if manager.apply(std::path::Path::new(&inj.target), std::path::Path::new(&inj.include_file)).is_ok() {
+                    inj.active = true;
+                    count += 1;
+                }
+            }
+        }
+        if count > 0 { self.add_toast(format!("Activated {} injections", count), ToastType::Success); }
+    }
+
+    pub fn deactivate_all_injections(&mut self) {
+        use crate::injection::InjectionManager;
+        let manager = InjectionManager::new();
+        let mut count = 0;
+        for inj in self.injections.iter_mut() {
+            if inj.active {
+                if manager.remove(std::path::Path::new(&inj.target), std::path::Path::new(&inj.include_file)).is_ok() {
+                    inj.active = false;
+                    count += 1;
+                }
+            }
+        }
+        if count > 0 { self.add_toast(format!("Deactivated {} injections", count), ToastType::Success); }
+    }
+
+    pub fn validate_mirrors_all(&mut self) {
+        // Basic validation: presence of source/target strings
+        let mut missing = 0;
+        for m in &self.mirrors {
+            if m.source.trim().is_empty() || m.target.trim().is_empty() { missing += 1; }
+        }
+        if missing == 0 { self.add_toast("Mirrors OK".to_string(), ToastType::Info); }
+        else { self.add_toast(format!("{} mirrors incomplete", missing), ToastType::Info); }
+    }
+
+    pub fn activate_all_mirrors(&mut self) {
+        use crate::mirror::MirrorManager;
+        let m = MirrorManager::new();
+        let mut count = 0;
+        for mir in self.mirrors.iter_mut() {
+            if !mir.active {
+                if m.apply_mirror(&mir.source, &mir.target).is_ok() {
+                    mir.active = true;
+                    count += 1;
+                }
+            }
+        }
+        if count > 0 { self.add_toast(format!("Activated {} mirrors", count), ToastType::Success); }
+    }
+
+    pub fn deactivate_all_mirrors(&mut self) {
+        use crate::mirror::MirrorManager;
+        let m = MirrorManager::new();
+        let mut count = 0;
+        for mir in self.mirrors.iter_mut() {
+            if mir.active {
+                if m.remove_mirror(&mir.target).is_ok() {
+                    mir.active = false;
+                    count += 1;
+                }
+            }
+        }
+        if count > 0 { self.add_toast(format!("Deactivated {} mirrors", count), ToastType::Success); }
     }
     
     pub fn is_modal_visible(&self) -> bool {
@@ -630,12 +753,23 @@ impl App {
                     self.view_state.select(Some(self.selected_view));
                     // Sync view_mode when selection changes in Views column
                     self.sync_view_mode();
+                    // Update Actions preview selection according to settings
+                    let actions = self.get_current_actions();
+                    let preview_idx = match self.action_selection_behavior {
+                        ActionSelectionBehavior::PerViewPersist => *self.action_selection_by_view.get(&self.selected_view).unwrap_or(&0),
+                        ActionSelectionBehavior::AlwaysList => 0,
+                    };
+                    let clamped = preview_idx.min(actions.len().saturating_sub(1));
+                    self.selected_action = clamped;
+                    self.action_state.select(Some(clamped));
                 }
             }
             ActiveColumn::Actions => {
                 if self.selected_action > 0 {
                     self.selected_action -= 1;
                     self.action_state.select(Some(self.selected_action));
+                    // persist per-view selection
+                    self.action_selection_by_view.insert(self.selected_view, self.selected_action);
                 }
             }
             ActiveColumn::Content => {
@@ -652,6 +786,15 @@ impl App {
                     self.view_state.select(Some(self.selected_view));
                     // Sync view_mode when selection changes in Views column
                     self.sync_view_mode();
+                    // Update Actions preview selection according to settings
+                    let actions = self.get_current_actions();
+                    let preview_idx = match self.action_selection_behavior {
+                        ActionSelectionBehavior::PerViewPersist => *self.action_selection_by_view.get(&self.selected_view).unwrap_or(&0),
+                        ActionSelectionBehavior::AlwaysList => 0,
+                    };
+                    let clamped = preview_idx.min(actions.len().saturating_sub(1));
+                    self.selected_action = clamped;
+                    self.action_state.select(Some(clamped));
                 }
             }
             ActiveColumn::Actions => {
@@ -659,6 +802,8 @@ impl App {
                 if self.selected_action < actions.len().saturating_sub(1) {
                     self.selected_action += 1;
                     self.action_state.select(Some(self.selected_action));
+                    // persist per-view selection
+                    self.action_selection_by_view.insert(self.selected_view, self.selected_action);
                 }
             }
             ActiveColumn::Content => {
@@ -685,6 +830,15 @@ impl App {
                 self.active_column = ActiveColumn::Actions;
                 // Sync view_mode when entering Actions column
                 self.sync_view_mode();
+                // Restore action selection based on settings
+                let actions = self.get_current_actions();
+                let preview_idx = match self.action_selection_behavior {
+                    ActionSelectionBehavior::PerViewPersist => *self.action_selection_by_view.get(&self.selected_view).unwrap_or(&0),
+                    ActionSelectionBehavior::AlwaysList => 0,
+                };
+                let clamped = preview_idx.min(actions.len().saturating_sub(1));
+                self.selected_action = clamped;
+                self.action_state.select(Some(clamped));
             }
             ActiveColumn::Actions => {
                 self.active_column = ActiveColumn::Content;
@@ -932,8 +1086,14 @@ impl App {
     pub fn select_view(&mut self) {
         self.sync_view_mode();
         self.active_column = ActiveColumn::Actions;
-        self.selected_action = 0;
-        self.action_state.select(Some(0));
+        let actions = self.get_current_actions();
+        let preview_idx = match self.action_selection_behavior {
+            ActionSelectionBehavior::PerViewPersist => *self.action_selection_by_view.get(&self.selected_view).unwrap_or(&0),
+            ActionSelectionBehavior::AlwaysList => 0,
+        };
+        let clamped = preview_idx.min(actions.len().saturating_sub(1));
+    self.selected_action = clamped;
+    self.action_state.select(Some(clamped));
     }
     
     /// Helper to convert optional description string to Option<String>
@@ -947,9 +1107,9 @@ impl App {
     
     pub fn get_current_actions(&self) -> Vec<String> {
         match self.view_mode {
-            ViewMode::DetoursList => vec!["List".to_string(), "Verify All".to_string(), "Activate All".to_string()],
-            ViewMode::InjectionsList => vec!["List".to_string()],
-            ViewMode::MirrorsList => vec!["List".to_string(), "Add".to_string()],
+            ViewMode::DetoursList => vec!["List".to_string(), "New".to_string(), "Verify All".to_string(), "Activate All".to_string(), "Deactivate All".to_string()],
+            ViewMode::InjectionsList => vec!["List".to_string(), "New".to_string(), "Verify All".to_string(), "Activate All".to_string(), "Deactivate All".to_string()],
+            ViewMode::MirrorsList => vec!["List".to_string(), "New".to_string(), "Verify All".to_string(), "Activate All".to_string(), "Deactivate All".to_string()],
             ViewMode::ServicesList => vec!["List".to_string()],
             ViewMode::StatusOverview => vec!["Overview".to_string()],
             ViewMode::LogsLive => vec!["Logs".to_string()],
@@ -986,12 +1146,40 @@ impl App {
         if self.active_column == ActiveColumn::Actions {
             let action = self.get_current_actions()[self.selected_action].clone();
             match action.as_str() {
-                "Verify All" => {
-                        self.validate_detours_all();
-                }
-                "Activate All" => {
-                    self.activate_all_detours();
-                }
+                "Verify All" => match self.view_mode {
+                    ViewMode::DetoursList => self.validate_detours_all(),
+                    ViewMode::InjectionsList => self.validate_injections_all(),
+                    ViewMode::MirrorsList => self.validate_mirrors_all(),
+                    _ => {}
+                },
+                "Activate All" => match self.view_mode {
+                    ViewMode::DetoursList => self.activate_all_detours(),
+                    ViewMode::InjectionsList => self.activate_all_injections(),
+                    ViewMode::MirrorsList => self.activate_all_mirrors(),
+                    _ => {}
+                },
+                "Deactivate All" => match self.view_mode {
+                    ViewMode::DetoursList => self.deactivate_all_detours(),
+                    ViewMode::InjectionsList => self.deactivate_all_injections(),
+                    ViewMode::MirrorsList => self.deactivate_all_mirrors(),
+                    _ => {}
+                },
+                "New" => match self.view_mode {
+                    ViewMode::DetoursList => {
+                        self.view_mode = ViewMode::DetoursAdd;
+                        self.add_form = AddDetourForm::default();
+                        self.active_column = ActiveColumn::Content;
+                    }
+                    ViewMode::InjectionsList => {
+                        self.view_mode = ViewMode::InjectionsAdd;
+                        self.active_column = ActiveColumn::Content;
+                    }
+                    ViewMode::MirrorsList => {
+                        self.view_mode = ViewMode::MirrorsAdd;
+                        self.active_column = ActiveColumn::Content;
+                    }
+                    _ => {}
+                },
                 _ => {}
             }
         }
@@ -1016,21 +1204,21 @@ impl App {
         G: FnOnce() -> Result<String, String>,
     {
         let new_state = !current_active;
-        let result = if new_state {
+                        let result = if new_state {
             apply_fn()
-        } else {
+                        } else {
             remove_fn()
-        };
-        
-        match result {
-            Ok(msg) => {
-                use crate::operations::config_ops;
-                let _ = config_ops::with_config_mut(&self.config_path, |config| {
+                        };
+                        
+                        match result {
+                            Ok(msg) => {
+                                use crate::operations::config_ops;
+                                let _ = config_ops::with_config_mut(&self.config_path, |config| {
                     config_update_fn(config, new_state);
-                    Ok(())
-                });
-                
-                let action = if new_state { "Activated" } else { "Deactivated" };
+                                    Ok(())
+                                });
+                                
+                                let action = if new_state { "Activated" } else { "Deactivated" };
                 let log_msg = if msg.is_empty() {
                     format!("{} {}", action, item_name)
                 } else {
@@ -1039,8 +1227,8 @@ impl App {
                 self.add_log("INFO", &log_msg);
                 self.add_toast(format!("{} {}", action, item_name), ToastType::Success);
                 Ok(msg)
-            }
-            Err(err) => {
+                            }
+                            Err(err) => {
                 let error_msg = format!("Failed to toggle {}: {}", item_name, err);
                 self.show_error(error_title.to_string(), error_msg.clone());
                 Err(error_msg)
@@ -1065,21 +1253,21 @@ impl App {
         G: FnOnce() -> Result<String, String>,
     {
         let new_state = !current_active;
-        let result = if new_state {
+                        let result = if new_state {
             apply_fn()
-        } else {
+                        } else {
             remove_fn()
-        };
-        
-        match result {
+                        };
+                        
+                        match result {
             Ok(msg) => {
-                use crate::operations::config_ops;
+                                use crate::operations::config_ops;
                 let _ = config_ops::with_config_mut(config_path, |config| {
                     config_update_fn(config, new_state);
-                    Ok(())
-                });
-                
-                let action = if new_state { "Activated" } else { "Deactivated" };
+                                    Ok(())
+                                });
+                                
+                                let action = if new_state { "Activated" } else { "Deactivated" };
                 let log_msg = if msg.is_empty() {
                     format!("{} {}", action, item_name)
                 } else {
@@ -1088,8 +1276,8 @@ impl App {
                 self.add_log("INFO", &log_msg);
                 self.add_toast(format!("{} {}", action, item_name), ToastType::Success);
                 Ok(msg)
-            }
-            Err(err) => {
+                            }
+                            Err(err) => {
                 let error_msg = format!("Failed to toggle {}: {}", item_name, err);
                 self.show_error(error_title.to_string(), error_msg.clone());
                 Err(error_msg)
@@ -1107,34 +1295,27 @@ impl App {
                     } else {
                         return;
                     };
-                    
-                    let new_state = !current_active;
-                    let result = if new_state {
-                        self.detour_manager.apply_detour(&original, &custom)
-                    } else {
-                        self.detour_manager.remove_detour(&original)
+
+                    // Use generic toggle
+                    let apply_fn = || {
+                        use crate::manager::DetourManager;
+                        let m = DetourManager::new();
+                        m.apply_detour(&original, &custom)
                     };
-                    
-                    match result {
-                        Ok(msg) => {
-                            use crate::operations::config_ops;
-                            let _ = config_ops::with_config_mut(&self.config_path, |config| {
-                                if let Some(entry) = config.detours.iter_mut().find(|e| e.original == original) {
-                                    entry.enabled = new_state;
-                                }
-                                Ok(())
-                            });
-                            
-                            if let Some(detour) = self.detours.get_mut(self.selected_detour) {
-                                detour.active = new_state;
-                            }
-                            
-                            let action = if new_state { "Activated" } else { "Deactivated" };
-                            self.add_log("INFO", &msg);
-                            self.add_toast(format!("{} detour", action), ToastType::Success);
+                    let remove_fn = || {
+                        use crate::manager::DetourManager;
+                        let m = DetourManager::new();
+                        m.remove_detour(&original)
+                    };
+                    let update_cfg = |config: &mut crate::config::DetourConfig, enabled: bool| {
+                        if let Some(entry) = config.detours.iter_mut().find(|e| e.original == original) {
+                            entry.enabled = enabled;
                         }
-                        Err(err) => {
-                            self.show_error("Mount Error".to_string(), format!("Failed to toggle detour: {}", err));
+                    };
+
+                    if self.toggle_item_generic(current_active, "detour", "Mount Error", apply_fn, remove_fn, update_cfg).is_ok() {
+                        if let Some(detour) = self.detours.get_mut(self.selected_detour) {
+                            detour.active = !current_active;
                         }
                     }
                 }
@@ -1145,40 +1326,26 @@ impl App {
                     } else {
                         return;
                     };
-                    
-                    let new_state = !current_active;
-                    let result = if new_state {
-                        self.injection_manager.apply(
-                            std::path::Path::new(&target),
-                            std::path::Path::new(&include_file)
-                        )
-                    } else {
-                        self.injection_manager.remove(
-                            std::path::Path::new(&target),
-                            std::path::Path::new(&include_file)
-                        )
+
+                    let apply_fn = || {
+                        use crate::injection::InjectionManager;
+                        let m = InjectionManager::new();
+                        m.apply(std::path::Path::new(&target), std::path::Path::new(&include_file)).map(|_| format!("Applied include: {}", target))
                     };
-                    
-                    match result {
-                        Ok(_) => {
-                            use crate::operations::config_ops;
-                            let _ = config_ops::with_config_mut(&self.config_path, |config| {
-                                if let Some(entry) = config.injections.iter_mut().find(|e| e.target == target) {
-                                    entry.enabled = new_state;
-                                }
-                                Ok(())
-                            });
-                            
-                            if let Some(injection) = self.injections.get_mut(self.selected_injection) {
-                                injection.active = new_state;
-                            }
-                            
-                            let action = if new_state { "Activated" } else { "Deactivated" };
-                            self.add_log("INFO", &format!("{} include: {}", action, target));
-                            self.add_toast(format!("{} include", action), ToastType::Success);
+                    let remove_fn = || {
+                        use crate::injection::InjectionManager;
+                        let m = InjectionManager::new();
+                        m.remove(std::path::Path::new(&target), std::path::Path::new(&include_file)).map(|_| format!("Removed include: {}", target))
+                    };
+                    let update_cfg = |config: &mut crate::config::DetourConfig, enabled: bool| {
+                        if let Some(entry) = config.injections.iter_mut().find(|e| e.target == target) {
+                            entry.enabled = enabled;
                         }
-                        Err(err) => {
-                            self.show_error("Include Error".to_string(), format!("Failed to toggle include: {}", err));
+                    };
+
+                    if self.toggle_item_generic(current_active, "include", "Include Error", apply_fn, remove_fn, update_cfg).is_ok() {
+                        if let Some(injection) = self.injections.get_mut(self.selected_injection) {
+                            injection.active = !current_active;
                         }
                     }
                 }
@@ -1189,34 +1356,26 @@ impl App {
                     } else {
                         return;
                     };
-                    
-                    let new_state = !current_active;
-                    let result = if new_state {
-                        self.mirror_manager.apply_mirror(&source, &target)
-                    } else {
-                        self.mirror_manager.remove_mirror(&target)
+
+                    let apply_fn = || {
+                        use crate::mirror::MirrorManager;
+                        let m = MirrorManager::new();
+                        m.apply_mirror(&source, &target)
                     };
-                    
-                    match result {
-                        Ok(msg) => {
-                            use crate::operations::config_ops;
-                            let _ = config_ops::with_config_mut(&self.config_path, |config| {
-                                if let Some(entry) = config.mirrors.iter_mut().find(|e| e.source == source && e.target == target) {
-                                    entry.enabled = new_state;
-                                }
-                                Ok(())
-                            });
-                            
-                            if let Some(mirror) = self.mirrors.get_mut(self.selected_mirror) {
-                                mirror.active = new_state;
-                            }
-                            
-                            let action = if new_state { "Activated" } else { "Deactivated" };
-                            self.add_log("INFO", &msg);
-                            self.add_toast(format!("{} mirror", action), ToastType::Success);
+                    let remove_fn = || {
+                        use crate::mirror::MirrorManager;
+                        let m = MirrorManager::new();
+                        m.remove_mirror(&target)
+                    };
+                    let update_cfg = |config: &mut crate::config::DetourConfig, enabled: bool| {
+                        if let Some(entry) = config.mirrors.iter_mut().find(|e| e.source == source && e.target == target) {
+                            entry.enabled = enabled;
                         }
-                        Err(err) => {
-                            self.show_error("Mirror Error".to_string(), format!("Failed to toggle mirror: {}", err));
+                    };
+
+                    if self.toggle_item_generic(current_active, "mirror", "Mirror Error", apply_fn, remove_fn, update_cfg).is_ok() {
+                        if let Some(mirror) = self.mirrors.get_mut(self.selected_mirror) {
+                            mirror.active = !current_active;
                         }
                     }
                 }
@@ -1224,7 +1383,7 @@ impl App {
             }
         }
     }
-    
+
     /* PHASE 2 REFACTOR: Old handle_space implementation - replaced with refactored version above
      * Pattern was: 3 nearly identical blocks (60 lines each) doing:
      * 1. Get item, toggle active state
@@ -1770,7 +1929,7 @@ impl App {
                 let removed = config.injections.remove(idx);
                 // Return include file path for file check
                 Ok(Some(removed.include_file.clone()))
-            } else {
+                } else {
                 Err("Index out of bounds".to_string())
             }
         };
@@ -1788,8 +1947,8 @@ impl App {
             Err(e) if e.starts_with("FILE_EXISTS:") => {
                 let file_path = e.trim_start_matches("FILE_EXISTS:");
                 self.pending_action = Some(PendingAction::DeleteInjectionAndFile(index, file_path.to_string()));
-                self.popup = Some(crate::popup::Popup::Confirm {
-                    title: "Delete Include File?".to_string(),
+                    self.popup = Some(crate::popup::Popup::Confirm {
+                        title: "Delete Include File?".to_string(),
                     message: format!("The include file still exists:\n\n{}\n\nDelete it as well?", file_path),
                     selected: 1,
                 });

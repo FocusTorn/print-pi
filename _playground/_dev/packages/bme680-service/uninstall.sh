@@ -3,8 +3,19 @@
 
 set -e
 
-INSTALL_ROOT="$HOME/.local/share/bme680-service"
-INSTALL_BIN="$HOME/.local/bin"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PACKAGE_DIR="$SCRIPT_DIR"
+MENU_SCRIPT="$PACKAGE_DIR/scripts/interactive-menu.sh"
+
+# Capture original user's home (before sudo)
+ORIGINAL_USER="${SUDO_USER:-$USER}"
+ORIGINAL_HOME=$(getent passwd "$ORIGINAL_USER" 2>/dev/null | cut -d: -f6)
+if [ -z "$ORIGINAL_HOME" ]; then
+    ORIGINAL_HOME="/home/$ORIGINAL_USER"
+fi
+
+INSTALL_ROOT="$ORIGINAL_HOME/.local/share/bme680-service"
+INSTALL_BIN="$ORIGINAL_HOME/.local/bin"
 
 # Colors
 RED='\033[0;31m'
@@ -59,43 +70,130 @@ uninstall_service() {
 print_info "BME680 Service Uninstallation"
 echo
 
-read -p "Uninstall IAQ monitor service? (y/N): " -n 1 -r
-echo
-if [[ $REPLY =~ ^[Yy]$ ]]; then
-    uninstall_service "bme680-iaq"
-fi
-
-read -p "Uninstall temperature monitor service? (y/N): " -n 1 -r
-echo
-if [[ $REPLY =~ ^[Yy]$ ]]; then
-    uninstall_service "bme680-temperature"
+# Source menu functions if available
+if [ -f "$MENU_SCRIPT" ]; then
+    source "$MENU_SCRIPT"
+    
+    # Build menu options based on installed services
+    local menu_options=()
+    
+    if systemctl list-units --all --type=service | grep -q "bme680-readings.service"; then
+        menu_options+=("Sensor readings service (bme680-readings)")
+    fi
+    
+    if systemctl list-units --all --type=service | grep -q "bme680-heat-soak.service"; then
+        menu_options+=("Heat soak detection service (bme680-heat-soak)")
+    fi
+    
+    if [ ${#menu_options[@]} -eq 0 ]; then
+        print_info "No BME680 services found installed"
+    else
+        print_info "Select services to uninstall:"
+        echo
+        
+        local selected
+        selected=$(interactive_menu "${menu_options[@]}")
+        local menu_exit=$?
+        
+        if [ $menu_exit -ne 0 ] || [ -z "$selected" ]; then
+            print_info "Uninstallation cancelled"
+            exit 0
+        fi
+        
+        # Process selections
+        for idx in $selected; do
+            case "${menu_options[$idx]}" in
+                *"readings"*)
+                    uninstall_service "bme680-readings"
+                    ;;
+                *"heat-soak"*)
+                    uninstall_service "bme680-heat-soak"
+                    ;;
+            esac
+        done
+    fi
+else
+    # Fallback to simple prompts
+    print_warning "Interactive menu not available, using simple prompts..."
+    
+    if systemctl list-units --all --type=service | grep -q "bme680-readings.service"; then
+        read -p "Uninstall sensor readings service? (y/N): " -n 1 -r
+        echo
+        if [[ $REPLY =~ ^[Yy]$ ]]; then
+            uninstall_service "bme680-readings"
+        fi
+    fi
+    
+    if systemctl list-units --all --type=service | grep -q "bme680-heat-soak.service"; then
+        read -p "Uninstall heat soak detection service? (y/N): " -n 1 -r
+        echo
+        if [[ $REPLY =~ ^[Yy]$ ]]; then
+            uninstall_service "bme680-heat-soak"
+        fi
+    fi
 fi
 
 print_info "Reloading systemd daemon..."
 systemctl daemon-reload
 
-# Remove installed files
+# Build removal options
+local removal_options=()
+
 if [ -d "$INSTALL_ROOT" ]; then
-    read -p "Remove installed package files from $INSTALL_ROOT? (y/N): " -n 1 -r
-    echo
-    if [[ $REPLY =~ ^[Yy]$ ]]; then
-        print_info "Removing package files..."
-        rm -rf "$INSTALL_ROOT"
-        print_success "Package files removed"
-    else
-        print_info "Keeping package files (virtual environment and scripts)"
-    fi
-else
-    print_info "No package files found at $INSTALL_ROOT"
+    removal_options+=("Package files ($INSTALL_ROOT)")
 fi
 
-# Remove CLI tool if it exists
 if [ -f "$INSTALL_BIN/bme680-cli" ]; then
-    read -p "Remove CLI tool (bme680-cli) from $INSTALL_BIN? (y/N): " -n 1 -r
+    removal_options+=("CLI tool ($INSTALL_BIN/bme680-cli)")
+fi
+
+if [ ${#removal_options[@]} -gt 0 ]; then
     echo
-    if [[ $REPLY =~ ^[Yy]$ ]]; then
-        rm -f "$INSTALL_BIN/bme680-cli"
-        print_success "CLI tool removed"
+    print_info "Select additional items to remove:"
+    
+    if [ -f "$MENU_SCRIPT" ]; then
+        source "$MENU_SCRIPT"
+        local selected
+        selected=$(interactive_menu "${removal_options[@]}")
+        local menu_exit=$?
+        
+        if [ $menu_exit -ne 0 ] || [ -z "$selected" ]; then
+            print_info "Keeping all files"
+        else
+            for idx in $selected; do
+                case "${removal_options[$idx]}" in
+                    *"Package files"*)
+                        print_info "Removing package files..."
+                        rm -rf "$INSTALL_ROOT"
+                        print_success "Package files removed"
+                        ;;
+                    *"CLI tool"*)
+                        rm -f "$INSTALL_BIN/bme680-cli"
+                        print_success "CLI tool removed"
+                        ;;
+                esac
+            done
+        fi
+    else
+        # Fallback to simple prompts
+        if [ -d "$INSTALL_ROOT" ]; then
+            read -p "Remove installed package files from $INSTALL_ROOT? (y/N): " -n 1 -r
+            echo
+            if [[ $REPLY =~ ^[Yy]$ ]]; then
+                print_info "Removing package files..."
+                rm -rf "$INSTALL_ROOT"
+                print_success "Package files removed"
+            fi
+        fi
+        
+        if [ -f "$INSTALL_BIN/bme680-cli" ]; then
+            read -p "Remove CLI tool (bme680-cli) from $INSTALL_BIN? (y/N): " -n 1 -r
+            echo
+            if [[ $REPLY =~ ^[Yy]$ ]]; then
+                rm -f "$INSTALL_BIN/bme680-cli"
+                print_success "CLI tool removed"
+            fi
+        fi
     fi
 fi
 

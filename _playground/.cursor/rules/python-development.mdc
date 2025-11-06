@@ -1,0 +1,72 @@
+---
+description: Python development entry point - all Python work goes into snake-pit
+alwaysApply: true
+---
+
+# Python Development - Snake Pit
+
+## High-Level Overview
+
+**All Python development, scripts, and projects MUST go into the `snake-pit` directory.**
+
+```
+/home/pi/_playground/snake-pit/
+```
+
+This is the **centralized location** for all Python-related work in this workspace.
+
+## Quick Reference
+
+- **Location**: `/home/pi/_playground/snake-pit/`
+- **Main Environment**: `.venv/` (shared dependencies)
+- **Projects**: `projects/` subdirectory
+- **Package Manager**: `uv` (ultra-fast Python package installer)
+- **Bootstrap**: `_playground/_scripts/bootstraps/bootstrap-snake-pit.sh`
+
+## Detailed Rules
+
+For comprehensive Python development rules, standards, and best practices, see:
+
+**`/home/pi/_playground/snake-pit/.cursor/rules/`**
+
+This directory contains:
+- `python-standards.mdc` - PEP 8, type hints, docstrings
+- `project-structure.mdc` - Monorepo layout and organization
+- `hardware-raspberry-pi.mdc` - GPIO/I2C/SPI integration patterns
+
+## Key Principles
+
+1. **Centralization**: All Python code lives in `snake-pit/`
+2. **Two-tier Environments**: Main `.venv/` for shared deps, project `.venv/` for isolated needs
+3. **uv-based**: Use `uv` for ALL package management (standard tool, pip is deprecated)
+4. **Tracked**: All Python code is tracked in git (part of `_playground/`)
+
+## Package Management
+
+**`uv` is the standard Python package manager** - All packages MUST be managed with `uv`, not `pip`.
+
+- ✅ **Use `uv pip install`** - Primary tool for all installations
+- ✅ **Use `uv venv`** - Create virtual environments
+- ✅ **Use `uv run`** - Run commands without activating venv
+- ❌ **Avoid `pip` directly** - Only use as fallback if `uv` unavailable
+
+**Why uv?**
+- ⚡ 10-100x faster than pip
+- 🔒 More reliable dependency resolution
+- 📦 Better virtual environment handling
+- ✅ Standard across snake-pit and _dev packages
+
+**Migration Status**: All existing pip-installed packages have been migrated to uv. See `_playground/_scripts/migrate-pip-to-uv.sh` for migration script.
+
+## When Working with Python
+
+- ✅ Create new Python scripts/projects in `snake-pit/projects/`
+- ✅ Install shared dependencies to main `.venv/`
+- ✅ Use project-specific venvs for conflicting dependencies
+- ✅ Reference snake-pit rules directory for detailed guidelines
+- ❌ Do NOT create Python projects outside `snake-pit/`
+- ❌ Do NOT install Python packages globally (use venvs)
+
+## More Information
+
+See `snake-pit/README.md` for setup instructions, project structure, and usage examples.

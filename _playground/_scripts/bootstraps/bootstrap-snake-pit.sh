@@ -49,6 +49,11 @@ if ! command -v uv &> /dev/null; then
     source "$HOME/.cargo/env" 2>/dev/null || true
 fi
 
+# Ensure uv is executable (sometimes installer doesn't set permissions correctly)
+if [ -f "$HOME/.local/bin/uv" ]; then
+    chmod +x "$HOME/.local/bin/uv"
+fi
+
 # Verify installation
 echo ""
 echo "✅ uv installation complete!"

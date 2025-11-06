@@ -1,6 +1,6 @@
 [Unit]
-Description=BME680 Temperature Monitor Service
-After=network.target mqtt.service
+Description=BME680 HeatSoak Consumer
+After=network-online.target mosquitto.service bme680-base.service
 Wants=network-online.target
 
 [Service]
@@ -9,14 +9,9 @@ User=pi
 Group=pi
 WorkingDirectory=/home/pi/.local/share/bme680-service
 Environment="PATH=/home/pi/.local/share/bme680-service/.venv/bin:/usr/local/bin:/usr/bin:/bin"
-ExecStart=/home/pi/.local/share/bme680-service/.venv/bin/python /home/pi/.local/share/bme680-service/monitor-temperature.py --monitor --mqtt
+ExecStart=/home/pi/.local/share/bme680-service/.venv/bin/python /home/pi/.local/share/bme680-service/heatsoak-consumer.py --topic-raw sensors/bme680/raw --topic-state sensors/bme680/heatsoak/state --target 45.0 --plateau-slope 0.05 --window 120
 Restart=always
-RestartSec=10
-StandardOutput=journal
-StandardError=journal
-SyslogIdentifier=bme680-temp
-
-# Security settings
+RestartSec=5
 NoNewPrivileges=true
 PrivateTmp=true
 ProtectSystem=strict
@@ -25,3 +20,5 @@ ReadWritePaths=/home/pi/.local/share/bme680-service
 
 [Install]
 WantedBy=multi-user.target
+
+

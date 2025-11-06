@@ -1,0 +1,33 @@
+[Unit]
+Description=Raspberry Pi to Home Assistant Reporter (MQTT)
+Documentation=https://github.com/ironsheep/RPi-Reporter-MQTT2HA-Daemon
+After=network.target mosquitto.service network-online.target
+Wants=network-online.target
+Requires=network.target
+
+[Service]
+Type=notify
+User=%i
+Group=%i
+WorkingDirectory=%h/.local/share/pi-to-ha-reporter
+Environment="PATH=%h/.local/share/pi-to-ha-reporter/.venv/bin:/usr/local/bin:/usr/bin:/bin"
+Environment="PYTHONUNBUFFERED=1"
+ExecStart=%h/.local/share/pi-to-ha-reporter/.venv/bin/python %h/.local/share/pi-to-ha-reporter/pi-to-ha-reporter.py --config %h/.local/share/pi-to-ha-reporter/config
+StandardOutput=journal
+StandardError=journal
+Restart=always
+RestartSec=3
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=pi-to-ha-reporter
+NotifyAccess=all
+
+# Security settings
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=read-only
+ReadWritePaths=%h/.local/share/pi-to-ha-reporter
+
+[Install]
+WantedBy=multi-user.target

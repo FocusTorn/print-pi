@@ -66,7 +66,8 @@ snake-pit/
 
 ## Running Projects
 
-**Always run from snake-pit root or project directory:**
+**Always use `uv` for package management and running:**
+
 ```bash
 # Shared venv
 cd /home/pi/_playground/snake-pit
@@ -76,6 +77,12 @@ uv run python projects/my-project/main.py
 cd projects/my-project
 uv run python main.py
 ```
+
+**Package Management:**
+- ✅ Use `uv pip install` - Primary tool for all package installations
+- ✅ Use `uv venv` - Create virtual environments
+- ✅ Use `uv run` - Run commands without activating venv
+- ❌ Avoid `pip` directly - Only use as fallback if `uv` unavailable
 
 ## Documentation
 

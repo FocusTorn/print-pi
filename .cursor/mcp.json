@@ -1,0 +1,13 @@
+{
+  "mcpServers": {
+    "Home Assistant": {
+      "command": "mcp-proxy",
+      "args": [
+        "http://localhost:8123/mcp_server/sse"
+      ],
+      "env": {
+        "API_ACCESS_TOKEN": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiIzYzVjYTNjM2E2MmM0ZWIzYjE3NDNlNDk4YmU4MjU5ZSIsImlhdCI6MTc2MTczMjQ3OSwiZXhwIjoyMDc3MDkyNDc5fQ.4_ta37XOAH_y5FSpUgSA7hmBfQ_qIks7d04seJw5NKc"
+      }
+    }
+  }
+}
