@@ -13,8 +13,8 @@ from pathlib import Path
 # Paths
 INSTALL_ROOT = Path.home() / ".local" / "share" / "bme680-service"
 VENV_PYTHON = INSTALL_ROOT / ".venv" / "bin" / "python"
-MONITOR_IAQ = INSTALL_ROOT / "monitor-iaq.py"
-MONITOR_TEMP = INSTALL_ROOT / "monitor-temperature.py"
+MONITOR_IAQ = INSTALL_ROOT / "mqtt" / "monitor-iaq.py"
+MONITOR_HEATSOAK = INSTALL_ROOT / "mqtt" / "monitor-heatsoak.py"
 
 # Service names
 SERVICE_READINGS = "bme680-readings"
@@ -201,8 +201,8 @@ def monitor(mode="iaq", interval=10, mqtt=False, json_output=False):
     
     if mode == "iaq":
         script = MONITOR_IAQ
-    elif mode == "temp":
-        script = MONITOR_TEMP
+    elif mode == "heatsoak":
+        script = MONITOR_HEATSOAK
     else:
         print(f"❌ Unknown mode: {mode}")
         return 1
@@ -263,6 +263,7 @@ Examples:
   
   # Monitor continuously
   bme680-cli monitor --iaq --interval 10
+  bme680-cli monitor --heatsoak --interval 5
         """
     )
     
@@ -295,7 +296,7 @@ Examples:
     # Monitor command
     monitor_parser = subparsers.add_parser("monitor", help="Monitor sensor continuously")
     monitor_parser.add_argument("--iaq", action="store_true", help="Monitor IAQ")
-    monitor_parser.add_argument("--temp", action="store_true", help="Monitor temperature")
+    monitor_parser.add_argument("--heatsoak", action="store_true", help="Monitor heat soak (temperature with rate calculation)")
     monitor_parser.add_argument("--interval", type=int, default=10, help="Interval in seconds (default: 10)")
     monitor_parser.add_argument("--mqtt", action="store_true", help="Enable MQTT publishing")
     monitor_parser.add_argument("--json", action="store_true", help="Output as JSON")
@@ -335,8 +336,8 @@ Examples:
     
     elif args.command == "monitor":
         mode = "iaq"
-        if args.temp:
-            mode = "temp"
+        if args.heatsoak:
+            mode = "heatsoak"
         elif args.iaq:
             mode = "iaq"
         return monitor(mode, args.interval, args.mqtt, args.json)
