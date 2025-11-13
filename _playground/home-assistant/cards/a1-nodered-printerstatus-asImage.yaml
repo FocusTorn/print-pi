@@ -1,0 +1,156 @@
+type: picture-elements
+image: /local/media/bambuprinter/a1_lightoff.png
+entity: light.a1_a1_chamber_light
+elements:
+  - type: conditional
+    conditions:
+      - entity: sensor.a1_a1_print_status
+        state_not: OFFLINE
+    elements:
+      - type: conditional
+        conditions:
+          - entity: sensor.a1_a1_network_connection
+            state: Wired
+        elements:
+          - type: custom:config-template-card
+            entities:
+              - sensor.a1_a1_wifi_signal
+            element:
+              type: state-icon
+              entity: sensor.a1_a1_wifi_signal
+              icon: mdi:ethernet-cable
+            style:
+              left: 76%
+              top: 27.7%
+              font-size: 0.8em
+              color: rgba(0,0,0,0)
+              "--paper-item-icon-color": |-
+                ${states['sensor.a1_a1_wifi_signal'].state > -50 ? 'green' :
+                  states['sensor.a1_a1_wifi_signal'].state > -60 ?
+                'yellow' :
+                  states['sensor.a1_a1_wifi_signal'].state > -67 ?
+                'orange' :
+                  states['sensor.a1_a1_wifi_signal'].state > -70 ?
+                'red' : 'red'}
+      - type: conditional
+        conditions:
+          - entity: sensor.a1_a1_network_connection
+            state: Wireless
+        elements:
+          - type: custom:config-template-card
+            entities:
+              - sensor.a1_a1_wifi_signal
+            element:
+              type: state-icon
+              entity: sensor.a1_a1_wifi_signal
+              icon: >-
+                ${states['sensor.a1_a1_wifi_signal'].state > -50 ?
+                'mdi:wifi-strength-4' :
+                  states['sensor.a1_a1_wifi_signal'].state > -60 ?
+                'mdi:wifi-strength-3' :
+                  states['sensor.a1_a1_wifi_signal'].state > -67 ?
+                'mdi:wifi-strength-2' :
+                  states['sensor.a1_a1_wifi_signal'].state > -70 ?
+                'mdi:wifi-strength-1-alert' : 'mdi:wifi-strength-outline'}
+            style:
+              left: 76%
+              top: 27.7%
+              font-size: 0.8em
+              color: rgba(0,0,0,0)
+              "--paper-item-icon-color": |-
+                ${states['sensor.a1_a1_wifi_signal'].state > -50 ? 'green' :
+                  states['sensor.a1_a1_wifi_signal'].state > -60 ?
+                'yellow' :
+                  states['sensor.a1_a1_wifi_signal'].state > -67 ?
+                'orange' :
+                  states['sensor.a1_a1_wifi_signal'].state > -70 ?
+                'red' : 'red'}
+      - entity: light.a1_a1_chamber_light
+        type: state-icon
+        style:
+          top: 45%
+          left: 89%
+          "--mdc-icon-size": 2.6em
+        tap_action:
+          action: toggle
+      - entity: sensor.a1_a1_print_status
+        type: state-label
+        style:
+          top: 82.5%
+          left: 78.8%
+          font-size: 0.75em
+          color: "#FFFFFF"
+      - type: conditional
+        conditions:
+          - entity: sensor.a1_a1_print_status
+            state:
+              - RUNNING
+              - PAUSE
+        elements:
+          - type: conditional
+            conditions:
+              - entity: image.a1_a1_print_preview
+                state_not: unavailable
+            elements:
+              - type: custom:hui-element
+                card_type: picture-entity
+                show_name: false
+                show_state: false
+                entity: image.a1_a1_print_preview
+                style:
+                  top: 61.5%
+                  left: 47%
+                  transform: translate(-45%, -40%) scale(75%, 75%)
+                  "--ha-card-border-width": 0px
+                  "--ha-card-background": none
+          - entity: sensor.a1_a1_print_progress
+            type: state-badge
+            tap_action:
+              action: none
+            style:
+              top: 18.5%
+              left: 74%
+              font-size: 1em
+              color: rgba(0,0,0,0)
+              "--label-badge-red": "#11739D"
+      - entity: sensor.a1_a1_nozzle_temperature
+        type: state-badge
+        style:
+          top: 35%
+          left: 46.5%
+          font-size: 0.8em
+          color: rgba(0,0,0,0)
+      - entity: sensor.a1_a1_bed_temperature
+        type: state-badge
+        style:
+          top: 95%
+          left: 46.5%
+          font-size: 0.8em
+          color: rgba(0,0,0,0)
+card_mod:
+  style: |
+    ha-card {
+      background: none !important;
+      border: none !important; 
+      box-shadow: none !important;
+      position: relative;
+    }
+    ha-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      {% if is_state('light.a1_a1_chamber_light', 'on') %}
+      background-image: url('/local/media/bambuprinter/a1_lighton.png');
+      {% else %}
+      background-image: url('/local/media/bambuprinter/a1_lightoff.png');
+      {% endif %}
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      z-index: -1;
+      pointer-events: none;
+    }
+

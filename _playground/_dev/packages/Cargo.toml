@@ -1,0 +1,15 @@
+[workspace]
+members = [
+    "_tui-components",
+    "detour",
+    "hasync",
+]
+
+resolver = "2"
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+authors = ["FocusTorn <FocusTorn@gmail.com>"]
+license = "MIT"
+

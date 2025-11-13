@@ -1,0 +1,26 @@
+# Home Assistant Dashboard Sync Configuration
+
+dashboards:
+  - name: "Main Dashboard"
+    yaml_source: "/home/pi/_playground/home-assistant/dashboards/main.yaml"
+    json_storage: "/home/pi/homeassistant/.storage/lovelace.main.json"
+    dashboard_key: "main"
+    dashboard_title: "Main Dashboard"
+    dashboard_path: "main"
+
+  - name: "Printer Dashboard"
+    yaml_source: "/home/pi/_playground/home-assistant/dashboards/printer.yaml"
+    json_storage: "/home/pi/homeassistant/.storage/lovelace.printer.json"
+    dashboard_key: "printer"
+    dashboard_title: "Printer Dashboard"
+    dashboard_path: "printer"
+
+default_dashboard: "main"
+
+# Scripts synchronization (directory sync)
+scripts:
+  - name: "Home Assistant Scripts"
+    source: "/home/pi/_playground/home-assistant/scripts"
+    destination: "/home/pi/homeassistant/scripts"
+    recursive: true
+

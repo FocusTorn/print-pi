@@ -1,0 +1,201 @@
+# A1 Hotend Temperature & Filament Control Card
+# Shows current/target temperature with progress bar and Load/Unload/Cancel buttons
+# 
+# Layout:
+#   LOAD          UNLOAD        CANCEL
+#   [==========BAR==========]
+#   Current: XXX°C  Target: XXX°C
+
+type: vertical-stack
+cards:
+  # Load, Unload, and Cancel buttons (horizontal)
+  - type: horizontal-stack
+    cards:
+      # Load Filament Button
+      - type: custom:button-card
+        name: LOAD
+        icon: mdi:printer-3d-nozzle
+        tap_action:
+          action: call-service
+          service: script.a1_load_filament
+          service_data:
+            entity_id: sensor.a1_external_spool_external_spool
+            temperature: "{{ states('sensor.a1_nozzle_target_temperature') | int }}"
+        styles:
+          card:
+            - padding: 12px
+            - text-align: center
+          name:
+            - font-weight: bold
+            - font-size: 14px
+            - letter-spacing: 1px
+        state:
+          - value: default
+            styles:
+              card:
+                - background-color: rgba(76, 175, 80, 0.1)
+                - border: 2px solid rgba(76, 175, 80, 0.5)
+              name:
+                - color: rgb(76, 175, 80)
+              icon:
+                - color: rgb(76, 175, 80)
+        card_mod:
+          style: |
+            ha-card {
+              box-shadow: none !important;
+              transition: all 0.3s ease;
+            }
+            ha-card:active {
+              transform: scale(0.95);
+              background-color: rgba(76, 175, 80, 0.2) !important;
+            }
+      
+      # Unload Filament Button
+      - type: custom:button-card
+        name: UNLOAD
+        icon: mdi:printer-3d-nozzle-off
+        tap_action:
+          action: call-service
+          service: script.a1_unload_filament
+          service_data:
+            entity_id: sensor.a1_external_spool_external_spool
+        styles:
+          card:
+            - padding: 12px
+            - text-align: center
+          name:
+            - font-weight: bold
+            - font-size: 14px
+            - letter-spacing: 1px
+        state:
+          - value: default
+            styles:
+              card:
+                - background-color: rgba(244, 67, 54, 0.1)
+                - border: 2px solid rgba(244, 67, 54, 0.5)
+              name:
+                - color: rgb(244, 67, 54)
+              icon:
+                - color: rgb(244, 67, 54)
+        card_mod:
+          style: |
+            ha-card {
+              box-shadow: none !important;
+              transition: all 0.3s ease;
+            }
+            ha-card:active {
+              transform: scale(0.95);
+              background-color: rgba(244, 67, 54, 0.2) !important;
+            }
+      
+      # Cancel Filament Operation Button
+      - type: custom:button-card
+        name: CANCEL
+        icon: mdi:stop-circle
+        tap_action:
+          action: call-service
+          service: script.a1_cancel_filament_operation
+        styles:
+          card:
+            - padding: 12px
+            - text-align: center
+          name:
+            - font-weight: bold
+            - font-size: 14px
+            - letter-spacing: 1px
+        state:
+          - value: default
+            styles:
+              card:
+                - background-color: rgba(255, 152, 0, 0.1)
+                - border: 2px solid rgba(255, 152, 0, 0.5)
+              name:
+                - color: rgb(255, 152, 0)
+              icon:
+                - color: rgb(255, 152, 0)
+        card_mod:
+          style: |
+            ha-card {
+              box-shadow: none !important;
+              transition: all 0.3s ease;
+            }
+            ha-card:active {
+              transform: scale(0.95);
+              background-color: rgba(255, 152, 0, 0.2) !important;
+            }
+  
+  # Temperature Progress Bar Card
+  - type: markdown
+    content: |
+        <div style="padding: 16px;">
+          <!-- Temperature Display -->
+          <div style="display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 16px;">
+            <div>
+              <strong>Current:</strong> 
+              <span style="color: {% if states('sensor.a1_nozzle_temperature') | float >= states('sensor.a1_nozzle_target_temperature') | float(0) * 0.95 %}rgb(76, 175, 80){% else %}rgb(255, 152, 0){% endif %};">
+                {{ states('sensor.a1_nozzle_temperature') | default('0') | int }}°C
+              </span>
+            </div>
+            <div>
+              <strong>Target:</strong> 
+              <span style="color: rgb(33, 150, 243);">
+                {{ states('sensor.a1_nozzle_target_temperature') | default('0') | int }}°C
+              </span>
+            </div>
+          </div>
+          
+          <!-- Progress Bar -->
+          <div style="position: relative; width: 100%; height: 24px; background: rgba(0, 0, 0, 0.1); border-radius: 12px; overflow: hidden; margin-bottom: 8px;">
+            {% set current = states('sensor.a1_nozzle_temperature') | float(0) %}
+            {% set target = states('sensor.a1_nozzle_target_temperature') | float(1) %}
+            {% set max_temp = 300 %}
+            {% set progress = (current / max_temp * 100) | round(1) %}
+            {% set target_progress = (target / max_temp * 100) | round(1) %}
+            {% set bar_color = 'rgb(76, 175, 80)' if current >= target * 0.95 else 'rgb(255, 152, 0)' if current >= target * 0.5 else 'rgb(244, 67, 54)' %}
+            
+            <!-- Current Temperature Bar -->
+            <div style="position: absolute; left: 0; top: 0; height: 100%; width: {{ progress }}%; background: linear-gradient(90deg, {{ bar_color }}, {{ bar_color }}dd); transition: width 0.5s ease;">
+            </div>
+            
+            <!-- Target Temperature Marker -->
+            {% if target > 0 %}
+            <div style="position: absolute; left: {{ target_progress }}%; top: 0; bottom: 0; width: 2px; background: rgba(33, 150, 243, 0.8); z-index: 10;">
+            </div>
+            {% endif %}
+            
+            <!-- Bar Label (Current/Target) -->
+            <div style="position: absolute; left: 0; right: 0; top: 50%; transform: translateY(-50%); text-align: center; font-size: 11px; font-weight: bold; color: rgba(255, 255, 255, 0.9); text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3); z-index: 5; pointer-events: none;">
+              {{ current | int }}°C / {{ target | int }}°C
+            </div>
+          </div>
+          
+          <!-- Status Text -->
+          <div style="text-align: center; font-size: 12px; color: rgba(0, 0, 0, 0.6);">
+            {% if target > 0 %}
+              {% if current >= target * 0.95 %}
+                <span style="color: rgb(76, 175, 80);">● Ready</span>
+              {% elif current >= target * 0.5 %}
+                <span style="color: rgb(255, 152, 0);">● Heating...</span>
+              {% else %}
+                <span style="color: rgb(244, 67, 54);">● Cold</span>
+              {% endif %}
+            {% else %}
+              <span style="color: rgba(0, 0, 0, 0.4);">● Idle</span>
+            {% endif %}
+          </div>
+        </div>
+    card_mod:
+      style: |
+        ha-card {
+          box-shadow: none !important;
+          border: 1px solid rgba(0, 0, 0, 0.1);
+          border-radius: 8px;
+          background: rgba(255, 255, 255, 0.05);
+        }
+        ha-card .card-content {
+          padding: 0 !important;
+        }
+        ha-card ha-markdown {
+          padding: 0 !important;
+        }
+

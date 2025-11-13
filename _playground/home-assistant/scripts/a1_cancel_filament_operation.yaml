@@ -1,0 +1,37 @@
+# Bambu Lab A1 Cancel Filament Operation Script
+# Cancels any running filament load/unload operations
+# When using !include_dir_named, filename (a1_cancel_filament_operation) becomes the script ID
+
+alias: "A1 Cancel Filament Operation"
+description: "Cancel any running filament load or unload operations"
+icon: mdi:stop-circle
+sequence:
+  # Log the action
+  - service: logbook.log
+    data:
+      name: A1 Filament Operation Cancel
+      message: "Cancelling filament load/unload operations"
+  
+  # Cancel any running scripts (may not work if script already sent command to printer)
+  # Turn off load filament script if running
+  - service: script.turn_off
+    target:
+      entity_id: script.a1_load_filament
+  # Turn off unload filament script if running
+  - service: script.turn_off
+    target:
+      entity_id: script.a1_unload_filament
+  
+  # Stop printer operation - press cancel button to interrupt any ongoing operations
+  # Note: Once a filament operation starts on the printer, the cancel button should
+  # interrupt it. The printer may complete the current step before fully stopping.
+  - service: button.press
+    target:
+      entity_id: button.a1_cancel
+  
+  # Notify completion
+  - service: notify.persistent_notification
+    data:
+      title: "A1 Filament Operation Cancelled"
+      message: "Cancelled filament load/unload operations"
+

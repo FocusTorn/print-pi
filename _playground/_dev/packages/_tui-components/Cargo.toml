@@ -1,0 +1,16 @@
+[package]
+name = "tui-common"
+version = "0.1.0"
+edition = "2021"
+authors = ["FocusTorn <FocusTorn@gmail.com>"]
+description = "Shared TUI components for Rust terminal user interfaces"
+license = "MIT"
+
+[dependencies]
+ratatui = "0.26"
+crossterm = "0.27"
+
+[lib]
+name = "tui_common"
+path = "src/lib.rs"
+

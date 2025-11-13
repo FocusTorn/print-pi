@@ -44,6 +44,21 @@ bin/detour status
 bin/detour remove
 ```
 
+## Documentation
+
+**For AI Agents and Developers:**
+- See `docs/README.md` for comprehensive AI Agent-focused documentation
+- Structure guide: `docs/01-structure-guide.md`
+- Style guide: `docs/02-style-guide.md`
+- Implementation patterns: `docs/03-implementation-patterns.md`
+- Formatting reference: `docs/04-formatting-reference.md`
+
+**For Users:**
+- This README: Usage and quick start
+- Architecture: `ARCHITECTURE.md`
+- Config structure: `CONFIG-STRUCTURE.md`
+- Migration: `docs/MIGRATION.md`
+
 ## Directory Structure
 
 ```

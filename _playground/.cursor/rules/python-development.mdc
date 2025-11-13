@@ -67,6 +67,57 @@ This directory contains:
 - ❌ Do NOT create Python projects outside `snake-pit/`
 - ❌ Do NOT install Python packages globally (use venvs)
 
+## Virtual Environment Requirements
+
+**RULE: Always use a venv unless there's a specific technical reason not to.**
+
+### When to Use a Venv
+
+- ✅ **ALL development packages** - Any Python code with dependencies
+- ✅ **ALL utility packages** - Even if in `_dev/packages/` (like `iMenu_py`)
+- ✅ **ALL scripts with dependencies** - Even minimal ones
+- ✅ **ALL projects** - Standard practice for isolation
+
+### Rare Exceptions (System-Level Only)
+
+**Only these scenarios may not use a venv:**
+
+1. **System bootstrap scripts** - Scripts that install Python/venv itself
+   - Example: `bootstrap-snake-pit.sh` that creates the venv
+   - These run before venvs exist
+
+2. **Package installers** - Scripts that install Python packages
+   - Example: Scripts that run `uv pip install` to set up environments
+   - These are part of the installation process
+
+3. **Cross-version compatibility scripts** - Scripts that must work with multiple Python versions
+   - Usually better handled with venvs per version
+
+**For development packages like `iMenu_py`:**
+- ❌ **NO EXCEPTIONS** - Always use a venv
+- ✅ Create `.venv/` in the package directory
+- ✅ Use `uv venv` to create it
+- ✅ Install dependencies with `uv pip install -r requirements.txt`
+
+### Creating Venvs for Packages Outside snake-pit
+
+For Python packages in `_dev/packages/` or other locations:
+
+```bash
+# Create venv in package directory
+cd /path/to/package
+uv venv
+
+# Install dependencies
+uv pip install -r requirements.txt
+
+# Or activate and use normally
+source .venv/bin/activate
+pip install -r requirements.txt
+```
+
+**Key Principle**: If it has dependencies or is a development utility, it needs a venv. No exceptions.
+
 ## More Information
 
 See `snake-pit/README.md` for setup instructions, project structure, and usage examples.

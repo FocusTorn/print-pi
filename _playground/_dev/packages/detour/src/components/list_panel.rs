@@ -113,4 +113,3 @@ pub fn draw_list_panel(
     f.render_stateful_widget(list, area, state);
 }
 
-

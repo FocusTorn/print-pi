@@ -1,0 +1,44 @@
+# Configuration files with secrets
+config/wifi-config.h
+config/mqtt-config.h
+config/sensor-config.json
+
+# Build artifacts
+firmware/**/build/
+firmware/**/.pio/
+firmware/**/.vscode/
+
+# Python
+raspberry-pi/**/__pycache__/
+raspberry-pi/**/*.pyc
+raspberry-pi/**/.venv/
+raspberry-pi/**/venv/
+
+# Node.js
+raspberry-pi/**/node_modules/
+raspberry-pi/**/package-lock.json
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+
+# Temporary files
+*.tmp
+*.temp
+

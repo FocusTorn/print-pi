@@ -1,0 +1,168 @@
+# Bambu Lab A1 Print Start Workflow Script
+# Coordinates bed heating, nozzle pre-heating, heat soak, and final heating
+
+a1_print_start_heatsoak_workflow:
+  alias: "A1 Print Start Heat Soak Workflow"
+  description: "Orchestrates print start with heat soak monitoring"
+  icon: mdi:printer-3d
+  fields:
+    bed_temp:
+      description: "Target bed temperature"
+      example: 60
+      required: true
+      selector:
+        number:
+          min: 0
+          max: 120
+          unit_of_measurement: "°C"
+    nozzle_temp:
+      description: "Final nozzle temperature"
+      example: 220
+      required: true
+      selector:
+        number:
+          min: 0
+          max: 300
+          unit_of_measurement: "°C"
+    nozzle_preheat_temp:
+      description: "Pre-probe nozzle temperature (default: 150)"
+      example: 150
+      required: false
+      default: 150
+      selector:
+        number:
+          min: 0
+          max: 300
+          unit_of_measurement: "°C"
+    soak_temp:
+      description: "Minimum chamber temp to start checking rate (default: 40)"
+      example: 40
+      required: false
+      default: 40
+      selector:
+        number:
+          min: 0
+          max: 100
+          unit_of_measurement: "°C"
+    target_temp:
+      description: "Target chamber temp - if reached, automatically soaked (default: 50)"
+      example: 50
+      required: false
+      default: 50
+      selector:
+        number:
+          min: 0
+          max: 100
+          unit_of_measurement: "°C"
+    max_rate:
+      description: "Maximum rate of change for heat soak (default: 0.1)"
+      example: 0.1
+      required: false
+      default: 0.1
+      selector:
+        number:
+          min: 0
+          max: 1
+          step: 0.01
+          unit_of_measurement: "°C/min"
+  sequence:
+    # Step 1: Set initial temperatures
+    - service: number.set_value
+      target:
+        entity_id: number.a1_bed_target
+      data:
+        value: "{{ bed_temp }}"
+    
+    - service: number.set_value
+      target:
+        entity_id: number.a1_nozzle_target
+      data:
+        value: "{{ nozzle_preheat_temp | default(150) }}"
+    
+    # Step 2: Wait for bed and nozzle to reach preheat temps
+    - wait_template: >
+        {{ (states('sensor.a1_bed_temperature') | float >= bed_temp - 2) and
+           (states('sensor.a1_nozzle_temperature') | float >= (nozzle_preheat_temp | default(150)) - 5) }}
+      timeout: "00:30:00"
+      continue_on_timeout: false
+    
+    # Step 3: Start heat soak monitoring (wait for rate to stabilize)
+    - service: logbook.log
+      data:
+        name: A1 Print Start
+        message: "Pre-heat complete. Starting heat soak monitoring..."
+        entity_id: sensor.a1_nozzle_temperature
+    
+    # Step 4: Wait for heat soak conditions
+    # Ready if:
+    # - Chamber temp >= target_temp (automatically soaked), OR
+    # - Chamber temp >= soak_temp AND rate <= max_rate
+    - wait_template: >
+        {% set chamber_temp = states('sensor.bme680_chamber_smoothed_temp') | float(0) %}
+        {% set rate_str = states('sensor.bme680_chamber_rate') %}
+        {% set rate = rate_str | float(999) if rate_str != 'unknown' else 999 %}
+        {% set target = target_temp | default(50) %}
+        {% set min_temp = soak_temp | default(40) %}
+        {% set max_rate_val = max_rate | default(0.1) %}
+        {{ (chamber_temp >= target) or 
+           (chamber_temp >= min_temp and rate != 999 and rate <= max_rate_val) }}
+      timeout: "00:15:00"
+      continue_on_timeout: false
+    
+    # Step 5: Do pre-print checks (placeholder - add your checks here)
+    - service: logbook.log
+      data:
+        name: A1 Print Start
+        message: "Heat soak ready. Running pre-print checks..."
+        entity_id: sensor.a1_nozzle_temperature
+    
+    # Add your pre-print checks here:
+    # - Check filament loaded
+    # - Check bed leveling
+    # - Check other conditions
+    
+    # Step 6: NOW heat nozzle to final temperature (only after heat soak completes)
+    - service: number.set_value
+      target:
+        entity_id: number.a1_nozzle_target
+      data:
+        value: "{{ nozzle_temp }}"
+    
+    - service: logbook.log
+      data:
+        name: A1 Print Start
+        message: "Heat soak complete. Heating nozzle to print temperature: {{ nozzle_temp }}°C"
+        entity_id: sensor.a1_nozzle_temperature
+    
+    # Step 7: Wait for all conditions to be ready
+    - wait_template: >
+        {% set chamber_temp = states('sensor.bme680_chamber_smoothed_temp') | float(0) %}
+        {% set rate_str = states('sensor.bme680_chamber_rate') %}
+        {% set rate = rate_str | float(999) if rate_str != 'unknown' else 999 %}
+        {% set target = target_temp | default(50) %}
+        {% set min_temp = soak_temp | default(40) %}
+        {% set max_rate_val = max_rate | default(0.1) %}
+        {% set heat_soak_ready = (chamber_temp >= target) or 
+                                 (chamber_temp >= min_temp and rate != 999 and rate <= max_rate_val) %}
+        {{ (states('sensor.a1_bed_temperature') | float >= bed_temp - 2) and
+           (states('sensor.a1_nozzle_temperature') | float >= nozzle_temp - 5) and
+           heat_soak_ready }}
+      timeout: "00:10:00"
+      continue_on_timeout: false
+    
+    # Step 8: All ready - print can start
+    - service: logbook.log
+      data:
+        name: A1 Print Start
+        message: "All systems ready! Bed: {{ states('sensor.a1_bed_temperature') }}°C, Nozzle: {{ states('sensor.a1_nozzle_temperature') }}°C, Heat Soak: Ready"
+        entity_id: sensor.a1_nozzle_temperature
+    
+    - service: notify.persistent_notification
+      data:
+        title: "A1 Print Ready"
+        message: >
+          All systems ready for printing:
+          - Bed: {{ states('sensor.a1_bed_temperature') }}°C (target: {{ bed_temp }}°C)
+          - Nozzle: {{ states('sensor.a1_nozzle_temperature') }}°C (target: {{ nozzle_temp }}°C)
+          - Heat Soak: Ready (Rate: {{ states('sensor.bme680_chamber_rate') }}°C/min)
+

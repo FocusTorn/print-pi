@@ -1,0 +1,283 @@
+# Expandable Camera using Layout Card + Card Mod Animations
+# This combines layout-card for structure with card-mod for smooth animations
+
+views:
+  - title: Camera Layout + Card Mod
+    path: camera-layout-mod
+    icon: mdi:camera
+    type: sections
+    max_columns: 3
+    sections:
+
+      - type: grid
+        cards:
+          - type: heading
+            heading: Camera (Layout Card + Card Mod)
+            heading_style: title
+            icon: mdi:camera
+            badges: []
+          
+          # Layout card with animated camera
+          - type: custom:layout-card
+            layout_type: custom:grid-layout
+            layout:
+              grid-template-columns: repeat(12, 1fr)
+              grid-template-rows: auto
+              gap: 0
+            cards:
+              # Camera card that expands/contracts based on state
+              - type: picture-entity
+                entity: camera.a1_camera
+                camera_image: camera.a1_camera
+                camera_view: live
+                show_name: false
+                show_state: false
+                tap_action:
+                  action: call-service
+                  service: input_boolean.toggle
+                  target:
+                    entity_id: input_boolean.camera_a1_expanded
+                # Card-mod for animations and dynamic sizing
+                card_mod:
+                  style: |
+                    ha-card {
+                      /* Base styles */
+                      border-radius: 12px;
+                      overflow: hidden;
+                      position: relative;
+                      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+                      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+                    }
+                    
+                    /* Small state (collapsed) */
+                    ha-card {
+                      grid-column: span 4;
+                      grid-row: span 3;
+                    }
+                    
+                    /* Large state (expanded) - when input_boolean is on */
+                    {% if is_state('input_boolean.camera_a1_expanded', 'on') %}
+                    ha-card {
+                      grid-column: 1 / -1; /* Full width */
+                      grid-row: span 12;
+                      box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+                      border-radius: 16px;
+                    }
+                    {% endif %}
+                    
+                    /* Smooth scale animation on tap */
+                    ha-card:active {
+                      transform: scale(0.98);
+                      transition: transform 0.1s;
+                    }
+                    
+                    /* Image styling */
+                    ha-card img {
+                      transition: transform 0.4s ease;
+                      object-fit: cover;
+                    }
+                    
+                    ha-card:hover img {
+                      transform: scale(1.02);
+                    }
+                layout:
+                  grid-column: span 4
+                  grid-row: span 3
+          
+          column_span: 3
+
+      # ======================================================================
+      # ALTERNATIVE: Using conditional with layout-card wrapper
+      # ======================================================================
+      - type: grid
+        cards:
+          - type: heading
+            heading: Alternative: Conditional Layout
+            heading_style: title
+            icon: mdi:swap-horizontal
+            badges: []
+          
+          # Small view
+          - type: conditional
+            conditions:
+              - entity: input_boolean.camera_a1_expanded
+                state: "off"
+            card:
+              type: custom:layout-card
+              layout_type: custom:grid-layout
+              layout:
+                grid-template-columns: repeat(12, 1fr)
+                grid-template-rows: auto
+              cards:
+                - type: picture-entity
+                  entity: camera.a1_camera
+                  camera_image: camera.a1_camera
+                  camera_view: live
+                  show_name: false
+                  show_state: false
+                  tap_action:
+                    action: toggle
+                    entity_id: input_boolean.camera_a1_expanded
+                  card_mod:
+                    style: |
+                      ha-card {
+                        border-radius: 12px;
+                        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+                        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+                        animation: slideIn 0.4s ease;
+                      }
+                      @keyframes slideIn {
+                        from {
+                          opacity: 0;
+                          transform: scale(0.95);
+                        }
+                        to {
+                          opacity: 1;
+                          transform: scale(1);
+                        }
+                      }
+                  layout:
+                    grid-column: span 4
+                    grid-row: span 3
+          
+          # Large view
+          - type: conditional
+            conditions:
+              - entity: input_boolean.camera_a1_expanded
+                state: "on"
+            card:
+              type: custom:layout-card
+              layout_type: custom:grid-layout
+              layout:
+                grid-template-columns: repeat(12, 1fr)
+                grid-template-rows: auto
+              cards:
+                - type: picture-entity
+                  entity: camera.a1_camera
+                  camera_image: camera.a1_camera
+                  camera_view: live
+                  show_name: false
+                  show_state: false
+                  tap_action:
+                    action: toggle
+                    entity_id: input_boolean.camera_a1_expanded
+                  card_mod:
+                    style: |
+                      ha-card {
+                        border-radius: 16px;
+                        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+                        box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+                        animation: expandIn 0.4s ease;
+                      }
+                      @keyframes expandIn {
+                        from {
+                          opacity: 0;
+                          transform: scale(0.9);
+                        }
+                        to {
+                          opacity: 1;
+                          transform: scale(1);
+                        }
+                      }
+                  layout:
+                    grid-column: 1 / -1
+                    grid-row: span 12
+          
+          column_span: 3
+
+      # ======================================================================
+      # ADVANCED: Single layout-card with dynamic grid based on state
+      # ======================================================================
+      - type: grid
+        cards:
+          - type: heading
+            heading: Advanced: Dynamic Grid Layout
+            heading_style: title
+            icon: mdi:animation
+            badges: []
+          
+          - type: custom:layout-card
+            layout_type: custom:grid-layout
+            card_mod:
+              style: |
+                ha-card {
+                  /* Container styling */
+                  padding: 0;
+                  background: transparent;
+                }
+            layout:
+              grid-template-columns: repeat(12, 1fr)
+              grid-template-rows: auto
+              gap: 0
+            cards:
+              - type: picture-entity
+                entity: camera.a1_camera
+                camera_image: camera.a1_camera
+                camera_view: live
+                show_name: false
+                show_state: false
+                tap_action:
+                  action: toggle
+                  entity_id: input_boolean.camera_a1_expanded
+                card_mod:
+                  style: |
+                    ha-card {
+                      /* Smooth transitions */
+                      transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+                      border-radius: 12px;
+                      overflow: hidden;
+                      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                      position: relative;
+                    }
+                    
+                    /* Collapsed state */
+                    ha-card {
+                      grid-column: span 4;
+                      grid-row: span 3;
+                    }
+                    
+                    /* Expanded state */
+                    {% if is_state('input_boolean.camera_a1_expanded', 'on') %}
+                    ha-card {
+                      grid-column: 1 / -1;
+                      grid-row: span 12;
+                      border-radius: 16px;
+                      box-shadow: 0 12px 32px rgba(0,0,0,0.25);
+                    }
+                    {% endif %}
+                    
+                    /* Hover effect */
+                    ha-card:hover {
+                      transform: translateY(-2px);
+                      box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+                    }
+                    
+                    /* Active/press effect */
+                    ha-card:active {
+                      transform: translateY(0) scale(0.98);
+                      transition: transform 0.1s;
+                    }
+                    
+                    /* Image zoom on hover (expanded only) */
+                    {% if is_state('input_boolean.camera_a1_expanded', 'on') %}
+                    ha-card:hover img {
+                      transform: scale(1.05);
+                      transition: transform 0.3s ease;
+                    }
+                    {% endif %}
+                    
+                    /* Pulse animation when expanding */
+                    @keyframes pulse {
+                      0%, 100% { transform: scale(1); }
+                      50% { transform: scale(1.02); }
+                    }
+                    
+                    ha-card {
+                      animation: pulse 0.6s ease;
+                    }
+                layout:
+                  grid-column: span 4
+                  grid-row: span 3
+          
+          column_span: 3
+

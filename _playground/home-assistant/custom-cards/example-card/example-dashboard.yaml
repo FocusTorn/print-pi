@@ -1,0 +1,22 @@
+# Example Dashboard Card Usage
+# Add this to your dashboard to test the example-card
+
+type: custom:example-card
+entity: sensor.time
+title: Example Card Demo
+
+# Alternative usage with different entity:
+# type: custom:example-card
+# entity: sensor.date
+# title: Date Display
+
+# You can also use it in a vertical stack:
+# type: vertical-stack
+# cards:
+#   - type: custom:example-card
+#     entity: sensor.time
+#     title: Current Time
+#   - type: custom:example-card
+#     entity: sensor.date
+#     title: Current Date
+

@@ -1,25 +1,21 @@
+"""Sensor platform for BME680 Monitor integration."""
 from __future__ import annotations
 
-import time
-from dataclasses import dataclass
 from typing import Any
 
 from datetime import timedelta
-import voluptuous as vol
-from homeassistant.components.sensor import SensorEntity, PLATFORM_SCHEMA
+from homeassistant.components.sensor import SensorEntity
 from homeassistant.const import PERCENTAGE, UnitOfPressure, UnitOfTemperature
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 from homeassistant.core import HomeAssistant
 
-DEFAULT_BUS = 1
-DEFAULT_ADDR = 0x77
-DEFAULT_INTERVAL = 5
-
-PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({
-    vol.Optional("bus", default=DEFAULT_BUS): vol.Coerce(int),
-    vol.Optional("address", default=DEFAULT_ADDR): vol.Coerce(int),
-    vol.Optional("scan_interval", default=DEFAULT_INTERVAL): vol.Coerce(int),
-})
+from .const import (
+    DOMAIN,
+    DEFAULT_BUS,
+    DEFAULT_ADDR,
+    DEFAULT_INTERVAL,
+    DEFAULT_ENABLE_I2C,
+)
 
 
 def _open_sensor(bus: int, addr: int):
@@ -59,13 +55,26 @@ class BME680Coordinator(DataUpdateCoordinator):
             raise UpdateFailed(str(err))
 
 
-async def async_setup_platform(hass: HomeAssistant, config, async_add_entities, discovery_info=None):
-    bus = config.get("bus", DEFAULT_BUS)
-    addr = config.get("address", DEFAULT_ADDR)
-    interval = config.get("scan_interval", DEFAULT_INTERVAL)
+async def async_setup_platform(
+    hass: HomeAssistant, config: dict[str, Any], async_add_entities, discovery_info=None
+) -> None:
+    """Set up BME680 Monitor sensor platform."""
+    # Get configuration from domain data
+    domain_config = hass.data.get(DOMAIN, {}).get("config", {})
+    
+    # Check if I2C is enabled
+    enable_i2c = domain_config.get("enable_i2c", DEFAULT_ENABLE_I2C)
+    
+    if not enable_i2c:
+        # I2C is disabled, don't create any entities
+        return
+    
+    bus = domain_config.get("bus", DEFAULT_BUS)
+    addr = domain_config.get("address", DEFAULT_ADDR)
+    interval = domain_config.get("scan_interval", DEFAULT_INTERVAL)
 
     coordinator = BME680Coordinator(hass, bus, addr, interval)
-    await coordinator.async_config_entry_first_refresh()
+    await coordinator.async_refresh()
 
     entities: list[SensorEntity] = [
         TemperatureEntity(coordinator),
@@ -78,6 +87,7 @@ async def async_setup_platform(hass: HomeAssistant, config, async_add_entities, 
 
 class BaseBMEEntity(SensorEntity):
     _attr_has_entity_name = True
+    
     def __init__(self, coordinator: BME680Coordinator) -> None:
         self.coordinator = coordinator
         self._attr_available = True
@@ -101,7 +111,7 @@ class BaseBMEEntity(SensorEntity):
     @property
     def device_info(self):
         return {
-            "identifiers": {("bme680_monitor", "bme680")},
+            "identifiers": {(DOMAIN, "bme680_monitor")},
             "name": "BME680 Monitor",
             "manufacturer": "Bosch",
             "model": "BME680",
@@ -112,6 +122,10 @@ class TemperatureEntity(BaseBMEEntity):
     _attr_name = "BME680 Temperature"
     _attr_native_unit_of_measurement = UnitOfTemperature.CELSIUS
 
+    def __init__(self, coordinator: BME680Coordinator) -> None:
+        super().__init__(coordinator)
+        self._attr_unique_id = "bme680_monitor_temperature"
+
     @property
     def native_value(self):
         return self.coordinator.data.get("temperature")
@@ -120,6 +134,10 @@ class TemperatureEntity(BaseBMEEntity):
 class HumidityEntity(BaseBMEEntity):
     _attr_name = "BME680 Humidity"
     _attr_native_unit_of_measurement = PERCENTAGE
+
+    def __init__(self, coordinator: BME680Coordinator) -> None:
+        super().__init__(coordinator)
+        self._attr_unique_id = "bme680_monitor_humidity"
 
     @property
     def native_value(self):
@@ -130,6 +148,10 @@ class PressureEntity(BaseBMEEntity):
     _attr_name = "BME680 Pressure"
     _attr_native_unit_of_measurement = UnitOfPressure.HPA
 
+    def __init__(self, coordinator: BME680Coordinator) -> None:
+        super().__init__(coordinator)
+        self._attr_unique_id = "bme680_monitor_pressure"
+
     @property
     def native_value(self):
         return self.coordinator.data.get("pressure")
@@ -137,6 +159,10 @@ class PressureEntity(BaseBMEEntity):
 
 class GasEntity(BaseBMEEntity):
     _attr_name = "BME680 Gas Resistance"
+
+    def __init__(self, coordinator: BME680Coordinator) -> None:
+        super().__init__(coordinator)
+        self._attr_unique_id = "bme680_monitor_gas"
 
     @property
     def native_value(self):

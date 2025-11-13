@@ -1,0 +1,60 @@
+{
+  "node_id": "kitchen-node",
+  "firmware_version": "1.0.0",
+  "sensors": [
+    {
+      "mux_address": "0x70",
+      "mux_channel": 0,
+      "sensor_type": "bme280",
+      "sensor_id": "0",
+      "i2c_address": "0x76",
+      "enabled": true,
+      "read_interval": 5000,
+      "data_types": ["temperature", "humidity", "pressure"]
+    },
+    {
+      "mux_address": "0x70",
+      "mux_channel": 1,
+      "sensor_type": "bme280",
+      "sensor_id": "1",
+      "i2c_address": "0x76",
+      "enabled": true,
+      "read_interval": 5000,
+      "data_types": ["temperature", "humidity", "pressure"]
+    },
+    {
+      "mux_address": "0x70",
+      "mux_channel": 2,
+      "sensor_type": "sht31",
+      "sensor_id": "0",
+      "i2c_address": "0x44",
+      "enabled": true,
+      "read_interval": 10000,
+      "data_types": ["temperature", "humidity"]
+    }
+  ],
+  "multiplexers": [
+    {
+      "address": "0x70",
+      "enabled": true,
+      "channels": 8
+    },
+    {
+      "address": "0x71",
+      "enabled": true,
+      "channels": 8
+    }
+  ],
+  "i2c": {
+    "sda_pin": 21,
+    "scl_pin": 22,
+    "clock_speed": 100000,
+    "timeout": 1000
+  },
+  "publish_settings": {
+    "publish_individual": true,
+    "publish_combined": true,
+    "combined_interval": 60000
+  }
+}
+

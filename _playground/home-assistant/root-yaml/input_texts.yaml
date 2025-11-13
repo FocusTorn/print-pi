@@ -1,0 +1,22 @@
+# Input Text Helpers for Node-RED Status Messages
+# Include this file in configuration.yaml with: input_text: !include input_texts.yaml
+# These can be used by Node-RED to report status messages and errors
+
+nodered_flow_message:
+  name: Node-RED Flow Message
+  icon: mdi:message-text
+  initial: "Ready"
+  max: 255
+
+nodered_flow_error:
+  name: Node-RED Flow Error
+  icon: mdi:alert-circle
+  initial: ""
+  max: 255
+
+nodered_last_execution:
+  name: Node-RED Last Execution
+  icon: mdi:clock-time-four
+  initial: "Never"
+  max: 50
+

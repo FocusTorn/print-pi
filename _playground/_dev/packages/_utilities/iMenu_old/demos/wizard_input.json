@@ -1,0 +1,91 @@
+{
+    "title": "Service Installation Wizard",
+    "steps": [
+        {
+            "type": "confirm",
+            "message": "ℹ️  Confirm it?",
+            "initial": true
+        },
+        {
+            "type": "text",
+            "message": "ℹ️  Confirm it?"
+        },
+        // {
+        //     "type": "confirm",
+        //     "message": "ℹ️  Are you sure?",
+        //     "initial": true
+        // },
+       
+        {
+            "type": "multiselect",
+            "message": "ℹ️  Which services would you like to install?",
+            "options": [
+                "Sensor readings",
+                "IAQ (Air quality calculation, Safe to open flag)",
+                "Heat soak detection (Current enclosure temp, target enclosure temp, Rate of change)"
+            ],
+            "preselect": [ 0 ]
+        },
+        {
+            "type": "select",
+            "message": "ℹ️  Which services would you like to install?",
+            "options": [
+                "Sensor readings",
+                "IAQ (Air quality calculation, Safe to open flag)",
+                "Heat soak detection (Current enclosure temp, target enclosure temp, Rate of change)"
+            ]
+        },
+        {
+            "type": "confirm",
+            "message": "ℹ️  Confirm it?",
+            "initial": true
+        },
+       
+        
+        // {
+        //     "type": "multiselect",
+        //     "message": "ℹ️  Which services would you like to install?",
+        //     "options": [
+        //         "Sensor readings",
+        //         "IAQ (Air quality calculation, Safe to open flag)",
+        //         "Heat soak detection (Current enclosure temp, target enclosure temp, Rate of change)"
+        //     ],
+        //     "preselect": [ 0 ]
+        // },
+        {
+            "type": "confirm",
+            "message": "ℹ️  Finish it?",
+            "initial": true
+        }
+       
+        // {
+        //     "type": "text",
+        //     "message": "ℹ️  Enter your name:",
+        //     "initial": "John"
+        // },
+        
+       
+        // {
+        //     "type": "confirm",
+        //     "message": "ℹ️  You sure?",
+        //     "initial": false
+        // }
+        
+        
+        
+    ]
+}
+
+
+
+// We should have an object in the json for options to separazte it
+
+//         {
+//             "type": "confirm",
+//             "message": "ℹ️  You sure?",
+//             "options": {
+//                 "initial": false    
+//             }
+//         }
+        
+        

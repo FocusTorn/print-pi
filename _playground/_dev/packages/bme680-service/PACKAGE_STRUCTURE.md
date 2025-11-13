@@ -8,7 +8,7 @@ When installed, the package creates a self-contained installation in:
 ~/.local/share/bme680-service/
 ├── monitor/              # BME680 library (monitor module)
 ├── monitor-iaq.py        # IAQ monitoring script
-├── monitor-temperature.py # Temperature monitoring script
+├── monitor-heatsoak.py        # Heat soak monitoring script
 ├── .venv/                # Virtual environment with dependencies
 └── config/               # Configuration files (if needed)
 
@@ -27,7 +27,7 @@ bme680-service/
 │   │   ├── __init__.py
 │   │   └── constants.py
 │   ├── monitor-iaq.py     # IAQ monitor script
-│   └── monitor-temperature.py # Temperature monitor script
+│   └── monitor-heatsoak.py     # Heat soak monitor script
 ├── detectors/             # Detection scripts
 │   └── detect-bme680.sh   # Sensor detection
 ├── services/              # Systemd service files

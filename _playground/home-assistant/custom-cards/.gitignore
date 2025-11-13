@@ -1,0 +1,18 @@
+# Ignore temporary files
+*.tmp
+*.bak
+*~
+
+# Ignore node_modules if you add build tools
+node_modules/
+
+# Ignore build artifacts
+dist/
+build/
+
+# Keep all source files tracked
+!*.js
+!*.md
+!*.yaml
+!*.sh
+

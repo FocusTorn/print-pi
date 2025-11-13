@@ -1,0 +1,36 @@
+# Bambu Lab A1 Unload Filament Script
+# Unloads filament from the extruder
+# When using !include_dir_named, filename (a1_unload_filament) becomes the script ID
+
+alias: "A1 Unload Filament"
+description: "Unload filament from the extruder"
+icon: mdi:printer-3d-nozzle-off
+fields:
+  entity_id:
+    description: "The external spool or AMS tray entity that has the filament loaded"
+    example: "sensor.a1_external_spool_external_spool"
+    required: true
+    selector:
+      entity:
+        domain:
+          - sensor
+          - binary_sensor
+        integration: bambu_lab
+sequence:
+  # Log the action
+  - service: logbook.log
+    data:
+      name: A1 Filament Unload
+      message: "Unloading filament from {{ entity_id }}"
+      entity_id: "{{ entity_id }}"
+  
+  # Call the unload_filament service
+  - service: bambu_lab.unload_filament
+    target:
+      entity_id: "{{ entity_id }}"
+  
+  # Notify completion
+  - service: notify.persistent_notification
+    data:
+      title: "A1 Filament Unload Started"
+      message: "Unloading filament from {{ entity_id }}"

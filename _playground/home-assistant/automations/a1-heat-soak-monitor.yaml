@@ -1,0 +1,64 @@
+# Automation to monitor heat soak during print start
+# Triggers when print status changes to "printing" or "preparing"
+
+- id: a1_heat_soak_monitor
+  alias: "A1 Heat Soak Monitor During Print Start"
+  description: "Monitors heat soak status and logs progress during print start"
+  trigger:
+    - platform: state
+      entity_id:
+        - sensor.a1_print_status
+      to: 
+        - "printing"
+        - "preparing"
+    - platform: state
+      entity_id:
+        - binary_sensor.bme680_heat_soak_ready
+      to: "on"
+      for:
+        seconds: 5
+  condition:
+    # Only monitor if print is starting
+    - condition: state
+      entity_id: sensor.a1_print_status
+      state:
+        - "printing"
+        - "preparing"
+  action:
+    - service: logbook.log
+      data:
+        name: A1 Heat Soak
+        message: >
+          Heat Soak Status:
+          - Chamber: {{ states('sensor.bme680_chamber_smoothed_temp') }}°C
+          - Rate: {{ states('sensor.bme680_chamber_rate') }}°C/min
+          - Ready: {{ states('binary_sensor.bme680_heat_soak_ready') }}
+        entity_id: sensor.bme680_chamber_temperature
+
+# Automation to notify when heat soak is ready
+- id: a1_heat_soak_ready_notification
+  alias: "A1 Heat Soak Ready Notification"
+  description: "Notifies when heat soak conditions are met"
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.bme680_heat_soak_ready
+      to: "on"
+      for:
+        seconds: 10
+  condition:
+    # Only notify if print is starting/preparing
+    - condition: state
+      entity_id: sensor.a1_print_status
+      state:
+        - "printing"
+        - "preparing"
+  action:
+    - service: notify.persistent_notification
+      data:
+        title: "Heat Soak Ready"
+        message: >
+          Chamber temperature stabilized:
+          - Temperature: {{ states('sensor.bme680_chamber_smoothed_temp') }}°C
+          - Rate of change: {{ states('sensor.bme680_chamber_rate') }}°C/min
+          - Ready for final heating phase
+

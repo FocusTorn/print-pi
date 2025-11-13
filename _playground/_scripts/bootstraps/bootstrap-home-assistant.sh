@@ -403,6 +403,31 @@ if [ ! -f /home/pi/.local/bin/ha ]; then
     echo "✅ 'ha' command available globally"
 fi
 
+# Install BME680 Monitor custom component
+BME680_SOURCE="/home/pi/_playground/_dev/packages/bme680-service/ha/custom_components/bme680_monitor"
+if [ -d "$BME680_SOURCE" ]; then
+    echo "📦 Installing BME680 Monitor custom component..."
+    
+    # Wait for container to be fully ready
+    echo "⏱️  Waiting for container to be ready..."
+    sleep 10
+    
+    # Copy component to container
+    if $DOCKER_CMD cp "$BME680_SOURCE" homeassistant:/config/custom_components/ 2>/dev/null; then
+        echo "✅ BME680 Monitor component installed"
+        echo "   Location: /config/custom_components/bme680_monitor/"
+        echo "   Note: Restart Home Assistant to use this integration"
+    else
+        echo "⚠️  Could not install BME680 Monitor component (container may not be ready)"
+        echo "   Install manually with:"
+        echo "   docker cp $BME680_SOURCE homeassistant:/config/custom_components/"
+    fi
+else
+    echo "ℹ️  BME680 Monitor component source not found at:"
+    echo "   $BME680_SOURCE"
+    echo "   Skipping custom component installation"
+fi
+
 echo ""
 echo "✅ Home Assistant installation complete!"
 echo ""
@@ -415,6 +440,9 @@ echo "   ✅ Directory structure established"
 echo "   ✅ VS Code settings configured (X11 loop prevented)"
 echo "   ✅ Documentation created in _docs/"
 echo "   ✅ .gitignore configured"
+if [ -d "$BME680_SOURCE" ] && $DOCKER_CMD exec homeassistant test -d /config/custom_components/bme680_monitor 2>/dev/null; then
+    echo "   ✅ BME680 Monitor custom component installed"
+fi
 echo ""
 echo "🌐 Access Home Assistant at:"
 echo "   • http://192.168.1.159:8123"
@@ -429,6 +457,13 @@ echo "   • ha restart         (restart HA)"
 echo "   • ha logs            (view logs)"
 echo "   • ha help            (show all commands)"
 echo ""
+if [ -d "$BME680_SOURCE" ] && $DOCKER_CMD exec homeassistant test -d /config/custom_components/bme680_monitor 2>/dev/null; then
+    echo "🌡️  BME680 Monitor Integration:"
+    echo "   After HA fully starts, add via:"
+    echo "   Settings → Devices & Services → Add Integration"
+    echo "   Search for: 'BME680 Monitor'"
+    echo ""
+fi
 echo "📖 Documentation: /home/pi/homeassistant/_docs/README.md"
 echo ""
 

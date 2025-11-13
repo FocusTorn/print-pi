@@ -1,0 +1,24 @@
+# Input Boolean Helper for Camera Expand Toggle
+# Include this file in configuration.yaml with: input_boolean: !include input_booleans.yaml
+
+camera_a1_expanded:
+  name: Camera A1 Expanded
+  icon: mdi:camera
+  initial: false
+
+# Node-RED Flow Controls
+nodered_flow_trigger:
+  name: Node-RED Flow Trigger
+  icon: mdi:play-circle
+  initial: false
+
+nodered_flow_enabled:
+  name: Node-RED Flow Enabled
+  icon: mdi:toggle-switch
+  initial: true
+
+nodered_automation_active:
+  name: Node-RED Automation Active
+  icon: mdi:robot
+  initial: false
+

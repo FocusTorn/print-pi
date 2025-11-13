@@ -102,12 +102,35 @@ bash /home/pi/Downloads/curls/<filename>
 
 **If any validation fails → STOP, do not execute, rewrite command.**
 
+## **USER INTERACTION PATTERNS**
+
+### **Question vs Action Handling**
+- ✅ **ALWAYS answer questions FIRST** - Do not take action when a question is asked
+- ❌ **NEVER take action** in response to a question without explicit request
+- ✅ **DETECT question patterns** - "Why", "What", "How", "Explain", "Help me understand", etc.
+- ✅ **ASK for confirmation** before acting if action might be desired after answering
+- ✅ **CLARIFY intent** if user's request is ambiguous
+
+**VIOLATION PATTERNS (AUTOMATIC REJECT):**
+- ❌ User asks "Why..." → AI immediately takes action
+- ❌ User asks "What are the tradeoffs..." → AI starts making changes
+- ❌ User asks a question → AI assumes action is desired and proceeds
+
+**REQUIRED PATTERN (ONLY ACCEPTABLE):**
+1. User asks question → AI answers completely
+2. AI asks if action is desired → User confirms
+3. Only then → AI takes action
+
+**See**: `ai-interaction-patterns.mdc` for complete interaction guidelines
+
 ## **ENFORCEMENT**
 
 **EVERY AI CODING SESSION MUST:**
 1. Begin with a review of these rules
-2. **Perform pre-flight validation** BEFORE every tool call
-3. End with verification of compliance
-4. Ensure all generated code follows these rules exactly
+2. **Detect question patterns** BEFORE taking any action
+3. **Perform pre-flight validation** BEFORE every tool call
+4. **Answer questions completely** before offering or taking action
+5. End with verification of compliance
+6. Ensure all generated code follows these rules exactly
 
 **NO EXCEPTIONS. NO COMPROMISES. NO DEVIATIONS.**

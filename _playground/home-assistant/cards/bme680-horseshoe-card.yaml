@@ -1,0 +1,173 @@
+# BME680 Temperature Gauge Card (Flex Horseshoe)
+# Displays smoothed temperature with rate of change and smoothing statistics
+#
+# Layout:
+#   [Large Temperature % at top]
+#   [Horseshoe gauge showing temperature]
+#   [Count of readings]  [Rate of change]
+#   [Threshold status]   [Max change rate]
+#   [Label: BME680 TEMPERATURE]
+#
+# Replace entity placeholders with your actual BME680 entities:
+#   - sensor.bme680_temperature_smoothed (or your smoothed temp entity)
+#   - sensor.bme680_smoothing_count (count of readings used)
+#   - sensor.bme680_temperature_rate_of_change (rate of change)
+#   - input_number.bme680_ready_threshold (threshold value)
+#   - sensor.bme680_max_change_rate (max change rate)
+
+type: custom:flex-horseshoe-card
+entities:
+  # Primary entity - smoothed temperature (shown in horseshoe gauge)
+  - entity: sensor.bme680_temperature_smoothed
+  # Secondary entities for additional info
+  - entity: sensor.bme680_smoothing_count
+  - entity: sensor.bme680_temperature_rate_of_change
+  - entity: input_number.bme680_ready_threshold
+  - entity: sensor.bme680_max_change_rate
+
+# Primary entity configuration (temperature gauge)
+primary_entity: entity.0
+min: 0
+max: 50
+decimals: 1
+unit: '°C'
+
+# Color stops for temperature gauge (blue=cold, green=normal, red=hot)
+colorstops:
+  - color: '#2196F3'  # Blue (cold)
+    value: 0
+  - color: '#4CAF50'  # Green (normal)
+    value: 25
+  - color: '#FF9800'  # Orange (warm)
+    value: 40
+  - color: '#F44336'  # Red (hot)
+    value: 50
+
+# Layout configuration - positioning elements on the card
+layout:
+  # Large temperature percentage at top center
+  - type: text
+    entity: entity.0
+    text: '{{ value }}%'
+    position:
+      x: 50
+      y: 15
+    styles:
+      - font-size: 48px
+      - font-weight: bold
+      - text-anchor: middle
+      - fill: var(--primary-text-color)
+  
+  # Temperature value below percentage
+  - type: text
+    entity: entity.0
+    text: '{{ value }}°C'
+    position:
+      x: 50
+      y: 25
+    styles:
+      - font-size: 24px
+      - text-anchor: middle
+      - fill: var(--secondary-text-color)
+  
+  # Count of readings (left side)
+  - type: text
+    entity: entity.1
+    text: '{{ value }}'
+    position:
+      x: 20
+      y: 70
+    styles:
+      - font-size: 20px
+      - font-weight: bold
+      - text-anchor: middle
+      - fill: var(--primary-text-color)
+  
+  # "READINGS" label below count
+  - type: text
+    text: '(COUNT OF READINGS)'
+    position:
+      x: 20
+      y: 78
+    styles:
+      - font-size: 10px
+      - text-anchor: middle
+      - fill: var(--secondary-text-color)
+  
+  # Rate of change (right side)
+  - type: text
+    entity: entity.2
+    text: '{{ value }}°C/min'
+    position:
+      x: 80
+      y: 70
+    styles:
+      - font-size: 20px
+      - font-weight: bold
+      - text-anchor: middle
+      - fill: var(--primary-text-color)
+  
+  # "RATE OF CHANGE" label below rate
+  - type: text
+    text: '(RATE OF CHANGE)'
+    position:
+      x: 80
+      y: 78
+    styles:
+      - font-size: 10px
+      - text-anchor: middle
+      - fill: var(--secondary-text-color)
+  
+  # Threshold status (left bottom)
+  - type: text
+    entity: entity.2
+    entity_attribute: state
+    text: '{% if value | float < states("input_number.bme680_ready_threshold") | float(0) %}READY{% else %}NOT READY{% endif %}'
+    position:
+      x: 20
+      y: 90
+    styles:
+      - font-size: 14px
+      - font-weight: bold
+      - text-anchor: middle
+      - fill: '{% if value | float < states("input_number.bme680_ready_threshold") | float(0) %}var(--success-color){% else %}var(--error-color){% endif %}'
+  
+  # Max change rate (right bottom)
+  - type: text
+    entity: entity.4
+    text: 'Max: {{ value }}°C/min'
+    position:
+      x: 80
+      y: 90
+    styles:
+      - font-size: 14px
+      - font-weight: bold
+      - text-anchor: middle
+      - fill: var(--primary-text-color)
+  
+  # Card label at bottom
+  - type: text
+    text: 'BME680: TEMPERATURE'
+    position:
+      x: 50
+      y: 98
+    styles:
+      - font-size: 12px
+      - text-anchor: middle
+      - fill: var(--secondary-text-color)
+      - letter-spacing: 1px
+
+# Show configuration
+show:
+  scale_tickmarks: true
+  horseshoe_style: colorstopgradient
+
+# Card styling
+card_filter: card--dropshadow-medium
+card_mod:
+  style: |
+    ha-card {
+      box-shadow: var(--card-box-shadow, 0 2px 4px rgba(0,0,0,0.1));
+      border-radius: 8px;
+    }
+

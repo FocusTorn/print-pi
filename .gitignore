@@ -112,3 +112,8 @@ homeassistant
 _ha-backups
 .ssh
 ide_state.json
+
+go
+go-workspace
+
+_cacache

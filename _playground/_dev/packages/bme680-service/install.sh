@@ -4,15 +4,25 @@
 
 set -e
 
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# Determine script directory - works in both bash and zsh
+if [ -n "${BASH_SOURCE[0]:-}" ]; then
+    # Bash: use BASH_SOURCE
+    SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+elif [ -n "${0:-}" ] && [ "${0}" != "-" ] && [ "${0}" != "main" ] && [ "${0}" != "bash" ] && [ "${0}" != "zsh" ] && [ -f "${0}" ]; then
+    # Zsh or other: use $0 if it's a valid file path
+    SCRIPT_DIR="$(cd "$(dirname "${0}")" && pwd)"
+else
+    # Fallback: try to find script in current directory
+    SCRIPT_DIR="$(pwd)"
+fi
+
 PACKAGE_DIR="$SCRIPT_DIR"
 DETECTOR="$PACKAGE_DIR/detectors/detect-bme680.sh"
 SERVICE_DIR="$PACKAGE_DIR/services"
 DATA_DIR="$PACKAGE_DIR/data"
-MENU_SCRIPT="$PACKAGE_DIR/scripts/interactive-menu.sh"
+IMENU_DIR="$PACKAGE_DIR/../_utilities/iMenu"
 
 # Capture original user's home directory (before sudo changes $HOME)
-# Get home directory of the user who invoked sudo, or current user if not sudo'd
 ORIGINAL_USER="${SUDO_USER:-$USER}"
 ORIGINAL_HOME=$(getent passwd "$ORIGINAL_USER" | cut -d: -f6)
 
@@ -25,6 +35,7 @@ fi
 INSTALL_ROOT="$ORIGINAL_HOME/.local/share/bme680-service"
 INSTALL_BIN="$ORIGINAL_HOME/.local/bin"
 VENV_DIR="$INSTALL_ROOT/.venv"
+CONFIG_DIR="$ORIGINAL_HOME/.config/bme680-monitor"
 
 # Colors
 RED='\033[0;31m'
@@ -148,17 +159,28 @@ install_package_files() {
         exit 1
     fi
     
-    # Copy monitor scripts
-    if [ -f "$DATA_DIR/monitor-iaq.py" ]; then
-        cp "$DATA_DIR/monitor-iaq.py" "$INSTALL_ROOT/"
-        chmod +x "$INSTALL_ROOT/monitor-iaq.py"
-        print_success "  monitor-iaq.py installed"
-    fi
-    
-    if [ -f "$DATA_DIR/monitor-temperature.py" ]; then
-        cp "$DATA_DIR/monitor-temperature.py" "$INSTALL_ROOT/"
-        chmod +x "$INSTALL_ROOT/monitor-temperature.py"
-        print_success "  monitor-temperature.py installed"
+    # Copy MQTT base-readings script (consolidated - includes heatsoak calculations)
+    if [ -d "$PACKAGE_DIR/mqtt/data" ]; then
+        mkdir -p "$INSTALL_ROOT/mqtt"
+        if [ -f "$PACKAGE_DIR/mqtt/data/base-readings.py" ]; then
+            cp "$PACKAGE_DIR/mqtt/data/base-readings.py" "$INSTALL_ROOT/mqtt/"
+            chmod +x "$INSTALL_ROOT/mqtt/base-readings.py"
+            print_success "  base-readings.py (MQTT) installed"
+        fi
+        
+        # Copy wrapper script
+        if [ -f "$PACKAGE_DIR/mqtt/services/bme680-base-readings-wrapper.sh" ]; then
+            cp "$PACKAGE_DIR/mqtt/services/bme680-base-readings-wrapper.sh" "$INSTALL_ROOT/"
+            chmod +x "$INSTALL_ROOT/bme680-base-readings-wrapper.sh"
+            print_success "  bme680-base-readings-wrapper.sh installed"
+        fi
+        
+        # Legacy scripts (optional, for backward compatibility)
+        if [ -f "$PACKAGE_DIR/mqtt/data/monitor-iaq.py" ]; then
+            cp "$PACKAGE_DIR/mqtt/data/monitor-iaq.py" "$INSTALL_ROOT/mqtt/"
+            chmod +x "$INSTALL_ROOT/mqtt/monitor-iaq.py"
+            print_success "  monitor-iaq.py (MQTT) installed"
+        fi
     fi
     
     # Install CLI tool to ~/.local/bin
@@ -168,9 +190,6 @@ install_package_files() {
         chmod +x "$INSTALL_BIN/bme680-cli"
         print_success "  bme680-cli installed to $INSTALL_BIN"
     fi
-    
-    # Create config directory
-    mkdir -p "$INSTALL_ROOT/config"
     
     print_success "Package files installed"
 }
@@ -188,21 +207,52 @@ setup_python_environment() {
     PYTHON_VERSION=$(python3 --version)
     print_info "  Using $PYTHON_VERSION"
     
-    # Check if uv is available (preferred) or fall back to python3 -m venv
+    # Check if uv is available (preferred) or fall back to python3 -m venv + pip
+    # Note: uv might be in user's ~/.local/bin which isn't in root's PATH
+    USE_UV=false
+    UV_CMD=""
+    
+    # Try to find uv in standard locations or user's local bin
     if command -v uv &> /dev/null; then
+        UV_CMD="uv"
+        USE_UV=true
+    elif [ -f "$ORIGINAL_HOME/.local/bin/uv" ]; then
+        UV_CMD="$ORIGINAL_HOME/.local/bin/uv"
+        USE_UV=true
+    elif [ -f "/usr/local/bin/uv" ]; then
+        UV_CMD="/usr/local/bin/uv"
+        USE_UV=true
+    fi
+    
+    if [ "$USE_UV" = true ]; then
+        print_info "  Using uv for virtual environment and package management"
+        print_info "    Found at: $UV_CMD"
+    else
+        print_info "  uv not available, falling back to venv + pip"
+    fi
+    
+    if [ "$USE_UV" = true ]; then
         # Use uv for venv creation and package management
         if [ ! -d "$VENV_DIR" ]; then
             print_info "  Creating virtual environment with uv..."
-            uv venv "$VENV_DIR"
+            "$UV_CMD" venv "$VENV_DIR"
             print_success "  Virtual environment created"
         else
-            print_info "  Virtual environment already exists, updating..."
+            # Check if venv is valid (has Python executable)
+            if [ ! -f "$VENV_DIR/bin/python" ]; then
+                print_warning "  Virtual environment appears corrupted, recreating..."
+                rm -rf "$VENV_DIR"
+                "$UV_CMD" venv "$VENV_DIR"
+                print_success "  Virtual environment recreated"
+            else
+                print_info "  Virtual environment already exists, updating..."
+            fi
         fi
         
         # Install dependencies with uv
         if [ -f "$DATA_DIR/requirements.txt" ]; then
             print_info "  Installing dependencies from requirements.txt with uv..."
-            uv pip install -r "$DATA_DIR/requirements.txt" --python "$VENV_DIR/bin/python" --quiet
+            "$UV_CMD" pip install -r "$DATA_DIR/requirements.txt" --python "$VENV_DIR/bin/python" --quiet
             print_success "  Dependencies installed"
         else
             print_warning "requirements.txt not found, skipping dependency installation"
@@ -214,12 +264,25 @@ setup_python_environment() {
             python3 -m venv "$VENV_DIR"
             print_success "  Virtual environment created"
         else
-            print_info "  Virtual environment already exists, updating..."
+            # Check if venv is valid (has Python and pip executables)
+            if [ ! -f "$VENV_DIR/bin/python" ] || [ ! -f "$VENV_DIR/bin/pip" ]; then
+                print_warning "  Virtual environment appears corrupted or incomplete, recreating..."
+                rm -rf "$VENV_DIR"
+                python3 -m venv "$VENV_DIR"
+                print_success "  Virtual environment recreated"
+            else
+                print_info "  Virtual environment already exists, updating..."
+            fi
         fi
         
-        # Activate venv and upgrade pip
-        print_info "  Upgrading pip..."
-        "$VENV_DIR/bin/pip" install --upgrade pip --quiet
+        # Activate venv and upgrade pip (only if pip exists)
+        if [ -f "$VENV_DIR/bin/pip" ]; then
+            print_info "  Upgrading pip..."
+            "$VENV_DIR/bin/pip" install --upgrade pip --quiet
+        else
+            print_error "  pip not found in virtual environment"
+            exit 1
+        fi
         
         # Install dependencies
         if [ -f "$DATA_DIR/requirements.txt" ]; then
@@ -234,26 +297,78 @@ setup_python_environment() {
     print_success "Python environment ready"
 }
 
+# Create default config file
+create_config_file() {
+    print_info "Creating configuration file..."
+    
+    mkdir -p "$CONFIG_DIR"
+    local config_file="$CONFIG_DIR/config.yaml"
+    
+    if [ -f "$config_file" ]; then
+        print_warning "Config file already exists at $config_file"
+        print_info "  Skipping config file creation (preserving existing config)"
+        return 0
+    fi
+    
+    cat > "$config_file" << 'EOF'
+# BME680 Monitor Configuration
+# Location: /home/pi/.config/bme680-monitor/config.yaml
+
+# sudo systemctl restart bme680-base-mqtt.service 
+# sudo systemctl restart bme680-base-mqtt.service && sudo journalctl -u bme680-base-mqtt.service -f
+
+# I2C Settings
+i2c:
+  enabled: false
+  bus: 1
+  address: 0x77  # Hex format: 0x77
+  scan_interval: 5  # seconds
+
+# MQTT Settings
+mqtt:
+  enabled: true
+  topic_base: "sensors/bme680/raw"
+  read_interval: 1  # Seconds between sensor reads (for smoothing calculations)
+  publish_interval: 30  # Seconds between MQTT publishes
+  temp_offset: -4.0  # Temperature offset in Celsius to apply (negative values subtract heat from Pi)
+  temp_smooth: 4.0  # Temperature smoothing window in seconds (default: 4.0)
+  
+  # Heatsoak MQTT Settings
+  heatsoak:
+    # Offset is a temperature added to the initial temp read once soak_started = true
+    # Absolute is a temperature used as it is shown
+    rate_start_type: "offset"  # [offset, absolute]
+    rate_start_temp: 5.0  # Temperature to start checking rate - prevents false positives during ramp-up (°C)
+    rate_change_plateau: 0.1  # Maximum rate of change threshold (°C/min) - indicates diminishing returns
+    target_temp: 45.0  # Target temperature - if reached, automatically ready (°C)
+    rate_smooth_time: 30.0  # Rate smoothing window in seconds (default: 30.0)
+EOF
+    
+    chmod 600 "$config_file"
+    print_success "Configuration file created at $config_file"
+}
+
 # Install systemd service
 install_service() {
     local service_name=$1
-    local service_file="$SERVICE_DIR/$service_name.service"
+    local service_type=${2:-mqtt}  # Default to mqtt
+    local service_file="$PACKAGE_DIR/$service_type/services/$service_name-$service_type.service"
+    local installed_service_name="$service_name-$service_type"
     
     if [ ! -f "$service_file" ]; then
         print_error "Service file not found: $service_file"
         return 1
     fi
     
-    print_info "Installing $service_name service..."
+    print_info "Installing $installed_service_name service..."
     
     # Copy service file and substitute user if needed
-    # Use sed to replace User= in service file if it's generic
     if grep -q "User=pi" "$service_file"; then
         # Service file already has User=pi, use as-is
-        cp "$service_file" "/etc/systemd/system/$service_name.service"
+        cp "$service_file" "/etc/systemd/system/$installed_service_name.service"
     else
         # Create service file with proper user
-        sed "s|User=.*|User=$ORIGINAL_USER|g" "$service_file" > "/etc/systemd/system/$service_name.service"
+        sed "s|User=.*|User=$ORIGINAL_USER|g" "$service_file" > "/etc/systemd/system/$installed_service_name.service"
     fi
     print_success "Service file copied to /etc/systemd/system/"
     
@@ -262,18 +377,18 @@ install_service() {
     print_success "Systemd daemon reloaded"
     
     # Enable service
-    systemctl enable "$service_name.service"
+    systemctl enable "$installed_service_name.service"
     print_success "Service enabled (will start on boot)"
     
     # Check if service should be started
-    if systemctl is-active --quiet "$service_name.service" 2>/dev/null; then
+    if systemctl is-active --quiet "$installed_service_name.service" 2>/dev/null; then
         print_info "Service is already running"
     else
-        print_info "Starting $service_name service..."
-        if systemctl start "$service_name.service"; then
+        print_info "Starting $installed_service_name service..."
+        if systemctl start "$installed_service_name.service"; then
             print_success "Service started successfully"
         else
-            print_warning "Service start failed, check status with: systemctl status $service_name"
+            print_warning "Service start failed, check status with: systemctl status $installed_service_name"
         fi
     fi
 }
@@ -282,178 +397,270 @@ install_service() {
 main() {
     # Auto-elevate if needed (must be first)
     if [ "$EUID" -ne 0 ]; then
-        # Preserve script path when elevating - use absolute path (no noisy output)
-        local script_path="${BASH_SOURCE[0]}"
-        if [ ! "${script_path:0:1}" = "/" ]; then
+        # Preserve script path when elevating - use absolute path
+        # When zsh runs a script directly: zsh "/path/to/script.sh", $0 is the script path
+        # When bash runs a script: BASH_SOURCE[0] is set
+        # When sourced: both might be wrong, so we need fallbacks
+        
+        script_path=""
+        
+        # Method 1: Try BASH_SOURCE (works in bash when script is executed, not sourced)
+        if [ -n "${BASH_SOURCE[0]:-}" ] && [ -f "${BASH_SOURCE[0]}" ]; then
+            script_path="${BASH_SOURCE[0]}"
+        # Method 2: Try $0 if it's an absolute path and exists
+        elif [ -n "${0:-}" ] && [ "${0:0:1}" = "/" ] && [ -f "${0}" ]; then
+            script_path="$0"
+        # Method 3: Try $0 if it's a relative path and exists
+        elif [ -n "${0:-}" ] && [ "${0:0:1}" != "/" ] && [ -f "${0}" ]; then
+            script_path="$(cd "$(dirname "${0}")" && pwd)/$(basename "${0}")"
+        fi
+        
+        # Method 4: Use SCRIPT_DIR if available (set at top of script)
+        if [ -z "$script_path" ] || [ ! -f "$script_path" ]; then
+            if [ -n "${SCRIPT_DIR:-}" ] && [ -f "${SCRIPT_DIR}/install.sh" ]; then
+                script_path="${SCRIPT_DIR}/install.sh"
+            # Check if we're in the bme680-service directory
+            elif [ -f "$(pwd)/install.sh" ]; then
+                script_path="$(cd "$(pwd)" && pwd)/install.sh"
+            # Check parent directory
+            elif [ -f "$(dirname "$(pwd)")/install.sh" ]; then
+                script_path="$(cd "$(dirname "$(pwd)")" && pwd)/install.sh"
+            fi
+        fi
+        
+        # Convert to absolute path if relative and still valid
+        if [ -n "$script_path" ] && [ -f "$script_path" ] && [ ! "${script_path:0:1}" = "/" ]; then
             script_path="$(cd "$(dirname "$script_path")" && pwd)/$(basename "$script_path")"
         fi
+        
+        # Final verification
+        if [ -z "$script_path" ] || [ ! -f "$script_path" ]; then
+            echo "Error: Could not determine script path" >&2
+            echo "  BASH_SOURCE[0]=${BASH_SOURCE[0]:-}" >&2
+            echo "  \$0=$0" >&2
+            echo "  PWD=$(pwd)" >&2
+            exit 1
+        fi
+        
         exec sudo bash "$script_path" "$@"
     fi
     
     print_header
     
     # Always re-resolve paths after sudo (sudo changes working directory context)
+    # Re-resolve ORIGINAL_USER and ORIGINAL_HOME after sudo
+    ORIGINAL_USER="${SUDO_USER:-$USER}"
+    ORIGINAL_HOME=$(getent passwd "$ORIGINAL_USER" 2>/dev/null | cut -d: -f6)
+    if [ -z "$ORIGINAL_HOME" ]; then
+        ORIGINAL_HOME="/home/$ORIGINAL_USER"
+    fi
+    
+    # Re-resolve installation paths
+    INSTALL_ROOT="$ORIGINAL_HOME/.local/share/bme680-service"
+    INSTALL_BIN="$ORIGINAL_HOME/.local/bin"
+    VENV_DIR="$INSTALL_ROOT/.venv"
+    CONFIG_DIR="$ORIGINAL_HOME/.config/bme680-monitor"
+    
     SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
     PACKAGE_DIR="$SCRIPT_DIR"
     DETECTOR="$PACKAGE_DIR/detectors/detect-bme680.sh"
     SERVICE_DIR="$PACKAGE_DIR/services"
     DATA_DIR="$PACKAGE_DIR/data"
-    MENU_SCRIPT="$PACKAGE_DIR/scripts/interactive-menu.sh"
+    IMENU_DIR="$PACKAGE_DIR/../_utilities/iMenu"
     
-    # Source menu functions (if available)
-    local use_interactive_menu=false
-    if [ -f "$MENU_SCRIPT" ] && source "$MENU_SCRIPT" && type interactive_menu >/dev/null 2>&1 && [ -t 0 ] && [ -t 1 ]; then
-        use_interactive_menu=true
+    # Source iMenu (includes iWizard)
+    if [ -f "$IMENU_DIR/iMenu.sh" ]; then
+        source "$IMENU_DIR/iMenu.sh"
     else
-        print_warning "Interactive menu unavailable; falling back to simple prompts."
+        print_warning "iMenu not found at $IMENU_DIR/iMenu.sh"
+        print_warning "Falling back to simple prompts..."
     fi
-
-    # State for wizard steps
-    local step=1
-    local install_readings=false
-    local install_iaq=false
-    local install_heat_soak=false
-    local platform="mqtt"  # mqtt|ha (kept for backward compat)
-    local install_broker="Y"
-    local selected_indices_step1="0 1 2"
-    local selected_indices_step2="0 1"
-    local selected_indices_step0="0 1 2"  # default all selected
-
-    while true; do
-        if [ $step -eq 1 ]; then
-            echo "[Space] Toggle   │  [Esc] Cancel"
-            echo "[a] Toggle All   │  [b] Back"
-            echo "[Enter] Confirm  │  [?] Help"
-            echo
-            print_info "Which services would you like to install?"
-            if [ "$use_interactive_menu" = true ]; then
-                local menu_options=(
-                    "Sensor readings"
-                    "IAQ (Air quality calculation, Safe to open flag)"
-                    "Heat soak detection (Current enclosure temp, target enclosure temp, Rate of change [datapoints, value]"
-                )
-                local selected_result
-                if [ -n "$selected_indices_step1" ]; then
-                    selected_result=$(interactive_menu "${menu_options[@]}" --preselect "$selected_indices_step1")
-                else
-                    selected_result=$(interactive_menu "${menu_options[@]}")
+    
+    # Use iWizard for installation steps
+    if type iwizard_run >/dev/null 2>&1 && [ -t 0 ] && [ -t 1 ]; then
+        # Step 1: Select services to install
+        local step1=(
+            "multiselect"
+            "ℹ️  Which services would you like to install?"
+            "Base readings (MQTT) - Includes sensor readings and heatsoak calculations"
+            "IAQ monitor (MQTT) - Air quality calculation"
+            "--preselect" "0"
+        )
+        
+        # Step 2: Select installation types
+        local step2=(
+            "multiselect"
+            "ℹ️  Which installation(s) would you like to perform?"
+            "Standalone MQTT"
+            "Home Assistant MQTT Integration"
+            "Home Assistant Custom Integration"
+            "--preselect" "0 1"
+        )
+        
+        # Step 3: MQTT broker installation (only if MQTT selected)
+        local step3=(
+            "confirm"
+            "ℹ️  Install Mosquitto MQTT broker?"
+            "--default" "true"
+        )
+        
+        # Run wizard - iWizard expects variable names, not arrays directly
+        # We need to use iprompt_run for each step instead, or define variables
+        # For now, let's use iprompt_run directly for each step
+        local step1_result
+        step1_result=$(iprompt_run "step1" "${step1[@]}")
+        local step1_exit=$?
+        
+        if [ $step1_exit -ne 0 ]; then
+            print_info "Installation cancelled"
+            exit 0
+        fi
+        
+        local step2_result
+        step2_result=$(iprompt_run "step2" "${step2[@]}")
+        local step2_exit=$?
+        
+        if [ $step2_exit -eq 2 ]; then
+            # Back button - restart from step 1
+            step1_result=$(iprompt_run "step1" "${step1[@]}")
+            step1_exit=$?
+            if [ $step1_exit -ne 0 ]; then
+                print_info "Installation cancelled"
+                exit 0
+            fi
+            step2_result=$(iprompt_run "step2" "${step2[@]}")
+            step2_exit=$?
+        fi
+        
+        if [ $step2_exit -ne 0 ]; then
+            print_info "Installation cancelled"
+            exit 0
+        fi
+        
+        # Only ask about broker if MQTT is selected
+        local want_mqtt=false
+        for idx in $step2_result; do
+            case $idx in
+                0|1) want_mqtt=true ;;
+            esac
+        done
+        
+        local step3_result="false"
+        if [ "$want_mqtt" = true ]; then
+            step3_result=$(iprompt_run "step3" "${step3[@]}")
+            local step3_exit=$?
+            
+            if [ $step3_exit -eq 2 ]; then
+                # Back button - go to step 2
+                step2_result=$(iprompt_run "step2" "${step2[@]}")
+                step2_exit=$?
+                if [ $step2_exit -ne 0 ]; then
+                    print_info "Installation cancelled"
+                    exit 0
                 fi
-                local rc=$?
-                if [ $rc -eq 1 ]; then
-                    print_info "Installation cancelled"; exit 0
-                elif [ $rc -eq 2 ]; then
-                    # Back from step 1 → cancel
-                    print_info "Installation cancelled"; exit 0
-                fi
-                # reset flags
-                install_readings=false; install_iaq=false; install_heat_soak=false
-                for idx in $selected_result; do
+                # Re-check if MQTT selected
+                want_mqtt=false
+                for idx in $step2_result; do
                     case $idx in
-                        0) install_readings=true ;;
-                        1) install_iaq=true ;;
-                        2) install_heat_soak=true ;;
+                        0|1) want_mqtt=true ;;
                     esac
                 done
-                selected_indices_step1="$selected_result"
-                if [ "$install_readings" = false ] && [ "$install_iaq" = false ] && [ "$install_heat_soak" = false ]; then
-                    print_info "No services selected. Installation cancelled."; exit 0
+                if [ "$want_mqtt" = true ]; then
+                    step3_result=$(iprompt_run "step3" "${step3[@]}")
+                    step3_exit=$?
+                    if [ $step3_exit -ne 0 ]; then
+                        print_info "Installation cancelled"
+                        exit 0
+                    fi
                 fi
-            else
-                echo "  1) Sensor readings"
-                echo "  2) IAQ"
-                echo "  3) Heat soak"
-                echo "  4) All"
-                echo "  5) Cancel"
-                read -p "Choice [1-5]: " choice
-                case $choice in
-                    1) install_readings=true ;;
-                    2) install_iaq=true ;;
-                    3) install_heat_soak=true ;;
-                    4) install_readings=true; install_iaq=true; install_heat_soak=true ;;
-                    5) print_info "Installation cancelled"; exit 0 ;;
-                    *) print_error "Invalid choice"; exit 1 ;;
-                esac
+            elif [ $step3_exit -ne 0 ]; then
+                print_info "Installation cancelled"
+                exit 0
             fi
-            step=2
-        elif [ $step -eq 2 ]; then
-            # Installation type(s)
-            if type clear_menu >/dev/null 2>&1; then clear_menu 5; fi
-            echo "[Space] Toggle   │  [Esc] Cancel"
-            echo "[a] Toggle All   │  [b] Back"
-            echo "[Enter] Confirm  │  [?] Help"
-            echo
-            print_info "Which services would you like to install?"
-            print_info "Which installation(s) would you like to perform?"
-            if [ "$use_interactive_menu" = true ]; then
-                local menu0=(
-                    "Standalone MQTT"
-                    "HA MQTT Receipt"
-                    "HA Custom Integration"
-                )
-                local selected0
-                selected0=$(interactive_menu "${menu0[@]}" --preselect "$selected_indices_step0")
-                local rc0=$?
-                if [ $rc0 -eq 1 ]; then print_info "Installation cancelled"; exit 0
-                elif [ $rc0 -eq 2 ]; then step=1; continue; fi
-                selected_indices_step0="$selected0"
-                if [ -z "$selected_indices_step0" ]; then selected_indices_step0="0 1 2"; fi
-            else
-                echo "  1) Standalone MQTT"
-                echo "  2) HA MQTT Receipt"
-                echo "  3) HA Custom Integration"
-                echo "  4) Back"
-                echo "  5) Cancel"
-                read -p "Choice [1-5]: " ch0
-                case $ch0 in
-                    1) selected_indices_step0="0" ;;
-                    2) selected_indices_step0="1" ;;
-                    3) selected_indices_step0="0 1 2" ;;
-                    4) step=1; continue ;;
-                    5) print_info "Installation cancelled"; exit 0 ;;
-                    *) print_error "Invalid choice"; exit 1 ;;
-                esac
-            fi
-            step=3
-        elif [ $step -eq 3 ]; then
-            # Determine selected platforms
-            local want_mqtt=false
-            local want_ha=false
-            for idx in $selected_indices_step2; do
-                case $idx in
-                    0) want_mqtt=true ;;
-                    1) want_ha=true ;;
-                esac
-            done
-            if [ "$want_mqtt" = true ]; then
-                # Clear previous platform menu lines so redraw doesn't climb
-                if type clear_menu >/dev/null 2>&1; then
-                    clear_menu 10
-                fi
-                echo "[Space] Toggle   │  [Esc] Cancel"
-                echo "[b] Back        │  [Enter] Confirm"
-                echo "[?] Help"
-                if [ "$use_interactive_menu" = true ] && type yes_no_prompt >/dev/null 2>&1; then
-                    yes_no_prompt "Install Mosquitto MQTT broker (y):" "Y"; rc=$?
-                    if [ $rc -eq 1 ]; then install_broker="N"; elif [ $rc -eq 2 ]; then step=2; continue; else install_broker="Y"; fi
-                else
-                    read -p "Install Mosquitto MQTT broker? (Y/n): " ans; ans=${ans:-Y}; install_broker=$ans
-                fi
-            fi
-            break
         fi
-    done
+        
+        # Parse step1: services
+        local install_base=false
+        local install_iaq=false
+        for idx in $step1_result; do
+            case $idx in
+                0) install_base=true ;;
+                1) install_iaq=true ;;
+            esac
+        done
+        
+        # Parse step2: installation types
+        local do_standalone=false
+        local do_ha_mqtt=false
+        local do_ha_integration=false
+        for idx in $step2_result; do
+            case $idx in
+                0) do_standalone=true ;;
+                1) do_ha_mqtt=true ;;
+                2) do_ha_integration=true ;;
+            esac
+        done
+        
+        # Parse step3: broker installation
+        local install_broker=false
+        if [ "$step3_result" = "true" ]; then
+            install_broker=true
+        fi
+    else
+        # Fallback to simple prompts
+        print_warning "Using simple prompts (iWizard not available)"
+        
+        echo "Which services would you like to install?"
+        echo "  1) Base readings (MQTT) - Includes sensor readings and heatsoak calculations"
+        echo "  2) IAQ monitor (MQTT)"
+        echo "  3) All"
+        echo "  4) Cancel"
+        read -p "Choice [1-4]: " choice
+        case $choice in
+            1) install_base=true ;;
+            2) install_iaq=true ;;
+            3) install_base=true; install_iaq=true ;;
+            4) print_info "Installation cancelled"; exit 0 ;;
+            *) print_error "Invalid choice"; exit 1 ;;
+        esac
+        
+        echo
+        echo "Which installation(s) would you like to perform?"
+        echo "  1) Standalone MQTT"
+        echo "  2) Home Assistant MQTT Integration"
+        echo "  3) Home Assistant Custom Integration"
+        echo "  4) All"
+        echo "  5) Cancel"
+        read -p "Choice [1-5]: " ch0
+        case $ch0 in
+            1) do_standalone=true ;;
+            2) do_ha_mqtt=true ;;
+            3) do_ha_integration=true ;;
+            4) do_standalone=true; do_ha_mqtt=true; do_ha_integration=true ;;
+            5) print_info "Installation cancelled"; exit 0 ;;
+            *) print_error "Invalid choice"; exit 1 ;;
+        esac
+        
+        if [ "$do_standalone" = true ] || [ "$do_ha_mqtt" = true ]; then
+            read -p "Install Mosquitto MQTT broker? (Y/n): " ans
+            ans=${ans:-Y}
+            if [[ "${ans^^}" = "Y" ]]; then
+                install_broker=true
+            fi
+        fi
+    fi
     
     # Check if user cancelled (no services selected)
-    if [ "$install_readings" = false ] && [ "$install_heat_soak" = false ]; then
+    if [ "$install_base" = false ] && [ "$install_iaq" = false ]; then
         print_info "No services selected. Installation cancelled."
         exit 0
     fi
     
-    # 2) Only now detect the sensor (after selection)
+    # Detect sensor (after selection)
     echo
     detect_sensor
     
-    # 3) Proceed with installation (after user selection and detection)
+    # Proceed with installation
     echo
     print_info "Installing BME680 service package..."
     echo 
@@ -464,22 +671,14 @@ main() {
     # Setup Python environment
     setup_python_environment
     
-    # Execute based on step 0 selections
-    local do_standalone=false
-    local do_ha_mqtt=false
-    local do_ha_integration=false
-    for idx in $selected_indices_step0; do
-        case $idx in
-            0) do_standalone=true ;;
-            1) do_ha_mqtt=true ;;
-            2) do_ha_integration=true ;;
-        esac
-    done
-
+    # Create config file
+    create_config_file
+    
+    # Execute based on selections
     if [ "$do_standalone" = true ] || [ "$do_ha_mqtt" = true ] || [ "$do_ha_integration" = true ]; then
         # Broker if MQTT path selected and user opted in
         if [ "$do_standalone" = true ] || [ "$do_ha_mqtt" = true ]; then
-            if [[ "${install_broker^^}" = "Y" ]]; then
+            if [ "$install_broker" = true ]; then
                 print_info "Installing Mosquitto MQTT broker..."
                 apt-get update -y >/dev/null 2>&1 || true
                 apt-get install -y mosquitto mosquitto-clients >/dev/null 2>&1 || true
@@ -488,37 +687,57 @@ main() {
             fi
         fi
 
-        # Install services for base architecture
-        if [ "$install_readings" = true ]; then install_service "bme680-base"; fi
-        if [ "$install_iaq" = true ]; then install_service "bme680-iaq"; fi
-        if [ "$install_heat_soak" = true ]; then install_service "bme680-heatsoak"; fi
+        # Install MQTT services
+        if [ "$install_base" = true ]; then
+            install_service "bme680-base" "mqtt"
+        fi
+        if [ "$install_iaq" = true ]; then
+            install_service "bme680-iaq" "mqtt"
+        fi
 
         # HA MQTT wiring (install into HA packages and ensure include + mqtt: broker)
         if [ "$do_ha_mqtt" = true ]; then
             print_info "Configuring Home Assistant packages include and MQTT wiring..."
             local HA_CONF="$ORIGINAL_HOME/homeassistant/configuration.yaml"
             local HA_PKG_DIR="$ORIGINAL_HOME/homeassistant/packages"
-            local ha_yaml_src="$PACKAGE_DIR/ha/sensors-bme680-mqtt.yaml"
-            local ha_yaml_dst="$HA_PKG_DIR/bme680.yaml"
+            
+            # Copy consolidated MQTT sensors config (includes all data including heatsoak)
+            local ha_yaml_src="$PACKAGE_DIR/mqtt/ha/sensors-bme680-mqtt.yaml"
+            local ha_yaml_dst="$HA_PKG_DIR/bme680_mqtt.yaml"
             if [ -f "$ha_yaml_src" ]; then
                 mkdir -p "$HA_PKG_DIR"
                 cp "$ha_yaml_src" "$ha_yaml_dst"
-                print_success "Copied MQTT wiring to $ha_yaml_dst"
-                # ensure packages include present
-                if grep -Eq "^\s*packages:\s*!include_dir_named\s+packages" "$HA_CONF"; then
-                    true
-                elif grep -Eq "^homeassistant:\s*$" "$HA_CONF"; then
-                    sed -i '/^homeassistant:\s*$/a\  packages: !include_dir_named packages' "$HA_CONF"
-                    print_success "Added packages include under homeassistant:"
-                else
-                    printf '\n# Added by bme680 installer - Home Assistant packages include\n' >> "$HA_CONF"
-                    printf 'homeassistant:\n  packages: !include_dir_named packages\n' >> "$HA_CONF"
-                    print_success "Appended homeassistant: packages include"
-                fi
-                # Note: do not auto-add mqtt: broker block here; user configures MQTT integration
+                print_success "Copied MQTT sensors config to $ha_yaml_dst"
+                print_info "  Note: This includes all sensor data including heatsoak calculations"
             else
-                print_warning "HA MQTT YAML source not found (expected at $ha_yaml_src)."
+                print_warning "MQTT sensors YAML source not found (expected at $ha_yaml_src)."
             fi
+            
+            # Disable deprecated heatsoak package if it exists
+            if [ -f "$HA_PKG_DIR/bme680_heatsoak_mqtt.yaml" ]; then
+                mv "$HA_PKG_DIR/bme680_heatsoak_mqtt.yaml" "$HA_PKG_DIR/bme680_heatsoak_mqtt.yaml.disabled" 2>/dev/null || true
+                print_info "Disabled deprecated heatsoak package (consolidated into main package)"
+            fi
+            
+            # Note: User must reload HA core to pick up new package
+            echo
+            print_info "⚠️  IMPORTANT: Reload Home Assistant Core to pick up MQTT sensors"
+            print_info "   Run: ha reload core"
+            print_info "   Or use: Developer Tools > YAML > Reload Core Configuration"
+            echo
+            
+            # ensure packages include present
+            if grep -Eq "^\s*packages:\s*!include_dir_named\s+packages" "$HA_CONF"; then
+                true
+            elif grep -Eq "^homeassistant:\s*$" "$HA_CONF"; then
+                sed -i '/^homeassistant:\s*$/a\  packages: !include_dir_named packages' "$HA_CONF"
+                print_success "Added packages include under homeassistant:"
+            else
+                printf '\n# Added by bme680 installer - Home Assistant packages include\n' >> "$HA_CONF"
+                printf 'homeassistant:\n  packages: !include_dir_named packages\n' >> "$HA_CONF"
+                print_success "Appended homeassistant: packages include"
+            fi
+            # Note: do not auto-add mqtt: broker block here; user configures MQTT integration
         fi
 
         # HA Custom Integration scaffold (install into HA custom_components)
@@ -531,6 +750,7 @@ main() {
                 rm -rf "$comp_dst"
                 cp -r "$comp_src" "$comp_dst"
                 print_success "Installed custom component to $comp_dst"
+                print_info "  Note: Integration is YAML-only (no UI config flow)"
             else
                 print_warning "Custom component scaffold not found at $comp_src"
             fi
@@ -542,11 +762,13 @@ main() {
     echo
     print_info "Package installed to: $INSTALL_ROOT"
     print_info "Virtual environment: $VENV_DIR"
+    print_info "Configuration file: $CONFIG_DIR/config.yaml"
     echo
     print_info "Useful commands:"
-    echo "  systemctl status bme680-base         # Raw readings"
-    echo "  systemctl status bme680-iaq          # IAQ consumer"
-    echo "  systemctl status bme680-heatsoak     # HeatSoak consumer"
+    echo "  systemctl status bme680-base-mqtt         # Base readings + heatsoak (MQTT)"
+    echo "  systemctl status bme680-iaq-mqtt          # IAQ monitor (MQTT)"
+    echo "  sudo systemctl restart bme680-base-mqtt   # Restart after config changes"
+    echo "  mqtt 'sensors/bme680/raw'                 # View MQTT messages"
 }
 
 main "$@"

@@ -27,8 +27,8 @@
               "items": {
                 "type": "string",
                 "enum": [
-                  "water",
-                  "gas",
+                  "outlet",
+                  "switch",
                   "identify",
                   "restart",
                   "update",
@@ -42,11 +42,11 @@
                   "shade",
                   "shutter",
                   "window",
-                  "outlet",
-                  "switch",
                   "tv",
                   "speaker",
-                  "receiver"
+                  "receiver",
+                  "water",
+                  "gas"
                 ]
               }
             }
@@ -79,8 +79,8 @@
               "items": {
                 "type": "string",
                 "enum": [
-                  "water",
-                  "gas",
+                  "outlet",
+                  "switch",
                   "identify",
                   "restart",
                   "update",
@@ -94,11 +94,11 @@
                   "shade",
                   "shutter",
                   "window",
-                  "outlet",
-                  "switch",
                   "tv",
                   "speaker",
-                  "receiver"
+                  "receiver",
+                  "water",
+                  "gas"
                 ]
               }
             }
@@ -112,36 +112,6 @@
           "type": "object",
           "properties": {
             "area": {
-              "type": "string"
-            }
-          }
-        }
-      },
-      {
-        "name": "HassListAddItem",
-        "description": "Add item to a todo list",
-        "inputSchema": {
-          "type": "object",
-          "properties": {
-            "item": {
-              "type": "string"
-            },
-            "name": {
-              "type": "string"
-            }
-          }
-        }
-      },
-      {
-        "name": "HassListCompleteItem",
-        "description": "Complete item on a todo list",
-        "inputSchema": {
-          "type": "object",
-          "properties": {
-            "item": {
-              "type": "string"
-            },
-            "name": {
               "type": "string"
             }
           }
@@ -354,8 +324,8 @@
                 {
                   "type": "string",
                   "enum": [
-                    "up",
-                    "down"
+                    "down",
+                    "up"
                   ]
                 },
                 {
@@ -418,6 +388,36 @@
               "type": "string"
             },
             "floor": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      {
+        "name": "HassListAddItem",
+        "description": "Add item to a todo list",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "item": {
+              "type": "string"
+            },
+            "name": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      {
+        "name": "HassListCompleteItem",
+        "description": "Complete item on a todo list",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "item": {
+              "type": "string"
+            },
+            "name": {
               "type": "string"
             }
           }

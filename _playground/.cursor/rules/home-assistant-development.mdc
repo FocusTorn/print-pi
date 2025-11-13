@@ -1,0 +1,364 @@
+---
+description: "Home Assistant development rules for AI coding agent - template syntax, custom components, documentation requirements"
+alwaysApply: true
+---
+
+# Home Assistant Development Rules
+
+## ⚠️ CRITICAL: Pre-Action Validation Required
+
+**BEFORE creating or modifying any Home Assistant configuration, dashboard card, or custom script:**
+
+### STEP 0: INTERACTION PATTERN CHECK
+
+**You MUST complete this FIRST:**
+
+1. **✅ DETECT question vs command** - Is the user asking a question or giving a command?
+   - If **question** → Answer completely first, then ask for permission to act
+   - If **command** → Proceed to pre-flight checklist below
+
+2. **✅ VERIFY no assumptions** - Are you about to assume something?
+   - If yes → STOP, verify with tool calls instead
+
+### MANDATORY PRE-FLIGHT CHECKLIST
+
+**You MUST complete ALL of these steps BEFORE writing any configuration code:**
+
+1. **✅ IDENTIFY all components** - List every card type, custom component, and integration being used
+2. **✅ VERIFY installation** - Check `/home/pi/homeassistant/www/community/` for custom components
+3. **✅ REVIEW documentation** - Read official docs for EACH component:
+   - Custom components: GitHub repository README
+   - Core HA: https://www.home-assistant.io/
+   - Local docs: `/home/pi/_playground/home-assistant/_docs/`
+4. **✅ CHECK examples** - Review example configurations from component repositories
+5. **✅ VERIFY syntax** - Confirm template syntax (Jinja2 vs JavaScript) for each component
+6. **✅ VALIDATE entities** - Verify entity IDs exist using `ha list-entities <pattern>`
+
+**ENFORCEMENT:** If you skip any step, you MUST stop and complete it before proceeding.
+
+### STEP 7: PRE-ACTION VALIDATION
+
+**Before writing ANY configuration code, verify:**
+
+- [ ] **Question detected?** → Answered first, permission obtained
+- [ ] **All checklist steps completed?** → Verified with tool calls (not assumptions)
+- [ ] **Documentation reviewed?** → Used `web_search` or `read_file`
+- [ ] **Installation verified?** → Used `run_terminal_cmd` to check
+- [ ] **Entities validated?** → Used `ha list-entities` if applicable
+- [ ] **Syntax confirmed?** → Reviewed component-specific requirements
+
+**If ANY checkbox is unchecked → STOP and complete it before proceeding.**
+
+**Why this matters:**
+- Prevents syntax errors (e.g., using JavaScript templates in card-mod instead of Jinja2)
+- Ensures correct component usage (e.g., `picture-elements` doesn't support `state_image` like `picture-entity`)
+- Avoids missing dependencies (custom components must be installed)
+- Reduces debugging time and configuration errors
+
+## Template Syntax Rules
+
+### Jinja2 Templates (Home Assistant Standard)
+
+**✅ MUST use Jinja2 syntax in card-mod, config-template-card, and HA templates:**
+```yaml
+{% if is_state('light.entity_id', 'on') %}
+  background-image: url('/local/path/to/image.png');
+{% else %}
+  background-image: url('/local/path/to/other.png');
+{% endif %}
+```
+
+### JavaScript Template Literals (NOT Supported)
+
+**❌ NEVER use JavaScript template literals in Home Assistant:**
+```yaml
+# WRONG - JavaScript syntax doesn't work in HA
+background-image: url('${states["entity.id"].state === "on" ? "path1" : "path2"}');
+```
+
+**Why this is wrong:**
+- Home Assistant uses Jinja2, not JavaScript
+- Card Mod uses Jinja2 templates in CSS
+- JavaScript template literals will NOT evaluate
+
+## Custom Components Documentation
+
+### Card Mod (lovelace-card-mod)
+
+**Documentation Location:**
+- GitHub: https://github.com/thomasloven/lovelace-card-mod
+- Local Docs: `/home/pi/_playground/home-assistant/_docs/picture-elements-card-components.md`
+- Installation: `/home/pi/homeassistant/www/community/lovelace-card-mod/`
+
+**Key Rules:**
+- **MUST use Jinja2 templates** in card-mod CSS, NOT JavaScript
+- Correct: `{% if is_state('entity.id', 'state') %}`
+- Wrong: `${states["entity.id"].state === "state"}`
+- **MUST reference documentation** before using card-mod templates
+
+### Config Template Card
+
+**Documentation Location:**
+- GitHub: https://github.com/custom-cards/config-template-card
+- Installation: `/home/pi/homeassistant/www/community/config-template-card/`
+
+**Purpose:** Enables templates in picture-elements card elements
+
+### HUI Element
+
+**Documentation Location:**
+- GitHub: https://github.com/custom-cards/hui-element
+- Installation: `/home/pi/homeassistant/www/community/lovelace-hui-element/`
+
+**Purpose:** Allows nesting other card types inside picture-elements
+
+## Core Home Assistant Documentation
+
+**Main Documentation:**
+- Core HA Docs: https://www.home-assistant.io/
+- Picture Elements: https://www.home-assistant.io/dashboards/picture-elements/
+- Templating: https://www.home-assistant.io/docs/configuration/templating/
+- Jinja2 Templates: https://www.home-assistant.io/docs/configuration/templating/#jinja2-templates
+
+## Verification Commands
+
+**Check Custom Component Installation:**
+```bash
+# List installed custom components
+ls -la /home/pi/homeassistant/www/community/
+
+# Verify specific component
+ls -la /home/pi/homeassistant/www/community/lovelace-card-mod/
+```
+
+## Common Issues to Prevent
+
+### Issue 1: Wrong Template Syntax
+
+**Problem:** Using JavaScript template literals in card-mod or HA templates
+
+**Prevention:**
+1. **MUST review** card-mod documentation before using templates
+2. **MUST use** Jinja2 syntax: `{% if is_state(...) %}`
+3. **MUST test** template syntax separately before adding to card
+4. **MUST check** Home Assistant templating documentation
+
+### Issue 2: Missing Custom Component
+
+**Problem:** Using custom component that isn't installed
+
+**Prevention:**
+1. **MUST verify** component is installed: `ls /home/pi/homeassistant/www/community/`
+2. **MUST check** HACS for installation status
+3. **MUST review** component documentation for installation requirements
+
+### Issue 3: Incorrect Component Usage
+
+**Problem:** Using component features that don't exist (e.g., `state_image` in `picture-elements`)
+
+**Prevention:**
+1. **MUST review** component documentation for supported features
+2. **MUST check** if feature is in Core HA or Custom Component
+3. **MUST verify** component version supports the feature
+
+### Issue 4: Wrong Image Path Format
+
+**Problem:** Images not loading due to incorrect path format
+
+**Prevention:**
+1. **MUST use** `/local/` prefix for images in `www/` directory
+2. **MUST verify** image exists: `ls /home/pi/homeassistant/www/media/`
+3. **MUST use** absolute paths, not relative paths
+
+## Development Workflow
+
+### Before Creating/Modifying Cards - EXECUTION STEPS
+
+**These steps MUST be executed as tool calls, not just mental notes:**
+
+1. **✅ IDENTIFY components** (use `grep` or `read_file` to check existing cards)
+   ```bash
+   # Example: Check what custom cards are used
+   grep -r "type: custom:" /home/pi/_playground/home-assistant/cards/
+   ```
+
+2. **✅ VERIFY installation** (use `run_terminal_cmd`)
+   ```bash
+   ls -la /home/pi/homeassistant/www/community/ | grep <component-name>
+   ```
+
+3. **✅ REVIEW documentation** (use `web_search` or `read_file`)
+   - Search GitHub repository for component
+   - Read README.md from repository
+   - Check examples folder if available
+   - Review local docs: `/home/pi/_playground/home-assistant/_docs/`
+
+4. **✅ CHECK examples** (use `web_search` or repository examples)
+   - Look for example configurations
+   - Review similar use cases
+
+5. **✅ VERIFY entities** (use `run_terminal_cmd`)
+   ```bash
+   ha list-entities <pattern>
+   ```
+
+6. **✅ VALIDATE syntax** - After reviewing docs, confirm:
+   - Template syntax (Jinja2 vs JavaScript)
+   - Configuration structure
+   - Required vs optional parameters
+
+7. **✅ WRITE configuration** - Only after completing all above steps
+
+### When Modifying Existing Cards
+
+1. **MUST review** current configuration to understand components used
+2. **MUST check** documentation for each component
+3. **MUST verify** template syntax matches component requirements
+4. **MUST test** changes incrementally
+5. **MUST verify** images, templates, and entities work correctly
+
+## Image Path Rules
+
+**✅ CORRECT:**
+```yaml
+image: /local/media/bambuprinter/a1_lighton.png
+```
+
+**❌ WRONG:**
+```yaml
+image: media/bambuprinter/a1_lighton.png  # Missing /local/
+image: /www/media/bambuprinter/a1_lighton.png  # Wrong prefix
+```
+
+## Template Syntax Examples
+
+### Correct (Jinja2)
+```yaml
+card_mod:
+  style: |
+    {% if is_state('light.a1_a1_chamber_light', 'on') %}
+    ha-card::before {
+      background-image: url('/local/media/bambuprinter/a1_lighton.png');
+    }
+    {% else %}
+    ha-card::before {
+      background-image: url('/local/media/bambuprinter/a1_lightoff.png');
+    }
+    {% endif %}
+```
+
+### Wrong (JavaScript)
+```yaml
+card_mod:
+  style: |
+    ha-card::before {
+      background-image: url('${states["light.a1_a1_chamber_light"].state === "on" ? "/local/media/bambuprinter/a1_lighton.png" : "/local/media/bambuprinter/a1_lightoff.png"}');
+    }
+```
+
+## Component Documentation Reference
+
+**Core HA:**
+- https://www.home-assistant.io/
+
+**Card Mod:**
+- https://github.com/thomasloven/lovelace-card-mod
+- Local: `/home/pi/_playground/home-assistant/_docs/picture-elements-card-components.md`
+
+**Custom Components:**
+- Check GitHub repositories
+- Check HACS documentation
+- Check local docs in `_playground/home-assistant/_docs/`
+
+## Required Actions
+
+### ✅ MUST DO
+
+- ✅ Review documentation before using any component
+- ✅ Use Jinja2 templates in card-mod and HA configurations
+- ✅ Verify custom components are installed
+- ✅ Test image paths and URLs
+- ✅ Use `/local/` prefix for images in `www/` directory
+- ✅ Check browser console for errors
+- ✅ Use absolute paths for images
+- ✅ Verify entity IDs and states are correct
+- ✅ Test templates separately if complex
+
+### ❌ MUST NOT DO
+
+- ❌ Use JavaScript template literals in Home Assistant
+- ❌ Assume component features without checking docs
+- ❌ Use custom components without verifying installation
+- ❌ Use relative paths for images
+- ❌ Skip documentation review
+- ❌ Mix template syntaxes (Jinja2 vs JavaScript)
+- ❌ Assume `picture-elements` supports all `picture-entity` features
+- ❌ Ignore browser console errors
+
+## Summary
+
+**MANDATORY RULES:**
+1. **ALWAYS complete pre-flight checklist** - Execute verification steps as tool calls
+2. **ALWAYS review documentation** before creating/modifying cards (use web_search/read_file)
+3. **ALWAYS verify installation** - Check `/home/pi/homeassistant/www/community/` (use run_terminal_cmd)
+4. **ALWAYS verify entities exist** - Use `ha list-entities` before referencing them
+5. **ALWAYS use Jinja2 templates**, never JavaScript template literals
+6. **ALWAYS verify custom components** are installed and compatible
+7. **ALWAYS test configurations** incrementally
+8. **ALWAYS check browser console** for errors
+9. **ALWAYS use correct image paths** with `/local/` prefix
+10. **ALWAYS separate Core HA** from Custom Component documentation
+11. **ALWAYS follow component-specific** syntax requirements
+
+## New Component Documentation
+
+**When using a custom component for the first time:**
+1. **MUST create local documentation** in `/home/pi/_playground/home-assistant/_docs/`
+2. **MUST include** key configuration examples
+3. **MUST document** common pitfalls and syntax requirements
+4. **MUST reference** the GitHub repository
+
+**Example:** Create `flex-horseshoe-card.md` with:
+- Installation location
+- Key configuration parameters
+- Example configurations
+- Template syntax requirements
+- Common issues and solutions
+
+---
+
+## Deviation Analysis Requirement
+
+**When asked about why a deviation/oversight occurred, you MUST:**
+
+1. **✅ ANALYZE root causes** - Identify what caused the deviation:
+   - What rules were not followed?
+   - What validation steps were skipped?
+   - What assumptions were made?
+   - What tool calls were not executed?
+
+2. **✅ PROVIDE remediation plan** - Propose specific changes to rules files:
+   - What rules need to be added/modified?
+   - What validation steps need to be enforced?
+   - What safeguards need to be implemented?
+   - How can this be prevented in the future?
+
+3. **✅ ANSWER first, then ask** - Provide complete analysis before offering to implement
+
+**Example Response Structure:**
+```
+## Root Causes
+[Analysis of what went wrong]
+
+## What Needs to Happen
+[Specific recommendations]
+
+## Proposed Remediation
+[Specific rule changes needed]
+
+Would you like me to update the rules files with these improvements?
+```
+
+---
+
+**Remember:** Documentation review prevents configuration errors. Always verify component documentation before implementing new features or modifying existing configurations. **Execute verification steps as tool calls, don't just assume.**

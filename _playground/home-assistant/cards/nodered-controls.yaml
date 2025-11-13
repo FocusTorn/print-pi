@@ -1,0 +1,71 @@
+# Node-RED Control Cards
+# Add these cards to your dashboard to control Node-RED flows
+
+# Node-RED Flow Control Card
+- type: vertical-stack
+  title: Node-RED Flow Control
+  cards:
+    # Flow Status Overview
+    - type: entities
+      title: Node-RED Status
+      entities:
+        - entity: input_boolean.nodered_flow_enabled
+          name: Flow Enabled
+        - entity: input_text.nodered_flow_message
+          name: Status Message
+        - entity: input_number.nodered_flow_status
+          name: Flow Status
+        - entity: input_text.nodered_last_execution
+          name: Last Execution
+
+    # Flow Control Buttons
+    - type: horizontal-stack
+      cards:
+        - type: button
+          entity: input_boolean.nodered_flow_trigger
+          name: Trigger Flow
+          icon: mdi:play-circle
+          tap_action:
+            action: toggle
+          hold_action:
+            action: more-info
+
+        - type: button
+          entity: input_boolean.nodered_flow_enabled
+          name: Enable/Disable
+          icon: mdi:toggle-switch
+          tap_action:
+            action: toggle
+
+    # Flow Status Gauge
+    - type: gauge
+      entity: input_number.nodered_flow_status
+      name: Flow Progress
+      min: 0
+      max: 100
+      severity:
+        green: 0
+        yellow: 50
+        red: 80
+
+    # Flow Error Display (if error exists)
+    - type: conditional
+      conditions:
+        - entity: input_text.nodered_flow_error
+          state_not: ""
+      card:
+        type: markdown
+        content: |
+          ## ⚠️ Node-RED Error
+          **Error:** {{ states('input_text.nodered_flow_error') }}
+        title: Error Status
+
+    # Flow Execution History
+    - type: entities
+      title: Flow Statistics
+      entities:
+        - entity: input_number.nodered_flow_counter
+          name: Total Executions
+        - entity: input_number.nodered_flow_duration
+          name: Last Duration
+

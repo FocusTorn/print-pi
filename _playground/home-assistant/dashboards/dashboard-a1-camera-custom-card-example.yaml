@@ -1,0 +1,201 @@
+# Example: Expandable Camera using Custom Cards
+# This file demonstrates alternative approaches to the expandable camera
+# DO NOT import this directly - use as reference for custom card implementations
+
+views:
+  - title: Camera Custom Card Examples
+    path: camera-examples
+    icon: mdi:camera
+    type: sections
+    max_columns: 3
+    sections:
+
+      # ======================================================================
+      # EXAMPLE 1: Using custom:state-switch (Recommended)
+      # ======================================================================
+      - type: grid
+        cards:
+          - type: heading
+            heading: State Switch Card
+            heading_style: title
+            icon: mdi:swap-horizontal
+            badges: []
+          
+          # Single card that switches between states
+          - type: custom:state-switch
+            entity: input_boolean.camera_a1_expanded
+            states:
+              "off":
+                show_state: false
+                show_name: false
+                camera_view: live
+                type: picture-entity
+                entity: camera.a1_camera
+                camera_image: camera.a1_camera
+                grid_options:
+                  columns: 4
+                  rows: 3
+                tap_action:
+                  action: toggle
+                  entity_id: input_boolean.camera_a1_expanded
+                hold_action:
+                  action: none
+              "on":
+                show_state: false
+                show_name: false
+                camera_view: live
+                type: picture-entity
+                entity: camera.a1_camera
+                camera_image: camera.a1_camera
+                grid_options:
+                  columns: full
+                  rows: 12
+                tap_action:
+                  action: toggle
+                  entity_id: input_boolean.camera_a1_expanded
+                hold_action:
+                  action: none
+          
+          column_span: 3
+
+      # ======================================================================
+      # EXAMPLE 2: Using custom:button-card (Already installed)
+      # ======================================================================
+      - type: grid
+        cards:
+          - type: heading
+            heading: Button Card (Expandable)
+            heading_style: title
+            icon: mdi:button-cursor
+            badges: []
+          
+          # Button card that expands to show camera
+          - type: custom:button-card
+            entity: input_boolean.camera_a1_expanded
+            name: Camera
+            icon: mdi:camera
+            tap_action:
+              action: toggle
+            state:
+              - value: "off"
+                styles:
+                  card:
+                    - width: 33%
+                    - height: 200px
+                card:
+                  type: picture-entity
+                  entity: camera.a1_camera
+                  camera_view: live
+                  show_name: false
+                  show_state: false
+              - value: "on"
+                styles:
+                  card:
+                    - width: 100%
+                    - height: 600px
+                card:
+                  type: picture-entity
+                  entity: camera.a1_camera
+                  camera_view: live
+                  show_name: false
+                  show_state: false
+          
+          column_span: 3
+
+      # ======================================================================
+      # EXAMPLE 3: Using custom:layout-card (Already installed)
+      # ======================================================================
+      - type: grid
+        cards:
+          - type: heading
+            heading: Layout Card (Collapsible)
+            heading_style: title
+            icon: mdi:view-grid
+            badges: []
+          
+          # Layout card with collapsible sections
+          - type: custom:layout-card
+            layout_type: custom:grid-layout
+            layout:
+              grid-template-columns: repeat(12, 1fr)
+              grid-template-rows: auto
+            cards:
+              - type: picture-entity
+                entity: camera.a1_camera
+                camera_view: live
+                show_name: false
+                show_state: false
+                layout:
+                  grid-column: span 4
+                  grid-row: span 3
+                tap_action:
+                  action: toggle
+                  entity_id: input_boolean.camera_a1_expanded
+          
+          column_span: 3
+
+      # ======================================================================
+      # EXAMPLE 4: Using card-mod for styling (Already installed)
+      # ======================================================================
+      - type: grid
+        cards:
+          - type: heading
+            heading: Card Mod (Styled)
+            heading_style: title
+            icon: mdi:palette
+            badges: []
+          
+          # Picture entity with card-mod styling
+          - type: conditional
+            conditions:
+              - entity: input_boolean.camera_a1_expanded
+                state: "off"
+            card:
+              type: picture-entity
+              entity: camera.a1_camera
+              camera_view: live
+              show_name: false
+              show_state: false
+              grid_options:
+                columns: 4
+                rows: 3
+              tap_action:
+                action: toggle
+                entity_id: input_boolean.camera_a1_expanded
+              card_mod:
+                style: |
+                  ha-card {
+                    border-radius: 12px;
+                    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+                    transition: all 0.3s ease;
+                  }
+                  ha-card:active {
+                    transform: scale(0.98);
+                  }
+          
+          - type: conditional
+            conditions:
+              - entity: input_boolean.camera_a1_expanded
+                state: "on"
+            card:
+              type: picture-entity
+              entity: camera.a1_camera
+              camera_view: live
+              show_name: false
+              show_state: false
+              grid_options:
+                columns: full
+                rows: 12
+              tap_action:
+                action: toggle
+                entity_id: input_boolean.camera_a1_expanded
+              card_mod:
+                style: |
+                  ha-card {
+                    border-radius: 16px;
+                    box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+                    transition: all 0.3s ease;
+                  }
+          
+          column_span: 3
+

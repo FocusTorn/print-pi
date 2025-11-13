@@ -1,0 +1,83 @@
+type: vertical-stack
+cards:
+  - type: conditional
+    conditions:
+      - condition: state
+        entity: fan.a1_aux_fan
+        state_not: unavailable
+      - condition: state
+        entity: sensor.a1_aux_fan
+        state_not: unknown
+    card:
+      type: custom:mushroom-fan-card
+      entity: fan.a1_aux_fan
+      name: Aux Fan
+      icon_animation: true
+      show_percentage_control: true
+      fill_container: false
+      layout: horizontal
+  - type: conditional
+    card:
+      type: custom:mushroom-fan-card
+      entity: fan.a1_chamber_fan
+      name: Chamber Fan
+      icon_animation: true
+      show_percentage_control: true
+      fill_container: false
+      layout: horizontal
+    conditions:
+      - condition: state
+        entity: fan.a1_chamber_fan
+        state_not: unavailable
+      - condition: state
+        entity: sensor.a1_chamber_fan
+        state_not: unknown
+  - type: conditional
+    card:
+      type: custom:mushroom-fan-card
+      entity: fan.a1_cooling_fan
+      name: Part Cooling Fan
+      icon_animation: true
+      show_percentage_control: true
+      fill_container: false
+      layout: horizontal
+    conditions:
+      - condition: state
+        entity: fan.a1_cooling_fan
+        state_not: unavailable
+      - condition: state
+        entity: sensor.a1_cooling_fan
+        state_not: unknown
+  - type: conditional
+    card:
+      type: custom:mushroom-number-card
+      entity: number.a1_nozzle_target_temperature
+      name: Set Nozzle Temp
+      layout: horizontal
+      display_mode: buttons
+    conditions:
+      - condition: state
+        entity: number.a1_nozzle_target_temperature
+        state_not: unavailable
+  - type: conditional
+    card:
+      type: custom:mushroom-number-card
+      entity: number.a1_bed_target_temperature
+      name: Set Bed Temp
+      display_mode: buttons
+      layout: horizontal
+    conditions:
+      - condition: state
+        entity: number.a1_bed_target_temperature
+        state_not: unavailable
+  - type: conditional
+    card:
+      type: custom:mushroom-number-card
+      entity: number.a1_chamber_target_temperature
+      name: Set Chamber Temp
+      display_mode: buttons
+      layout: horizontal
+    conditions:
+      - condition: state
+        entity: number.a1_chamber_target_temperature
+        state_not: unavailable

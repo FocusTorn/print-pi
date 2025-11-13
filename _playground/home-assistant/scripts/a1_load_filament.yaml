@@ -1,0 +1,68 @@
+# Bambu Lab A1 Load Filament Script
+# Loads filament from external spool or AMS tray
+# When using !include_dir_named, filename (a1_load_filament) becomes the script ID
+
+alias: "A1 Load Filament"
+description: "Load filament into the extruder from external spool or AMS tray"
+icon: mdi:printer-3d-nozzle
+fields:
+  entity_id:
+    description: "The external spool or AMS tray entity to load from"
+    example: "sensor.a1_external_spool_external_spool"
+    required: true
+    selector:
+      entity:
+        domain:
+          - sensor
+          - binary_sensor
+        integration: bambu_lab
+  temperature:
+    description: "Target nozzle temperature in Celsius (optional, uses filament default if not specified)"
+    example: 220
+    required: false
+    selector:
+      number:
+        min: 0
+        max: 300
+        step: 1
+        unit_of_measurement: "°C"
+sequence:
+  # Log the action
+  - service: logbook.log
+    data:
+      name: A1 Filament Load
+      message: "{% if temperature is defined and temperature | int > 0 %}Loading filament from {{ entity_id }} at {{ temperature }}°C{% elif states('sensor.a1_nozzle_target_temperature') | float(0) > 0 %}Loading filament from {{ entity_id }} at {{ states('sensor.a1_nozzle_target_temperature') | int }}°C (target temp){% else %}Loading filament from {{ entity_id }} using filament default temperature{% endif %}"
+      entity_id: "{{ entity_id }}"
+  
+  # Call the load_filament service
+  # Temperature: use provided value, or target temperature, or filament default
+  - choose:
+      - conditions:
+          - condition: template
+            value_template: "{{ temperature is defined and temperature | int > 0 }}"
+        sequence:
+          - service: bambu_lab.load_filament
+            target:
+              entity_id: "{{ entity_id }}"
+            data:
+              temperature: "{{ temperature | int }}"
+      - conditions:
+          - condition: template
+            value_template: "{{ states('sensor.a1_nozzle_target_temperature') | float(0) > 0 }}"
+        sequence:
+          - service: bambu_lab.load_filament
+            target:
+              entity_id: "{{ entity_id }}"
+            data:
+              temperature: "{{ states('sensor.a1_nozzle_target_temperature') | int }}"
+      - conditions: []
+        sequence:
+          - service: bambu_lab.load_filament
+            target:
+              entity_id: "{{ entity_id }}"
+  
+  # Notify completion
+  - service: notify.persistent_notification
+    data:
+      title: "A1 Filament Load Started"
+      message: "Loading filament from {{ entity_id }}{% if temperature is defined and temperature | int > 0 %} at {{ temperature }}°C{% elif states('sensor.a1_nozzle_target_temperature') | float(0) > 0 %} at {{ states('sensor.a1_nozzle_target_temperature') | int }}°C (target temp){% else %} using filament default temperature{% endif %}"

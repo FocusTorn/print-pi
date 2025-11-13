@@ -1,0 +1,33 @@
+# Input Number Helpers for Node-RED Status and Control
+# Include this file in configuration.yaml with: input_number: !include input_numbers.yaml
+# These can be used by Node-RED to report status and accept control values
+
+# Node-RED Flow Status (0-100)
+nodered_flow_status:
+  name: Node-RED Flow Status
+  icon: mdi:percent
+  min: 0
+  max: 100
+  step: 1
+  unit_of_measurement: "%"
+  initial: 0
+
+# Node-RED Flow Counter
+nodered_flow_counter:
+  name: Node-RED Flow Executions
+  icon: mdi:counter
+  min: 0
+  max: 999999
+  step: 1
+  initial: 0
+
+# Node-RED Flow Duration (seconds)
+nodered_flow_duration:
+  name: Node-RED Flow Duration
+  icon: mdi:timer
+  min: 0
+  max: 3600
+  step: 1
+  unit_of_measurement: "s"
+  initial: 0
+
