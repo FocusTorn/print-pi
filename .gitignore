@@ -28,6 +28,9 @@ Thumbs.db
 *.crt
 .secrets/
 
+# GPG keys and configuration (contains private keys)
+.gnupg/
+
 # Large directories
 Videos/
 Downloads/
@@ -83,37 +86,70 @@ printer_data
 .xsession*
 
 # .config selective ignoring
-.config/kanshi/
-.config/pulse/
-.config/wf-panel-pi/
+.config/kanshi
+.config/pulse
+.config/wf-panel-pi
+.config/labwc
+
 
 # .local selective ignoring
-.local/share/
-.local/state/
+.local/share
+.local/state
+.local/bin
 
 # .oh-my-zsh - ignore entire directory (it's just a framework + our custom is symlinked from _playground)
 .oh-my-zsh/
 
 
 # SSH security
+.ssh
 .ssh/authorized_keys
 
 
 
 
-.config/labwc/environment
+
+
+
+
+
+
+
+
+###########################################
+
+.symlink-db
+
 
 
 _removed
 
-test-source.txt
-.symlink-db
+
+
+
+
+
+
 homeassistant
-_ha-backups
-.ssh
-ide_state.json
+grafana
+
 
 go
 go-workspace
 
-_cacache
+
+
+
+
+
+
+
+#  Node Red  ###############################################
+
+.npm/_cacache/
+nodered/.npm
+nodered/*.backup*
+nodered/package-lock.json
+nodered/package.json
+
+.secrets
