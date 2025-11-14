@@ -476,112 +476,67 @@ main() {
         print_warning "Falling back to simple prompts..."
     fi
     
+    # Wizard configuration for installation steps
+    INSTALL_WIZARD_CONFIG='
+{
+    "title": "BME680 Service Installation",
+    "steps": [
+        {
+            "type": "multiselect",
+            "message": "ℹ️  Which services would you like to install?",
+            "options": [
+                "Base readings (MQTT) - Includes sensor readings and heatsoak calculations",
+                "IAQ monitor (MQTT) - Air quality calculation"
+            ],
+            "preselect": [0]
+        },
+        {
+            "type": "multiselect",
+            "message": "ℹ️  Which installation(s) would you like to perform?",
+            "options": [
+                "Standalone MQTT",
+                "Home Assistant MQTT Integration",
+                "Home Assistant Custom Integration"
+            ],
+            "preselect": [0, 1]
+        },
+        {
+            "type": "confirm",
+            "message": "ℹ️  Install Mosquitto MQTT broker?",
+            "initial": true
+        }
+    ]
+}
+'
+    
     # Use iWizard for installation steps
-    if type iwizard_run >/dev/null 2>&1 && [ -t 0 ] && [ -t 1 ]; then
-        # Step 1: Select services to install
-        local step1=(
-            "multiselect"
-            "ℹ️  Which services would you like to install?"
-            "Base readings (MQTT) - Includes sensor readings and heatsoak calculations"
-            "IAQ monitor (MQTT) - Air quality calculation"
-            "--preselect" "0"
-        )
+    if type iwizard_run_inline >/dev/null 2>&1 && [ -t 0 ] && [ -t 1 ]; then
+        wizard_results=$(iwizard_run_inline "$INSTALL_WIZARD_CONFIG")
+        wizard_exit=$?
         
-        # Step 2: Select installation types
-        local step2=(
-            "multiselect"
-            "ℹ️  Which installation(s) would you like to perform?"
-            "Standalone MQTT"
-            "Home Assistant MQTT Integration"
-            "Home Assistant Custom Integration"
-            "--preselect" "0 1"
-        )
-        
-        # Step 3: MQTT broker installation (only if MQTT selected)
-        local step3=(
-            "confirm"
-            "ℹ️  Install Mosquitto MQTT broker?"
-            "--default" "true"
-        )
-        
-        # Run wizard - iWizard expects variable names, not arrays directly
-        # We need to use iprompt_run for each step instead, or define variables
-        # For now, let's use iprompt_run directly for each step
-        local step1_result
-        step1_result=$(iprompt_run "step1" "${step1[@]}")
-        local step1_exit=$?
-        
-        if [ $step1_exit -ne 0 ]; then
+        if [ $wizard_exit -ne 0 ]; then
             print_info "Installation cancelled"
             exit 0
         fi
         
-        local step2_result
-        step2_result=$(iprompt_run "step2" "${step2[@]}")
-        local step2_exit=$?
-        
-        if [ $step2_exit -eq 2 ]; then
-            # Back button - restart from step 1
-            step1_result=$(iprompt_run "step1" "${step1[@]}")
-            step1_exit=$?
-            if [ $step1_exit -ne 0 ]; then
-                print_info "Installation cancelled"
-                exit 0
-            fi
-            step2_result=$(iprompt_run "step2" "${step2[@]}")
-            step2_exit=$?
-        fi
-        
-        if [ $step2_exit -ne 0 ]; then
-            print_info "Installation cancelled"
-            exit 0
-        fi
+        # Parse results
+        # Multiselect results are space-separated indices like "0 1"
+        # Confirm results are "true" or "false"
+        step1_result=$(echo "$wizard_results" | jq -r '.step0.result' 2>/dev/null || echo "")
+        step2_result=$(echo "$wizard_results" | jq -r '.step1.result' 2>/dev/null || echo "")
+        step3_result=$(echo "$wizard_results" | jq -r '.step2.result' 2>/dev/null || echo "")
         
         # Only ask about broker if MQTT is selected
-        local want_mqtt=false
+        want_mqtt=false
         for idx in $step2_result; do
             case $idx in
                 0|1) want_mqtt=true ;;
             esac
         done
         
-        local step3_result="false"
-        if [ "$want_mqtt" = true ]; then
-            step3_result=$(iprompt_run "step3" "${step3[@]}")
-            local step3_exit=$?
-            
-            if [ $step3_exit -eq 2 ]; then
-                # Back button - go to step 2
-                step2_result=$(iprompt_run "step2" "${step2[@]}")
-                step2_exit=$?
-                if [ $step2_exit -ne 0 ]; then
-                    print_info "Installation cancelled"
-                    exit 0
-                fi
-                # Re-check if MQTT selected
-                want_mqtt=false
-                for idx in $step2_result; do
-                    case $idx in
-                        0|1) want_mqtt=true ;;
-                    esac
-                done
-                if [ "$want_mqtt" = true ]; then
-                    step3_result=$(iprompt_run "step3" "${step3[@]}")
-                    step3_exit=$?
-                    if [ $step3_exit -ne 0 ]; then
-                        print_info "Installation cancelled"
-                        exit 0
-                    fi
-                fi
-            elif [ $step3_exit -ne 0 ]; then
-                print_info "Installation cancelled"
-                exit 0
-            fi
-        fi
-        
         # Parse step1: services
-        local install_base=false
-        local install_iaq=false
+        install_base=false
+        install_iaq=false
         for idx in $step1_result; do
             case $idx in
                 0) install_base=true ;;
@@ -590,9 +545,9 @@ main() {
         done
         
         # Parse step2: installation types
-        local do_standalone=false
-        local do_ha_mqtt=false
-        local do_ha_integration=false
+        do_standalone=false
+        do_ha_mqtt=false
+        do_ha_integration=false
         for idx in $step2_result; do
             case $idx in
                 0) do_standalone=true ;;
@@ -601,9 +556,9 @@ main() {
             esac
         done
         
-        # Parse step3: broker installation
-        local install_broker=false
-        if [ "$step3_result" = "true" ]; then
+        # Parse step3: broker installation (only if MQTT selected)
+        install_broker=false
+        if [ "$want_mqtt" = true ] && [ "$step3_result" = "true" ]; then
             install_broker=true
         fi
     else

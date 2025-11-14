@@ -49,7 +49,7 @@ mqtt:
         name: "BME680 Heat Soak Monitor (MQTT)"
         model: "BME680"
         manufacturer: "Bosch"
-    
+      
     # Max Rate Since Soak Started
     - name: "BME680 Max Rate Since Soak Start (MQTT)"
       unique_id: "bme680_max_rate_since_soak_start_mqtt"

@@ -74,7 +74,7 @@ class UnifiedBME680Monitor:
             
         if not self.sensor.data.heat_stable:
             return False
-        
+            
         self.current_temp = self.sensor.data.temperature
         return True
     
@@ -221,7 +221,7 @@ class UnifiedBME680Monitor:
         
         raw_temp = self.sensor.data.temperature
         adjusted_temp = raw_temp + temp_offset
-        
+            
         # Build comprehensive readings dictionary
         readings = {
             # Base sensor readings
@@ -411,20 +411,20 @@ Examples:
                     # Publish to MQTT only at specified interval
                     should_publish = (current_time - last_publish_time) >= args.publish_interval
                     if should_publish:
-                        try:
-                            result = mqtt_client.publish(
+                    try:
+                        result = mqtt_client.publish(
                                 args.topic,
-                                json.dumps(readings),
-                                qos=1,
-                                retain=True  # Retain messages so HA gets last value on startup
-                            )
+                            json.dumps(readings),
+                            qos=1,
+                            retain=True  # Retain messages so HA gets last value on startup
+                        )
                             last_publish_time = current_time
-                            if not args.quiet:
+                        if not args.quiet:
                                 print(f"   ✅ Published to {args.topic}")
-                                sys.stdout.flush()
-                        except Exception as e:
-                            print(f"   ❌ MQTT publish failed: {e}", file=sys.stderr)
-                            sys.stderr.flush()
+                            sys.stdout.flush()
+                    except Exception as e:
+                        print(f"   ❌ MQTT publish failed: {e}", file=sys.stderr)
+                        sys.stderr.flush()
                 else:
                     if not args.quiet and not args.json:
                         print("⏳ Waiting for heat stable reading...")

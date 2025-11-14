@@ -2060,7 +2060,7 @@
                 "t": "set",
                 "p": "printer_name",
                 "pt": "flow",
-                "to": "A1",
+                "to": "A1_NodeRed",
                 "tot": "str"
             },
             {

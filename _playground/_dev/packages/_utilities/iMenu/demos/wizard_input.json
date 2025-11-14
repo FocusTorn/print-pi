@@ -1,0 +1,23 @@
+{
+    "title": "Service Installation Wizard",
+    "steps": [
+        {
+            "type": "confirm",
+            "message": "ℹ️  Proceed?",
+            "initial": true
+        },
+        // This is a single-line comment
+        {
+            "type": "multiselect",
+            "message": "ℹ️  Which services?",
+            "options": [
+                "Sensor readings",
+                "IAQ (Air quality calculation)",
+                "Heat soak detection"
+            ],
+            "preselect": [0]
+        }
+        /* This is a
+           multi-line comment */
+    ]
+}

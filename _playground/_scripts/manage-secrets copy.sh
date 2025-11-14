@@ -336,138 +336,61 @@ Security Notes:
 EOF
 } #<
 
-# Wizard configuration for interactive menu
-WIZARD_CONFIG='
-{
-    "title": "Secrets Management",
-    "steps": [
-        {
-            "type": "select",
-            "message": "ℹ️  What would you like to do?",
-            "options": [
-                "Initialize secrets file",
-                "Edit secrets",
-                "View secrets",
-                "Export secrets to environment",
-                "Create encrypted backup",
-                "List encrypted backups",
-                "Restore secrets from backup",
-                "Show help"
-            ]
-        }
-    ]
-}
-'
-
 # Main command handler
 if [ $# -eq 0 ]; then
-    # No command provided - show interactive wizard
-    if type iwizard_run_inline >/dev/null 2>&1 && [ -t 0 ] && [ -t 1 ]; then
-        wizard_results=$(iwizard_run_inline "$WIZARD_CONFIG")
-        wizard_exit=$?
-        
-        if [ $wizard_exit -ne 0 ]; then
-            print_info "Cancelled"
-            exit 0
-        fi
-        
-        # Parse results
-        choice_idx=$(echo "$wizard_results" | jq -r '.step0.result' 2>/dev/null || echo "")
-        
-        if [ -z "$choice_idx" ] || [ "$choice_idx" = "null" ]; then
+    # No command provided - show interactive menu
+    COMMAND_OPTIONS=(
+        "Initialize secrets file"
+        "Edit secrets"
+        "View secrets"
+        "Export secrets to environment"
+        "Create encrypted backup"
+        "List encrypted backups"
+        "Restore secrets from backup"
+        "Show help"
+    )
+    
+    IMENU_HINT="Use ↑↓ to navigate, Enter to select"
+    choice_idx=$(imenu_select "action" "What would you like to do?" \
+        "${COMMAND_OPTIONS[@]}")
+    
+    case "$choice_idx" in
+        0)
+            init_secrets
+            ;;
+        1)
+            edit_secrets
+            ;;
+        2)
+            view_secrets
+            ;;
+        3)
+            export_secrets
+            ;;
+        4)
+            backup_secrets
+            ;;
+        5)
+            list_backups
+            ;;
+        6)
+            print_info "Enter path to backup file:"
+            backup_path=$(imenu_text "backup_path" "Backup file path:")
+            if [ -n "$backup_path" ]; then
+                restore_secrets "$backup_path"
+            else
+                print_error "No backup path provided"
+                exit 1
+            fi
+            ;;
+        7)
+            show_help
+            ;;
+        *)
             print_error "Invalid selection"
             exit 1
-        fi
-        
-        case "$choice_idx" in
-            0)
-                init_secrets
-                ;;
-            1)
-                edit_secrets
-                ;;
-            2)
-                view_secrets
-                ;;
-            3)
-                export_secrets
-                ;;
-            4)
-                backup_secrets
-                ;;
-            5)
-                list_backups
-                ;;
-            6)
-                # Restore requires a backup path - prompt for it
-                RESTORE_WIZARD_CONFIG='
-{
-    "title": "Restore Secrets",
-    "steps": [
-        {
-            "type": "text",
-            "message": "ℹ️  Enter path to backup file:",
-            "initial": ""
-        }
-    ]
-}
-'
-                restore_results=$(iwizard_run_inline "$RESTORE_WIZARD_CONFIG")
-                restore_exit=$?
-                
-                if [ $restore_exit -ne 0 ]; then
-                    print_info "Cancelled"
-                    exit 0
-                fi
-                
-                backup_path=$(echo "$restore_results" | jq -r '.step0.result' 2>/dev/null || echo "")
-                if [ -n "$backup_path" ] && [ "$backup_path" != "null" ]; then
-                    restore_secrets "$backup_path"
-                else
-                    print_error "No backup path provided"
-                    exit 1
-                fi
-                ;;
-            7)
-                show_help
-                ;;
-            *)
-                print_error "Invalid selection"
-                exit 1
-                ;;
-        esac
-    else
-        # Fallback to simple prompt
-        echo "What would you like to do?"
-        echo "  1) Initialize secrets file"
-        echo "  2) Edit secrets"
-        echo "  3) View secrets"
-        echo "  4) Export secrets to environment"
-        echo "  5) Create encrypted backup"
-        echo "  6) List encrypted backups"
-        echo "  7) Restore secrets from backup"
-        echo "  8) Show help"
-        read -p "Choice [1-8]: " choice
-        case "$choice" in
-            1) init_secrets ;;
-            2) edit_secrets ;;
-            3) view_secrets ;;
-            4) export_secrets ;;
-            5) backup_secrets ;;
-            6) list_backups ;;
-            7)
-                read -p "Enter path to backup file: " backup_path
-                if [ -n "$backup_path" ]; then
-                    restore_secrets "$backup_path"
-                else
-                    print_error "No backup path provided"
-                    exit 1
-                fi
-                ;;
-            8) show_help ;;
-            *) print_error "Invalid choice"; exit 1 ;;
-        esac
-    fi
+            ;;
+    esac
 else
     # Command provided - use traditional command-line interface
     case "$1" in

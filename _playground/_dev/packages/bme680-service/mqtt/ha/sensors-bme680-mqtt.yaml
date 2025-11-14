@@ -59,7 +59,7 @@ mqtt:
         name: "BME680 Environmental Sensor (MQTT)"
         model: "BME680"
         manufacturer: "Bosch"
-    
+
     # Heatsoak Calculated Values
     - name: "BME680 Smoothed Temperature (MQTT)"
       unique_id: "bme680_smoothed_temperature_mqtt"
@@ -74,7 +74,7 @@ mqtt:
         name: "BME680 Environmental Sensor (MQTT)"
         model: "BME680"
         manufacturer: "Bosch"
-    
+
     - name: "BME680 Smoothed Change Rate (MQTT)"
       unique_id: "bme680_smoothed_change_rate_mqtt"
       state_topic: "sensors/bme680/raw"
@@ -88,7 +88,7 @@ mqtt:
         name: "BME680 Environmental Sensor (MQTT)"
         model: "BME680"
         manufacturer: "Bosch"
-    
+
     - name: "BME680 Max Rate Since Soak Start (MQTT)"
       unique_id: "bme680_max_rate_since_soak_start_mqtt"
       state_topic: "sensors/bme680/raw"

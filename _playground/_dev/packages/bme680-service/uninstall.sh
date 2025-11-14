@@ -70,6 +70,35 @@ uninstall_service() {
     print_success "Uninstalled $service_name"
 }
 
+# Clean up any remaining bme680 service files (including backups and deprecated services)
+cleanup_all_service_files() {
+    print_info "Cleaning up any remaining bme680 service files..."
+    
+    # Find all bme680 service files
+    local service_files
+    service_files=$(find /etc/systemd/system -name "*bme680*" -type f 2>/dev/null)
+    
+    if [ -n "$service_files" ]; then
+        while IFS= read -r service_file; do
+            if [ -f "$service_file" ]; then
+                local service_name
+                service_name=$(basename "$service_file")
+                # Remove .backup extension if present to get actual service name
+                local actual_service="${service_name%.backup}"
+                actual_service="${actual_service%.service}"
+                
+                print_info "  Removing $service_name..."
+                systemctl stop "$actual_service.service" 2>/dev/null || true
+                systemctl disable "$actual_service.service" 2>/dev/null || true
+                rm -f "$service_file"
+                print_success "  Removed $service_name"
+            fi
+        done <<< "$service_files"
+    else
+        print_info "  No additional service files found"
+    fi
+}
+
 print_info "BME680 Service Uninstallation"
 echo
 
@@ -120,22 +149,76 @@ if [ ${#menu_options[@]} -eq 0 ]; then
     exit 0
 fi
 
-# Step 1: Prompt for services to uninstall
-print_info "Select services to uninstall:"
-echo
+# Build wizard configuration with all steps dynamically
+# Start with base config
+UNINSTALL_WIZARD_CONFIG='{"title": "BME680 Service Uninstallation", "steps": []}'
 
-if type iprompt_run >/dev/null 2>&1 && [ -t 0 ] && [ -t 1 ]; then
-    step1=(
-        "multiselect"
-        "ℹ️  Which services would you like to uninstall?"
-        "${menu_options[@]}"
-    )
+# Step 1: Services to uninstall (always present)
+if [ ${#menu_options[@]} -gt 0 ]; then
+    # Convert menu_options array to JSON array format
+    options_json="["
+    first=true
+    for option in "${menu_options[@]}"; do
+        if [ "$first" = true ]; then
+            first=false
+        else
+            options_json="$options_json,"
+        fi
+        # Escape quotes in option text
+        escaped_option=$(echo "$option" | sed 's/"/\\"/g')
+        options_json="$options_json\"$escaped_option\""
+    done
+    options_json="$options_json]"
     
-    wizard_result=$(iprompt_run "uninstall_services" "${step1[@]}")
+    # Add services step
+    step1=$(cat <<EOF
+{
+    "type": "multiselect",
+    "message": "ℹ️  Which services would you like to uninstall?",
+    "options": $options_json
+}
+EOF
+)
+    UNINSTALL_WIZARD_CONFIG=$(echo "$UNINSTALL_WIZARD_CONFIG" | jq --argjson step "$step1" '.steps += [$step]' 2>/dev/null || echo "$UNINSTALL_WIZARD_CONFIG")
+fi
+
+# Step 2: HA integration removal (conditional)
+if [ -f "$HA_PKG_DIR/bme680_mqtt.yaml" ] || [ -f "$HA_PKG_DIR/bme680_heatsoak_mqtt.yaml" ] || [ -f "$HA_PKG_DIR/bme680_heatsoak_mqtt.yaml.disabled" ] || [ -d "$HA_CUSTOM_COMPONENTS" ]; then
+    step2='{"type": "confirm", "message": "ℹ️  Remove Home Assistant integration files (MQTT packages and custom component)?", "initial": false}'
+    UNINSTALL_WIZARD_CONFIG=$(echo "$UNINSTALL_WIZARD_CONFIG" | jq --argjson step "$step2" '.steps += [$step]' 2>/dev/null || echo "$UNINSTALL_WIZARD_CONFIG")
+fi
+
+# Step 3: Config removal (conditional)
+if [ -d "$CONFIG_DIR" ]; then
+    # Escape config dir path for JSON
+    config_dir_escaped=$(echo "$CONFIG_DIR" | sed 's/"/\\"/g')
+    step3="{\"type\": \"confirm\", \"message\": \"ℹ️  Remove configuration files ($config_dir_escaped)?\", \"initial\": false}"
+    UNINSTALL_WIZARD_CONFIG=$(echo "$UNINSTALL_WIZARD_CONFIG" | jq --argjson step "$step3" '.steps += [$step]' 2>/dev/null || echo "$UNINSTALL_WIZARD_CONFIG")
+fi
+
+# Step 4: Final confirmation (always present)
+step4='{"type": "confirm", "message": "ℹ️  Proceed with uninstallation?", "initial": false}'
+UNINSTALL_WIZARD_CONFIG=$(echo "$UNINSTALL_WIZARD_CONFIG" | jq --argjson step "$step4" '.steps += [$step]' 2>/dev/null || echo "$UNINSTALL_WIZARD_CONFIG")
+
+# Run single wizard with all steps
+if type iwizard_run_inline >/dev/null 2>&1 && [ -t 0 ] && [ -t 1 ]; then
+    wizard_results=$(iwizard_run_inline "$UNINSTALL_WIZARD_CONFIG")
     wizard_exit=$?
     
-    if [ $wizard_exit -ne 0 ] || [ -z "$wizard_result" ]; then
+    if [ $wizard_exit -ne 0 ]; then
         print_info "Uninstallation cancelled"
+        exit 0
+    fi
+    
+    # Parse results - step indices depend on which conditional steps were included
+    step_idx=0
+    
+    # Step 1: Services (always step0)
+    wizard_result=$(echo "$wizard_results" | jq -r ".step${step_idx}.result" 2>/dev/null || echo "")
+    step_idx=$((step_idx + 1))
+    
+    if [ -z "$wizard_result" ] || [ "$wizard_result" = "null" ]; then
+        print_info "No services selected. Uninstallation cancelled."
         exit 0
     fi
     
@@ -162,6 +245,33 @@ if type iprompt_run >/dev/null 2>&1 && [ -t 0 ] && [ -t 1 ]; then
                 ;;
         esac
     done
+    
+    # Step 2: HA integration (conditional)
+    if [ -f "$HA_PKG_DIR/bme680_mqtt.yaml" ] || [ -f "$HA_PKG_DIR/bme680_heatsoak_mqtt.yaml" ] || [ -f "$HA_PKG_DIR/bme680_heatsoak_mqtt.yaml.disabled" ] || [ -d "$HA_CUSTOM_COMPONENTS" ]; then
+        ha_result=$(echo "$wizard_results" | jq -r ".step${step_idx}.result" 2>/dev/null || echo "false")
+        step_idx=$((step_idx + 1))
+        if [ "$ha_result" = "true" ]; then
+            remove_ha_integration=true
+        fi
+    fi
+    
+    # Step 3: Config removal (conditional)
+    if [ -d "$CONFIG_DIR" ]; then
+        config_result=$(echo "$wizard_results" | jq -r ".step${step_idx}.result" 2>/dev/null || echo "false")
+        step_idx=$((step_idx + 1))
+        if [ "$config_result" = "true" ]; then
+            remove_config=true
+        fi
+    fi
+    
+    # Step 4: Final confirmation (always last)
+    confirm_result=$(echo "$wizard_results" | jq -r ".step${step_idx}.result" 2>/dev/null || echo "false")
+    if [ "$confirm_result" = "true" ]; then
+        proceed_with_uninstall=true
+    else
+        print_info "Uninstallation cancelled"
+        exit 0
+    fi
 elif type interactive_menu >/dev/null 2>&1 && [ -t 0 ] && [ -t 1 ]; then
     # Fallback to old interactive_menu if available
     selected=$(interactive_menu "${menu_options[@]}")
@@ -249,63 +359,13 @@ else
     fi
 fi
 
-# If no services selected, exit
+# If no services selected, exit (shouldn't happen with wizard, but check anyway)
 if [ ${#services_to_uninstall[@]} -eq 0 ]; then
     print_info "No services selected. Uninstallation cancelled."
     exit 0
 fi
 
-# Step 2: Prompt for HA integration removal
-if [ -f "$HA_PKG_DIR/bme680_mqtt.yaml" ] || [ -f "$HA_PKG_DIR/bme680_heatsoak_mqtt.yaml" ] || [ -f "$HA_PKG_DIR/bme680_heatsoak_mqtt.yaml.disabled" ] || [ -d "$HA_CUSTOM_COMPONENTS" ]; then
-    echo
-    if type iprompt_run >/dev/null 2>&1 && [ -t 0 ] && [ -t 1 ]; then
-        ha_step=(
-            "confirm"
-            "ℹ️  Remove Home Assistant integration files (MQTT packages and custom component)?"
-            "--default" "false"
-        )
-        
-        ha_result=$(iprompt_run "remove_ha_integration" "${ha_step[@]}")
-        ha_exit=$?
-        
-        if [ $ha_exit -eq 0 ] && [ "$ha_result" = "true" ]; then
-            remove_ha_integration=true
-        fi
-    else
-        read -p "Remove Home Assistant integration files? (y/N): " -n 1 -r
-        echo
-        if [[ $REPLY =~ ^[Yy]$ ]]; then
-            remove_ha_integration=true
-        fi
-    fi
-fi
-
-# Step 3: Prompt for config removal
-if [ -d "$CONFIG_DIR" ]; then
-    echo
-    if type iprompt_run >/dev/null 2>&1 && [ -t 0 ] && [ -t 1 ]; then
-        config_step=(
-            "confirm"
-            "ℹ️  Remove configuration files ($CONFIG_DIR)?"
-            "--default" "false"
-        )
-        
-        config_result=$(iprompt_run "remove_config" "${config_step[@]}")
-        config_exit=$?
-        
-        if [ $config_exit -eq 0 ] && [ "$config_result" = "true" ]; then
-            remove_config=true
-        fi
-    else
-        read -p "Remove configuration files from $CONFIG_DIR? (y/N): " -n 1 -r
-        echo
-        if [[ $REPLY =~ ^[Yy]$ ]]; then
-            remove_config=true
-        fi
-    fi
-fi
-
-# Step 4: Show summary and confirm to proceed
+# Show summary of what will be uninstalled
 echo
 print_info "The following will be uninstalled:"
 echo
@@ -344,33 +404,6 @@ fi
 
 echo
 
-# Step 5: Ask for final confirmation to proceed
-if type iprompt_run >/dev/null 2>&1 && [ -t 0 ] && [ -t 1 ]; then
-    confirm_step=(
-        "confirm"
-        "ℹ️  Proceed with uninstallation?"
-        "--default" "false"
-    )
-    
-    confirm_result=$(iprompt_run "confirm_uninstall" "${confirm_step[@]}")
-    confirm_exit=$?
-    
-    if [ $confirm_exit -ne 0 ] || [ "$confirm_result" != "true" ]; then
-        print_info "Uninstallation cancelled"
-        exit 0
-    fi
-    proceed_with_uninstall=true
-else
-    read -p "Proceed with uninstallation? (y/N): " -n 1 -r
-    echo
-    if [[ $REPLY =~ ^[Yy]$ ]]; then
-        proceed_with_uninstall=true
-    else
-        print_info "Uninstallation cancelled"
-        exit 0
-    fi
-fi
-
 # Now process all the options
 if [ "$proceed_with_uninstall" = true ]; then
     echo
@@ -381,6 +414,17 @@ if [ "$proceed_with_uninstall" = true ]; then
     
     print_info "Reloading systemd daemon..."
     systemctl daemon-reload
+    
+    # Clean up any remaining service files (backups, deprecated services, etc.)
+    cleanup_all_service_files
+    
+    # Kill any remaining bme680 processes
+    print_info "Stopping any remaining bme680 processes..."
+    pkill -f "bme680.*wrapper" 2>/dev/null || true
+    pkill -f "base-readings.py" 2>/dev/null || true
+    pkill -f "monitor-heatsoak.py" 2>/dev/null || true
+    pkill -f "monitor-iaq.py" 2>/dev/null || true
+    sleep 1  # Give processes time to stop
     
     # Remove package files and CLI automatically (no point keeping them without services)
     if [ -d "$INSTALL_ROOT" ]; then
@@ -415,10 +459,15 @@ if [ "$proceed_with_uninstall" = true ]; then
             print_success "Removed MQTT package: bme680_heatsoak_mqtt.yaml.disabled"
         fi
         
-        # Remove custom component
+        # Remove custom component (check both possible locations)
         if [ -d "$HA_CUSTOM_COMPONENTS" ]; then
             rm -rf "$HA_CUSTOM_COMPONENTS"
             print_success "Removed custom component: bme680_monitor"
+        fi
+        # Also check for old location (bme680-monitor instead of bme680_monitor)
+        if [ -d "$ORIGINAL_HOME/homeassistant/bme680-monitor" ]; then
+            rm -rf "$ORIGINAL_HOME/homeassistant/bme680-monitor"
+            print_success "Removed custom component (old location): bme680-monitor"
         fi
         
         echo

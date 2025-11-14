@@ -1,9 +1,11 @@
 #!/usr/bin/env bash
-# iMenu - Main Loader
-# Sources all core modules and prompt types
+# iPrompt - Single prompt wrapper
+# Provides a unified interface for running individual prompts
+# Used by iWizard and can be used directly for single prompts
 
 # Get directory of this script
-_IMENU_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+_IPROMPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+_IMENU_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 
 # Source core modules
 source "${_IMENU_DIR}/core/colors.sh"
@@ -25,10 +27,9 @@ source "${_IMENU_DIR}/_prompts/invisible.sh"
 source "${_IMENU_DIR}/_prompts/autocomplete.sh"
 source "${_IMENU_DIR}/_prompts/date.sh"
 
-# Source public modules
-source "${_IMENU_DIR}/iPrompt/iPrompt.sh"
-source "${_IMENU_DIR}/iWizard/iWizard.sh"
+# Source dispatcher
+source "${_IPROMPT_DIR}/core/prompt-dispatcher.sh"
 
-# Clean up temporary variable
-unset _IMENU_DIR
+# Clean up temporary variables (keep _IMENU_DIR for iWizard)
+unset _IPROMPT_DIR
 
