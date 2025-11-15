@@ -27,8 +27,6 @@
               "items": {
                 "type": "string",
                 "enum": [
-                  "outlet",
-                  "switch",
                   "identify",
                   "restart",
                   "update",
@@ -46,7 +44,9 @@
                   "speaker",
                   "receiver",
                   "water",
-                  "gas"
+                  "gas",
+                  "outlet",
+                  "switch"
                 ]
               }
             }
@@ -79,8 +79,6 @@
               "items": {
                 "type": "string",
                 "enum": [
-                  "outlet",
-                  "switch",
                   "identify",
                   "restart",
                   "update",
@@ -98,7 +96,9 @@
                   "speaker",
                   "receiver",
                   "water",
-                  "gas"
+                  "gas",
+                  "outlet",
+                  "switch"
                 ]
               }
             }
@@ -424,39 +424,6 @@
         }
       },
       {
-        "name": "HassFanSetSpeed",
-        "description": "Sets a fan's speed by percentage",
-        "inputSchema": {
-          "type": "object",
-          "properties": {
-            "name": {
-              "type": "string"
-            },
-            "area": {
-              "type": "string"
-            },
-            "floor": {
-              "type": "string"
-            },
-            "domain": {
-              "type": "array",
-              "items": {
-                "type": "string",
-                "enum": [
-                  "fan"
-                ]
-              }
-            },
-            "percentage": {
-              "type": "integer",
-              "minimum": 0,
-              "maximum": 100,
-              "description": "The speed percentage of the fan"
-            }
-          }
-        }
-      },
-      {
         "name": "HassLightSet",
         "description": "Sets the brightness percentage or color of a light",
         "inputSchema": {
@@ -489,6 +456,39 @@
               "minimum": 0,
               "maximum": 100,
               "description": "The brightness percentage of the light between 0 and 100, where 0 is off and 100 is fully lit"
+            }
+          }
+        }
+      },
+      {
+        "name": "HassFanSetSpeed",
+        "description": "Sets a fan's speed by percentage",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "area": {
+              "type": "string"
+            },
+            "floor": {
+              "type": "string"
+            },
+            "domain": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "fan"
+                ]
+              }
+            },
+            "percentage": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 100,
+              "description": "The speed percentage of the fan"
             }
           }
         }

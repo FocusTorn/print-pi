@@ -1,0 +1,20 @@
+#!/bin/bash
+# Minimal HA logs viewer - shows warnings and errors
+
+CONTAINER_NAME="homeassistant"
+LINES=${1:-1000}
+FILTER=${2:-all}
+
+case "$FILTER" in
+    error)
+        docker logs "$CONTAINER_NAME" --tail "$LINES" 2>&1 | grep "ERROR"
+        ;;
+    warning)
+        docker logs "$CONTAINER_NAME" --tail "$LINES" 2>&1 | grep -E "(WARNING|ERROR)"
+        ;;
+    all|*)
+        docker logs "$CONTAINER_NAME" --tail "$LINES" 2>&1 | grep -E "(WARNING|ERROR)"
+        ;;
+esac
+
+

@@ -8,7 +8,9 @@ Pictures/
 Music/
 
 # Runtime data (already ignored by .gitignore, but explicitly here for Cursor)
-homeassistant/
+# homeassistant/
+# homeassistant/customize.yaml
+
 _ha-backups/
 printer_data/
 

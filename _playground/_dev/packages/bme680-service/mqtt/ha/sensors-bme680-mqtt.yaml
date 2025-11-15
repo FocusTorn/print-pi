@@ -6,7 +6,7 @@ mqtt:
   sensor:
     # Base Sensor Readings
     - name: "BME680 Temperature (MQTT)"
-      unique_id: "bme680_temperature_mqtt"
+      unique_id: "bme680_temperature"
       state_topic: "sensors/bme680/raw"
       value_template: "{{ value_json.temperature | float }}"
       unit_of_measurement: "°C"
@@ -20,7 +20,7 @@ mqtt:
         manufacturer: "Bosch"
 
     - name: "BME680 Humidity (MQTT)"
-      unique_id: "bme680_humidity_mqtt"
+      unique_id: "bme680_humidity"
       state_topic: "sensors/bme680/raw"
       value_template: "{{ value_json.humidity | float }}"
       unit_of_measurement: "%"
@@ -34,7 +34,7 @@ mqtt:
         manufacturer: "Bosch"
 
     - name: "BME680 Pressure (MQTT)"
-      unique_id: "bme680_pressure_mqtt"
+      unique_id: "bme680_pressure"
       state_topic: "sensors/bme680/raw"
       value_template: "{{ value_json.pressure | float }}"
       unit_of_measurement: "hPa"
@@ -48,7 +48,7 @@ mqtt:
         manufacturer: "Bosch"
 
     - name: "BME680 Gas Resistance (MQTT)"
-      unique_id: "bme680_gas_resistance_mqtt"
+      unique_id: "bme680_gas_resistance"
       state_topic: "sensors/bme680/raw"
       value_template: "{{ value_json.gas_resistance | float }}"
       unit_of_measurement: "Ω"
@@ -64,7 +64,7 @@ mqtt:
     - name: "BME680 Smoothed Temperature (MQTT)"
       unique_id: "bme680_smoothed_temperature_mqtt"
       state_topic: "sensors/bme680/raw"
-      value_template: "{{ value_json.smoothed_temp | float if value_json.smoothed_temp is not none else 'unknown' }}"
+      value_template: "{{ value_json.smoothed_temp | float if value_json.smoothed_temp is not none }}"
       unit_of_measurement: "°C"
       state_class: measurement
       icon: "mdi:thermometer"
@@ -78,7 +78,7 @@ mqtt:
     - name: "BME680 Smoothed Change Rate (MQTT)"
       unique_id: "bme680_smoothed_change_rate_mqtt"
       state_topic: "sensors/bme680/raw"
-      value_template: "{{ value_json.smoothed_change_rate | float if value_json.smoothed_change_rate is not none else 'unknown' }}"
+      value_template: "{{ value_json.smoothed_change_rate | float if value_json.smoothed_change_rate is not none }}"
       unit_of_measurement: "°C/min"
       icon: "mdi:trending-up"
       state_class: measurement
@@ -92,10 +92,116 @@ mqtt:
     - name: "BME680 Max Rate Since Soak Start (MQTT)"
       unique_id: "bme680_max_rate_since_soak_start_mqtt"
       state_topic: "sensors/bme680/raw"
-      value_template: "{{ value_json.max_rate_since_soak_start | float if value_json.max_rate_since_soak_start is not none else 'unknown' }}"
+      value_template: "{{ value_json.max_rate_since_soak_start | float if value_json.max_rate_since_soak_start is not none }}"
       unit_of_measurement: "°C/min"
       icon: "mdi:trending-up"
+      device:
+        identifiers:
+          - "bme680_mqtt"
+        name: "BME680 Environmental Sensor (MQTT)"
+        model: "BME680"
+        manufacturer: "Bosch"
+
+    # Heatsoak Configuration and Status
+    - name: "BME680 Temp Smoothing Buffer (MQTT)"
+      unique_id: "bme680_temp_smoothing_buffer_mqtt"
+      state_topic: "sensors/bme680/raw"
+      value_template: "{{ value_json.temp_smoothing_buffer | int }}"
+      unit_of_measurement: "readings"
+      icon: "mdi:counter"
       state_class: measurement
+      device:
+        identifiers:
+          - "bme680_mqtt"
+        name: "BME680 Environmental Sensor (MQTT)"
+        model: "BME680"
+        manufacturer: "Bosch"
+
+    - name: "BME680 Rate Smoothing Buffer (MQTT)"
+      unique_id: "bme680_rate_smoothing_buffer_mqtt"
+      state_topic: "sensors/bme680/raw"
+      value_template: "{{ value_json.rate_smoothing_buffer | int }}"
+      unit_of_measurement: "readings"
+      icon: "mdi:counter"
+      state_class: measurement
+      device:
+        identifiers:
+          - "bme680_mqtt"
+        name: "BME680 Environmental Sensor (MQTT)"
+        model: "BME680"
+        manufacturer: "Bosch"
+
+    - name: "BME680 Rate Start Type (MQTT)"
+      unique_id: "bme680_rate_start_type_mqtt"
+      state_topic: "sensors/bme680/raw"
+      value_template: "{{ value_json.rate_start_type }}"
+      icon: "mdi:format-list-bulleted-type"
+      device:
+        identifiers:
+          - "bme680_mqtt"
+        name: "BME680 Environmental Sensor (MQTT)"
+        model: "BME680"
+        manufacturer: "Bosch"
+
+    - name: "BME680 Rate Start Temp (MQTT)"
+      unique_id: "bme680_rate_start_temp_mqtt"
+      state_topic: "sensors/bme680/raw"
+      value_template: "{{ value_json.rate_start_temp | float }}"
+      unit_of_measurement: "°C"
+      icon: "mdi:thermometer"
+      state_class: measurement
+      device:
+        identifiers:
+          - "bme680_mqtt"
+        name: "BME680 Environmental Sensor (MQTT)"
+        model: "BME680"
+        manufacturer: "Bosch"
+
+    - name: "BME680 Rate Change Plateau (MQTT)"
+      unique_id: "bme680_rate_change_plateau_mqtt"
+      state_topic: "sensors/bme680/raw"
+      value_template: "{{ value_json.rate_change_plateau | float }}"
+      unit_of_measurement: "°C/min"
+      icon: "mdi:trending-flat"
+      state_class: measurement
+      device:
+        identifiers:
+          - "bme680_mqtt"
+        name: "BME680 Environmental Sensor (MQTT)"
+        model: "BME680"
+        manufacturer: "Bosch"
+
+    - name: "BME680 Target Temp (MQTT)"
+      unique_id: "bme680_target_temp_mqtt"
+      state_topic: "sensors/bme680/raw"
+      value_template: "{{ value_json.target_temp | float if value_json.target_temp is not none }}"
+      unit_of_measurement: "°C"
+      icon: "mdi:target"
+      device:
+        identifiers:
+          - "bme680_mqtt"
+        name: "BME680 Environmental Sensor (MQTT)"
+        model: "BME680"
+        manufacturer: "Bosch"
+
+    - name: "BME680 Initial Soak Temp (MQTT)"
+      unique_id: "bme680_initial_soak_temp_mqtt"
+      state_topic: "sensors/bme680/raw"
+      value_template: "{{ value_json.initial_soak_temp | float if value_json.initial_soak_temp is not none }}"
+      unit_of_measurement: "°C"
+      icon: "mdi:thermometer-low"
+      device:
+        identifiers:
+          - "bme680_mqtt"
+        name: "BME680 Environmental Sensor (MQTT)"
+        model: "BME680"
+        manufacturer: "Bosch"
+
+    - name: "BME680 Last Update Timestamp (MQTT)"
+      unique_id: "bme680_timestamp_mqtt"
+      state_topic: "sensors/bme680/raw"
+      value_template: "{{ value_json.timestamp | int }}"
+      icon: "mdi:clock-outline"
       device:
         identifiers:
           - "bme680_mqtt"
@@ -106,6 +212,7 @@ mqtt:
   binary_sensor:
     - name: "BME680 Heat Stable (MQTT)"
       unique_id: "bme680_heat_stable_mqtt"
+      default_entity_id: "binary_sensor.bme680_heat_stable"
       state_topic: "sensors/bme680/raw"
       value_template: "{{ 'on' if value_json.heat_stable == true else 'off' }}"
       device_class: connectivity
@@ -118,6 +225,7 @@ mqtt:
 
     - name: "BME680 Heat Soak Ready (MQTT)"
       unique_id: "bme680_heat_soak_ready_mqtt"
+      default_entity_id: "binary_sensor.bme680_heat_soak_ready"
       state_topic: "sensors/bme680/raw"
       value_template: "{{ 'on' if value_json.ready == true else 'off' }}"
       icon: "mdi:thermometer-check"
@@ -142,6 +250,45 @@ mqtt:
             'initial_soak_temp': value_json.initial_soak_temp
           } | tojson
         }}
+      device:
+        identifiers:
+          - "bme680_mqtt"
+        name: "BME680 Environmental Sensor (MQTT)"
+        model: "BME680"
+        manufacturer: "Bosch"
+
+    - name: "BME680 Temp OK (MQTT)"
+      unique_id: "bme680_temp_ok_mqtt"
+      default_entity_id: "binary_sensor.bme680_temp_ok"
+      state_topic: "sensors/bme680/raw"
+      value_template: "{{ 'on' if value_json.temp_ok == true else 'off' }}"
+      icon: "mdi:check-circle"
+      device:
+        identifiers:
+          - "bme680_mqtt"
+        name: "BME680 Environmental Sensor (MQTT)"
+        model: "BME680"
+        manufacturer: "Bosch"
+
+    - name: "BME680 Rate OK (MQTT)"
+      unique_id: "bme680_rate_ok_mqtt"
+      default_entity_id: "binary_sensor.bme680_rate_ok"
+      state_topic: "sensors/bme680/raw"
+      value_template: "{{ 'on' if value_json.rate_ok == true else 'off' }}"
+      icon: "mdi:check-circle"
+      device:
+        identifiers:
+          - "bme680_mqtt"
+        name: "BME680 Environmental Sensor (MQTT)"
+        model: "BME680"
+        manufacturer: "Bosch"
+
+    - name: "BME680 Soak Started (MQTT)"
+      unique_id: "bme680_soak_started_mqtt"
+      default_entity_id: "binary_sensor.bme680_soak_started"
+      state_topic: "sensors/bme680/raw"
+      value_template: "{{ 'on' if value_json.soak_started == true else 'off' }}"
+      icon: "mdi:play-circle"
       device:
         identifiers:
           - "bme680_mqtt"

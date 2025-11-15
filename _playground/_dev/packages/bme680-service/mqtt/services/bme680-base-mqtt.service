@@ -9,7 +9,7 @@ User=pi
 Group=pi
 WorkingDirectory=/home/pi/.local/share/bme680-service
 Environment="PATH=/home/pi/.local/share/bme680-service/.venv/bin:/usr/local/bin:/usr/bin:/bin"
-ExecStart=/home/pi/.local/share/bme680-service/bme680-base-readings-wrapper.sh
+ExecStart=/home/pi/.local/share/bme680-service/.venv/bin/python -u /home/pi/.local/share/bme680-service/mqtt/base-readings.py
 Restart=always
 RestartSec=5
 NoNewPrivileges=true

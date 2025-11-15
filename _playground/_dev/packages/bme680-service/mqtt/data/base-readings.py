@@ -37,6 +37,14 @@ except ImportError:
     print("⚠️  paho-mqtt not installed. MQTT features disabled.")
     print("   Install with: uv pip install paho-mqtt")
 
+try:
+    import yaml
+    YAML_AVAILABLE = True
+except ImportError:
+    YAML_AVAILABLE = False
+    print("⚠️  PyYAML not installed. Config file reading disabled.")
+    print("   Install with: uv pip install pyyaml")
+
 
 class UnifiedBME680Monitor:
     """BME680 monitor that includes base readings and heatsoak calculations."""
@@ -256,7 +264,61 @@ class UnifiedBME680Monitor:
         return readings
 
 
+def load_config(config_path: str = None) -> dict:
+    """Load configuration from YAML file.
+    
+    Args:
+        config_path: Path to config file. If None, uses default location.
+        
+    Returns:
+        Dictionary with config values, or empty dict if file not found.
+    """
+    if not YAML_AVAILABLE:
+        return {}
+    
+    if config_path is None:
+        config_path = Path.home() / ".config" / "bme680-monitor" / "config.yaml"
+    else:
+        config_path = Path(config_path)
+    
+    if not config_path.exists():
+        return {}
+    
+    try:
+        with open(config_path, 'r') as f:
+            config = yaml.safe_load(f) or {}
+        return config
+    except Exception as e:
+        print(f"⚠️  Warning: Failed to load config from {config_path}: {e}", file=sys.stderr)
+        return {}
+
+
+def get_config_value(config: dict, *keys, default=None):
+    """Safely get nested config value.
+    
+    Args:
+        config: Config dictionary
+        *keys: Nested keys to traverse (e.g., 'mqtt', 'read_interval')
+        default: Default value if key not found
+        
+    Returns:
+        Config value or default
+    """
+    value = config
+    for key in keys:
+        if isinstance(value, dict):
+            value = value.get(key)
+        else:
+            return default
+        if value is None:
+            return default
+    return value if value is not None else default
+
+
 def main():
+    # Load config file first
+    config = load_config()
+    
     parser = argparse.ArgumentParser(
         description='BME680 Unified Readings Publisher',
         formatter_class=argparse.RawDescriptionHelpFormatter,
@@ -270,46 +332,55 @@ Examples:
   
   # Single reading (no MQTT)
   base-readings.py --once
+  
+  # Use custom config file
+  base-readings.py --config /path/to/config.yaml
         """
     )
+    
+    # Config file override
+    parser.add_argument('--config', type=str, default=None,
+                       help='Path to config file (default: ~/.config/bme680-monitor/config.yaml)')
     
     # Reading mode
     parser.add_argument('--once', action='store_true',
                        help='Read once and exit (no MQTT)')
     
     # Calibration
-    parser.add_argument('--temp-offset', type=float, default=0.0,
-                       help='Temperature offset in Celsius to apply (default: 0.0). Use negative values to subtract heat from Pi.')
+    parser.add_argument('--temp-offset', type=float, default=None,
+                       help='Temperature offset in Celsius to apply. Use negative values to subtract heat from Pi.')
     
     # Monitoring
-    parser.add_argument('--read-interval', type=int, default=1,
-                       help='Sensor reading interval in seconds (default: 1)')
-    parser.add_argument('--publish-interval', type=int, default=30,
-                       help='MQTT publish interval in seconds (default: 30)')
+    parser.add_argument('--read-interval', type=int, default=None,
+                       help='Sensor reading interval in seconds')
+    parser.add_argument('--publish-interval', type=int, default=None,
+                       help='MQTT publish interval in seconds')
     
     # Heatsoak settings
-    parser.add_argument('--rate-start-type', type=str, default='absolute', choices=['offset', 'absolute'],
-                       help='Rate start type: "offset" (adds to initial soak temp) or "absolute" (uses as-is, default: absolute)')
-    parser.add_argument('--rate-start-temp', type=float, default=40.0,
-                       help='Temperature to start checking rate - prevents false positives during ramp-up (°C, default: 40.0)')
-    parser.add_argument('--rate-change-plateau', type=float, default=0.1,
-                       help='Maximum rate of change threshold (°C/min) - indicates diminishing returns (default: 0.1)')
+    parser.add_argument('--rate-start-type', type=str, default=None, choices=['offset', 'absolute'],
+                       help='Rate start type: "offset" (adds to initial soak temp) or "absolute" (uses as-is)')
+    parser.add_argument('--rate-start-temp', type=float, default=None,
+                       help='Temperature to start checking rate - prevents false positives during ramp-up (°C)')
+    parser.add_argument('--rate-change-plateau', type=float, default=None,
+                       help='Maximum rate of change threshold (°C/min) - indicates diminishing returns')
     parser.add_argument('--target-temp', type=float, default=None,
-                       help='Target temperature - if reached, automatically ready (default: None)')
-    parser.add_argument('--temp-smooth', type=float, default=4.0,
-                       help='Temperature smoothing window, seconds (default: 4.0)')
-    parser.add_argument('--rate-smooth', type=float, default=30.0,
-                       help='Rate smoothing window, seconds (default: 30.0)')
+                       help='Target temperature - if reached, automatically ready')
+    parser.add_argument('--temp-smooth', type=float, default=None,
+                       help='Temperature smoothing window, seconds')
+    parser.add_argument('--rate-smooth', type=float, default=None,
+                       help='Rate smoothing window, seconds')
     
     # MQTT
-    parser.add_argument('--mqtt-host', default='localhost',
-                       help='MQTT broker host (default: localhost)')
-    parser.add_argument('--mqtt-port', type=int, default=1883,
-                       help='MQTT broker port (default: 1883)')
-    parser.add_argument('--topic', default='sensors/bme680/raw',
-                       help='MQTT topic for all readings (default: sensors/bme680/raw)')
+    parser.add_argument('--mqtt-host', default=None,
+                       help='MQTT broker host')
+    parser.add_argument('--mqtt-port', type=int, default=None,
+                       help='MQTT broker port')
+    parser.add_argument('--topic', default=None,
+                       help='MQTT topic for all readings')
     parser.add_argument('--mqtt-client-id', default='bme680-unified-readings',
                        help='MQTT client ID (default: bme680-unified-readings)')
+    parser.add_argument('--retain', type=str, default=None, choices=['true', 'false', 'True', 'False'],
+                       help='Retain MQTT messages. Set to true if you want HA to get last value on startup')
     
     # Output
     parser.add_argument('--json', action='store_true',
@@ -319,20 +390,39 @@ Examples:
     
     args = parser.parse_args()
     
+    # Reload config if custom path provided
+    if args.config:
+        config = load_config(args.config)
+    
+    # Apply config values as defaults (command-line args override config)
+    temp_offset = args.temp_offset if args.temp_offset is not None else get_config_value(config, 'mqtt', 'temp_offset', default=0.0)
+    read_interval = args.read_interval if args.read_interval is not None else get_config_value(config, 'mqtt', 'read_interval', default=1)
+    publish_interval = args.publish_interval if args.publish_interval is not None else get_config_value(config, 'mqtt', 'publish_interval', default=30)
+    temp_smooth = args.temp_smooth if args.temp_smooth is not None else get_config_value(config, 'mqtt', 'temp_smooth', default=4.0)
+    rate_smooth = args.rate_smooth if args.rate_smooth is not None else get_config_value(config, 'mqtt', 'heatsoak', 'rate_smooth_time', default=30.0)
+    rate_start_type = args.rate_start_type if args.rate_start_type is not None else get_config_value(config, 'mqtt', 'heatsoak', 'rate_start_type', default='absolute')
+    rate_start_temp = args.rate_start_temp if args.rate_start_temp is not None else get_config_value(config, 'mqtt', 'heatsoak', 'rate_start_temp', default=40.0)
+    rate_change_plateau = args.rate_change_plateau if args.rate_change_plateau is not None else get_config_value(config, 'mqtt', 'heatsoak', 'rate_change_plateau', default=0.1)
+    target_temp = args.target_temp if args.target_temp is not None else get_config_value(config, 'mqtt', 'heatsoak', 'target_temp', default=None)
+    mqtt_host = args.mqtt_host if args.mqtt_host is not None else 'localhost'
+    mqtt_port = args.mqtt_port if args.mqtt_port is not None else 1883
+    topic = args.topic if args.topic is not None else get_config_value(config, 'mqtt', 'topic_base', default='sensors/bme680/raw')
+    retain = args.retain if args.retain is not None else str(get_config_value(config, 'mqtt', 'retain', default=False)).lower()
+    
     try:
         monitor = UnifiedBME680Monitor(
-            temp_smooth_time=args.temp_smooth,
-            rate_smooth_time=args.rate_smooth
+            temp_smooth_time=temp_smooth,
+            rate_smooth_time=rate_smooth
         )
         
         # Single read mode
         if args.once:
             readings = monitor.get_readings(
-                temp_offset=args.temp_offset,
-                rate_start_type=args.rate_start_type,
-                rate_start_temp=args.rate_start_temp,
-                rate_change_plateau=args.rate_change_plateau,
-                target_temp=args.target_temp
+                temp_offset=temp_offset,
+                rate_start_type=rate_start_type,
+                rate_start_temp=rate_start_temp,
+                rate_change_plateau=rate_change_plateau,
+                target_temp=target_temp
             )
             if readings:
                 if args.json:
@@ -358,13 +448,13 @@ Examples:
         
         if not args.quiet:
             print(f"\n📊 Starting BME680 unified readings publisher...")
-            print(f"   MQTT: {args.mqtt_host}:{args.mqtt_port}")
-            print(f"   Topic: {args.topic}")
-            print(f"   Read interval: {args.read_interval}s")
-            print(f"   Publish interval: {args.publish_interval}s")
-            print(f"   Heatsoak: rate_start_type={args.rate_start_type}, rate_start_temp={args.rate_start_temp}°C, plateau={args.rate_change_plateau}°C/min", end="")
-            if args.target_temp is not None:
-                print(f", target={args.target_temp}°C")
+            print(f"   MQTT: {mqtt_host}:{mqtt_port}")
+            print(f"   Topic: {topic}")
+            print(f"   Read interval: {read_interval}s")
+            print(f"   Publish interval: {publish_interval}s")
+            print(f"   Heatsoak: rate_start_type={rate_start_type}, rate_start_temp={rate_start_temp}°C, plateau={rate_change_plateau}°C/min", end="")
+            if target_temp is not None:
+                print(f", target={target_temp}°C")
             else:
                 print()
             print("   Press Ctrl+C to stop\n")
@@ -372,7 +462,7 @@ Examples:
         # Setup MQTT client
         mqtt_client = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2, args.mqtt_client_id)
         try:
-            mqtt_client.connect(args.mqtt_host, args.mqtt_port)
+            mqtt_client.connect(mqtt_host, mqtt_port)
             mqtt_client.loop_start()
             if not args.quiet:
                 print(f"✅ Connected to MQTT broker")
@@ -388,11 +478,11 @@ Examples:
                 
                 # Always read sensor (for smoothing calculations)
                 readings = monitor.get_readings(
-                    temp_offset=args.temp_offset,
-                    rate_start_type=args.rate_start_type,
-                    rate_start_temp=args.rate_start_temp,
-                    rate_change_plateau=args.rate_change_plateau,
-                    target_temp=args.target_temp
+                    temp_offset=temp_offset,
+                    rate_start_type=rate_start_type,
+                    rate_start_temp=rate_start_temp,
+                    rate_change_plateau=rate_change_plateau,
+                    target_temp=target_temp
                 )
                 
                 if readings:
@@ -409,18 +499,20 @@ Examples:
                         sys.stdout.flush()
                     
                     # Publish to MQTT only at specified interval
-                    should_publish = (current_time - last_publish_time) >= args.publish_interval
+                    should_publish = (current_time - last_publish_time) >= publish_interval
                     if should_publish:
                     try:
+                            # Convert retain string to boolean
+                            retain_flag = str(retain).lower() == 'true'
                         result = mqtt_client.publish(
-                                args.topic,
+                                topic,
                             json.dumps(readings),
                             qos=1,
-                            retain=True  # Retain messages so HA gets last value on startup
+                                retain=retain_flag  # Retain flag from config/command line
                         )
                             last_publish_time = current_time
                         if not args.quiet:
-                                print(f"   ✅ Published to {args.topic}")
+                                print(f"   ✅ Published to {topic}")
                             sys.stdout.flush()
                     except Exception as e:
                         print(f"   ❌ MQTT publish failed: {e}", file=sys.stderr)
@@ -429,7 +521,7 @@ Examples:
                     if not args.quiet and not args.json:
                         print("⏳ Waiting for heat stable reading...")
                 
-                time.sleep(args.read_interval)
+                time.sleep(read_interval)
                 
         except KeyboardInterrupt:
             if not args.quiet:

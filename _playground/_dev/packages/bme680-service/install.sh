@@ -68,6 +68,25 @@ print_info() {
     echo -e "${BLUE}ℹ️  $1${NC}"
 }
 
+# Check if I2C is enabled in config
+check_i2c_enabled() {
+    local config_file="$1"
+    if [ ! -f "$config_file" ]; then
+        return 1  # Config file doesn't exist, assume I2C check needed
+    fi
+    
+    # Check if I2C is enabled in YAML config
+    # Look for "enabled: true" or "enabled: false" under i2c section
+    local i2c_enabled
+    i2c_enabled=$(grep -A 5 "^i2c:" "$config_file" 2>/dev/null | grep -E "^\s*enabled:\s*(true|false)" | awk '{print $2}' | tr -d ' ')
+    
+    if [ "$i2c_enabled" = "false" ]; then
+        return 1  # I2C is disabled
+    fi
+    
+    return 0  # I2C is enabled or not specified (default to enabled)
+}
+
 # Detect BME680 sensor
 detect_sensor() {
     print_info "Detecting BME680 sensor on I2C bus 1..."
@@ -86,8 +105,8 @@ detect_sensor() {
         SENSOR_ADDR=$(echo "$SENSOR_ADDR" | head -1 | tr -d '\n\r')
         
         print_success "BME680 sensor detected at I2C address: $SENSOR_ADDR"
-        print_info "  ✓ Verified chip ID: 0x61 (confirmed BME680, not another sensor)"
-        print_info "  ✓ Checked both addresses: 0x76 and 0x77"
+        print_info "- Verified chip ID: 0x61 (confirmed BME680, not another sensor)"
+        print_info "- Checked both addresses: 0x76 and 0x77"
         
         return 0
     else
@@ -100,22 +119,22 @@ detect_sensor() {
         
         if [ "$CHECK_76" != "none" ]; then
             if [ "$CHECK_76" = "0x61" ]; then
-                print_info "  • Address 0x76: BME680 detected (chip ID 0x61)"
+                print_info "- Address 0x76: BME680 detected (chip ID 0x61)"
             else
-                print_info "  • Address 0x76: Device present but chip ID is $CHECK_76 (not BME680)"
+                print_info "- Address 0x76: Device present but chip ID is $CHECK_76 (not BME680)"
             fi
         else
-            print_info "  • Address 0x76: No device"
+            print_info "- Address 0x76: No device"
         fi
         
         if [ "$CHECK_77" != "none" ]; then
             if [ "$CHECK_77" = "0x61" ]; then
-                print_info "  • Address 0x77: BME680 detected (chip ID 0x61)"
+                print_info "- Address 0x77: BME680 detected (chip ID 0x61)"
             else
-                print_info "  • Address 0x77: Device present but chip ID is $CHECK_77 (not BME680)"
+                print_info "- Address 0x77: Device present but chip ID is $CHECK_77 (not BME680)"
             fi
         else
-            print_info "  • Address 0x77: No device"
+            print_info "- Address 0x77: No device"
         fi
         print_info ""
         print_info "Checking if I2C is enabled..."
@@ -128,9 +147,9 @@ detect_sensor() {
         
         print_warning "I2C is enabled but no BME680 detected"
         print_info "Possible reasons:"
-        print_info "  • Sensor not connected or powered"
-        print_info "  • Wrong I2C address (check SDO pin wiring)"
-        print_info "  • Different sensor model (not BME680)"
+        print_info "- Sensor not connected or powered"
+        print_info "- Wrong I2C address (check SDO pin wiring)"
+        print_info "- Different sensor model (not BME680)"
         print_info ""
         read -p "Continue anyway? (y/N): " -n 1 -r
         echo
@@ -151,9 +170,9 @@ install_package_files() {
     
     # Copy monitor library
     if [ -d "$DATA_DIR/monitor" ]; then
-        print_info "  Copying BME680 library..."
+        print_info "- Installing BME680 library..."
         cp -r "$DATA_DIR/monitor" "$INSTALL_ROOT/"
-        print_success "  BME680 library installed"
+        print_success "BME680 library installed"
     else
         print_error "Monitor library not found in package: $DATA_DIR/monitor"
         exit 1
@@ -163,35 +182,31 @@ install_package_files() {
     if [ -d "$PACKAGE_DIR/mqtt/data" ]; then
         mkdir -p "$INSTALL_ROOT/mqtt"
         if [ -f "$PACKAGE_DIR/mqtt/data/base-readings.py" ]; then
+            print_info "- Installing base-readings.py..."
             cp "$PACKAGE_DIR/mqtt/data/base-readings.py" "$INSTALL_ROOT/mqtt/"
             chmod +x "$INSTALL_ROOT/mqtt/base-readings.py"
-            print_success "  base-readings.py (MQTT) installed"
+            print_success "base-readings.py (MQTT) installed"
         fi
         
-        # Copy wrapper script
-        if [ -f "$PACKAGE_DIR/mqtt/services/bme680-base-readings-wrapper.sh" ]; then
-            cp "$PACKAGE_DIR/mqtt/services/bme680-base-readings-wrapper.sh" "$INSTALL_ROOT/"
-            chmod +x "$INSTALL_ROOT/bme680-base-readings-wrapper.sh"
-            print_success "  bme680-base-readings-wrapper.sh installed"
-        fi
+        # Wrapper script removed - Python script now reads YAML config directly
         
-        # Legacy scripts (optional, for backward compatibility)
-        if [ -f "$PACKAGE_DIR/mqtt/data/monitor-iaq.py" ]; then
+        # IAQ script - only install if IAQ service is selected
+        if [ "${install_iaq:-false}" = true ] && [ -f "$PACKAGE_DIR/mqtt/data/monitor-iaq.py" ]; then
+            print_info "- Installing BME680 monitor-iaq.py..."
             cp "$PACKAGE_DIR/mqtt/data/monitor-iaq.py" "$INSTALL_ROOT/mqtt/"
             chmod +x "$INSTALL_ROOT/mqtt/monitor-iaq.py"
-            print_success "  monitor-iaq.py (MQTT) installed"
+            print_success "monitor-iaq.py (MQTT) installed"
         fi
     fi
     
     # Install CLI tool to ~/.local/bin
     if [ -f "$DATA_DIR/bme680-cli" ]; then
+        print_info "- Installing bme680-cli to $INSTALL_BIN..."
         mkdir -p "$INSTALL_BIN"
         cp "$DATA_DIR/bme680-cli" "$INSTALL_BIN/"
         chmod +x "$INSTALL_BIN/bme680-cli"
-        print_success "  bme680-cli installed to $INSTALL_BIN"
+        print_success "bme680-cli installed"
     fi
-    
-    print_success "Package files installed"
 }
 
 # Create virtual environment and install dependencies
@@ -205,7 +220,7 @@ setup_python_environment() {
     fi
     
     PYTHON_VERSION=$(python3 --version)
-    print_info "  Using $PYTHON_VERSION"
+    print_info "- Using $PYTHON_VERSION"
     
     # Check if uv is available (preferred) or fall back to python3 -m venv + pip
     # Note: uv might be in user's ~/.local/bin which isn't in root's PATH
@@ -225,70 +240,80 @@ setup_python_environment() {
     fi
     
     if [ "$USE_UV" = true ]; then
-        print_info "  Using uv for virtual environment and package management"
-        print_info "    Found at: $UV_CMD"
+        print_info "- Using uv for virtual environment and package management"
+        print_info "- Found at: $UV_CMD"
     else
-        print_info "  uv not available, falling back to venv + pip"
+        print_info "- uv not available, falling back to venv + pip"
     fi
     
     if [ "$USE_UV" = true ]; then
         # Use uv for venv creation and package management
         if [ ! -d "$VENV_DIR" ]; then
-            print_info "  Creating virtual environment with uv..."
-            "$UV_CMD" venv "$VENV_DIR"
-            print_success "  Virtual environment created"
+            print_info "- Creating virtual environment with uv..."
+            "$UV_CMD" venv "$VENV_DIR" 2>&1 | while IFS= read -r line; do
+                print_info "- $line"
+            done
+            print_success "Virtual environment created with uv"
         else
             # Check if venv is valid (has Python executable)
             if [ ! -f "$VENV_DIR/bin/python" ]; then
-                print_warning "  Virtual environment appears corrupted, recreating..."
+                print_warning "Virtual environment appears corrupted, recreating..."
                 rm -rf "$VENV_DIR"
-                "$UV_CMD" venv "$VENV_DIR"
-                print_success "  Virtual environment recreated"
+                "$UV_CMD" venv "$VENV_DIR" 2>&1 | while IFS= read -r line; do
+                    print_info "- $line"
+                done
+                print_success "Virtual environment recreated with uv"
             else
-                print_info "  Virtual environment already exists, updating..."
+                print_info "Virtual environment already exists, updating..."
             fi
         fi
         
         # Install dependencies with uv
         if [ -f "$DATA_DIR/requirements.txt" ]; then
-            print_info "  Installing dependencies from requirements.txt with uv..."
+            print_info "- Installing dependencies from requirements.txt with uv..."
             "$UV_CMD" pip install -r "$DATA_DIR/requirements.txt" --python "$VENV_DIR/bin/python" --quiet
-            print_success "  Dependencies installed"
+            print_success "Dependencies installed"
         else
             print_warning "requirements.txt not found, skipping dependency installation"
         fi
     else
         # Fallback to traditional venv/pip
         if [ ! -d "$VENV_DIR" ]; then
-            print_info "  Creating virtual environment..."
-            python3 -m venv "$VENV_DIR"
-            print_success "  Virtual environment created"
+            print_info "- Creating virtual environment..."
+            python3 -m venv "$VENV_DIR" 2>&1 | while IFS= read -r line; do
+                print_info "- $line"
+            done
+            PYTHON_VERSION=$(python3 --version 2>&1 | awk '{print $2}')
+            print_success "Virtual environment created with Python $PYTHON_VERSION"
         else
             # Check if venv is valid (has Python and pip executables)
             if [ ! -f "$VENV_DIR/bin/python" ] || [ ! -f "$VENV_DIR/bin/pip" ]; then
-                print_warning "  Virtual environment appears corrupted or incomplete, recreating..."
+                print_warning "Virtual environment appears corrupted or incomplete, recreating..."
                 rm -rf "$VENV_DIR"
-                python3 -m venv "$VENV_DIR"
-                print_success "  Virtual environment recreated"
+                python3 -m venv "$VENV_DIR" 2>&1 | while IFS= read -r line; do
+                    print_info "- $line"
+                done
+                PYTHON_VERSION=$(python3 --version 2>&1 | awk '{print $2}')
+                print_success "Virtual environment recreated with Python $PYTHON_VERSION"
             else
-                print_info "  Virtual environment already exists, updating..."
+                print_info "Virtual environment already exists, updating..."
             fi
         fi
         
         # Activate venv and upgrade pip (only if pip exists)
         if [ -f "$VENV_DIR/bin/pip" ]; then
-            print_info "  Upgrading pip..."
+            print_info "- Upgrading pip..."
             "$VENV_DIR/bin/pip" install --upgrade pip --quiet
         else
-            print_error "  pip not found in virtual environment"
+            print_error "pip not found in virtual environment"
             exit 1
         fi
         
         # Install dependencies
         if [ -f "$DATA_DIR/requirements.txt" ]; then
-            print_info "  Installing dependencies from requirements.txt..."
+            print_info "- Installing dependencies from requirements.txt..."
             "$VENV_DIR/bin/pip" install -r "$DATA_DIR/requirements.txt" --quiet
-            print_success "  Dependencies installed"
+            print_success "Dependencies installed"
         else
             print_warning "requirements.txt not found, skipping dependency installation"
         fi
@@ -297,55 +322,77 @@ setup_python_environment() {
     print_success "Python environment ready"
 }
 
-# Create default config file
-create_config_file() {
-    print_info "Creating configuration file..."
+# Check if Mosquitto is installed
+check_mosquitto_installed() {
+    if command -v mosquitto >/dev/null 2>&1 || systemctl list-units --all --type=service | grep -q "mosquitto.service"; then
+        return 0  # Installed
+    else
+        return 1  # Not installed
+    fi
+}
+
+# Reload Home Assistant core configuration
+reload_ha_core() {
+    print_info "Reloading Home Assistant core configuration..."
     
-    mkdir -p "$CONFIG_DIR"
-    local config_file="$CONFIG_DIR/config.yaml"
-    
-    if [ -f "$config_file" ]; then
-        print_warning "Config file already exists at $config_file"
-        print_info "  Skipping config file creation (preserving existing config)"
-        return 0
+    # Try using ha helper script first (if available)
+    if command -v ha >/dev/null 2>&1; then
+        if ha restart >/dev/null 2>&1; then
+            print_success "Home Assistant core configuration reloaded (via ha helper)"
+            return 0
+        fi
     fi
     
-    cat > "$config_file" << 'EOF'
-# BME680 Monitor Configuration
-# Location: /home/pi/.config/bme680-monitor/config.yaml
-
-# sudo systemctl restart bme680-base-mqtt.service 
-# sudo systemctl restart bme680-base-mqtt.service && sudo journalctl -u bme680-base-mqtt.service -f
-
-# I2C Settings
-i2c:
-  enabled: false
-  bus: 1
-  address: 0x77  # Hex format: 0x77
-  scan_interval: 5  # seconds
-
-# MQTT Settings
-mqtt:
-  enabled: true
-  topic_base: "sensors/bme680/raw"
-  read_interval: 1  # Seconds between sensor reads (for smoothing calculations)
-  publish_interval: 30  # Seconds between MQTT publishes
-  temp_offset: -4.0  # Temperature offset in Celsius to apply (negative values subtract heat from Pi)
-  temp_smooth: 4.0  # Temperature smoothing window in seconds (default: 4.0)
-  
-  # Heatsoak MQTT Settings
-  heatsoak:
-    # Offset is a temperature added to the initial temp read once soak_started = true
-    # Absolute is a temperature used as it is shown
-    rate_start_type: "offset"  # [offset, absolute]
-    rate_start_temp: 5.0  # Temperature to start checking rate - prevents false positives during ramp-up (°C)
-    rate_change_plateau: 0.1  # Maximum rate of change threshold (°C/min) - indicates diminishing returns
-    target_temp: 45.0  # Target temperature - if reached, automatically ready (°C)
-    rate_smooth_time: 30.0  # Rate smoothing window in seconds (default: 30.0)
-EOF
+    # Try docker exec with supervisor API (if supervised installation)
+    if docker ps --format '{{.Names}}' | grep -q "^homeassistant$"; then
+        # Try supervisor API first (for supervised installations)
+        if docker exec homeassistant curl -s -X POST http://supervisor/core/reload 2>/dev/null | grep -q "ok"; then
+            print_success "Home Assistant core configuration reloaded (via supervisor API)"
+            return 0
+        fi
+        
+        # Fallback: Try HA API with localhost (may require token, but worth trying)
+        # Note: This will fail if token is required, but we'll catch it
+        if docker exec homeassistant curl -s -X POST -H "Content-Type: application/json" http://localhost:8123/api/services/config/reload_core_config 2>/dev/null | grep -q -E "(reload|ok|success)"; then
+            print_success "Home Assistant core configuration reloaded (via HA API)"
+            return 0
+        fi
+    fi
     
-    chmod 600 "$config_file"
-    print_success "Configuration file created at $config_file"
+    # If all methods fail, inform user
+    print_warning "Could not automatically reload Home Assistant core configuration"
+    print_info "Please reload manually:"
+    print_info "- Run: ha restart"
+    print_info "- Or use: Developer Tools > YAML > Reload Core Configuration"
+    return 1
+}
+
+# Setup config file (must be first - services depend on it)
+setup_config_file() {
+    print_info "Setting up configuration file..."
+    
+    mkdir -p "$CONFIG_DIR"
+    chown "$ORIGINAL_USER:$ORIGINAL_USER" "$CONFIG_DIR"
+    chmod 700 "$CONFIG_DIR"
+    local config_file="$CONFIG_DIR/config.yaml"
+    
+    # Use tracked config file if it exists
+    local tracked_config="$PACKAGE_DIR/config.yaml"
+    if [ -f "$tracked_config" ]; then
+        print_info "- Copying tracked config file from $tracked_config"
+        # Remove existing file/symlink if it exists
+        if [ -e "$config_file" ]; then
+            rm -f "$config_file"
+        fi
+        # Copy tracked config file
+        cp "$tracked_config" "$config_file"
+        chmod 600 "$config_file"
+        chown "$ORIGINAL_USER:$ORIGINAL_USER" "$config_file"
+        print_success "Configuration file installed in ~/.config"
+    else
+        print_warning "Tracked config file not found at $tracked_config"
+        print_info "Services will use default values if config file doesn't exist"
+    fi
 }
 
 # Install systemd service
@@ -377,7 +424,12 @@ install_service() {
     print_success "Systemd daemon reloaded"
     
     # Enable service
-    systemctl enable "$installed_service_name.service"
+    enable_output=$(systemctl enable "$installed_service_name.service" 2>&1)
+    if [ -n "$enable_output" ]; then
+        echo "$enable_output" | while IFS= read -r line; do
+            print_info "- $line"
+        done
+    fi
     print_success "Service enabled (will start on boot)"
     
     # Check if service should be started
@@ -476,8 +528,43 @@ main() {
         print_warning "Falling back to simple prompts..."
     fi
     
-    # Wizard configuration for installation steps
-    INSTALL_WIZARD_CONFIG='
+    # Check if Mosquitto is already installed
+    mosquitto_installed=false
+    if check_mosquitto_installed; then
+        mosquitto_installed=true
+        print_success "Mosquitto MQTT broker is already installed"
+    fi
+    
+    # Build wizard config - only include broker step if not already installed
+    if [ "$mosquitto_installed" = true ]; then
+        INSTALL_WIZARD_CONFIG='
+{
+    "title": "BME680 Service Installation",
+    "steps": [
+        {
+            "type": "multiselect",
+            "message": "ℹ️  Which services would you like to install?",
+            "options": [
+                "Base readings (MQTT) - Includes sensor readings and heatsoak calculations",
+                "IAQ monitor (MQTT) - Air quality calculation"
+            ],
+            "preselect": [0]
+        },
+        {
+            "type": "multiselect",
+            "message": "ℹ️  Which installation(s) would you like to perform?",
+            "options": [
+                "Standalone MQTT",
+                "Home Assistant MQTT Integration",
+                "Home Assistant Custom Integration"
+            ],
+            "preselect": [0, 1]
+        }
+    ]
+}
+'
+    else
+        INSTALL_WIZARD_CONFIG='
 {
     "title": "BME680 Service Installation",
     "steps": [
@@ -508,6 +595,7 @@ main() {
     ]
 }
 '
+    fi
     
     # Use iWizard for installation steps
     if type iwizard_run_inline >/dev/null 2>&1 && [ -t 0 ] && [ -t 1 ]; then
@@ -524,15 +612,6 @@ main() {
         # Confirm results are "true" or "false"
         step1_result=$(echo "$wizard_results" | jq -r '.step0.result' 2>/dev/null || echo "")
         step2_result=$(echo "$wizard_results" | jq -r '.step1.result' 2>/dev/null || echo "")
-        step3_result=$(echo "$wizard_results" | jq -r '.step2.result' 2>/dev/null || echo "")
-        
-        # Only ask about broker if MQTT is selected
-        want_mqtt=false
-        for idx in $step2_result; do
-            case $idx in
-                0|1) want_mqtt=true ;;
-            esac
-        done
         
         # Parse step1: services
         install_base=false
@@ -556,10 +635,19 @@ main() {
             esac
         done
         
-        # Parse step3: broker installation (only if MQTT selected)
+        # Parse step3: broker installation (only if MQTT selected and not already installed)
         install_broker=false
-        if [ "$want_mqtt" = true ] && [ "$step3_result" = "true" ]; then
-            install_broker=true
+        if [ "$mosquitto_installed" = false ]; then
+            step3_result=$(echo "$wizard_results" | jq -r '.step2.result' 2>/dev/null || echo "")
+            want_mqtt=false
+            for idx in $step2_result; do
+                case $idx in
+                    0|1) want_mqtt=true ;;
+                esac
+            done
+            if [ "$want_mqtt" = true ] && [ "$step3_result" = "true" ]; then
+                install_broker=true
+            fi
         fi
     else
         # Fallback to simple prompts
@@ -597,10 +685,14 @@ main() {
         esac
         
         if [ "$do_standalone" = true ] || [ "$do_ha_mqtt" = true ]; then
-            read -p "Install Mosquitto MQTT broker? (Y/n): " ans
-            ans=${ans:-Y}
-            if [[ "${ans^^}" = "Y" ]]; then
-                install_broker=true
+            if [ "$mosquitto_installed" = false ]; then
+                read -p "Install Mosquitto MQTT broker? (Y/n): " ans
+                ans=${ans:-Y}
+                if [[ "${ans^^}" = "Y" ]]; then
+                    install_broker=true
+                fi
+            else
+                install_broker=false
             fi
         fi
     fi
@@ -611,14 +703,24 @@ main() {
         exit 0
     fi
     
-    # Detect sensor (after selection)
-    echo
-    detect_sensor
+    # Check config file to see if I2C is enabled before detecting sensor
+    local tracked_config="$PACKAGE_DIR/config.yaml"
+    if check_i2c_enabled "$tracked_config"; then
+        # I2C is enabled, detect sensor
+        echo
+        detect_sensor
+    else
+        # I2C is disabled in config, skip sensor detection
+        print_info "I2C is disabled in configuration, skipping sensor detection"
+    fi
     
     # Proceed with installation
     echo
     print_info "Installing BME680 service package..."
     echo 
+    
+    # Setup config file FIRST (services depend on it)
+    setup_config_file
     
     # Install package files
     install_package_files
@@ -626,14 +728,14 @@ main() {
     # Setup Python environment
     setup_python_environment
     
-    # Create config file
-    create_config_file
     
     # Execute based on selections
     if [ "$do_standalone" = true ] || [ "$do_ha_mqtt" = true ] || [ "$do_ha_integration" = true ]; then
-        # Broker if MQTT path selected and user opted in
+        # Broker if MQTT path selected
         if [ "$do_standalone" = true ] || [ "$do_ha_mqtt" = true ]; then
-            if [ "$install_broker" = true ]; then
+            if [ "$mosquitto_installed" = true ]; then
+                print_success "Mosquitto MQTT broker is already installed"
+            elif [ "$install_broker" = true ]; then
                 print_info "Installing Mosquitto MQTT broker..."
                 apt-get update -y >/dev/null 2>&1 || true
                 apt-get install -y mosquitto mosquitto-clients >/dev/null 2>&1 || true
@@ -661,7 +763,13 @@ main() {
             local ha_yaml_dst="$HA_PKG_DIR/bme680_mqtt.yaml"
             if [ -f "$ha_yaml_src" ]; then
                 mkdir -p "$HA_PKG_DIR"
+                # Remove existing file/symlink if it exists
+                if [ -e "$ha_yaml_dst" ]; then
+                    rm -f "$ha_yaml_dst"
+                fi
+                # Copy tracked HA sensors file
                 cp "$ha_yaml_src" "$ha_yaml_dst"
+                chown "$ORIGINAL_USER:$ORIGINAL_USER" "$ha_yaml_dst"
                 print_success "Copied MQTT sensors config to $ha_yaml_dst"
                 print_info "  Note: This includes all sensor data including heatsoak calculations"
             else
@@ -677,8 +785,8 @@ main() {
             # Note: User must reload HA core to pick up new package
             echo
             print_info "⚠️  IMPORTANT: Reload Home Assistant Core to pick up MQTT sensors"
-            print_info "   Run: ha reload core"
-            print_info "   Or use: Developer Tools > YAML > Reload Core Configuration"
+            print_info "- Run: ha restart"
+            print_info "- Or use: Developer Tools > YAML > Reload Core Configuration"
             echo
             
             # ensure packages include present
@@ -717,7 +825,6 @@ main() {
     echo
     print_info "Package installed to: $INSTALL_ROOT"
     print_info "Virtual environment: $VENV_DIR"
-    print_info "Configuration file: $CONFIG_DIR/config.yaml"
     echo
     print_info "Useful commands:"
     echo "  systemctl status bme680-base-mqtt         # Base readings + heatsoak (MQTT)"

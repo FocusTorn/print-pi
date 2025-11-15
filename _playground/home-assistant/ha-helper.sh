@@ -281,13 +281,19 @@ cmd_restart() {
     print_header
     check_container_exists
     
-    # Create auto-backup before restart
-    # if [ "$1" != "--no-backup" ]; then
-    #     echo "💾 Creating auto-backup before restart..."
-    #     cmd_backup "before-restart-$(date +%Y-%m-%d-%H-%M-%S)" > /dev/null
-    #     print_success "Backup created"
-    #     echo
-    # fi
+    # Check for --verbose flag
+    VERBOSE=false
+    for arg in "$@"; do
+        if [[ "$arg" == "--verbose" || "$arg" == "-v" ]]; then
+            VERBOSE=true
+            break
+        fi
+    done
+    
+    # Record timestamp before restart
+    RESTART_TIMESTAMP=$(date +%Y-%m-%dT%H:%M:%S)
+    print_info "Recording restart timestamp: ${RESTART_TIMESTAMP}"
+    echo
     
     echo "🔄 Restarting Home Assistant..."
     
@@ -297,7 +303,53 @@ cmd_restart() {
         echo "⏱️  Waiting for Home Assistant to start (this takes ~30 seconds)..."
         sleep 5
         echo
-        cmd_logs_tail 20
+        
+        # Show issues (warnings and errors) from after the timestamp
+        # Convert timestamp to human-readable format for display
+        HUMAN_TIMESTAMP=$(date -d "$RESTART_TIMESTAMP" +"%Y-%m-%d %H:%M:%S" 2>/dev/null || echo "$RESTART_TIMESTAMP")
+        
+        # Extract logs after timestamp and filter for issues
+        # Docker's --since interprets timestamps without timezone indicator as local time
+        # Use the timestamp as-is since it's already in local time (matches container timezone)
+        # Query logs twice - first query may not have all logs available yet (Docker log buffering)
+        # Exclude custom integration loader warnings (informational, not actual issues)
+        # Do all calculations but don't output debug messages
+        TOTAL_LOGS=$($DOCKER_CMD logs "${HA_CONTAINER}" --since "$RESTART_TIMESTAMP" 2>&1 | wc -l)
+        # Exclude custom integration loader warnings (informational, not actual issues)
+        ISSUES=$($DOCKER_CMD logs "${HA_CONTAINER}" --since "$RESTART_TIMESTAMP" 2>&1 | \
+            grep -E "(WARNING|ERROR)" | \
+            grep -v "\[homeassistant.loader\].*We found a custom integration.*which has not been tested by Home Assistant. This component might cause stability problems, be sure to disable it if you experience issues with Home Assistant" || \
+            echo "No warnings or errors found")
+        ISSUE_COUNT=$(echo "$ISSUES" | grep -v "No warnings or errors found" | wc -l)
+        
+        # Display header with issue count
+        if [ "$ISSUE_COUNT" -eq 0 ]; then
+            echo -e "\033[1;32m✔\033[0;32m No issues logged since ${HUMAN_TIMESTAMP}\033[0m"
+        else
+            echo -e "\033[1;33m⚠\033[0m \033[36m${ISSUE_COUNT} issue(s) logged since ${HUMAN_TIMESTAMP}\033[0m"
+        fi
+        echo
+        if [ -z "$ISSUES" ] || [ "$ISSUES" = "No warnings or errors found" ]; then
+            echo "No warnings or errors found"
+        else
+            echo "$ISSUES"
+        fi
+        echo
+        echo
+        
+        # Show last 20 log entries from after the timestamp (only if --verbose is passed)
+        # Exclude custom integration loader warnings (informational, not actual issues)
+        if [ "$VERBOSE" = true ]; then
+            echo -e "${CYAN}📋 Last 20 log entries (since restart):${NC}"
+            echo
+            echo -e "${YELLOW}DEBUG: Filter timestamp: ${RESTART_TIMESTAMP}${NC}"
+            LOG_ENTRIES=$($DOCKER_CMD logs "${HA_CONTAINER}" --since "$RESTART_TIMESTAMP" --tail 20 2>&1 | \
+                grep -v "\[homeassistant.loader\].*We found a custom integration.*which has not been tested by Home Assistant. This component might cause stability problems, be sure to disable it if you experience issues with Home Assistant")
+            LOG_COUNT=$(echo "$LOG_ENTRIES" | wc -l)
+            echo -e "${YELLOW}DEBUG: Log entries returned: ${LOG_COUNT}${NC}"
+            echo
+            echo "$LOG_ENTRIES"
+        fi
     else
         print_error "Failed to restart container!"
         exit 1
@@ -378,6 +430,56 @@ cmd_errors() {
     echo
     
     $DOCKER_CMD logs "${HA_CONTAINER}" 2>&1 | grep -iE "(error|warning|critical|exception)" --color=always | tail -50
+}
+
+cmd_clear_discovery() {
+    print_header
+    check_container_exists
+    
+    # Check for --yes or -y flag
+    local skip_confirm=false
+    for arg in "$@"; do
+        if [[ "$arg" == "--yes" || "$arg" == "-y" ]]; then
+            skip_confirm=true
+            break
+        fi
+    done
+    
+    if [ "$skip_confirm" = false ]; then
+        print_warning "This will clear all retained MQTT discovery messages"
+        echo "Entities will disappear until NodeRed republishes them"
+        echo
+        read -p "Continue? (y/N): " -n 1 -r
+        echo
+        if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+            print_error "Cancelled"
+            exit 0
+        fi
+    fi
+    
+    echo "🧹 Clearing old MQTT discovery messages..."
+    echo
+    
+    # Clear all discovery config topics (retained messages)
+    mosquitto_pub -h localhost -t "homeassistant/sensor/+/+/config" -n -r 2>/dev/null && echo "✅ Cleared sensor discovery topics"
+    mosquitto_pub -h localhost -t "homeassistant/switch/+/+/config" -n -r 2>/dev/null && echo "✅ Cleared switch discovery topics"
+    mosquitto_pub -h localhost -t "homeassistant/text/+/+/config" -n -r 2>/dev/null && echo "✅ Cleared text discovery topics"
+    mosquitto_pub -h localhost -t "homeassistant/button/+/+/config" -n -r 2>/dev/null && echo "✅ Cleared button discovery topics"
+    mosquitto_pub -h localhost -t "homeassistant/select/+/+/config" -n -r 2>/dev/null && echo "✅ Cleared select discovery topics"
+    mosquitto_pub -h localhost -t "homeassistant/number/+/+/config" -n -r 2>/dev/null && echo "✅ Cleared number discovery topics"
+    mosquitto_pub -h localhost -t "homeassistant/fan/+/+/config" -n -r 2>/dev/null && echo "✅ Cleared fan discovery topics"
+    mosquitto_pub -h localhost -t "homeassistant/light/+/+/config" -n -r 2>/dev/null && echo "✅ Cleared light discovery topics"
+    mosquitto_pub -h localhost -t "homeassistant/binary_sensor/+/+/config" -n -r 2>/dev/null && echo "✅ Cleared binary_sensor discovery topics"
+    mosquitto_pub -h localhost -t "homeassistant/device_automation/+/+/config" -n -r 2>/dev/null && echo "✅ Cleared device_automation discovery topics"
+    
+    echo
+    print_success "Discovery messages cleared!"
+    echo
+    print_info "Next steps:"
+    echo "  1. Restart NodeRed to reload the flow: docker restart nodered"
+    echo "     (Or click Deploy in NodeRed UI if it shows changes)"
+    echo "  2. NodeRed will republish all discovery messages"
+    echo "  3. Entities will reappear with updated configuration"
 }
 
 cmd_shell() {
@@ -706,12 +808,13 @@ cmd_list_entities() {
     fi
     
     PATTERN="${1:-}"
+    SHOW_DEVICES=true  # Always show devices when listing entities
     
     if [ -z "$PATTERN" ]; then
-        print_info "Listing all entities..."
+        print_info "Listing all entities and devices..."
         echo
     else
-        print_info "Listing entities matching pattern: ${PATTERN}"
+        print_info "Listing entities and devices matching pattern: ${PATTERN}"
         echo
     fi
     
@@ -897,6 +1000,86 @@ PYTHONSCRIPT
     
     if [ $EXIT_CODE -ne 0 ]; then
         exit $EXIT_CODE
+    fi
+    
+    # Also list devices from device registry
+    echo
+    echo -e "${CYAN}Devices:${NC}"
+    echo
+    
+    # Create script to list devices
+    TEMP_DEVICE_SCRIPT="/tmp/ha_list_devices_$$.py"
+    cat > "$TEMP_DEVICE_SCRIPT" <<'PYTHONSCRIPT'
+import json
+import sys
+import os
+
+pattern = os.environ.get('PATTERN_ENV', '').lower().strip()
+
+# Read device registry
+device_registry_file = '/config/.storage/core.device_registry'
+try:
+    with open(device_registry_file, 'r') as f:
+        device_registry = json.load(f)
+    
+    devices = device_registry.get('data', {}).get('devices', [])
+    
+    # Filter devices by pattern
+    if pattern:
+        filtered_devices = []
+        for device in devices:
+            # Handle None values safely
+            device_name = (device.get('name') or '').lower()
+            device_id = (device.get('id') or '').lower()
+            identifiers = str(device.get('identifiers') or []).lower()
+            manufacturer = (device.get('manufacturer') or '').lower()
+            model = (device.get('model') or '').lower()
+            
+            if (pattern in device_name or 
+                pattern in device_id or 
+                pattern in identifiers or 
+                pattern in manufacturer or 
+                pattern in model):
+                filtered_devices.append(device)
+        devices = filtered_devices
+    
+    # Sort by name (handle None values)
+    devices.sort(key=lambda x: x.get('name') or '')
+    
+    # Display results
+    if devices:
+        print(f"{'Device Name':<50} {'Manufacturer':<20} {'Model':<20} {'ID':<40}")
+        print("-" * 130)
+        for d in devices:
+            # Handle None values safely
+            name = (d.get('name') or 'Unknown')[:48]
+            manufacturer = (d.get('manufacturer') or 'Unknown')[:18]
+            model = (d.get('model') or 'Unknown')[:18]
+            device_id = (d.get('id') or 'unknown')[:38]
+            print(f"{name:<50} {manufacturer:<20} {model:<20} {device_id:<40}")
+        print(f"\nTotal: {len(devices)} device(s)" + (f" matching '{pattern}'" if pattern else ""))
+    else:
+        if pattern:
+            print(f"No devices found matching pattern: '{pattern}'")
+        else:
+            print("No devices found")
+            
+except Exception as e:
+    print(f"Error retrieving devices: {e}", file=sys.stderr)
+    sys.exit(1)
+PYTHONSCRIPT
+    
+    # Copy script to container and execute
+    $DOCKER_CMD cp "$TEMP_DEVICE_SCRIPT" "${HA_CONTAINER}:/tmp/ha_list_devices.py"
+    $DOCKER_CMD exec -e PATTERN_ENV="$PATTERN" "${HA_CONTAINER}" python3 -u /tmp/ha_list_devices.py
+    DEVICE_EXIT_CODE=$?
+    
+    # Clean up
+    rm -f "$TEMP_DEVICE_SCRIPT"
+    $DOCKER_CMD exec "${HA_CONTAINER}" rm -f /tmp/ha_list_devices.py > /dev/null 2>&1
+    
+    if [ $DEVICE_EXIT_CODE -ne 0 ]; then
+        print_warning "Could not retrieve devices (this is non-fatal)"
     fi
 }
 
@@ -1132,25 +1315,27 @@ EOF
 
 cmd_list_entities_help() {
     cat << 'EOF'
-ha list-entities: List Home Assistant entities
+ha list-entities: List Home Assistant entities and devices
 
 Usage:
     ha list-entities [pattern]
     ha list-entities --help
 
 Arguments:
-    pattern                     Filter entities by pattern (optional)
-                                Matches entity_id containing the pattern
+    pattern                     Filter entities and devices by pattern (optional)
+                                Matches entity_id, device name, manufacturer, or model
 
 Examples:
-    ha list-entities            List all entities
-    ha list-entities a1         List all a1 entities
+    ha list-entities            List all entities and devices
+    ha list-entities a1         List all a1 entities and devices
     ha list-entities sensor     List all sensor entities
+    ha list-entities bme680     List all bme680 entities and devices
     ha list-entities light      List all light entities
 
 Notes:
     • Pattern matching is case-insensitive
-    • Shows entity_id and current state
+    • Shows entity_id and current state for entities
+    • Shows device name, manufacturer, model, and ID for devices
     • Requires container to be running
 
 EOF
@@ -1194,6 +1379,9 @@ Logs & Debugging:
     logs-tail [n], tail, lt [n]   Show last N lines of logs (use --help for details)
                                   Default: 50
     errors, err, e                Show only errors and warnings from logs
+    clear-discovery, clear-disc   Clear all retained MQTT discovery messages
+                                  (use when fixing NodeRed flows)
+                                  Use --yes or -y to skip confirmation
 
 Information:
     list-entities [pattern]       List all entities (use --help for details)
@@ -1274,6 +1462,9 @@ case "$COMMAND" in
         ;;
     errors|err|e)
         cmd_errors "$@"
+        ;;
+    clear-discovery|clear-disc|cdisc)
+        cmd_clear_discovery "$@"
         ;;
     shell|sh|bash)
         cmd_shell "$@"

@@ -17,8 +17,9 @@ mqtt:
   topic_base: "sensors/bme680/raw"
   read_interval: 1  # Seconds between sensor reads (for smoothing calculations)
   publish_interval: 5  # Seconds between MQTT publishes
-  temp_offset: -4.0  # Temperature offset in Celsius to apply (negative values subtract heat from Pi)
+  # temp_offset: -4.0  # Temperature offset in Celsius to apply (negative values subtract heat from Pi)
   temp_smooth: 4.0  # Temperature smoothing window in seconds (default: 4.0)
+  retain: false  # Retain MQTT messages (default: false). Set to true if you want HA to get last value on startup
   
   # Heatsoak MQTT Settings
   heatsoak:
