@@ -827,8 +827,71 @@ import sys
 import os
 import urllib.request
 import urllib.error
+from pathlib import Path
 
 pattern = os.environ.get('PATTERN_ENV', '').lower().strip()
+
+# Function to find entity location in config files
+def find_entity_location(entity_id, config_dir="/config"):
+    """Find which file an entity is defined in"""
+    config_path = Path(config_dir)
+    
+    # First, try entity registry for platform info (most reliable)
+    entity_registry_file = config_path / ".storage" / "core.entity_registry"
+    if entity_registry_file.exists():
+        try:
+            with open(entity_registry_file, 'r') as f:
+                registry_data = json.load(f)
+                entities = registry_data.get('data', {}).get('entities', [])
+                for entity in entities:
+                    if entity.get('entity_id') == entity_id:
+                        platform = entity.get('platform', '')
+                        if platform:
+                            # MQTT platform indicates MQTT discovery
+                            if platform.lower() == 'mqtt':
+                                return "MQTT Discovery"
+                            # Return platform name as integration
+                            return f"{platform} Integration"
+        except:
+            pass
+    
+    # Check if entity name suggests MQTT (common pattern)
+    if '_mqtt' in entity_id.lower():
+        return "MQTT Discovery"
+    
+    # Search through YAML files for entity definitions
+    yaml_files = [
+        config_path / "configuration.yaml",
+        config_path / "automations.yaml",
+        config_path / "scripts.yaml",
+        config_path / "scenes.yaml",
+    ]
+    
+    # Also search in includes directory if it exists
+    includes_dir = config_path / "includes"
+    if includes_dir.exists():
+        yaml_files.extend(includes_dir.glob("*.yaml"))
+        yaml_files.extend(includes_dir.glob("*.yml"))
+    
+    # Search for entity_id in files
+    for yaml_file in yaml_files:
+        if not yaml_file.exists():
+            continue
+        try:
+            with open(yaml_file, 'r') as f:
+                content = f.read()
+                # Look for entity_id pattern - check for exact match in context
+                if entity_id in content:
+                    lines = content.split('\n')
+                    for i, line in enumerate(lines):
+                        if entity_id in line:
+                            # Check if it's likely an entity_id reference
+                            if 'entity_id' in line.lower() or ':' in line:
+                                return yaml_file.name
+        except:
+            continue
+    
+    return "Unknown"
 
 # Try to get token from environment or encrypted file
 token = os.environ.get('HA_TOKEN', '')
@@ -869,22 +932,37 @@ try:
                 
                 if not pattern or pattern in entity_id.lower():
                     domain = entity_id.split('.')[0] if '.' in entity_id else 'unknown'
+                    location = find_entity_location(entity_id)
                     entities.append({
                         'entity_id': entity_id,
                         'state': state_value,
-                        'domain': domain
+                        'domain': domain,
+                        'location': location
                     })
             
             # Sort by entity_id
             entities.sort(key=lambda x: x['entity_id'])
             
+            # Calculate column widths
+            max_domain_len = max(len('Domain'), max((len(e['domain']) for e in entities), default=0))
+            max_state_len = max(len('State'), max((len(str(e['state'])) for e in entities), default=0))
+            max_entity_len = max(len('Entity ID'), max((len(e['entity_id']) for e in entities), default=0))
+            max_location_len = max(len('Location'), max((len(e['location']) for e in entities), default=0))
+            
+            # Add 4 character gap
+            domain_width = max_domain_len + 4
+            state_width = max_state_len + 4
+            entity_width = max_entity_len + 4
+            location_width = max_location_len
+            
             # Display results
             if entities:
-                print(f"{'Entity ID':<50} {'Domain':<15} {'State':<20}")
-                print("-" * 85)
+                print(f"{'Domain':<{domain_width}}{'State':<{state_width}}{'Entity ID':<{entity_width}}{'Location':<{location_width}}")
+                separator_len = domain_width + state_width + entity_width + location_width
+                print("-" * separator_len)
                 for e in entities:
-                    state_display = str(e['state'])[:18] if len(str(e['state'])) > 18 else str(e['state'])
-                    print(f"{e['entity_id']:<50} {e['domain']:<15} {state_display:<20}")
+                    state_display = str(e['state'])
+                    print(f"{e['domain']:<{domain_width}}{state_display:<{state_width}}{e['entity_id']:<{entity_width}}{e['location']:<{location_width}}")
                 print(f"\nTotal: {len(entities)} entities" + (f" matching '{pattern}'" if pattern else ""))
             else:
                 if pattern:
@@ -905,7 +983,6 @@ except Exception as e:
     pass
 
 # Fallback: Read from state file
-from pathlib import Path
 state_file = Path("/config/.storage/core.restore_state")
 if not state_file.exists():
     print("Error: Could not access Home Assistant API and state file not found.", file=sys.stderr)
@@ -943,22 +1020,37 @@ try:
         
         if not pattern or pattern in entity_id.lower():
             domain = entity_id.split('.')[0] if '.' in entity_id else 'unknown'
+            location = find_entity_location(entity_id)
             entities.append({
                 'entity_id': entity_id,
                 'state': state_value,
-                'domain': domain
+                'domain': domain,
+                'location': location
             })
     
     # Sort by entity_id
     entities.sort(key=lambda x: x['entity_id'])
     
+    # Calculate column widths
+    max_domain_len = max(len('Domain'), max((len(e['domain']) for e in entities), default=0))
+    max_state_len = max(len('State'), max((len(str(e['state'])) for e in entities), default=0))
+    max_entity_len = max(len('Entity ID'), max((len(e['entity_id']) for e in entities), default=0))
+    max_location_len = max(len('Location'), max((len(e['location']) for e in entities), default=0))
+    
+    # Add 4 character gap
+    domain_width = max_domain_len + 4
+    state_width = max_state_len + 4
+    entity_width = max_entity_len + 4
+    location_width = max_location_len
+    
     # Display results
     if entities:
-        print(f"{'Entity ID':<50} {'Domain':<15} {'State':<20}")
-        print("-" * 85)
+        print(f"{'Domain':<{domain_width}}{'State':<{state_width}}{'Entity ID':<{entity_width}}{'Location':<{location_width}}")
+        separator_len = domain_width + state_width + entity_width + location_width
+        print("-" * separator_len)
         for e in entities:
-            state_display = str(e['state'])[:18] if len(str(e['state'])) > 18 else str(e['state'])
-            print(f"{e['entity_id']:<50} {e['domain']:<15} {state_display:<20}")
+            state_display = str(e['state'])
+            print(f"{e['domain']:<{domain_width}}{state_display:<{state_width}}{e['entity_id']:<{entity_width}}{e['location']:<{location_width}}")
         print(f"\nTotal: {len(entities)} entities" + (f" matching '{pattern}'" if pattern else ""))
         print("\nNote: Using state file (may show 'unknown' for some entities).")
         print("      Set HA_TOKEN for live state data.")

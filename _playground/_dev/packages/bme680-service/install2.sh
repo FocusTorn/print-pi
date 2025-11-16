@@ -1,6 +1,7 @@
 #!/bin/bash
-# BME680 Service Installation Script
+# BME680 Service Installation Script (GUM version)
 # Installs self-contained package to ~/.local/share/bme680-service/
+# Uses GUM for interactive prompts instead of iMenu
 
 set -e
 
@@ -20,7 +21,6 @@ PACKAGE_DIR="$SCRIPT_DIR"
 DETECTOR="$PACKAGE_DIR/detectors/detect-bme680.sh"
 SERVICE_DIR="$PACKAGE_DIR/services"
 DATA_DIR="$PACKAGE_DIR/data"
-IMENU_DIR="$PACKAGE_DIR/../_utilities/iMenu"
 
 # Capture original user's home directory (before sudo changes $HOME)
 ORIGINAL_USER="${SUDO_USER:-$USER}"
@@ -66,6 +66,154 @@ print_warning() {
 
 print_info() {
     echo -e "${BLUE}ℹ️  $1${NC}"
+}
+
+# Check if GUM is available
+check_gum() {
+    if ! command -v gum &> /dev/null; then
+        return 1
+    fi
+    return 0
+}
+
+# GUM multiselect helper - allows selecting multiple items
+# Usage: gum_multiselect "Header" "Option1" "Option2" ...
+# Returns: space-separated indices of selected items (0-based)
+gum_multiselect() {
+    local header="$1"
+    shift
+    local options=("$@")
+    local selected_indices=""
+    local selected_items=()
+    local all_selected=false
+    
+    # Build initial selection display
+    while true; do
+        # Clear screen for better UX
+        clear 2>/dev/null || true
+        
+        # Show header
+        gum style --foreground 212 --bold "$header"
+        echo ""
+        
+        # Show current selections
+        if [ ${#selected_items[@]} -gt 0 ]; then
+            gum style --foreground 10 "Selected: ${selected_items[*]}"
+            echo ""
+        fi
+        
+        # Build menu with options
+        local menu_options=()
+        for i in "${!options[@]}"; do
+            local is_selected=false
+            for sel in "${selected_indices[@]}"; do
+                if [ "$sel" = "$i" ]; then
+                    is_selected=true
+                    break
+                fi
+            done
+            
+            if [ "$is_selected" = true ]; then
+                menu_options+=("◉ ${options[$i]}")
+            else
+                menu_options+=("○ ${options[$i]}")
+            fi
+        done
+        
+        # Add Done option
+        menu_options+=("✓ Done")
+        
+        # Show menu
+        local choice=$(printf '%s\n' "${menu_options[@]}" | gum choose --header="Select options (space to toggle, enter to confirm selection)")
+        
+        if [ -z "$choice" ]; then
+            # User cancelled
+            return 1
+        fi
+        
+        # Check if Done was selected
+        if [[ "$choice" == *"✓ Done"* ]]; then
+            break
+        fi
+        
+        # Find which option was selected
+        local selected_idx=-1
+        for i in "${!options[@]}"; do
+            if [[ "$choice" == *"${options[$i]}"* ]]; then
+                selected_idx=$i
+                break
+            fi
+        done
+        
+        if [ $selected_idx -ge 0 ]; then
+            # Toggle selection
+            local found=false
+            local new_selected=()
+            for sel in $selected_indices; do
+                if [ "$sel" = "$selected_idx" ]; then
+                    found=true
+                else
+                    new_selected+=("$sel")
+                fi
+            done
+            
+            if [ "$found" = false ]; then
+                # Add to selection
+                new_selected+=("$selected_idx")
+                selected_items+=("${options[$selected_idx]}")
+            else
+                # Remove from selection
+                local new_items=()
+                for item in "${selected_items[@]}"; do
+                    if [ "$item" != "${options[$selected_idx]}" ]; then
+                        new_items+=("$item")
+                    fi
+                done
+                selected_items=("${new_items[@]}")
+            fi
+            
+            selected_indices="${new_selected[*]}"
+        fi
+    done
+    
+    # Return selected indices
+    echo "$selected_indices"
+}
+
+# True multiselect using gum choose --no-limit
+# Usage: gum_multiselect_simple "Header" "Option1" "Option2" ...
+# Returns: space-separated indices (0-based)
+gum_multiselect_simple() {
+    local header="$1"
+    shift
+    local options=("$@")
+    
+    # Show header
+    gum style --foreground 212 --bold "$header"
+    echo ""
+    
+    # Use gum choose with --no-limit for multiselect
+    # This allows selecting multiple items with space, Enter to confirm
+    local selected_items=$(printf '%s\n' "${options[@]}" | gum choose --no-limit --header="Use Space to select, Enter to confirm")
+    
+    if [ -z "$selected_items" ]; then
+        # User cancelled (Ctrl+C or Esc)
+        return 1
+    fi
+    
+    # Convert selected items to indices
+    local selected_indices=()
+    while IFS= read -r selected_item; do
+        for i in "${!options[@]}"; do
+            if [ "${options[$i]}" = "$selected_item" ]; then
+                selected_indices+=("$i")
+                break
+            fi
+        done
+    done <<< "$selected_items"
+    
+    # Return selected indices as space-separated string
+    echo "${selected_indices[*]}"
 }
 
 # Check if I2C is enabled in config
@@ -151,11 +299,18 @@ detect_sensor() {
         print_info "- Wrong I2C address (check SDO pin wiring)"
         print_info "- Different sensor model (not BME680)"
         print_info ""
-        read -p "Continue anyway? (y/N): " -n 1 -r
-        echo
-        if [[ ! $REPLY =~ ^[Yy]$ ]]; then
-            print_error "Installation cancelled"
-            exit 1
+        if [ "${USE_GUM:-false}" = true ] && command -v gum &> /dev/null; then
+            if ! gum confirm "Continue anyway?" --default=false; then
+                print_error "Installation cancelled"
+                exit 1
+            fi
+        else
+            read -p "Continue anyway? (y/N): " -n 1 -r
+            echo
+            if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+                print_error "Installation cancelled"
+                exit 1
+            fi
         fi
         return 1
     fi
@@ -469,14 +624,14 @@ main() {
         
         # Method 4: Use SCRIPT_DIR if available (set at top of script)
         if [ -z "$script_path" ] || [ ! -f "$script_path" ]; then
-            if [ -n "${SCRIPT_DIR:-}" ] && [ -f "${SCRIPT_DIR}/install.sh" ]; then
-                script_path="${SCRIPT_DIR}/install.sh"
+            if [ -n "${SCRIPT_DIR:-}" ] && [ -f "${SCRIPT_DIR}/install2.sh" ]; then
+                script_path="${SCRIPT_DIR}/install2.sh"
             # Check if we're in the bme680-service directory
-            elif [ -f "$(pwd)/install.sh" ]; then
-                script_path="$(cd "$(pwd)" && pwd)/install.sh"
+            elif [ -f "$(pwd)/install2.sh" ]; then
+                script_path="$(cd "$(pwd)" && pwd)/install2.sh"
             # Check parent directory
-            elif [ -f "$(dirname "$(pwd)")/install.sh" ]; then
-                script_path="$(cd "$(dirname "$(pwd)")" && pwd)/install.sh"
+            elif [ -f "$(dirname "$(pwd)")/install2.sh" ]; then
+                script_path="$(cd "$(dirname "$(pwd)")" && pwd)/install2.sh"
             fi
         fi
         
@@ -518,13 +673,15 @@ main() {
     DETECTOR="$PACKAGE_DIR/detectors/detect-bme680.sh"
     SERVICE_DIR="$PACKAGE_DIR/services"
     DATA_DIR="$PACKAGE_DIR/data"
-    IMENU_DIR="$PACKAGE_DIR/../_utilities/iMenu"
     
-    # Source iMenu (includes iWizard)
-    if [ -f "$IMENU_DIR/iMenu.sh" ]; then
-        source "$IMENU_DIR/iMenu.sh"
+    # Check if GUM is available
+    USE_GUM=false
+    if check_gum && [ -t 0 ] && [ -t 1 ]; then
+        USE_GUM=true
     else
-        print_warning "iMenu not found at $IMENU_DIR/iMenu.sh"
+        if ! check_gum; then
+            print_warning "GUM not found. Install with: /home/pi/_playground/_scripts/bootstraps/bootstrap-gum.sh"
+        fi
         print_warning "Falling back to simple prompts..."
     fi
     
@@ -535,83 +692,18 @@ main() {
         print_success "Mosquitto MQTT broker is already installed"
     fi
     
-    # Build wizard config - only include broker step if not already installed
-    if [ "$mosquitto_installed" = true ]; then
-        INSTALL_WIZARD_CONFIG='
-{
-    "title": "BME680 Service Installation",
-    "steps": [
-        {
-            "type": "multiselect",
-            "message": "ℹ️  Which services would you like to install?",
-            "options": [
-                "Base readings (MQTT) - Includes sensor readings and heatsoak calculations",
-                "IAQ monitor (MQTT) - Air quality calculation"
-            ],
-            "preselect": [0]
-        },
-        {
-            "type": "multiselect",
-            "message": "ℹ️  Which installation(s) would you like to perform?",
-            "options": [
-                "Standalone MQTT",
-                "Home Assistant MQTT Integration",
-                "Home Assistant Custom Integration"
-            ],
-            "preselect": [0, 1]
-        }
-    ]
-}
-'
-    else
-        INSTALL_WIZARD_CONFIG='
-{
-    "title": "BME680 Service Installation",
-    "steps": [
-        {
-            "type": "multiselect",
-            "message": "ℹ️  Which services would you like to install?",
-            "options": [
-                "Base readings (MQTT) - Includes sensor readings and heatsoak calculations",
-                "IAQ monitor (MQTT) - Air quality calculation"
-            ],
-            "preselect": [0]
-        },
-        {
-            "type": "multiselect",
-            "message": "ℹ️  Which installation(s) would you like to perform?",
-            "options": [
-                "Standalone MQTT",
-                "Home Assistant MQTT Integration",
-                "Home Assistant Custom Integration"
-            ],
-            "preselect": [0, 1]
-        },
-        {
-            "type": "confirm",
-            "message": "ℹ️  Install Mosquitto MQTT broker?",
-            "initial": true
-        }
-    ]
-}
-'
-    fi
-    
-    # Use iWizard for installation steps
-    if type iwizard_run_inline >/dev/null 2>&1 && [ -t 0 ] && [ -t 1 ]; then
-        wizard_results=$(iwizard_run_inline "$INSTALL_WIZARD_CONFIG")
-        wizard_exit=$?
+    # Use GUM for installation steps
+    if [ "$USE_GUM" = true ]; then
+        # Step 1: Select services
+        echo
+        step1_result=$(gum_multiselect_simple "ℹ️  Which services would you like to install?" \
+            "Base readings (MQTT) - Includes sensor readings and heatsoak calculations" \
+            "IAQ monitor (MQTT) - Air quality calculation")
         
-        if [ $wizard_exit -ne 0 ]; then
+        if [ -z "$step1_result" ]; then
             print_info "Installation cancelled"
             exit 0
         fi
-        
-        # Parse results
-        # Multiselect results are space-separated indices like "0 1"
-        # Confirm results are "true" or "false"
-        step1_result=$(echo "$wizard_results" | jq -r '.step0.result' 2>/dev/null || echo "")
-        step2_result=$(echo "$wizard_results" | jq -r '.step1.result' 2>/dev/null || echo "")
         
         # Parse step1: services
         install_base=false
@@ -622,6 +714,18 @@ main() {
                 1) install_iaq=true ;;
             esac
         done
+        
+        # Step 2: Select installation types
+        echo
+        step2_result=$(gum_multiselect_simple "ℹ️  Which installation(s) would you like to perform?" \
+            "Standalone MQTT" \
+            "Home Assistant MQTT Integration" \
+            "Home Assistant Custom Integration")
+        
+        if [ -z "$step2_result" ]; then
+            print_info "Installation cancelled"
+            exit 0
+        fi
         
         # Parse step2: installation types
         do_standalone=false
@@ -635,23 +739,25 @@ main() {
             esac
         done
         
-        # Parse step3: broker installation (only if MQTT selected and not already installed)
+        # Step 3: Broker installation (only if MQTT selected and not already installed)
         install_broker=false
         if [ "$mosquitto_installed" = false ]; then
-            step3_result=$(echo "$wizard_results" | jq -r '.step2.result' 2>/dev/null || echo "")
             want_mqtt=false
             for idx in $step2_result; do
                 case $idx in
                     0|1) want_mqtt=true ;;
                 esac
             done
-            if [ "$want_mqtt" = true ] && [ "$step3_result" = "true" ]; then
-                install_broker=true
+            if [ "$want_mqtt" = true ]; then
+                echo
+                if gum confirm "ℹ️  Install Mosquitto MQTT broker?" --default; then
+                    install_broker=true
+                fi
             fi
         fi
     else
         # Fallback to simple prompts
-        print_warning "Using simple prompts (iWizard not available)"
+        print_warning "Using simple prompts (GUM not available)"
         
         echo "Which services would you like to install?"
         echo "  1) Base readings (MQTT) - Includes sensor readings and heatsoak calculations"

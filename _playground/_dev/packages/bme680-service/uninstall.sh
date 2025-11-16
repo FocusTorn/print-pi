@@ -61,19 +61,32 @@ print_info() { #>
 } #<
 
 remove_bme680_entities() { #>
-    print_info "Removing BME680 entities from Home Assistant entity registry and state file..."
+    print_info "Removing BME680 entities from Home Assistant..."
+    
+    # Stop HA first to prevent file locks and entity recreation
+    local HA_CONTAINER="homeassistant"
+    local HA_CONFIG_PATH="$ORIGINAL_HOME/homeassistant"
+    
+    print_info "Stopping Home Assistant to prevent file locks..."
+    if docker stop "${HA_CONTAINER}" >/dev/null 2>&1; then
+        print_success "Home Assistant stopped"
+    else
+        print_warning "Could not stop Home Assistant (may already be stopped)"
+    fi
     
     local removed_count=0
     local state_removed_count=0
-    local registry_file="/config/.storage/core.entity_registry"
-    local state_file="/config/.storage/core.restore_state"
+    local device_removed_count=0
+    local mqtt_removed_count=0
+    local registry_file="${HA_CONFIG_PATH}/.storage/core.entity_registry"
+    local state_file="${HA_CONFIG_PATH}/.storage/core.restore_state"
+    local device_file="${HA_CONFIG_PATH}/.storage/core.device_registry"
+    local discovery_file="${HA_CONFIG_PATH}/.storage/mqtt.discovery"
     
-    # Try to remove entities by directly modifying the entity registry file
-    if docker ps --format '{{.Names}}' | grep -q "^homeassistant$"; then
-        # Check if registry file exists
-        if docker exec homeassistant test -f "$registry_file" 2>/dev/null; then
-            # Use Python to remove ALL entities that have 'bme680' in unique_id or entity_id
-            removed_count=$(docker exec homeassistant python3 -c "
+    # Remove entities using sudo for direct file access (like remove-ha-entities.sh)
+    if [ -f "$registry_file" ]; then
+        # Use Python to remove ALL entities that have 'bme680' in unique_id or entity_id
+        removed_count=$(sudo python3 <<PYEOF 2>/dev/null
 import json
 import sys
 
@@ -111,33 +124,31 @@ try:
 except Exception as e:
     print(0, file=sys.stderr)
     sys.exit(1)
-" 2>/dev/null || echo "0")
-        fi
-        
-        # Also remove from state file (where live states are stored)
-        if docker exec homeassistant test -f "$state_file" 2>/dev/null; then
-            state_removed_count=$(docker exec homeassistant python3 -c "
+PYEOF
+)
+    fi
+    
+    # Remove from state file (using sudo for direct file access)
+    if [ -f "$state_file" ]; then
+        state_removed_count=$(sudo python3 <<PYEOF 2>/dev/null
 import json
 import sys
+import os
 
 state_file = '$state_file'
 
 try:
-    # Read state file
+    if not os.path.exists(state_file):
+        print(0)
+        sys.exit(0)
+
     with open(state_file, 'r') as f:
         state_data = json.load(f)
     
-    # Get states list
-    states = []
-    if isinstance(state_data, dict) and 'data' in state_data:
-        data_content = state_data['data']
-        if isinstance(data_content, list):
-            states = data_content
-    
+    states = state_data.get('data', []) if isinstance(state_data.get('data'), list) else []
     original_count = len(states)
     states_to_keep = []
     
-    # Remove states for BME680 entities
     for state_obj in states:
         if not isinstance(state_obj, dict):
             states_to_keep.append(state_obj)
@@ -149,115 +160,403 @@ try:
         elif 'entity_id' in state_obj:
             entity_id = state_obj.get('entity_id', '')
         
-        # Keep state if it's not a BME680 entity
         if not entity_id or 'bme680' not in entity_id.lower():
             states_to_keep.append(state_obj)
     
     state_data['data'] = states_to_keep
-    removed_count = original_count - len(states_to_keep)
+    removed = original_count - len(states_to_keep)
     
-    # Write back
     with open(state_file, 'w') as f:
         json.dump(state_data, f, indent=2)
     
-    print(removed_count)
+    print(removed)
 except Exception as e:
-    print(0, file=sys.stderr)
+    print(f"Error: {e}", file=sys.stderr)
+    print(0)
     sys.exit(1)
-" 2>/dev/null || echo "0")
-        fi
+PYEOF
+)
     fi
+    
+    # Remove from device registry (using sudo for direct file access)
+    if [ -f "$device_file" ] && [ -f "$registry_file" ]; then
+        device_removed_count=$(sudo python3 <<PYEOF 2>/dev/null
+import json
+import sys
+import os
+
+device_file = '$device_file'
+entity_file = '$registry_file'
+
+if not os.path.exists(device_file) or not os.path.exists(entity_file):
+    print(0)
+    sys.exit(0)
+
+try:
+    with open(device_file, 'r') as f:
+        devices = json.load(f)
+    
+    # Get all device IDs that have entities matching the pattern
+    with open(entity_file, 'r') as f:
+        registry = json.load(f)
+    
+    matching_device_ids = set()
+    for entity in registry.get('data', {}).get('entities', []):
+        entity_id = entity.get('entity_id', '')
+        unique_id = entity.get('unique_id', '')
+        device_id = entity.get('device_id')
+        
+        if ('bme680' in unique_id.lower() or 'bme680' in entity_id.lower()) and device_id:
+            matching_device_ids.add(device_id)
+    
+    # Now check if any devices have ALL their entities removed (orphaned)
+    original_count = len(devices.get('data', {}).get('devices', []))
+    devices_to_keep = []
+    
+    for device in devices.get('data', {}).get('devices', []):
+        device_id = device.get('id')
+        if device_id not in matching_device_ids:
+            devices_to_keep.append(device)
+    
+    devices['data']['devices'] = devices_to_keep
+    removed = original_count - len(devices_to_keep)
+    
+    with open(device_file, 'w') as f:
+        json.dump(devices, f, indent=2)
+    
+    print(removed)
+except Exception as e:
+    print(f"Error: {e}", file=sys.stderr)
+    print(0)
+    sys.exit(1)
+PYEOF
+)
+    fi
+    
+    # Remove from MQTT discovery storage (using sudo for direct file access)
+    if [ -f "$discovery_file" ]; then
+        mqtt_removed_count=$(sudo python3 <<PYEOF 2>/dev/null
+import json
+import sys
+import os
+
+discovery_file = '$discovery_file'
+
+try:
+    if not os.path.exists(discovery_file):
+        print(0)
+        sys.exit(0)
+    
+    with open(discovery_file, 'r') as f:
+        discovery = json.load(f)
+    
+    items = discovery.get('data', {})
+    original_count = len(items)
+    
+    # Remove items matching the pattern
+    items_to_keep = {
+        k: v for k, v in items.items()
+        if 'bme680' not in k.lower()
+    }
+    
+    discovery['data'] = items_to_keep
+    removed = original_count - len(items_to_keep)
+    
+    with open(discovery_file, 'w') as f:
+        json.dump(discovery, f, indent=2)
+    
+    print(removed)
+except Exception as e:
+    print(f"Error: {e}", file=sys.stderr)
+    print(0)
+    sys.exit(1)
+PYEOF
+)
+    fi
+    
+    # Ensure all count variables are numeric
+    removed_count=$(echo "${removed_count}" | tr -d '[:space:]' || echo "0")
+    state_removed_count=$(echo "${state_removed_count}" | tr -d '[:space:]' || echo "0")
+    device_removed_count=$(echo "${device_removed_count}" | tr -d '[:space:]' || echo "0")
+    mqtt_removed_count=$(echo "${mqtt_removed_count}" | tr -d '[:space:]' || echo "0")
     
     if [ -n "$removed_count" ] && [ "$removed_count" -gt 0 ]; then
         print_success "Removed $removed_count BME680 entities from registry"
     else
-        if [ "$removed_count" = "0" ] && [ -n "$removed_count" ]; then
-            # Check if there actually were entities to remove (might indicate a script error)
-            actual_count=$(docker exec homeassistant python3 -c "
-import json
-try:
-    with open('$registry_file', 'r') as f:
-        registry = json.load(f)
-        bme680 = [e for e in registry.get('data', {}).get('entities', []) 
-                  if 'bme680' in e.get('unique_id', '').lower() or 'bme680' in e.get('entity_id', '').lower()]
-        print(len(bme680))
-except:
-    print(0)
-" 2>/dev/null || echo "0")
-            if [ "$actual_count" -gt 0 ]; then
-                print_warning "Removal reported 0, but $actual_count entities still exist - there may have been an error"
-            else
-                print_success "No BME680 entities found in registry (or already removed)"
-            fi
-        else
-            print_success "No BME680 entities found in registry (or already removed)"
-        fi
+        print_success "No BME680 entities found in registry (or already removed)"
     fi
     
     if [ -n "$state_removed_count" ] && [ "$state_removed_count" -gt 0 ]; then
         print_success "Removed $state_removed_count BME680 entity states from state file"
     fi
+    
+    if [ -n "$device_removed_count" ] && [ "$device_removed_count" -gt 0 ]; then
+        print_success "Removed $device_removed_count BME680 device(s) from device registry"
+    fi
+    
+    if [ -n "$mqtt_removed_count" ] && [ "$mqtt_removed_count" -gt 0 ]; then
+        print_success "Removed $mqtt_removed_count MQTT discovery items"
+    fi
+    
+    # Remove retained MQTT discovery messages from broker
+    remove_mqtt_retained_messages
+    
+    # Note: HA restart is handled by the main uninstall flow, not here
+    # This function just removes entities, doesn't restart
 } #<
 
-remove_bme680_device() { #>
-    print_info "Removing BME680 device from Home Assistant device registry..."
+remove_bme680_entities_no_restart() { #>
+    # Same as remove_bme680_entities but doesn't restart HA
+    # This allows the main uninstall flow to control when HA restarts
+    print_info "Removing BME680 entities from Home Assistant..."
+    
+    local HA_CONTAINER="homeassistant"
+    local HA_CONFIG_PATH="$ORIGINAL_HOME/homeassistant"
+    
+    # HA should already be stopped by the main uninstall flow
+    # But check just in case
+    if docker ps --format '{{.Names}}' | grep -q "^${HA_CONTAINER}$"; then
+        print_info "Stopping Home Assistant to prevent file locks..."
+        if docker stop "${HA_CONTAINER}" >/dev/null 2>&1; then
+            print_success "Home Assistant stopped"
+        else
+            print_warning "Could not stop Home Assistant (may already be stopped)"
+        fi
+    fi
     
     local removed_count=0
-    local device_registry_file="/config/.storage/core.device_registry"
+    local state_removed_count=0
+    local device_removed_count=0
+    local mqtt_removed_count=0
+    local registry_file="${HA_CONFIG_PATH}/.storage/core.entity_registry"
+    local state_file="${HA_CONFIG_PATH}/.storage/core.restore_state"
+    local device_file="${HA_CONFIG_PATH}/.storage/core.device_registry"
+    local discovery_file="${HA_CONFIG_PATH}/.storage/mqtt.discovery"
     
-    # Try to remove device by directly modifying the device registry file
-    if docker ps --format '{{.Names}}' | grep -q "^homeassistant$"; then
-        # Check if registry file exists
-        if docker exec homeassistant test -f "$device_registry_file" 2>/dev/null; then
-            # Use Python to remove ALL devices that have 'bme680' in name or identifiers
-            removed_count=$(docker exec homeassistant python3 -c "
+    # Remove entities using sudo for direct file access (like remove-ha-entities.sh)
+    if [ -f "$registry_file" ]; then
+        # Use Python to remove ALL entities that have 'bme680' in unique_id or entity_id
+        removed_count=$(sudo python3 <<PYEOF 2>/dev/null
 import json
 import sys
 
-device_registry_file = '$device_registry_file'
+registry_file = '$registry_file'
 
 try:
-    # Read device registry
-    with open(device_registry_file, 'r') as f:
-        device_registry = json.load(f)
+    with open(registry_file, 'r') as f:
+        registry = json.load(f)
     
-    # Find ALL devices to remove
-    original_count = len(device_registry.get('data', {}).get('devices', []))
-    devices_to_remove = []
+    # Find ALL entities to remove - match detection logic
+    original_count = len(registry.get('data', {}).get('entities', []))
+    entities_to_remove = []
     
-    for device in device_registry.get('data', {}).get('devices', []):
-        device_name = device.get('name', '')
-        device_id = device.get('id', '')
-        identifiers = str(device.get('identifiers', []))
+    for entity in registry.get('data', {}).get('entities', []):
+        entity_id = entity.get('entity_id', '')
+        unique_id = entity.get('unique_id', '')
         
-        # Remove any device with 'bme680' in name or identifiers
-        if 'bme680' in device_name.lower() or 'bme680' in identifiers.lower():
-            devices_to_remove.append(device_id)
+        # Remove any entity with 'bme680' in unique_id or entity_id (matches detection logic)
+        if 'bme680' in unique_id.lower() or 'bme680' in entity_id.lower():
+            entities_to_remove.append(entity_id)
     
-    # Remove devices
-    device_registry['data']['devices'] = [
-        device for device in device_registry['data']['devices']
-        if device.get('id') not in devices_to_remove
+    # Remove entities
+    registry['data']['entities'] = [
+        entity for entity in registry['data']['entities']
+        if entity.get('entity_id') not in entities_to_remove
     ]
-    removed_count = original_count - len(device_registry['data']['devices'])
+    removed_count = original_count - len(registry['data']['entities'])
     
     # Write back
-    with open(device_registry_file, 'w') as f:
-        json.dump(device_registry, f, indent=2)
+    with open(registry_file, 'w') as f:
+        json.dump(registry, f, indent=2)
     
     print(removed_count)
 except Exception as e:
     print(0, file=sys.stderr)
     sys.exit(1)
-" 2>/dev/null || echo "0")
-        fi
+PYEOF
+)
     fi
     
-    if [ -n "$removed_count" ] && [ "$removed_count" -gt 0 ]; then
-        print_success "Removed $removed_count BME680 device(s) from device registry"
-    else
-        print_success "No BME680 devices found in device registry (or already removed)"
+    # Remove from state file (using sudo for direct file access)
+    if [ -f "$state_file" ]; then
+        state_removed_count=$(sudo python3 <<PYEOF 2>/dev/null
+import json
+import sys
+import os
+
+state_file = '$state_file'
+
+try:
+    if not os.path.exists(state_file):
+        print(0)
+        sys.exit(0)
+
+    with open(state_file, 'r') as f:
+        state_data = json.load(f)
+    
+    states = state_data.get('data', []) if isinstance(state_data.get('data'), list) else []
+    original_count = len(states)
+    states_to_keep = []
+    
+    for state_obj in states:
+        if not isinstance(state_obj, dict):
+            states_to_keep.append(state_obj)
+            continue
+        
+        entity_id = None
+        if 'state' in state_obj and isinstance(state_obj['state'], dict):
+            entity_id = state_obj['state'].get('entity_id', '')
+        elif 'entity_id' in state_obj:
+            entity_id = state_obj.get('entity_id', '')
+        
+        if not entity_id or 'bme680' not in entity_id.lower():
+            states_to_keep.append(state_obj)
+    
+    state_data['data'] = states_to_keep
+    removed = original_count - len(states_to_keep)
+    
+    with open(state_file, 'w') as f:
+        json.dump(state_data, f, indent=2)
+    
+    print(removed)
+except Exception as e:
+    print(f"Error: {e}", file=sys.stderr)
+    print(0)
+    sys.exit(1)
+PYEOF
+)
     fi
+    
+    # Remove from device registry (using sudo for direct file access)
+    if [ -f "$device_file" ] && [ -f "$registry_file" ]; then
+        device_removed_count=$(sudo python3 <<PYEOF 2>/dev/null
+import json
+import sys
+import os
+
+device_file = '$device_file'
+entity_file = '$registry_file'
+
+if not os.path.exists(device_file) or not os.path.exists(entity_file):
+    print(0)
+    sys.exit(0)
+
+try:
+    with open(device_file, 'r') as f:
+        devices = json.load(f)
+    
+    # Get all device IDs that have entities matching the pattern
+    with open(entity_file, 'r') as f:
+        registry = json.load(f)
+    
+    matching_device_ids = set()
+    for entity in registry.get('data', {}).get('entities', []):
+        entity_id = entity.get('entity_id', '')
+        unique_id = entity.get('unique_id', '')
+        device_id = entity.get('device_id')
+        
+        if ('bme680' in unique_id.lower() or 'bme680' in entity_id.lower()) and device_id:
+            matching_device_ids.add(device_id)
+    
+    # Now check if any devices have ALL their entities removed (orphaned)
+    original_count = len(devices.get('data', {}).get('devices', []))
+    devices_to_keep = []
+    
+    for device in devices.get('data', {}).get('devices', []):
+        device_id = device.get('id')
+        if device_id not in matching_device_ids:
+            devices_to_keep.append(device)
+    
+    devices['data']['devices'] = devices_to_keep
+    removed = original_count - len(devices_to_keep)
+    
+    with open(device_file, 'w') as f:
+        json.dump(devices, f, indent=2)
+    
+    print(removed)
+except Exception as e:
+    print(f"Error: {e}", file=sys.stderr)
+    print(0)
+    sys.exit(1)
+PYEOF
+)
+    fi
+    
+    # Remove from MQTT discovery storage (using sudo for direct file access)
+    if [ -f "$discovery_file" ]; then
+        mqtt_removed_count=$(sudo python3 <<PYEOF 2>/dev/null
+import json
+import sys
+import os
+
+discovery_file = '$discovery_file'
+
+try:
+    if not os.path.exists(discovery_file):
+        print(0)
+        sys.exit(0)
+    
+    with open(discovery_file, 'r') as f:
+        discovery = json.load(f)
+    
+    items = discovery.get('data', {})
+    original_count = len(items)
+    
+    # Remove items matching the pattern
+    items_to_keep = {
+        k: v for k, v in items.items()
+        if 'bme680' not in k.lower()
+    }
+    
+    discovery['data'] = items_to_keep
+    removed = original_count - len(items_to_keep)
+    
+    with open(discovery_file, 'w') as f:
+        json.dump(discovery, f, indent=2)
+    
+    print(removed)
+except Exception as e:
+    print(f"Error: {e}", file=sys.stderr)
+    print(0)
+    sys.exit(1)
+PYEOF
+)
+    fi
+    
+    # Ensure all count variables are numeric
+    removed_count=$(echo "${removed_count}" | tr -d '[:space:]' || echo "0")
+    state_removed_count=$(echo "${state_removed_count}" | tr -d '[:space:]' || echo "0")
+    device_removed_count=$(echo "${device_removed_count}" | tr -d '[:space:]' || echo "0")
+    mqtt_removed_count=$(echo "${mqtt_removed_count}" | tr -d '[:space:]' || echo "0")
+    
+    if [ -n "$removed_count" ] && [ "$removed_count" -gt 0 ]; then
+        print_success "Removed $removed_count BME680 entities from registry"
+    else
+        print_success "No BME680 entities found in registry (or already removed)"
+    fi
+    
+    if [ -n "$state_removed_count" ] && [ "$state_removed_count" -gt 0 ]; then
+        print_success "Removed $state_removed_count BME680 entity states from state file"
+    fi
+    
+    if [ -n "$device_removed_count" ] && [ "$device_removed_count" -gt 0 ]; then
+        print_success "Removed $device_removed_count BME680 device(s) from device registry"
+    fi
+    
+    if [ -n "$mqtt_removed_count" ] && [ "$mqtt_removed_count" -gt 0 ]; then
+        print_success "Removed $mqtt_removed_count MQTT discovery items"
+    fi
+    
+    # Remove retained MQTT discovery messages from broker
+    remove_mqtt_retained_messages
+    
+    # Note: HA restart is handled by the main uninstall flow, not here
+} #<
+
+remove_bme680_device() { #>
+    # Device removal is now handled in remove_bme680_entities()
+    # This function is kept for backward compatibility but does nothing
+    print_info "Device removal handled as part of entity removal"
 } #<
 
 reload_ha_core() { #>
@@ -301,29 +600,97 @@ reload_ha_core() { #>
     return 1
 } #<
 
-remove_mqtt_discovery_messages() { #>
-    print_info "Checking for MQTT discovery messages that might recreate entities..."
+remove_mqtt_retained_messages() { #>
+    print_info "Checking for retained MQTT discovery messages..."
     
-    # This function attempts to remove retained MQTT discovery messages
-    # Note: This requires MQTT broker access, which may not be available
-    # This is a best-effort attempt to prevent entity recreation
-    
-    # Check if mosquitto_pub is available (for removing retained messages)
-    if ! command -v mosquitto_pub >/dev/null 2>&1 && ! command -v mosquitto >/dev/null 2>&1; then
-        print_info "  MQTT tools not available, skipping discovery message cleanup"
-        print_info "  If entities are recreated, manually remove retained messages from MQTT broker"
+    # Check if mosquitto tools are available
+    if ! command -v mosquitto_pub >/dev/null 2>&1; then
+        print_info "  MQTT tools not available, skipping retained message cleanup"
         return 0
     fi
     
-    # Common MQTT discovery topic patterns for BME680
-    # These would need to be removed from the broker to prevent auto-discovery
-    print_info "  Note: MQTT discovery messages may need manual removal from broker"
-    print_info "  Look for retained messages on topics like:"
-    print_info "    - homeassistant/sensor/bme680*/config"
-    print_info "    - homeassistant/binary_sensor/bme680*/config"
-    print_info "  Use MQTT broker tools or HA MQTT integration to remove them"
+    # Use paho-mqtt to discover retained messages (like remove-ha-entities.sh)
+    print_info "Scanning broker for retained messages matching pattern 'bme680'..."
     
-    return 0
+    RETAINED_TOPICS=$(python3 <<PYEOF 2>/dev/null
+import paho.mqtt.client as mqtt
+import json
+import sys
+import time
+
+pattern = 'bme680'
+topics_to_remove = set()
+received_messages = {}
+
+def on_connect(client, userdata, flags, rc):
+    if rc == 0:
+        client.subscribe('homeassistant/#')
+    else:
+        sys.exit(1)
+
+def on_message(client, userdata, msg):
+    if not msg.retain:
+        return
+    
+    topic = msg.topic
+    try:
+        payload = msg.payload.decode('utf-8')
+        if pattern in topic.lower() or pattern in payload.lower():
+            topics_to_remove.add(topic)
+        try:
+            data = json.loads(payload)
+            payload_str = json.dumps(data).lower()
+            if pattern in payload_str:
+                topics_to_remove.add(topic)
+        except:
+            pass
+    except:
+        pass
+
+try:
+    client = mqtt.Client()
+    client.on_connect = on_connect
+    client.on_message = on_message
+    
+    client.connect('localhost', 1883, 60)
+    client.loop_start()
+    
+    time.sleep(3)
+    
+    client.loop_stop()
+    client.disconnect()
+    
+    for topic in sorted(topics_to_remove):
+        print(topic)
+except Exception as e:
+    print('', file=sys.stderr)
+    sys.exit(0)
+PYEOF
+)
+    
+    if [ -n "$RETAINED_TOPICS" ]; then
+        TOTAL_TOPICS=$(echo "$RETAINED_TOPICS" | grep -v '^$' | wc -l)
+        print_info "Attempting to remove ${TOTAL_TOPICS} retained MQTT discovery topics..."
+        
+        REMOVED_TOPICS=0
+        while IFS= read -r topic; do
+            if [ -n "$topic" ]; then
+                if timeout 2 mosquitto_pub -h localhost -t "$topic" -r -n 2>/dev/null; then
+                    REMOVED_TOPICS=$((REMOVED_TOPICS + 1))
+                fi
+            fi
+        done <<< "$RETAINED_TOPICS"
+        
+        if [ "$REMOVED_TOPICS" -gt 0 ]; then
+            print_success "Removed ${REMOVED_TOPICS} retained MQTT discovery messages from broker"
+        elif [ "$TOTAL_TOPICS" -gt 0 ]; then
+            print_warning "Attempted to remove ${TOTAL_TOPICS} retained MQTT topics, but removal may have failed"
+        else
+            print_info "No retained MQTT discovery topics found to remove"
+        fi
+    else
+        print_info "No retained MQTT discovery topics found to remove"
+    fi
 } #<
 
 if [ "$EUID" -ne 0 ]; then #> Auto-elevate to root if needed
@@ -752,43 +1119,32 @@ fi
 
 echo
 
-# Now process all the options
-echo
-if [ ${#services_to_uninstall[@]} -gt 0 ]; then
-    print_info "Uninstalling services..."
-    for service in "${services_to_uninstall[@]}"; do
-        uninstall_service "$service"
-    done
-    
-    print_info "Reloading systemd daemon..."
-    systemctl daemon-reload
-    
-    # Clean up any remaining service files (backups, deprecated services, etc.)
-    cleanup_all_service_files
-    
-    # Kill any remaining bme680 processes
-    print_info "Stopping any remaining bme680 processes..."
-    pkill -f "bme680.*wrapper" 2>/dev/null || true
-    pkill -f "base-readings.py" 2>/dev/null || true
-    pkill -f "monitor-heatsoak.py" 2>/dev/null || true
-    pkill -f "monitor-iaq.py" 2>/dev/null || true
-    sleep 1  # Give processes time to stop
-    
-    # Remove package files and CLI automatically (no point keeping them without services)
-    if [ -d "$INSTALL_ROOT" ]; then
-        print_info "Removing package files..."
-        rm -rf "$INSTALL_ROOT"
-        print_success "Package files removed"
-    fi
-    
-    if [ -f "$INSTALL_BIN/bme680-cli" ]; then
-        print_info "Removing CLI tool..."
-        rm -f "$INSTALL_BIN/bme680-cli"
-        print_success "CLI tool removed"
+# Now process all the options in the correct order:
+# 1. Stop HA (if HA files/entities are being removed)
+# 2. Remove HA integration files
+# 3. Remove HA entities (but don't restart yet)
+# 4. Remove services
+# 5. Remove config files
+# 6. Remove package files and CLI
+# 7. Restart HA at the end (if it was stopped)
+
+HA_CONTAINER="homeassistant"
+HA_WAS_RUNNING=false
+
+# Step 1: Stop HA first if we're removing HA files or entities
+if [ "$remove_ha_integration" = true ] || [ "$remove_ha_entities" = true ]; then
+    if docker ps --format '{{.Names}}' | grep -q "^${HA_CONTAINER}$"; then
+        print_info "Stopping Home Assistant..."
+        if docker stop "${HA_CONTAINER}" >/dev/null 2>&1; then
+            print_success "Home Assistant stopped"
+            HA_WAS_RUNNING=true
+        else
+            print_warning "Could not stop Home Assistant (may already be stopped)"
+        fi
     fi
 fi
 
-# Remove HA integration files FIRST (before entities) to prevent recreation
+# Step 2: Remove HA integration files
 if [ "$remove_ha_integration" = true ]; then
     print_info "Removing Home Assistant integration files..."
     
@@ -820,29 +1176,36 @@ if [ "$remove_ha_integration" = true ]; then
     fi
 fi
 
-# Remove HA entities (can be done independently or after removing integration files)
-# Note: If both package file and entities are removed, HA restart will ensure clean state
+# Step 3: Remove HA entities (but don't restart yet - we'll do that at the end)
 if [ "$remove_ha_entities" = true ]; then
-    remove_bme680_entities
-    # CRITICAL: Also remove the device from device registry
-    # This prevents HA from recreating entities on restart
-    remove_bme680_device
-    # Also check for MQTT discovery messages that might recreate entities
-    remove_mqtt_discovery_messages
-    
-    # CRITICAL: Restart HA immediately to clear entities from runtime memory
-    # This is required - entities are in HA's memory until restart
-    echo
-    print_info "Restarting Home Assistant to clear entities from runtime memory..."
-    if ha restart >/dev/null 2>&1; then
-        print_success "Home Assistant restarted - entities should now be fully removed"
-    else
-        print_warning "Could not automatically restart Home Assistant"
-        print_warning "⚠️  REQUIRED: Restart HA manually with: ha restart"
-        print_warning "   Entities are still in HA's runtime memory until restart"
-    fi
+    # Temporarily modify remove_bme680_entities to not restart HA
+    # We'll restart at the end after all files are removed
+    remove_bme680_entities_no_restart
 fi
-# Remove config files if requested (independent of services)
+
+# Step 4: Remove services
+if [ ${#services_to_uninstall[@]} -gt 0 ]; then
+    print_info "Uninstalling services..."
+    for service in "${services_to_uninstall[@]}"; do
+        uninstall_service "$service"
+    done
+    
+    print_info "Reloading systemd daemon..."
+    systemctl daemon-reload
+    
+    # Clean up any remaining service files (backups, deprecated services, etc.)
+    cleanup_all_service_files
+    
+    # Kill any remaining bme680 processes
+    print_info "Stopping any remaining bme680 processes..."
+    pkill -f "bme680.*wrapper" 2>/dev/null || true
+    pkill -f "base-readings.py" 2>/dev/null || true
+    pkill -f "monitor-heatsoak.py" 2>/dev/null || true
+    pkill -f "monitor-iaq.py" 2>/dev/null || true
+    sleep 1  # Give processes time to stop
+fi
+
+# Step 5: Remove config files
 if [ "$remove_config" = true ]; then
     print_info "Removing configuration files..."
     
@@ -863,20 +1226,35 @@ if [ "$remove_config" = true ]; then
     print_success "Configuration files removed"
 fi
 
-# Final recommendation: Restart HA to clear entities from runtime memory
-if [ "$remove_ha_entities" = true ] || [ "$remove_ha_integration" = true ]; then
+# Step 6: Remove package files and CLI (if services were uninstalled)
+if [ ${#services_to_uninstall[@]} -gt 0 ]; then
+    if [ -d "$INSTALL_ROOT" ]; then
+        print_info "Removing package files..."
+        rm -rf "$INSTALL_ROOT"
+        print_success "Package files removed"
+    fi
+    
+    if [ -f "$INSTALL_BIN/bme680-cli" ]; then
+        print_info "Removing CLI tool..."
+        rm -f "$INSTALL_BIN/bme680-cli"
+        print_success "CLI tool removed"
+    fi
+fi
+
+# Step 7: Restart HA at the end (if it was stopped)
+if [ "$HA_WAS_RUNNING" = true ]; then
     echo
-    print_info "⚠️  REQUIRED: Restart Home Assistant to complete entity removal"
-    print_info "   Entities have been removed from registry and state files,"
-    print_info "   but they're still in HA's runtime memory until restart."
-    print_info ""
-    print_info "   Run: ha restart"
-    print_info "   Or use: Settings > System > Restart"
-    print_info ""
-    if [ "$remove_ha_integration" = true ]; then
-        print_info "   After restart, if entities reappear, they may be recreated from:"
-        print_info "   - MQTT discovery messages (check with: mosquitto_sub -h localhost -t 'homeassistant/#' -C 1 --retained-only)"
-        print_info "   - Cached MQTT integration configuration"
+    print_info "Restarting Home Assistant..."
+    print_info "Waiting for HA to fully initialize and process storage files..."
+    if docker start "${HA_CONTAINER}" >/dev/null 2>&1; then
+        print_success "Home Assistant started"
+        sleep 10
+        sync  # Force filesystem sync
+        sleep 5  # Additional wait for HA to process cleaned storage
+        print_success "Home Assistant restarted"
+    else
+        print_error "Could not start Home Assistant"
+        print_warning "⚠️  REQUIRED: Start HA manually with: docker start ${HA_CONTAINER}"
     fi
 fi
 

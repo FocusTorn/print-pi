@@ -46,8 +46,9 @@ _playground/
 ```
 ~/ (home directory)
 ├── homeassistant/         # Home Assistant runtime (can be removed)
-├── .local/bin/            # User binaries (symlinks to _playground)
-│                          # ⚠️ CRITICAL: Personal scripts ALWAYS go here, NEVER in /usr/local/bin
+├── .local/bin/            # User binaries (manual installs, symlinks to _playground)
+│                          # ⚠️ CRITICAL: Manual installs go here, NOT /usr/local/bin
+│                          # Note: APT/UV/PIP managed packages use system/venv locations
 ├── .config/               # Application configs (some detoured)
 ├── printer_data/          # Klipper runtime (can be removed)
 └── [other services]/      # Other service runtimes
@@ -59,7 +60,9 @@ _playground/
 - ✅ Installed via bootstrap scripts from `_playground/`
 - ✅ Can have files detoured to `_playground/` versions
 - ❌ Should NOT be directly tracked in git (use `.gitignore`)
-- ⚠️ **Personal binaries MUST go in `~/.local/bin/`** - Never install to `/usr/local/bin` or system directories
+- ⚠️ **Manual installs MUST go in `~/.local/bin/`** - Never install to `/usr/local/bin` or system directories
+- ✅ **Package-managed binaries** (APT/UV/PIP) use their standard locations - this is preferred
+- **Rationale:** `~/.local/bin/` is for tracking non-system-managed binaries. Prefer package managers when available.
 
 ---
 
@@ -143,8 +146,14 @@ _playground/home-assistant/automations.yaml  (tracked)
 - Can create symlinks from `~/` to `_playground/`
 - Can optionally configure services via CLI during bootstrap
 - Should be idempotent (safe to run multiple times)
-- **User binaries:** Always create symlinks in `~/.local/bin/` pointing to `_playground/` scripts
+- **Package Installation Priority:**
+  1. ✅ Use **APT** if package available (system-managed, auto-updates)
+  2. ✅ Use **UV/PIP** for Python packages (venv-managed)
+  3. ✅ Use **Cargo** for Rust crates
+  4. ✅ Use **~/.local/bin/** for manual installs (curl, binaries, custom scripts)
+- **User binaries:** For manual installs, create symlinks in `~/.local/bin/` pointing to `_playground/` scripts
 - ⚠️ **Never install to `/usr/local/bin`** - Keep system directories clean
+- **Rationale:** `~/.local/bin/` is for non-system-managed binaries. Prefer package managers (APT/UV/PIP) when available.
 
 **Current Scripts:**
 - `bootstrap-home-assistant.sh` - Installs HA with Bluetooth support
@@ -251,10 +260,15 @@ When suggesting changes or edits:
    - Emphasize that fresh installs restore from `_playground/` only
 
 6. **When installing or creating binaries/scripts:**
-   - ⚠️ **ALWAYS use `~/.local/bin/`** for user binaries and scripts
-   - ⚠️ **NEVER install to `/usr/local/bin/`** or other system directories
-   - Create symlinks from `~/.local/bin/` to source files in `_playground/`
-   - Bootstrap scripts should handle this symlink creation automatically
+   - **Package Manager Priority (in order):**
+     1. ✅ **APT** - Use for Debian packages (system-managed, auto-updates)
+     2. ✅ **UV/PIP** - Use for Python packages (venv-managed)
+     3. ✅ **Cargo** - Use for Rust crates
+     4. ✅ **~/.local/bin/** - Use for manual installs (curl, binaries, custom scripts)
+   - ⚠️ **NEVER install to `/usr/local/bin/`** - Keep system directories clean
+   - **Rationale:** `~/.local/bin/` is for non-system-managed binaries to keep them visible and trackable. If APT/UV/PIP can manage it, use those instead.
+   - **Manual installs:** Create symlinks from `~/.local/bin/` to source files in `_playground/`
+   - Bootstrap scripts should handle this automatically
 
 ---
 

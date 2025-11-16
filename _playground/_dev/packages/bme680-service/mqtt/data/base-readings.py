@@ -501,22 +501,22 @@ Examples:
                     # Publish to MQTT only at specified interval
                     should_publish = (current_time - last_publish_time) >= publish_interval
                     if should_publish:
-                    try:
+                        try:
                             # Convert retain string to boolean
                             retain_flag = str(retain).lower() == 'true'
-                        result = mqtt_client.publish(
+                            result = mqtt_client.publish(
                                 topic,
-                            json.dumps(readings),
-                            qos=1,
+                                json.dumps(readings),
+                                qos=1,
                                 retain=retain_flag  # Retain flag from config/command line
-                        )
+                            )
                             last_publish_time = current_time
-                        if not args.quiet:
+                            if not args.quiet:
                                 print(f"   ✅ Published to {topic}")
-                            sys.stdout.flush()
-                    except Exception as e:
-                        print(f"   ❌ MQTT publish failed: {e}", file=sys.stderr)
-                        sys.stderr.flush()
+                                sys.stdout.flush()
+                        except Exception as e:
+                            print(f"   ❌ MQTT publish failed: {e}", file=sys.stderr)
+                            sys.stderr.flush()
                 else:
                     if not args.quiet and not args.json:
                         print("⏳ Waiting for heat stable reading...")

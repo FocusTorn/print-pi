@@ -27,6 +27,8 @@
               "items": {
                 "type": "string",
                 "enum": [
+                  "water",
+                  "gas",
                   "identify",
                   "restart",
                   "update",
@@ -40,13 +42,11 @@
                   "shade",
                   "shutter",
                   "window",
+                  "outlet",
+                  "switch",
                   "tv",
                   "speaker",
-                  "receiver",
-                  "water",
-                  "gas",
-                  "outlet",
-                  "switch"
+                  "receiver"
                 ]
               }
             }
@@ -79,6 +79,8 @@
               "items": {
                 "type": "string",
                 "enum": [
+                  "water",
+                  "gas",
                   "identify",
                   "restart",
                   "update",
@@ -92,13 +94,11 @@
                   "shade",
                   "shutter",
                   "window",
+                  "outlet",
+                  "switch",
                   "tv",
                   "speaker",
-                  "receiver",
-                  "water",
-                  "gas",
-                  "outlet",
-                  "switch"
+                  "receiver"
                 ]
               }
             }
@@ -324,8 +324,8 @@
                 {
                   "type": "string",
                   "enum": [
-                    "down",
-                    "up"
+                    "up",
+                    "down"
                   ]
                 },
                 {

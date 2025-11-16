@@ -227,6 +227,12 @@ _wizard_orchestrate_steps_json() {
         local show_message="${1:-false}"  # Optional: show cancellation message
         _imenu_show_cursor
         _imenu_exit_alternate_screen
+        # Add newlines after exiting alternate screen to preserve scroll position
+        # This prevents the scroll bar from jumping to the top when returning to main terminal
+        if [ "$show_message" != "true" ]; then
+            # Only add newlines on successful completion (not on cancellation)
+            printf '\n\n' >&2
+        fi
         # Show cancellation message in original buffer if requested
         if [ "$show_message" = "true" ]; then
             printf '\n%b⚠️  Wizard cancelled%b\n' "${YELLOW}" "${NC}" >&2
