@@ -1,0 +1,167 @@
+# ============================================================================
+# BME680 Temperature Gauge Card - Simple Layout
+# ============================================================================
+# Layout matches diagram:
+#     TEMP
+#       1
+#   ───────┬───────
+#   B: 2   │ S: 3
+# ============================================================================
+
+type: custom:horseshoe-card
+
+# ============================================================================
+# ENTITIES
+# ============================================================================
+entities:
+  - entity: sensor.bme680_chanber_smoothed_temperature  # 1 - Top center
+    decimals: 1
+    unit: "°C"
+  - entity: sensor.bme680_chanber_temperature            # 2 - Bottom left (B:)
+    decimals: 2  # Show 2 decimals like "27.52"
+    unit: ""  # No unit shown
+  - entity: sensor.bme680_chanber_temp_smoothing_buffer  # 3 - Bottom right (S:)
+    decimals: 0
+    unit: ""  # No unit - will add manually if needed
+
+# ============================================================================
+# LAYOUT
+# ============================================================================
+layout:
+  states:
+    # 1 - Primary value at top center
+    - id: 0
+      xpos: 50
+      ypos: 30
+      entity_index: 0
+      styles:
+        - font-size: '3.5em'
+        - font-weight: 'bold'
+        - fill: '#E8E8E8'
+        - text-anchor: 'middle'
+    
+    # B: label - bottom left
+    - id: 1
+      xpos: 15
+      ypos: 75
+      entity_index: 0
+      text: 'B:'
+      styles:
+        - font-size: '1.1em'
+        - fill: '#B0B0B0'
+        - text-anchor: 'start'
+    
+    # 2 - Base temperature - bottom left (spaced from B:, no unit)
+    - id: 2
+      xpos: 24
+      ypos: 75
+      entity_index: 1
+      styles:
+        - font-size: '1.4em'
+        - font-weight: 'bold'
+        - fill: '#E8E8E8'
+        - text-anchor: 'start'
+    
+    # S: label - bottom right
+    - id: 3
+      xpos: 58
+      ypos: 75
+      entity_index: 0
+      text: 'S:'
+      styles:
+        - font-size: '1.1em'
+        - fill: '#B0B0B0'
+        - text-anchor: 'start'
+    
+    # 3 - Buffer count - bottom right (spaced from S:, no unit)
+    - id: 4
+      xpos: 67
+      ypos: 75
+      entity_index: 2
+      styles:
+        - font-size: '1.4em'
+        - font-weight: 'bold'
+        - fill: '#E8E8E8'
+        - text-anchor: 'start'
+
+  # Horizontal separator line (between top and bottom)
+  hlines:
+    - id: 0
+      xpos: 50
+      ypos: 60
+      length: 80
+      styles:
+        - stroke: '#E8E8E8'
+        - stroke-width: '1'
+        - opacity: '0.4'
+
+  # Vertical separator line (between left and right bottom)
+  vlines:
+    - id: 0
+      xpos: 50
+      ypos: 70
+      length: 12
+      styles:
+        - stroke: '#E8E8E8'
+        - stroke-width: '1'
+        - opacity: '0.4'
+
+# ============================================================================
+# GAUGE SCALE
+# ============================================================================
+horseshoe_scale:
+  min: "{{ states('sensor.bme680_chanber_initial_soak_temp') | default(0, true) | float(0) }}"
+  max: "{{ states('sensor.bme680_chanber_target_temp') | default(100, true) | float(100) }}"
+
+# ============================================================================
+# COLOR GRADIENT
+# ============================================================================
+color_stops:
+  "0": "#2196F3"   # Blue (cold)
+  "25": "#4CAF50"  # Green (normal)
+  "40": "#FF9800"  # Orange (warm)
+  "50": "#F44336"  # Red (hot)
+
+# ============================================================================
+# DISPLAY OPTIONS
+# ============================================================================
+show:
+  horseshoe_style: 'lineargradient'
+  scale_tickmarks: false
+
+# ============================================================================
+# STYLING
+# ============================================================================
+card_mod:
+  style: |
+    ha-card {
+      background: #2C2C2C !important;
+      color: #E8E8E8;
+      width: 100%;
+      height: auto;
+      box-shadow: none;
+    }
+    horseshoe-card {
+      width: 100%;
+      height: 100%;
+      background: transparent;
+    }
+    horseshoe-card svg {
+      background: transparent !important;
+    }
+    horseshoe-card text,
+    horseshoe-card text tspan {
+      filter: drop-shadow(1px 1px 2px rgba(0, 0, 0, 0.9));
+    }
+    /* Hide units for bottom values */
+    horseshoe-card text:nth-of-type(3) tspan.state__uom,
+    horseshoe-card text:nth-of-type(5) tspan.state__uom {
+      display: none;
+    }
+    /* Make top center unit render inline instead of above */
+    horseshoe-card text:nth-of-type(1) tspan.state__uom {
+      /* Move unit inline to the right of value */
+      dx: '0.2em' !important;
+      dy: '0em' !important;
+      font-size: 0.7em;
+    }

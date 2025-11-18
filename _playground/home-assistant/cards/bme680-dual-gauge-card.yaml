@@ -1,0 +1,289 @@
+# BME680 Dual Gauge Card (Flex Horseshoe)
+# This is a card configuration file (horizontal-stack with two gauges)
+# 
+# To use this card in a dashboard, include it in a view's cards array:
+#
+#   title: My Dashboard
+#   views:
+#     - title: BME680
+#       path: bme680
+#       cards:
+#         - !include ../cards/bme680-dual-gauge-card.yaml
+#
+# Or add it directly to an existing dashboard view:
+#
+#   cards:
+#     - !include ../cards/bme680-dual-gauge-card.yaml
+#
+# Alternative: Use the individual card files in a horizontal-stack:
+#   - type: horizontal-stack
+#     cards:
+#       - !include ../cards/bme680-gauge-temp.yaml
+#       - !include ../cards/bme680-gauge-rate.yaml
+#
+# Entity Mapping:
+#   1. sensor.bme680_chanber_smoothed_temperature
+#   2. sensor.bme680_chanber_temperature
+#   3. sensor.bme680_chanber_temp_smoothing_buffer
+#   4. sensor.bme680_chanber_smoothed_change_rate
+#   5. sensor.bme680_chanber_rate_change_plateau
+#   6. sensor.bme680_chanber_max_rate_since_soak_start
+
+
+type: grid
+cards:
+  - type: heading
+    heading: Heat Soak State
+    heading_style: title
+    icon: mdi:fire
+
+
+  - type: horizontal-stack
+    cards:
+    # Left Gauge: Smoothed Temperature
+    - type: custom:flex-horseshoe-card
+      entities:
+        # Primary entity - smoothed temperature (displayed in horseshoe gauge)
+        - entity: sensor.bme680_chanber_smoothed_temperature
+          decimals: 1
+          unit: '°C'
+        # Base reading
+        - entity: sensor.bme680_chanber_temperature
+          decimals: 1
+          unit: '°C'
+        # Smoothing buffer count
+        - entity: sensor.bme680_chanber_temp_smoothing_buffer
+          decimals: 0
+        # Entities for gauge range (initial and target temps)
+        - entity: sensor.bme680_chanber_initial_soak_temp
+          decimals: 1
+        - entity: sensor.bme680_chanber_target_temp
+          decimals: 1
+      
+      # Primary entity displayed in gauge
+      primary_entity: entity.0
+      
+      # Gauge scale - use entity states for dynamic min/max
+      horseshoe_scale:
+        min: "{{ states('sensor.bme680_chanber_initial_soak_temp') | float(0) }}"
+        max: "{{ states('sensor.bme680_chanber_target_temp') | float(100) }}"
+      
+      # Color stops for temperature gauge (cool to warm gradient)
+      color_stops:
+        '0': '#2196F3'   # Blue (cold)
+        '25': '#4CAF50'  # Green
+        '40': '#FF9800'  # Orange (warm)
+        '50': '#F44336'  # Red (hot)
+      
+      # Layout configuration - T-formation INSIDE gauge area
+      layout:
+        states:
+          # Primary value at top center (smoothed temp)
+          - id: 0
+            entity_index: 0
+            xpos: 50
+            ypos: 30
+            styles:
+              - font-size: 3.5em
+              - font-weight: bold
+              - fill: '#E8E8E8'
+              - text-anchor: middle
+          
+          # Label "B:" before base reading
+          - id: 1
+            xpos: 18
+            ypos: 75
+            styles:
+              - font-size: 1.2em
+              - fill: '#B0B0B0'
+              - text-anchor: middle
+            text: 'B:'
+          
+          # Base reading (B: 2) - left side below horizontal line
+          - id: 2
+            entity_index: 1
+            xpos: 30
+            ypos: 75
+            styles:
+              - font-size: 1.5em
+              - font-weight: bold
+              - fill: '#E8E8E8'
+              - text-anchor: middle
+          
+          # Label "S:" before smoothing buffer
+          - id: 3
+            xpos: 58
+            ypos: 75
+            styles:
+              - font-size: 1.2em
+              - fill: '#B0B0B0'
+              - text-anchor: middle
+            text: 'S:'
+          
+          # Smoothing buffer (S: 3) - right side below horizontal line
+          - id: 4
+            entity_index: 2
+            xpos: 70
+            ypos: 75
+            styles:
+              - font-size: 1.5em
+              - font-weight: bold
+              - fill: '#E8E8E8'
+              - text-anchor: middle
+        
+        # Horizontal line separator (T-formation)
+        hlines:
+          - id: 0
+            xpos: 20
+            ypos: 65
+            length: 60
+            styles:
+              - stroke: '#E8E8E8'
+              - stroke-width: 1
+              - opacity: 0.5
+        
+        # Vertical line separator (T-formation)
+        vlines:
+          - id: 0
+            xpos: 50
+            ypos: 65
+            length: 15
+            styles:
+              - stroke: '#E8E8E8'
+              - stroke-width: 1
+              - opacity: 0.5
+      
+      # Show configuration
+      show:
+        horseshoe_style: lineargradient
+        scale_tickmarks: true
+      
+      # Dark theme styling
+      card_mod:
+        style: |
+          ha-card {
+            background: #2C2C2C;
+            color: #E8E8E8;
+          }
+
+    # Right Gauge: Rate of Change
+    - type: custom:flex-horseshoe-card
+      entities:
+        # Primary entity - smoothed change rate (displayed in horseshoe gauge)
+        - entity: sensor.bme680_chanber_smoothed_change_rate
+          decimals: 2
+          unit: '°C/min'
+        # Threshold (plateau) for comparison
+        - entity: sensor.bme680_chanber_rate_change_plateau
+          decimals: 2
+          unit: '°C/min'
+        # Max rate since soak start
+        - entity: sensor.bme680_chanber_max_rate_since_soak_start
+          decimals: 2
+          unit: '°C/min'
+      
+      # Primary entity displayed in gauge
+      primary_entity: entity.0
+      
+      # Gauge scale - dynamic from entities
+      horseshoe_scale:
+        min: "{{ states('sensor.bme680_chanber_max_rate_since_soak_start') | float(0) }}"
+        max: "{{ states('sensor.bme680_chanber_rate_change_plateau') | float(5) }}"
+      
+      # Color stops for rate of change gauge
+      color_stops:
+        '0': '#00FF00'   # Green (low rate)
+        '2.5': '#FFFF00' # Yellow
+        '5': '#FF0000'   # Red (high rate)
+      
+      # Layout configuration - T-formation INSIDE gauge area
+      layout:
+        states:
+          # Primary value at top center (rate of change)
+          - id: 0
+            entity_index: 0
+            xpos: 50
+            ypos: 30
+            styles:
+              - font-size: 3.5em
+              - font-weight: bold
+              - fill: '#E8E8E8'
+              - text-anchor: middle
+          
+          # Label "<" for threshold status
+          - id: 1
+            xpos: 18
+            ypos: 75
+            styles:
+              - font-size: 1.2em
+              - fill: "{% if states('sensor.bme680_chanber_smoothed_change_rate') | float < states('sensor.bme680_chanber_rate_change_plateau') | float(0) %}#4CAF50{% else %}#F44336{% endif %}"
+              - text-anchor: middle
+            text: "<"
+          
+          # Threshold value (< 5) - left side below horizontal line
+          - id: 2
+            entity_index: 1
+            xpos: 30
+            ypos: 75
+            styles:
+              - font-size: 1.5em
+              - font-weight: bold
+              - fill: "{% if states('sensor.bme680_chanber_smoothed_change_rate') | float < states('sensor.bme680_chanber_rate_change_plateau') | float(0) %}#4CAF50{% else %}#F44336{% endif %}"
+              - text-anchor: middle
+          
+          # Label "Max:" before max rate
+          - id: 3
+            xpos: 58
+            ypos: 75
+            styles:
+              - font-size: 1.2em
+              - fill: '#B0B0B0'
+              - text-anchor: middle
+            text: 'Max:'
+          
+          # Max rate (Max: 6) - right side below horizontal line
+          - id: 4
+            entity_index: 2
+            xpos: 70
+            ypos: 75
+            styles:
+              - font-size: 1.5em
+              - font-weight: bold
+              - fill: '#E8E8E8'
+              - text-anchor: middle
+        
+        # Horizontal line separator (T-formation)
+        hlines:
+          - id: 0
+            xpos: 20
+            ypos: 65
+            length: 60
+            styles:
+              - stroke: '#E8E8E8'
+              - stroke-width: 1
+              - opacity: 0.5
+        
+        # Vertical line separator (T-formation)
+        vlines:
+          - id: 0
+            xpos: 50
+            ypos: 65
+            length: 15
+            styles:
+              - stroke: '#E8E8E8'
+              - stroke-width: 1
+              - opacity: 0.5
+      
+      # Show configuration
+      show:
+        horseshoe_style: lineargradient
+        scale_tickmarks: true
+      
+      # Dark theme styling
+      card_mod:
+        style: |
+          ha-card {
+            background: #2C2C2C;
+            color: #E8E8E8;
+          }
+

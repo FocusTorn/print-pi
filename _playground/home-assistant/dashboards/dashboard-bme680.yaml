@@ -1,0 +1,9 @@
+title: BME680 Sensors
+views:
+  - title: BME680 Gauges
+    path: bme680
+    icon: mdi:thermometer
+    cards:
+      # BME680 Dual Gauge Card
+      - !include ../cards/bme680-dual-gauge-card.yaml
+

@@ -1,0 +1,277 @@
+# BME680 Heat Soak Section - Complete Section for Dashboard
+# Copy this entire section into your dashboard's sections array
+#
+# Structure:
+#   - type: grid                    <- Section container (grid layout)
+#     cards:                        <- Array of cards in this section
+#       - heading card              <- Title card
+#       - horizontal-stack          <- Container for side-by-side cards
+#         cards:                    <- Two gauge cards inside
+#           - left gauge            <- Temperature gauge
+#           - right gauge           <- Rate of change gauge
+
+type: grid
+cards:
+  # Heading Card - Section Title
+  - type: heading
+    heading: Heat Soak State
+    heading_style: title
+    icon: mdi:fire
+  
+  # Horizontal Stack - Places two cards side by side
+  - type: horizontal-stack
+    cards:
+      # LEFT GAUGE: Smoothed Temperature
+      # Shows: Smoothed temp (1) at top, Base (2) and Smoothing buffer (3) below
+      - type: custom:flex-horseshoe-card
+        entities:
+          # Entity 1: Primary gauge value (displayed in horseshoe arc)
+          - entity: sensor.bme680_chanber_smoothed_temperature
+            decimals: 1
+            unit: '°C'
+          # Entity 2: Base reading (shown as "B: 2" below)
+          - entity: sensor.bme680_chanber_temperature
+            decimals: 1
+            unit: '°C'
+          # Entity 3: Smoothing buffer count (shown as "S: 3" below)
+          - entity: sensor.bme680_chanber_temp_smoothing_buffer
+            decimals: 0
+            unit: ''
+        
+        # Primary entity shown in the horseshoe gauge arc
+        primary_entity: entity.0
+        
+        # Gauge scale - range from initial to target temperature
+        # Using is_number filter to ensure we always have valid numbers
+        horseshoe_scale:
+          min: "{{ states('sensor.bme680_chanber_initial_soak_temp') | default(0, true) | float(0) }}"
+          max: "{{ states('sensor.bme680_chanber_target_temp') | default(100, true) | float(100) }}"
+        
+        # Color gradient for temperature (blue=cold, green=normal, orange=warm, red=hot)
+        color_stops:
+          '0': '#2196F3'   # Blue (cold)
+          '25': '#4CAF50'  # Green (normal)
+          '40': '#FF9800'  # Orange (warm)
+          '50': '#F44336'  # Red (hot)
+        
+        # Layout - positions text and lines INSIDE the gauge area
+        layout:
+          states:
+            # Primary value (Entity 1) - large at top center
+            - id: 0
+              entity_index: 0
+              xpos: 50
+              ypos: 30
+              styles:
+                - font-size: 3.5em
+                - font-weight: bold
+                - fill: '#E8E8E8'
+                - text-anchor: middle
+            
+            # Label "B:" before base reading (uses entity_index 1 but displays text)
+            - id: 1
+              entity_index: 1
+              xpos: 18
+              ypos: 80
+              styles:
+                - font-size: 1.2em
+                - fill: '#B0B0B0'
+                - text-anchor: middle
+              text: 'B:'
+            
+            # Base reading (Entity 2) - left side below horizontal line
+            - id: 2
+              entity_index: 1
+              xpos: 30
+              ypos: 80
+              styles:
+                - font-size: 1.5em
+                - font-weight: bold
+                - fill: '#E8E8E8'
+                - text-anchor: middle
+            
+            # Label "S:" before smoothing buffer (uses entity_index 2 but displays text)
+            - id: 3
+              entity_index: 2
+              xpos: 58
+              ypos: 80
+              styles:
+                - font-size: 1.2em
+                - fill: '#B0B0B0'
+                - text-anchor: middle
+              text: 'S:'
+            
+            # Smoothing buffer (Entity 3) - right side below horizontal line
+            - id: 4
+              entity_index: 2
+              xpos: 70
+              ypos: 80
+              styles:
+                - font-size: 1.5em
+                - font-weight: bold
+                - fill: '#E8E8E8'
+                - text-anchor: middle
+          
+          # Horizontal line separator (creates T-formation)
+          hlines:
+            - id: 0
+              xpos: 20
+              ypos: 65
+              length: 60
+              styles:
+                - stroke: '#E8E8E8'
+                - stroke-width: 1
+                - opacity: 0.5
+          
+          # Vertical line separator (creates T-formation)
+          vlines:
+            - id: 0
+              xpos: 50
+              ypos: 65
+              length: 15
+              styles:
+                - stroke: '#E8E8E8'
+                - stroke-width: 1
+                - opacity: 0.5
+        
+        # Display options
+        show:
+          horseshoe_style: lineargradient  # Gradient fill in the gauge arc
+          scale_tickmarks: false          # Hide tick marks to avoid overlap with T-formation
+        
+        # Dark theme styling
+        card_mod:
+          style: |
+            ha-card {
+              background: #2C2C2C;
+              color: #E8E8E8;
+            }
+      
+      # RIGHT GAUGE: Rate of Change
+      # Shows: Rate of change (4) at top, Threshold (5) and Max rate (6) below
+      - type: custom:flex-horseshoe-card
+        entities:
+          # Entity 4: Primary gauge value (rate of change)
+          - entity: sensor.bme680_chanber_smoothed_change_rate
+            decimals: 2
+            unit: '°C/min'
+          # Entity 5: Threshold/plateau value (shown as "< 5" below)
+          - entity: sensor.bme680_chanber_rate_change_plateau
+            decimals: 2
+            unit: '°C/min'
+          # Entity 6: Max rate since soak start (shown as "Max: 6" below)
+          - entity: sensor.bme680_chanber_max_rate_since_soak_start
+            decimals: 2
+            unit: '°C/min'
+        
+        # Primary entity shown in the horseshoe gauge arc
+        primary_entity: entity.0
+        
+        # Gauge scale - range from max rate to plateau
+        # Using is_number filter to ensure we always have valid numbers
+        horseshoe_scale:
+          min: "{{ states('sensor.bme680_chanber_max_rate_since_soak_start') | default(0, true) | float(0) }}"
+          max: "{{ states('sensor.bme680_chanber_rate_change_plateau') | default(5, true) | float(5) }}"
+        
+        # Color gradient for rate of change (green=low, yellow=medium, red=high)
+        color_stops:
+          '0': '#00FF00'   # Green (low rate)
+          '2.5': '#FFFF00' # Yellow (medium rate)
+          '5': '#FF0000'   # Red (high rate)
+        
+        # Layout - positions text and lines INSIDE the gauge area
+        layout:
+          states:
+            # Primary value (Entity 4) - large at top center
+            - id: 0
+              entity_index: 0
+              xpos: 50
+              ypos: 30
+              styles:
+                - font-size: 3.5em
+                - font-weight: bold
+                - fill: '#E8E8E8'
+                - text-anchor: middle
+            
+            # Label "<" for threshold (changes color based on comparison, uses entity_index 1 but displays text)
+            - id: 1
+              entity_index: 1
+              xpos: 18
+              ypos: 80
+              styles:
+                - font-size: 1.2em
+                # Color is green if rate < plateau, red otherwise
+                - fill: "{% if states('sensor.bme680_chanber_smoothed_change_rate') | float < states('sensor.bme680_chanber_rate_change_plateau') | float(0) %}#4CAF50{% else %}#F44336{% endif %}"
+                - text-anchor: middle
+              text: "<"
+            
+            # Threshold value (Entity 5) - left side below horizontal line
+            - id: 2
+              entity_index: 1
+              xpos: 30
+              ypos: 80
+              styles:
+                - font-size: 1.5em
+                - font-weight: bold
+                # Color matches the "<" label (green if rate < plateau, red otherwise)
+                - fill: "{% if states('sensor.bme680_chanber_smoothed_change_rate') | float < states('sensor.bme680_chanber_rate_change_plateau') | float(0) %}#4CAF50{% else %}#F44336{% endif %}"
+                - text-anchor: middle
+            
+            # Label "Max:" before max rate (uses entity_index 2 but displays text)
+            - id: 3
+              entity_index: 2
+              xpos: 58
+              ypos: 80
+              styles:
+                - font-size: 1.2em
+                - fill: '#B0B0B0'
+                - text-anchor: middle
+              text: 'Max:'
+            
+            # Max rate (Entity 6) - right side below horizontal line
+            - id: 4
+              entity_index: 2
+              xpos: 70
+              ypos: 80
+              styles:
+                - font-size: 1.5em
+                - font-weight: bold
+                - fill: '#E8E8E8'
+                - text-anchor: middle
+          
+          # Horizontal line separator (creates T-formation)
+          # Positioned lower to avoid overlap with scale labels
+          hlines:
+            - id: 0
+              xpos: 20
+              ypos: 70
+              length: 60
+              styles:
+                - stroke: '#E8E8E8'
+                - stroke-width: 1
+                - opacity: 0.5
+          
+          # Vertical line separator (creates T-formation)
+          vlines:
+            - id: 0
+              xpos: 50
+              ypos: 70
+              length: 15
+              styles:
+                - stroke: '#E8E8E8'
+                - stroke-width: 1
+                - opacity: 0.5
+        
+        # Display options
+        show:
+          horseshoe_style: lineargradient  # Gradient fill in the gauge arc
+          scale_tickmarks: false          # Hide tick marks to avoid overlap with T-formation
+        
+        # Dark theme styling
+        card_mod:
+          style: |
+            ha-card {
+              background: #2C2C2C;
+              color: #E8E8E8;
+            }
+

@@ -1,0 +1,164 @@
+# ============================================================================
+# BME680 Temperature Gauge Card - Full Width, Easy to Modify
+# ============================================================================
+# This card displays a horseshoe gauge showing smoothed temperature with
+# T-formation layout showing base temperature and smoothing buffer below.
+#
+# To modify:
+#   - Entity IDs: Change in the "entities" section
+#   - Scale Range: Adjust min/max in "horseshoe_scale" section
+#   - Colors: Modify "color_stops" for gradient colors
+#   - Layout: Adjust xpos/ypos values in "layout" section
+#   - Styling: Modify "card_mod" section for appearance
+# ============================================================================
+
+type: custom:horseshoe-card
+
+# ============================================================================
+# ENTITIES - Configure your sensor entities here
+# ============================================================================
+entities:
+    # Primary gauge value (displayed in horseshoe arc and as large number)
+    - entity: sensor.bme680_chanber_smoothed_temperature
+      decimals: 1
+      unit: "°C"
+
+    # Base reading (shown as "B: XX" in T-formation)
+    - entity: sensor.bme680_chanber_temperature
+      decimals: 1
+      unit: "°C"
+
+    # Smoothing buffer count (shown as "S: XX" in T-formation)
+    - entity: sensor.bme680_chanber_temp_smoothing_buffer
+      decimals: 0
+      unit: ""
+
+# Primary entity shown in the horseshoe gauge arc
+primary_entity: entity.0
+
+# ============================================================================
+# GAUGE SCALE - Configure min/max range here
+# ============================================================================
+horseshoe_scale:
+    # Minimum value (uses template with fallback to 0)
+    min: "{{ states('sensor.bme680_chanber_initial_soak_temp') | default(0, true) | float(0) }}"
+
+    # Maximum value (uses template with fallback to 100)
+    max: "{{ states('sensor.bme680_chanber_target_temp') | default(100, true) | float(100) }}"
+
+# ============================================================================
+# COLOR GRADIENT - Configure color stops here (percentages 0-100)
+# ============================================================================
+color_stops:
+    "0": "#2196F3" # Blue (cold)
+    "25": "#4CAF50" # Green (normal)
+    "40": "#FF9800" # Orange (warm)
+    "50": "#F44336" # Red (hot)
+
+# ============================================================================
+# LAYOUT - Configure text and line positions here
+# ============================================================================
+layout:
+    states:
+        # Primary value - large number at top center
+        # Position: xpos (0-100 = left-right), ypos (0-100 = top-bottom)
+        - id: 0
+          entity_index: 0
+          xpos: 50 # Center horizontally
+          ypos: 30 # Near top
+          styles:
+              - font-size: 3.5em
+              - font-weight: bold
+              - fill: "#E8E8E8"
+              - text-anchor: middle
+
+        # Left side: "B:" label (uses entity_index 0 for compatibility, but displays text)
+        - id: 1
+          entity_index: 0
+          xpos: 20 # Left side
+          ypos: 78 # Below horizontal line
+          styles:
+              - font-size: 1.2em
+              - fill: "#B0B0B0"
+              - text-anchor: start
+          text: "B:"
+
+        # Base reading value - left side of T-formation
+        - id: 2
+          entity_index: 1
+          xpos: 26 # Right after "B:" label with spacing
+          ypos: 78 # Same level as "B:"
+          styles:
+              - font-size: 1.6em
+              - font-weight: bold
+              - fill: "#E8E8E8"
+              - text-anchor: start
+
+        # Right side: "S:" label (uses entity_index 0 for compatibility, but displays text)
+        - id: 3
+          entity_index: 0
+          xpos: 62 # Right side
+          ypos: 78 # Below horizontal line
+          styles:
+              - font-size: 1.2em
+              - fill: "#B0B0B0"
+              - text-anchor: start
+          text: "S:"
+
+        # Smoothing buffer value - right side of T-formation
+        - id: 4
+          entity_index: 2
+          xpos: 68 # Right after "S:" label with spacing
+          ypos: 78 # Same level as "S:"
+          styles:
+              - font-size: 1.6em
+              - font-weight: bold
+              - fill: "#E8E8E8"
+              - text-anchor: start
+
+    # Horizontal line separator (creates T-formation)
+    hlines:
+        - id: 0
+          xpos: 18 # Start position - align with left text
+          ypos: 72 # Vertical position - above text
+          length: 64 # Line length - extend to right text
+          styles:
+              - stroke: "#E8E8E8"
+              - stroke-width: 1.5
+              - opacity: 0.6
+
+    # Vertical line separator (creates T-formation)
+    vlines:
+        - id: 0
+          xpos: 50 # Center horizontally
+          ypos: 72 # Start at horizontal line
+          length: 8 # Extend downward to text
+          styles:
+              - stroke: "#E8E8E8"
+              - stroke-width: 1.5
+              - opacity: 0.6
+
+# ============================================================================
+# DISPLAY OPTIONS
+# ============================================================================
+show:
+    horseshoe_style: lineargradient # Gradient fill in the gauge arc
+    scale_tickmarks: false # Hide tick marks to avoid overlap
+
+# ============================================================================
+# STYLING - Make card full width and customize appearance
+# ============================================================================
+card_mod:
+    style: |
+        ha-card {
+          background: #2C2C2C;
+          color: #E8E8E8;
+          width: 100%;              /* Full width */
+          height: auto;             /* Auto height */
+        }
+
+        /* Ensure gauge scales properly */
+        horseshoe-card {
+          width: 100%;
+          height: 100%;
+        }
