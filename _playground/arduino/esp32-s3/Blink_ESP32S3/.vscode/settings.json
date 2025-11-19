@@ -1,0 +1,11 @@
+{
+  "arduino.path": "/home/pi/.local/bin/arduino-cli",
+  "arduino.additionalUrls": [
+    "https://dl.espressif.com/dl/package_esp32_index.json"
+  ],
+  "arduino.defaultBaudRate": 115200,
+  "arduino.logLevel": "info",
+  "arduino.board": "esp32:esp32:esp32s3",
+  "arduino.port": "/dev/ttyUSB0"
+}
+

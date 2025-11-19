@@ -1029,7 +1029,9 @@ impl App {
     
     fn load_initial_baseline_info(data_dir: &PathBuf) -> (Option<String>, Option<String>, Option<usize>) { //>
         // Check if initial-baseline.json exists and load the scan_path, remap_to, and file_count
-        let initial_path = data_dir.join("baselines").join("baseline-initial.json");
+        // Load initial baseline from chamon root directory (one level up from data_dir)
+        let chamon_root = data_dir.parent().unwrap_or(data_dir);
+        let initial_path = chamon_root.join("baseline-initial.json");
         if let Ok(content) = std::fs::read_to_string(&initial_path) {
             if let Ok(json) = serde_json::from_str::<serde_json::Value>(&content) {
                 let scan_path = json.get("scan_path").and_then(|v| v.as_str()).map(|s| s.to_string());

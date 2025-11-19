@@ -42,5 +42,6 @@
     },
     "markdown.styles": [
         "/.vscode/css/github-dimmed.css"
-    ]
+    ],
+    "idf.pythonInstallPath": "/usr/bin/python"
 }

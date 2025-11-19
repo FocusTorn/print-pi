@@ -153,3 +153,9 @@ nodered/package-lock.json
 nodered/package.json
 
 .secrets
+
+
+
+.arduino15
+
+.espressif

@@ -3689,11 +3689,11 @@ function renderColorSegments(segments, min, max, radius, smooth_segments, value)
         arguments.length > 6 && arguments[6] !== undefined ?
         arguments[6] :
         MAX_ANGLE$1;
-    if (smooth_segments === "smooth" || smooth_segments === true) {
-        return renderSegmentsGradient(segments, min, max, maxAngle);
-    } else if (smooth_segments === "gradient") {
+    if (smooth_segments === "gradient") {
         var gradientResult = renderSegmentsLinearGradient(segments, min, max, radius, maxAngle);
         return gradientResult ? gradientResult.path : null;
+    } else if (smooth_segments === "smooth") {
+        return renderSegmentsGradient(segments, min, max, maxAngle);
     } else {
         return renderSegments(segments, min, max, radius, maxAngle, value);
     }
@@ -4875,7 +4875,14 @@ __decorate(
 );
 __decorate(
     [n$2({
-        type: String
+        converter: function(value) {
+            if (value === true || value === "true") {
+                return "smooth";
+            } else if (value === false || value === "false" || value === null || value === undefined) {
+                return "static";
+            }
+            return value;
+        }
     })],
     CirgaugeElement.prototype,
     "smoothSegments",
@@ -15512,6 +15519,64 @@ var HaFormCirgaugeTemplate = (function(_LitElement) {
             },
         },
         {
+            key: "_isColorRgbSelector",
+            value: function _isColorRgbSelector() {
+                return this.schema.schema && this.schema.schema.color_rgb !== undefined;
+            },
+        },
+        {
+            key: "_getCurrentColorValue",
+            value: function _getCurrentColorValue() {
+                var DATA = this.schema.flatten ?
+                    this.data :
+                    _defineProperty({}, this.schema.name, this.data);
+                var value = DATA[this.schema.name];
+                if (!value) return "";
+                if (typeof value === "string") {
+                    return value;
+                }
+                if (Array.isArray(value) && value.length >= 3) {
+                    return "#" + value.map(function(v) {
+                        var hex = Math.round(v).toString(16);
+                        return hex.length === 1 ? "0" + hex : hex;
+                    }).join("");
+                }
+                return "";
+            },
+        },
+        {
+            key: "_hexToRgb",
+            value: function _hexToRgb(hex) {
+                var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+                return result ? [
+                    parseInt(result[1], 16),
+                    parseInt(result[2], 16),
+                    parseInt(result[3], 16)
+                ] : null;
+            },
+        },
+        {
+            key: "_onHexInputChanged",
+            value: function _onHexInputChanged(ev) {
+                var hexValue = ev.target.value;
+                if (!hexValue.startsWith("#")) {
+                    hexValue = "#" + hexValue;
+                }
+                var rgb = this._hexToRgb(hexValue);
+                if (rgb) {
+                    var value = this.schema.flatten ?
+                        Object.assign(
+                            Object.assign({}, this.data),
+                            _defineProperty({}, this.schema.name, rgb)
+                        ) :
+                        rgb;
+                    fireEvent(this, "value-changed", {
+                        value: value
+                    });
+                }
+            },
+        },
+        {
             key: "render",
             value: function render() {
                 var _a;
@@ -15536,22 +15601,42 @@ var HaFormCirgaugeTemplate = (function(_LitElement) {
                         },
                     }, ];
                 }
+                var isColorRgb = !dataIsTemplate && this._isColorRgbSelector();
+                var currentHexValue = isColorRgb ? this._getCurrentColorValue() : "";
                 return x(
                     _templateObject$2 ||
                     (_templateObject$2 = _taggedTemplateLiteral([
-                        '\n      <div class="selector-container">\n        <ha-form\n          .hass=',
+                        '\n      <div class="selector-container">\n        ',
+                        '\n        <ha-form\n          .hass=',
                         "\n          .data=",
                         "\n          .schema=",
                         "\n          .computeLabel=",
                         "\n          .disabled=",
                         "\n          @value-changed=",
-                        '\n        >\n        </ha-form>\n        <ha-button appearance="plain" size="small" .disabled=',
+                        '\n        >\n        </ha-form>\n        ',
+                        '\n        <ha-button appearance="plain" size="small" .disabled=',
                         " @click=",
                         ">\n          ",
                         '\n          <ha-svg-icon slot="start" .path=',
                         '></ha-svg-icon>\n          <ha-svg-icon slot="icon" .path=',
                         "></ha-svg-icon>\n        </ha-button>\n      </div>\n    ",
                     ])),
+                    isColorRgb ? x(
+                        _templateObject$3 ||
+                        (_templateObject$3 = _taggedTemplateLiteral([
+                            '\n          <div class="color-input-wrapper">\n            <div class="color-preview" style=',
+                            '></div>\n            <ha-textfield\n              class="hex-input"\n              .label="Hex Color"\n              .value=',
+                            '\n              .disabled=',
+                            '\n              pattern="#[0-9A-Fa-f]{6}"\n              @input=',
+                            '\n              @change=',
+                            '\n            ></ha-textfield>\n          </div>\n        ',
+                        ])),
+                        "background-color: ".concat(currentHexValue || "#000000"),
+                        currentHexValue,
+                        this.disabled,
+                        this._onHexInputChanged,
+                        this._onHexInputChanged
+                    ) : E,
                     this.hass,
                     DATA,
                     schema,
@@ -15637,6 +15722,23 @@ var HaFormCirgaugeTemplate = (function(_LitElement) {
                         value: value
                     };
                 fireEvent(this, "value-changed", data);
+                if (this._isColorRgbSelector() && this.shadowRoot && value) {
+                    var hexInput = this.shadowRoot.querySelector(".hex-input");
+                    if (hexInput) {
+                        var hexValue = "";
+                        if (typeof value === "string") {
+                            hexValue = value;
+                        } else if (Array.isArray(value) && value.length >= 3) {
+                            hexValue = "#" + value.map(function(v) {
+                                var hex = Math.round(v).toString(16);
+                                return hex.length === 1 ? "0" + hex : hex;
+                            }).join("");
+                        }
+                        if (hexValue && hexInput.value !== hexValue) {
+                            hexInput.value = hexValue;
+                        }
+                    }
+                }
             },
         },
     ]);
@@ -15644,7 +15746,7 @@ var HaFormCirgaugeTemplate = (function(_LitElement) {
 HaFormCirgaugeTemplate.styles = i$6(
     _templateObject2$2 ||
     (_templateObject2$2 = _taggedTemplateLiteral([
-        "\n    :host {\n      display: block;\n    }\n    .selector-container {\n      display: flex;\n      flex-direction: column;\n      align-items: flex-start;\n      gap: 8px;\n    }\n    ha-form {\n      flex: 1;\n      width: 100%;\n    }\n  ",
+        "\n    :host {\n      display: block;\n    }\n    .selector-container {\n      display: flex;\n      flex-direction: column;\n      align-items: flex-start;\n      gap: 8px;\n    }\n    ha-form {\n      flex: 1;\n      width: 100%;\n    }\n    .color-input-wrapper {\n      display: flex;\n      align-items: center;\n      gap: 8px;\n      width: 100%;\n      margin-bottom: 8px;\n    }\n    .color-preview {\n      width: 40px;\n      height: 40px;\n      border-radius: 4px;\n      border: 1px solid var(--divider-color, rgba(0, 0, 0, 0.12));\n      flex-shrink: 0;\n      cursor: pointer;\n    }\n    .hex-input {\n      flex: 1;\n    }\n  ",
     ]))
 );
 __decorate(

@@ -206,6 +206,21 @@ These patterns indicate the user wants **action taken**:
    "Done! [Summary of what was done]"
 ```
 
+### **Communication Efficiency**
+
+**When to use `cat << 'EOF'` or file creation tools:**
+- ✅ **Creating files the user will use** (documentation, scripts, configs)
+- ✅ **Showing file contents as you create them**
+- ✅ **Ensuring files are created and user sees what's in them**
+
+**When to just explain directly:**
+- ✅ **Answering questions** - Just explain, don't create files
+- ✅ **Explaining concepts** - Direct explanation is clearer
+- ✅ **Comparing options** - Discussion doesn't need files
+- ✅ **General conversation** - Keep it conversational
+
+**Rule**: Don't mix both unnecessarily. If you're just explaining something, explain it directly. Only create files when the user will actually use them.
+
 ---
 
 ## **EDGE CASES**

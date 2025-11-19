@@ -1,0 +1,43 @@
+{
+    "configurations": [
+        {
+            "name": "ESP-IDF",
+            "compilerPath": "${env:HOME}/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/xtensa-esp32s3-elf-gcc",
+            "cStandard": "c17",
+            "cppStandard": "c++17",
+            "includePath": [
+                "${workspaceFolder}/**",
+                "/home/pi/esp/esp-idf/components/**",
+                "/home/pi/esp/esp-idf/components/freertos/FreeRTOS-Kernel-SMP/include",
+                "/home/pi/esp/esp-idf/components/freertos/FreeRTOS-Kernel-SMP/portable/xtensa/include",
+                "/home/pi/esp/esp-idf/components/freertos/FreeRTOS-Kernel/include",
+                "/home/pi/esp/esp-idf/components/freertos/FreeRTOS-Kernel/portable/xtensa/include",
+                "/home/pi/esp/esp-idf/components/esp_common/include",
+                "/home/pi/esp/esp-idf/components/esp_hw_support/include",
+                "/home/pi/esp/esp-idf/components/esp_system/include",
+                "/home/pi/esp/esp-idf/components/log/include",
+                "/home/pi/esp/esp-idf/components/esp32s3/include",
+                "/home/pi/esp/esp-idf/components/esp_rom/include",
+                "/home/pi/esp/esp-idf/components/esp_common/include/esp32s3",
+                "${workspaceFolder}/build/config"
+            ],
+            "browse": {
+                "path": [
+                    "${workspaceFolder}",
+                    "/home/pi/esp/esp-idf/components"
+                ],
+                "limitSymbolsToIncludedHeaders": true
+            },
+            "defines": [
+                "ESP_PLATFORM",
+                "IDF_VER=\"v6.1-dev\""
+            ],
+            "compilerArgs": [
+                "-mlongcalls"
+            ],
+            "intelliSenseMode": "gcc-arm"
+        }
+    ],
+    "version": 4
+}
+

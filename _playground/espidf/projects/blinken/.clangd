@@ -1,0 +1,26 @@
+CompileFlags:
+  Add:
+    - -I/home/pi/esp/esp-idf/components/freertos/FreeRTOS-Kernel-SMP/include
+    - -I/home/pi/esp/esp-idf/components/freertos/FreeRTOS-Kernel-SMP/portable/xtensa/include
+    - -I/home/pi/esp/esp-idf/components/freertos/FreeRTOS-Kernel/include
+    - -I/home/pi/esp/esp-idf/components/freertos/FreeRTOS-Kernel/portable/xtensa/include
+    - -I/home/pi/esp/esp-idf/components/freertos/config/xtensa/include
+    - -I/home/pi/esp/esp-idf/components/esp_common/include
+    - -I/home/pi/esp/esp-idf/components/esp_common/include/esp32s3
+    - -I/home/pi/esp/esp-idf/components/esp_hw_support/include
+    - -I/home/pi/esp/esp-idf/components/esp_system/include
+    - -I/home/pi/esp/esp-idf/components/log/include
+    - -I/home/pi/esp/esp-idf/components/esp32s3/include
+    - -I/home/pi/esp/esp-idf/components/esp_rom/include
+    - -I/home/pi/esp/esp-idf/components/esp_rom/esp32s3/include
+    - -I/home/pi/esp/esp-idf/components/soc/include
+    - -I/home/pi/esp/esp-idf/components/soc/esp32s3/include
+    - -I/home/pi/esp/esp-idf/components/hal/include
+    - -I/home/pi/esp/esp-idf/components/hal/esp32s3/include
+    - -I/home/pi/esp/esp-idf/components
+    - -DESP_PLATFORM
+    - -DIDF_VER="v6.1-dev"
+    - -mlongcalls
+    - --target=xtensa-esp32s3-elf
+    - -std=c17
+  CompilationDatabase: build

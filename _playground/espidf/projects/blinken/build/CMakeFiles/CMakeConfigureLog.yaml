@@ -1,0 +1,929 @@
+
+---
+events:
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/usr/share/cmake-3.31/Modules/CMakeDetermineSystem.cmake:200 (message)"
+      - "/home/pi/esp/esp-idf/tools/cmake/project.cmake:588 (__project)"
+      - "CMakeLists.txt:4 (project)"
+    message: |
+      The target system is: Generic -  - 
+      The host system is: Linux - 6.12.47+rpt-rpi-v8 - aarch64
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/usr/share/cmake-3.31/Modules/CMakeDetermineCompilerId.cmake:17 (message)"
+      - "/usr/share/cmake-3.31/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
+      - "/usr/share/cmake-3.31/Modules/CMakeDetermineCCompiler.cmake:123 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "/home/pi/esp/esp-idf/tools/cmake/project.cmake:588 (__project)"
+      - "CMakeLists.txt:4 (project)"
+    message: |
+      Compiling the C compiler identification source file "CMakeCCompilerId.c" succeeded.
+      Compiler: /home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/xtensa-esp32s3-elf-gcc 
+      Build flags: @/home/pi/_playground/espidf/projects/blinken/build/toolchain/cflags
+      Id flags:  
+      
+      The output was:
+      0
+      
+      
+      Compilation of the C compiler identification source "CMakeCCompilerId.c" produced "a.out"
+      
+      The C compiler identification is GNU, found in:
+        /home/pi/_playground/espidf/projects/blinken/build/CMakeFiles/3.31.6/CompilerIdC/a.out
+      
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/usr/share/cmake-3.31/Modules/CMakeDetermineCompilerId.cmake:17 (message)"
+      - "/usr/share/cmake-3.31/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
+      - "/usr/share/cmake-3.31/Modules/CMakeDetermineCXXCompiler.cmake:126 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "/home/pi/esp/esp-idf/tools/cmake/project.cmake:588 (__project)"
+      - "CMakeLists.txt:4 (project)"
+    message: |
+      Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" succeeded.
+      Compiler: /home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/xtensa-esp32s3-elf-g++ 
+      Build flags: @/home/pi/_playground/espidf/projects/blinken/build/toolchain/cxxflags
+      Id flags:  
+      
+      The output was:
+      0
+      
+      
+      Compilation of the CXX compiler identification source "CMakeCXXCompilerId.cpp" produced "a.out"
+      
+      The CXX compiler identification is GNU, found in:
+        /home/pi/_playground/espidf/projects/blinken/build/CMakeFiles/3.31.6/CompilerIdCXX/a.out
+      
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/usr/share/cmake-3.31/Modules/CMakeDetermineCompilerId.cmake:1237 (message)"
+      - "/usr/share/cmake-3.31/Modules/CMakeDetermineASMCompiler.cmake:135 (CMAKE_DETERMINE_COMPILER_ID_VENDOR)"
+      - "/home/pi/esp/esp-idf/tools/cmake/project.cmake:588 (__project)"
+      - "CMakeLists.txt:4 (project)"
+    message: |
+      Checking whether the ASM compiler is GNU using "--version" matched "(GNU assembler)|(GCC)|(Free Software Foundation)":
+      xtensa-esp-elf-gcc (crosstool-NG esp-15.2.0_20250929) 15.2.0
+      Copyright (C) 2025 Free Software Foundation, Inc.
+      This is free software; see the source for copying conditions.  There is NO
+      warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+      
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/usr/share/cmake-3.31/Modules/CMakeDetermineCompilerABI.cmake:74 (try_compile)"
+      - "/usr/share/cmake-3.31/Modules/CMakeTestCCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "/home/pi/esp/esp-idf/tools/cmake/project.cmake:588 (__project)"
+      - "CMakeLists.txt:4 (project)"
+    checks:
+      - "Detecting C compiler ABI info"
+    directories:
+      source: "/home/pi/_playground/espidf/projects/blinken/build/CMakeFiles/CMakeScratch/TryCompile-NTxC0j"
+      binary: "/home/pi/_playground/espidf/projects/blinken/build/CMakeFiles/CMakeScratch/TryCompile-NTxC0j"
+    cmakeVariables:
+      CMAKE_C_FLAGS: "@\"/home/pi/_playground/espidf/projects/blinken/build/toolchain/cflags\""
+      CMAKE_C_FLAGS_DEBUG: "-g"
+      CMAKE_EXE_LINKER_FLAGS: "@\"/home/pi/_playground/espidf/projects/blinken/build/toolchain/ldflags\""
+      CMAKE_MODULE_PATH: "/home/pi/esp/esp-idf/tools/cmake;/home/pi/esp/esp-idf/tools/cmake/third_party"
+    buildResult:
+      variable: "CMAKE_C_ABI_COMPILED"
+      cached: true
+      stdout: |
+        Change Dir: '/home/pi/_playground/espidf/projects/blinken/build/CMakeFiles/CMakeScratch/TryCompile-NTxC0j'
+        
+        Run Build Command(s): /usr/bin/ninja -v cmTC_e16ca
+        [1/2] /home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/xtensa-esp32s3-elf-gcc   @"/home/pi/_playground/espidf/projects/blinken/build/toolchain/cflags"    -v -o CMakeFiles/cmTC_e16ca.dir/CMakeCCompilerABI.c.obj -c /usr/share/cmake-3.31/Modules/CMakeCCompilerABI.c
+        Using built-in specs.
+        COLLECT_GCC=/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/xtensa-esp-elf-gcc
+        Target: xtensa-esp-elf
+        Configured with: /builds/idf/crosstool-NG/.build/xtensa-esp-elf/src/gcc/configure --build=x86_64-build_pc-linux-gnu --host=aarch64-host_unknown-linux-gnu --target=xtensa-esp-elf --prefix=/builds/idf/crosstool-NG/builds/xtensa-esp-elf --exec_prefix=/builds/idf/crosstool-NG/builds/xtensa-esp-elf --with-local-prefix=/builds/idf/crosstool-NG/builds/xtensa-esp-elf/xtensa-esp-elf --with-sysroot=/builds/idf/crosstool-NG/builds/xtensa-esp-elf/xtensa-esp-elf --with-native-system-header-dir=/include --with-headers=/builds/idf/crosstool-NG/builds/xtensa-esp-elf/xtensa-esp-elf/include --with-newlib --enable-threads=no --disable-shared --with-pkgversion='crosstool-NG esp-15.2.0_20250929' --disable-__cxa_atexit --enable-cxx-flags='-ffunction-sections -fdata-sections' --disable-libgomp --disable-libmudflap --disable-libmpx --disable-libssp --disable-libquadmath --disable-libquadmath-support --disable-libstdcxx-verbose --with-gmp=/builds/idf/crosstool-NG/.build/xtensa-esp-elf/buildtools/complibs-host --with-mpfr=/builds/idf/crosstool-NG/.build/xtensa-esp-elf/buildtools/complibs-host --with-mpc=/builds/idf/crosstool-NG/.build/xtensa-esp-elf/buildtools/complibs-host --with-isl=/builds/idf/crosstool-NG/.build/xtensa-esp-elf/buildtools/complibs-host --enable-lto --enable-target-optspace --without-long-double-128 --enable-plugin --disable-nls --enable-multiarch --enable-languages=c,c++ --disable-libstdcxx-verbose --enable-threads=posix --enable-libstdcxx-time=yes --disable-win32-utf8-manifest
+        Thread model: posix
+        Supported LTO compression algorithms: zlib zstd
+        gcc version 15.2.0 (crosstool-NG esp-15.2.0_20250929) 
+        COLLECT_GCC_OPTIONS='-mdynconfig=xtensa_esp32s3.so' '-v' '-o' 'CMakeFiles/cmTC_e16ca.dir/CMakeCCompilerABI.c.obj' '-c' '-dumpdir' 'CMakeFiles/cmTC_e16ca.dir/'
+         /home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../libexec/gcc/xtensa-esp-elf/15.2.0/cc1 -quiet -v -imultilib esp32s3 -iprefix /home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/ -isysroot /home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../xtensa-esp-elf /usr/share/cmake-3.31/Modules/CMakeCCompilerABI.c -quiet -dumpdir CMakeFiles/cmTC_e16ca.dir/ -dumpbase CMakeCCompilerABI.c.c -dumpbase-ext .c -mdynconfig=xtensa_esp32s3.so -version -o /tmp/ccArIW4y.s
+        GNU C23 (crosstool-NG esp-15.2.0_20250929) version 15.2.0 (xtensa-esp-elf)
+        	compiled by GNU C version 6.3.0 20170516, GMP version 6.3.0, MPFR version 4.2.1, MPC version 1.3.1, isl version isl-0.26-GMP
+        
+        GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072
+        ignoring duplicate directory "/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/../../lib/gcc/xtensa-esp-elf/15.2.0/include"
+        ignoring nonexistent directory "/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../xtensa-esp-elf/builds/idf/crosstool-NG/builds/xtensa-esp-elf/xtensa-esp-elf/include"
+        ignoring duplicate directory "/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/../../lib/gcc/xtensa-esp-elf/15.2.0/include-fixed"
+        ignoring duplicate directory "/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/../../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/include"
+        ignoring duplicate directory "/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../xtensa-esp-elf/include"
+        #include "..." search starts here:
+        #include <...> search starts here:
+         /home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/include
+         /home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/include-fixed
+         /home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/include
+        End of search list.
+        Compiler executable checksum: 90a6306288c98770ccf682d9cf66dc56
+        COLLECT_GCC_OPTIONS='-mdynconfig=xtensa_esp32s3.so' '-v' '-o' 'CMakeFiles/cmTC_e16ca.dir/CMakeCCompilerABI.c.obj' '-c' '-dumpdir' 'CMakeFiles/cmTC_e16ca.dir/'
+         /home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/bin/as --traditional-format --dynconfig=xtensa_esp32s3.so -o CMakeFiles/cmTC_e16ca.dir/CMakeCCompilerABI.c.obj /tmp/ccArIW4y.s
+        COMPILER_PATH=/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../libexec/gcc/xtensa-esp-elf/15.2.0/:/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../libexec/gcc/:/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/bin/
+        LIBRARY_PATH=/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/esp32s3/:/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/lib/esp32s3/:/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../xtensa-esp-elf/lib/esp32s3/:/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/:/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/:/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/lib/:/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../xtensa-esp-elf/lib/:/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../xtensa-esp-elf/usr/lib/
+        COLLECT_GCC_OPTIONS='-mdynconfig=xtensa_esp32s3.so' '-v' '-o' 'CMakeFiles/cmTC_e16ca.dir/CMakeCCompilerABI.c.obj' '-c' '-dumpdir' 'CMakeFiles/cmTC_e16ca.dir/CMakeCCompilerABI.c.'
+        [2/2] : && /home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/xtensa-esp32s3-elf-gcc @"/home/pi/_playground/espidf/projects/blinken/build/toolchain/cflags" @"/home/pi/_playground/espidf/projects/blinken/build/toolchain/ldflags" -v CMakeFiles/cmTC_e16ca.dir/CMakeCCompilerABI.c.obj -o cmTC_e16ca   && :
+        Using built-in specs.
+        COLLECT_GCC=/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/xtensa-esp-elf-gcc
+        COLLECT_LTO_WRAPPER=/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../libexec/gcc/xtensa-esp-elf/15.2.0/lto-wrapper
+        Target: xtensa-esp-elf
+        Configured with: /builds/idf/crosstool-NG/.build/xtensa-esp-elf/src/gcc/configure --build=x86_64-build_pc-linux-gnu --host=aarch64-host_unknown-linux-gnu --target=xtensa-esp-elf --prefix=/builds/idf/crosstool-NG/builds/xtensa-esp-elf --exec_prefix=/builds/idf/crosstool-NG/builds/xtensa-esp-elf --with-local-prefix=/builds/idf/crosstool-NG/builds/xtensa-esp-elf/xtensa-esp-elf --with-sysroot=/builds/idf/crosstool-NG/builds/xtensa-esp-elf/xtensa-esp-elf --with-native-system-header-dir=/include --with-headers=/builds/idf/crosstool-NG/builds/xtensa-esp-elf/xtensa-esp-elf/include --with-newlib --enable-threads=no --disable-shared --with-pkgversion='crosstool-NG esp-15.2.0_20250929' --disable-__cxa_atexit --enable-cxx-flags='-ffunction-sections -fdata-sections' --disable-libgomp --disable-libmudflap --disable-libmpx --disable-libssp --disable-libquadmath --disable-libquadmath-support --disable-libstdcxx-verbose --with-gmp=/builds/idf/crosstool-NG/.build/xtensa-esp-elf/buildtools/complibs-host --with-mpfr=/builds/idf/crosstool-NG/.build/xtensa-esp-elf/buildtools/complibs-host --with-mpc=/builds/idf/crosstool-NG/.build/xtensa-esp-elf/buildtools/complibs-host --with-isl=/builds/idf/crosstool-NG/.build/xtensa-esp-elf/buildtools/complibs-host --enable-lto --enable-target-optspace --without-long-double-128 --enable-plugin --disable-nls --enable-multiarch --enable-languages=c,c++ --disable-libstdcxx-verbose --enable-threads=posix --enable-libstdcxx-time=yes --disable-win32-utf8-manifest
+        Thread model: posix
+        Supported LTO compression algorithms: zlib zstd
+        gcc version 15.2.0 (crosstool-NG esp-15.2.0_20250929) 
+        COMPILER_PATH=/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../libexec/gcc/xtensa-esp-elf/15.2.0/:/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../libexec/gcc/:/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/bin/
+        LIBRARY_PATH=/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/esp32s3/:/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/lib/esp32s3/:/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../xtensa-esp-elf/lib/esp32s3/:/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/:/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/:/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/lib/:/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../xtensa-esp-elf/lib/:/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../xtensa-esp-elf/usr/lib/
+        COLLECT_GCC_OPTIONS='-mdynconfig=xtensa_esp32s3.so' '-v' '-o' 'cmTC_e16ca' '-dumpdir' 'cmTC_e16ca.'
+         /home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../libexec/gcc/xtensa-esp-elf/15.2.0/collect2 -plugin /home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../libexec/gcc/xtensa-esp-elf/15.2.0/liblto_plugin.so -plugin-opt=/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../libexec/gcc/xtensa-esp-elf/15.2.0/lto-wrapper -plugin-opt=-fresolution=/tmp/ccLASwD6.res -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lnosys -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc --sysroot=/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../xtensa-esp-elf --dynconfig=xtensa_esp32s3.so -o cmTC_e16ca /home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/lib/esp32s3/crt0.o /home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/esp32s3/crti.o /home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/esp32s3/crtbegin.o -L/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/esp32s3 -L/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/lib/esp32s3 -L/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../xtensa-esp-elf/lib/esp32s3 -L/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0 -L/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc -L/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/lib -L/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../xtensa-esp-elf/lib -L/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../xtensa-esp-elf/usr/lib @/tmp/cclnG5xb -lgcc -lc -lnosys -lc -lgcc /home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/esp32s3/crtend.o /home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/esp32s3/crtn.o
+        COLLECT_GCC_OPTIONS='-mdynconfig=xtensa_esp32s3.so' '-v' '-o' 'cmTC_e16ca' '-dumpdir' 'cmTC_e16ca.'
+        
+      exitCode: 0
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/usr/share/cmake-3.31/Modules/CMakeDetermineCompilerABI.cmake:182 (message)"
+      - "/usr/share/cmake-3.31/Modules/CMakeTestCCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "/home/pi/esp/esp-idf/tools/cmake/project.cmake:588 (__project)"
+      - "CMakeLists.txt:4 (project)"
+    message: |
+      Parsed C implicit include dir info: rv=done
+        found start of include info
+        found start of implicit include info
+          add: [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/include]
+          add: [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/include-fixed]
+          add: [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/include]
+        end of search list found
+        collapse include dir [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/include] ==> [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/lib/gcc/xtensa-esp-elf/15.2.0/include]
+        collapse include dir [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/include-fixed] ==> [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/lib/gcc/xtensa-esp-elf/15.2.0/include-fixed]
+        collapse include dir [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/include] ==> [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/xtensa-esp-elf/include]
+        implicit include dirs: [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/lib/gcc/xtensa-esp-elf/15.2.0/include;/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/lib/gcc/xtensa-esp-elf/15.2.0/include-fixed;/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/xtensa-esp-elf/include]
+      
+      
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/usr/share/cmake-3.31/Modules/CMakeDetermineCompilerABI.cmake:218 (message)"
+      - "/usr/share/cmake-3.31/Modules/CMakeTestCCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "/home/pi/esp/esp-idf/tools/cmake/project.cmake:588 (__project)"
+      - "CMakeLists.txt:4 (project)"
+    message: |
+      Parsed C implicit link information:
+        link line regex: [^( *|.*[/\\])(ld[0-9]*(\\.[a-z]+)?|CMAKE_LINK_STARTFILE-NOTFOUND|([^/\\]+-)?ld|collect2)[^/\\]*( |$)]
+        linker tool regex: [^[ 	]*(->|")?[ 	]*(([^"]*[/\\])?(ld[0-9]*(\\.[a-z]+)?))("|,| |$)]
+        ignore line: [Change Dir: '/home/pi/_playground/espidf/projects/blinken/build/CMakeFiles/CMakeScratch/TryCompile-NTxC0j']
+        ignore line: []
+        ignore line: [Run Build Command(s): /usr/bin/ninja -v cmTC_e16ca]
+        ignore line: [[1/2] /home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/xtensa-esp32s3-elf-gcc   @"/home/pi/_playground/espidf/projects/blinken/build/toolchain/cflags"    -v -o CMakeFiles/cmTC_e16ca.dir/CMakeCCompilerABI.c.obj -c /usr/share/cmake-3.31/Modules/CMakeCCompilerABI.c]
+        ignore line: [Using built-in specs.]
+        ignore line: [COLLECT_GCC=/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/xtensa-esp-elf-gcc]
+        ignore line: [Target: xtensa-esp-elf]
+        ignore line: [Configured with: /builds/idf/crosstool-NG/.build/xtensa-esp-elf/src/gcc/configure --build=x86_64-build_pc-linux-gnu --host=aarch64-host_unknown-linux-gnu --target=xtensa-esp-elf --prefix=/builds/idf/crosstool-NG/builds/xtensa-esp-elf --exec_prefix=/builds/idf/crosstool-NG/builds/xtensa-esp-elf --with-local-prefix=/builds/idf/crosstool-NG/builds/xtensa-esp-elf/xtensa-esp-elf --with-sysroot=/builds/idf/crosstool-NG/builds/xtensa-esp-elf/xtensa-esp-elf --with-native-system-header-dir=/include --with-headers=/builds/idf/crosstool-NG/builds/xtensa-esp-elf/xtensa-esp-elf/include --with-newlib --enable-threads=no --disable-shared --with-pkgversion='crosstool-NG esp-15.2.0_20250929' --disable-__cxa_atexit --enable-cxx-flags='-ffunction-sections -fdata-sections' --disable-libgomp --disable-libmudflap --disable-libmpx --disable-libssp --disable-libquadmath --disable-libquadmath-support --disable-libstdcxx-verbose --with-gmp=/builds/idf/crosstool-NG/.build/xtensa-esp-elf/buildtools/complibs-host --with-mpfr=/builds/idf/crosstool-NG/.build/xtensa-esp-elf/buildtools/complibs-host --with-mpc=/builds/idf/crosstool-NG/.build/xtensa-esp-elf/buildtools/complibs-host --with-isl=/builds/idf/crosstool-NG/.build/xtensa-esp-elf/buildtools/complibs-host --enable-lto --enable-target-optspace --without-long-double-128 --enable-plugin --disable-nls --enable-multiarch --enable-languages=c c++ --disable-libstdcxx-verbose --enable-threads=posix --enable-libstdcxx-time=yes --disable-win32-utf8-manifest]
+        ignore line: [Thread model: posix]
+        ignore line: [Supported LTO compression algorithms: zlib zstd]
+        ignore line: [gcc version 15.2.0 (crosstool-NG esp-15.2.0_20250929) ]
+        ignore line: [COLLECT_GCC_OPTIONS='-mdynconfig=xtensa_esp32s3.so' '-v' '-o' 'CMakeFiles/cmTC_e16ca.dir/CMakeCCompilerABI.c.obj' '-c' '-dumpdir' 'CMakeFiles/cmTC_e16ca.dir/']
+        ignore line: [ /home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../libexec/gcc/xtensa-esp-elf/15.2.0/cc1 -quiet -v -imultilib esp32s3 -iprefix /home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/ -isysroot /home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../xtensa-esp-elf /usr/share/cmake-3.31/Modules/CMakeCCompilerABI.c -quiet -dumpdir CMakeFiles/cmTC_e16ca.dir/ -dumpbase CMakeCCompilerABI.c.c -dumpbase-ext .c -mdynconfig=xtensa_esp32s3.so -version -o /tmp/ccArIW4y.s]
+        ignore line: [GNU C23 (crosstool-NG esp-15.2.0_20250929) version 15.2.0 (xtensa-esp-elf)]
+        ignore line: [	compiled by GNU C version 6.3.0 20170516  GMP version 6.3.0  MPFR version 4.2.1  MPC version 1.3.1  isl version isl-0.26-GMP]
+        ignore line: []
+        ignore line: [GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072]
+        ignore line: [ignoring duplicate directory "/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/../../lib/gcc/xtensa-esp-elf/15.2.0/include"]
+        ignore line: [ignoring nonexistent directory "/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../xtensa-esp-elf/builds/idf/crosstool-NG/builds/xtensa-esp-elf/xtensa-esp-elf/include"]
+        ignore line: [ignoring duplicate directory "/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/../../lib/gcc/xtensa-esp-elf/15.2.0/include-fixed"]
+        ignore line: [ignoring duplicate directory "/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/../../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/include"]
+        ignore line: [ignoring duplicate directory "/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../xtensa-esp-elf/include"]
+        ignore line: [#include "..." search starts here:]
+        ignore line: [#include <...> search starts here:]
+        ignore line: [ /home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/include]
+        ignore line: [ /home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/include-fixed]
+        ignore line: [ /home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/include]
+        ignore line: [End of search list.]
+        ignore line: [Compiler executable checksum: 90a6306288c98770ccf682d9cf66dc56]
+        ignore line: [COLLECT_GCC_OPTIONS='-mdynconfig=xtensa_esp32s3.so' '-v' '-o' 'CMakeFiles/cmTC_e16ca.dir/CMakeCCompilerABI.c.obj' '-c' '-dumpdir' 'CMakeFiles/cmTC_e16ca.dir/']
+        ignore line: [ /home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/bin/as --traditional-format --dynconfig=xtensa_esp32s3.so -o CMakeFiles/cmTC_e16ca.dir/CMakeCCompilerABI.c.obj /tmp/ccArIW4y.s]
+        ignore line: [COMPILER_PATH=/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../libexec/gcc/xtensa-esp-elf/15.2.0/:/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../libexec/gcc/:/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/bin/]
+        ignore line: [LIBRARY_PATH=/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/esp32s3/:/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/lib/esp32s3/:/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../xtensa-esp-elf/lib/esp32s3/:/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/:/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/:/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/lib/:/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../xtensa-esp-elf/lib/:/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../xtensa-esp-elf/usr/lib/]
+        ignore line: [COLLECT_GCC_OPTIONS='-mdynconfig=xtensa_esp32s3.so' '-v' '-o' 'CMakeFiles/cmTC_e16ca.dir/CMakeCCompilerABI.c.obj' '-c' '-dumpdir' 'CMakeFiles/cmTC_e16ca.dir/CMakeCCompilerABI.c.']
+        ignore line: [[2/2] : && /home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/xtensa-esp32s3-elf-gcc @"/home/pi/_playground/espidf/projects/blinken/build/toolchain/cflags" @"/home/pi/_playground/espidf/projects/blinken/build/toolchain/ldflags" -v CMakeFiles/cmTC_e16ca.dir/CMakeCCompilerABI.c.obj -o cmTC_e16ca   && :]
+        ignore line: [Using built-in specs.]
+        ignore line: [COLLECT_GCC=/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/xtensa-esp-elf-gcc]
+        ignore line: [COLLECT_LTO_WRAPPER=/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../libexec/gcc/xtensa-esp-elf/15.2.0/lto-wrapper]
+        ignore line: [Target: xtensa-esp-elf]
+        ignore line: [Configured with: /builds/idf/crosstool-NG/.build/xtensa-esp-elf/src/gcc/configure --build=x86_64-build_pc-linux-gnu --host=aarch64-host_unknown-linux-gnu --target=xtensa-esp-elf --prefix=/builds/idf/crosstool-NG/builds/xtensa-esp-elf --exec_prefix=/builds/idf/crosstool-NG/builds/xtensa-esp-elf --with-local-prefix=/builds/idf/crosstool-NG/builds/xtensa-esp-elf/xtensa-esp-elf --with-sysroot=/builds/idf/crosstool-NG/builds/xtensa-esp-elf/xtensa-esp-elf --with-native-system-header-dir=/include --with-headers=/builds/idf/crosstool-NG/builds/xtensa-esp-elf/xtensa-esp-elf/include --with-newlib --enable-threads=no --disable-shared --with-pkgversion='crosstool-NG esp-15.2.0_20250929' --disable-__cxa_atexit --enable-cxx-flags='-ffunction-sections -fdata-sections' --disable-libgomp --disable-libmudflap --disable-libmpx --disable-libssp --disable-libquadmath --disable-libquadmath-support --disable-libstdcxx-verbose --with-gmp=/builds/idf/crosstool-NG/.build/xtensa-esp-elf/buildtools/complibs-host --with-mpfr=/builds/idf/crosstool-NG/.build/xtensa-esp-elf/buildtools/complibs-host --with-mpc=/builds/idf/crosstool-NG/.build/xtensa-esp-elf/buildtools/complibs-host --with-isl=/builds/idf/crosstool-NG/.build/xtensa-esp-elf/buildtools/complibs-host --enable-lto --enable-target-optspace --without-long-double-128 --enable-plugin --disable-nls --enable-multiarch --enable-languages=c c++ --disable-libstdcxx-verbose --enable-threads=posix --enable-libstdcxx-time=yes --disable-win32-utf8-manifest]
+        ignore line: [Thread model: posix]
+        ignore line: [Supported LTO compression algorithms: zlib zstd]
+        ignore line: [gcc version 15.2.0 (crosstool-NG esp-15.2.0_20250929) ]
+        ignore line: [COMPILER_PATH=/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../libexec/gcc/xtensa-esp-elf/15.2.0/:/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../libexec/gcc/:/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/bin/]
+        ignore line: [LIBRARY_PATH=/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/esp32s3/:/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/lib/esp32s3/:/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../xtensa-esp-elf/lib/esp32s3/:/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/:/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/:/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/lib/:/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../xtensa-esp-elf/lib/:/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../xtensa-esp-elf/usr/lib/]
+        ignore line: [COLLECT_GCC_OPTIONS='-mdynconfig=xtensa_esp32s3.so' '-v' '-o' 'cmTC_e16ca' '-dumpdir' 'cmTC_e16ca.']
+        link line: [ /home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../libexec/gcc/xtensa-esp-elf/15.2.0/collect2 -plugin /home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../libexec/gcc/xtensa-esp-elf/15.2.0/liblto_plugin.so -plugin-opt=/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../libexec/gcc/xtensa-esp-elf/15.2.0/lto-wrapper -plugin-opt=-fresolution=/tmp/ccLASwD6.res -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lnosys -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc --sysroot=/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../xtensa-esp-elf --dynconfig=xtensa_esp32s3.so -o cmTC_e16ca /home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/lib/esp32s3/crt0.o /home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/esp32s3/crti.o /home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/esp32s3/crtbegin.o -L/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/esp32s3 -L/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/lib/esp32s3 -L/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../xtensa-esp-elf/lib/esp32s3 -L/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0 -L/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc -L/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/lib -L/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../xtensa-esp-elf/lib -L/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../xtensa-esp-elf/usr/lib @/tmp/cclnG5xb -lgcc -lc -lnosys -lc -lgcc /home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/esp32s3/crtend.o /home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/esp32s3/crtn.o]
+          arg [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../libexec/gcc/xtensa-esp-elf/15.2.0/collect2] ==> ignore
+          arg [-plugin] ==> ignore
+          arg [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../libexec/gcc/xtensa-esp-elf/15.2.0/liblto_plugin.so] ==> ignore
+          arg [-plugin-opt=/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../libexec/gcc/xtensa-esp-elf/15.2.0/lto-wrapper] ==> ignore
+          arg [-plugin-opt=-fresolution=/tmp/ccLASwD6.res] ==> ignore
+          arg [-plugin-opt=-pass-through=-lgcc] ==> ignore
+          arg [-plugin-opt=-pass-through=-lc] ==> ignore
+          arg [-plugin-opt=-pass-through=-lnosys] ==> ignore
+          arg [-plugin-opt=-pass-through=-lc] ==> ignore
+          arg [-plugin-opt=-pass-through=-lgcc] ==> ignore
+          arg [--sysroot=/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../xtensa-esp-elf] ==> ignore
+          arg [--dynconfig=xtensa_esp32s3.so] ==> ignore
+          arg [-o] ==> ignore
+          arg [cmTC_e16ca] ==> ignore
+          arg [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/lib/esp32s3/crt0.o] ==> obj [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/lib/esp32s3/crt0.o]
+          arg [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/esp32s3/crti.o] ==> obj [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/esp32s3/crti.o]
+          arg [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/esp32s3/crtbegin.o] ==> obj [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/esp32s3/crtbegin.o]
+          arg [-L/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/esp32s3] ==> dir [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/esp32s3]
+          arg [-L/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/lib/esp32s3] ==> dir [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/lib/esp32s3]
+          arg [-L/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../xtensa-esp-elf/lib/esp32s3] ==> dir [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../xtensa-esp-elf/lib/esp32s3]
+          arg [-L/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0] ==> dir [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0]
+          arg [-L/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc] ==> dir [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc]
+          arg [-L/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/lib] ==> dir [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/lib]
+          arg [-L/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../xtensa-esp-elf/lib] ==> dir [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../xtensa-esp-elf/lib]
+          arg [-L/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../xtensa-esp-elf/usr/lib] ==> dir [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../xtensa-esp-elf/usr/lib]
+          arg [@/tmp/cclnG5xb] ==> ignore
+          arg [-lgcc] ==> lib [gcc]
+          arg [-lc] ==> lib [c]
+          arg [-lnosys] ==> lib [nosys]
+          arg [-lc] ==> lib [c]
+          arg [-lgcc] ==> lib [gcc]
+          arg [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/esp32s3/crtend.o] ==> obj [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/esp32s3/crtend.o]
+          arg [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/esp32s3/crtn.o] ==> obj [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/esp32s3/crtn.o]
+        ignore line: [COLLECT_GCC_OPTIONS='-mdynconfig=xtensa_esp32s3.so' '-v' '-o' 'cmTC_e16ca' '-dumpdir' 'cmTC_e16ca.']
+        ignore line: []
+        ignore line: []
+        collapse obj [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/lib/esp32s3/crt0.o] ==> [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/xtensa-esp-elf/lib/esp32s3/crt0.o]
+        collapse obj [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/esp32s3/crti.o] ==> [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/lib/gcc/xtensa-esp-elf/15.2.0/esp32s3/crti.o]
+        collapse obj [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/esp32s3/crtbegin.o] ==> [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/lib/gcc/xtensa-esp-elf/15.2.0/esp32s3/crtbegin.o]
+        collapse obj [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/esp32s3/crtend.o] ==> [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/lib/gcc/xtensa-esp-elf/15.2.0/esp32s3/crtend.o]
+        collapse obj [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/esp32s3/crtn.o] ==> [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/lib/gcc/xtensa-esp-elf/15.2.0/esp32s3/crtn.o]
+        collapse library dir [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/esp32s3] ==> [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/lib/gcc/xtensa-esp-elf/15.2.0/esp32s3]
+        collapse library dir [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/lib/esp32s3] ==> [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/xtensa-esp-elf/lib/esp32s3]
+        collapse library dir [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../xtensa-esp-elf/lib/esp32s3] ==> [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/xtensa-esp-elf/lib/esp32s3]
+        collapse library dir [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0] ==> [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/lib/gcc/xtensa-esp-elf/15.2.0]
+        collapse library dir [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc] ==> [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/lib/gcc]
+        collapse library dir [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/lib] ==> [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/xtensa-esp-elf/lib]
+        collapse library dir [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../xtensa-esp-elf/lib] ==> [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/xtensa-esp-elf/lib]
+        collapse library dir [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../xtensa-esp-elf/usr/lib] ==> [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/xtensa-esp-elf/usr/lib]
+        implicit libs: [gcc;c;nosys;c;gcc]
+        implicit objs: [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/xtensa-esp-elf/lib/esp32s3/crt0.o;/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/lib/gcc/xtensa-esp-elf/15.2.0/esp32s3/crti.o;/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/lib/gcc/xtensa-esp-elf/15.2.0/esp32s3/crtbegin.o;/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/lib/gcc/xtensa-esp-elf/15.2.0/esp32s3/crtend.o;/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/lib/gcc/xtensa-esp-elf/15.2.0/esp32s3/crtn.o]
+        implicit dirs: [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/lib/gcc/xtensa-esp-elf/15.2.0/esp32s3;/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/xtensa-esp-elf/lib/esp32s3;/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/lib/gcc/xtensa-esp-elf/15.2.0;/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/lib/gcc;/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/xtensa-esp-elf/lib;/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/xtensa-esp-elf/usr/lib]
+        implicit fwks: []
+      
+      
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/usr/share/cmake-3.31/Modules/CMakeDetermineCompilerABI.cmake:74 (try_compile)"
+      - "/usr/share/cmake-3.31/Modules/CMakeTestCXXCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "/home/pi/esp/esp-idf/tools/cmake/project.cmake:588 (__project)"
+      - "CMakeLists.txt:4 (project)"
+    checks:
+      - "Detecting CXX compiler ABI info"
+    directories:
+      source: "/home/pi/_playground/espidf/projects/blinken/build/CMakeFiles/CMakeScratch/TryCompile-I65jAZ"
+      binary: "/home/pi/_playground/espidf/projects/blinken/build/CMakeFiles/CMakeScratch/TryCompile-I65jAZ"
+    cmakeVariables:
+      CMAKE_CXX_FLAGS: "@\"/home/pi/_playground/espidf/projects/blinken/build/toolchain/cxxflags\""
+      CMAKE_CXX_FLAGS_DEBUG: "-g"
+      CMAKE_CXX_SCAN_FOR_MODULES: "OFF"
+      CMAKE_EXE_LINKER_FLAGS: "@\"/home/pi/_playground/espidf/projects/blinken/build/toolchain/ldflags\""
+      CMAKE_MODULE_PATH: "/home/pi/esp/esp-idf/tools/cmake;/home/pi/esp/esp-idf/tools/cmake/third_party"
+    buildResult:
+      variable: "CMAKE_CXX_ABI_COMPILED"
+      cached: true
+      stdout: |
+        Change Dir: '/home/pi/_playground/espidf/projects/blinken/build/CMakeFiles/CMakeScratch/TryCompile-I65jAZ'
+        
+        Run Build Command(s): /usr/bin/ninja -v cmTC_ab2c0
+        [1/2] /home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/xtensa-esp32s3-elf-g++   @"/home/pi/_playground/espidf/projects/blinken/build/toolchain/cxxflags"    -v -o CMakeFiles/cmTC_ab2c0.dir/CMakeCXXCompilerABI.cpp.obj -c /usr/share/cmake-3.31/Modules/CMakeCXXCompilerABI.cpp
+        Using built-in specs.
+        COLLECT_GCC=/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/xtensa-esp-elf-g++
+        Target: xtensa-esp-elf
+        Configured with: /builds/idf/crosstool-NG/.build/xtensa-esp-elf/src/gcc/configure --build=x86_64-build_pc-linux-gnu --host=aarch64-host_unknown-linux-gnu --target=xtensa-esp-elf --prefix=/builds/idf/crosstool-NG/builds/xtensa-esp-elf --exec_prefix=/builds/idf/crosstool-NG/builds/xtensa-esp-elf --with-local-prefix=/builds/idf/crosstool-NG/builds/xtensa-esp-elf/xtensa-esp-elf --with-sysroot=/builds/idf/crosstool-NG/builds/xtensa-esp-elf/xtensa-esp-elf --with-native-system-header-dir=/include --with-headers=/builds/idf/crosstool-NG/builds/xtensa-esp-elf/xtensa-esp-elf/include --with-newlib --enable-threads=no --disable-shared --with-pkgversion='crosstool-NG esp-15.2.0_20250929' --disable-__cxa_atexit --enable-cxx-flags='-ffunction-sections -fdata-sections' --disable-libgomp --disable-libmudflap --disable-libmpx --disable-libssp --disable-libquadmath --disable-libquadmath-support --disable-libstdcxx-verbose --with-gmp=/builds/idf/crosstool-NG/.build/xtensa-esp-elf/buildtools/complibs-host --with-mpfr=/builds/idf/crosstool-NG/.build/xtensa-esp-elf/buildtools/complibs-host --with-mpc=/builds/idf/crosstool-NG/.build/xtensa-esp-elf/buildtools/complibs-host --with-isl=/builds/idf/crosstool-NG/.build/xtensa-esp-elf/buildtools/complibs-host --enable-lto --enable-target-optspace --without-long-double-128 --enable-plugin --disable-nls --enable-multiarch --enable-languages=c,c++ --disable-libstdcxx-verbose --enable-threads=posix --enable-libstdcxx-time=yes --disable-win32-utf8-manifest
+        Thread model: posix
+        Supported LTO compression algorithms: zlib zstd
+        gcc version 15.2.0 (crosstool-NG esp-15.2.0_20250929) 
+        COLLECT_GCC_OPTIONS='-mdynconfig=xtensa_esp32s3.so' '-v' '-o' 'CMakeFiles/cmTC_ab2c0.dir/CMakeCXXCompilerABI.cpp.obj' '-c' '-dumpdir' 'CMakeFiles/cmTC_ab2c0.dir/'
+         /home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../libexec/gcc/xtensa-esp-elf/15.2.0/cc1plus -quiet -v -imultilib esp32s3 -iprefix /home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/ -isysroot /home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../xtensa-esp-elf /usr/share/cmake-3.31/Modules/CMakeCXXCompilerABI.cpp -quiet -dumpdir CMakeFiles/cmTC_ab2c0.dir/ -dumpbase CMakeCXXCompilerABI.cpp.cpp -dumpbase-ext .cpp -mdynconfig=xtensa_esp32s3.so -version -o /tmp/ccByqbpn.s
+        GNU C++17 (crosstool-NG esp-15.2.0_20250929) version 15.2.0 (xtensa-esp-elf)
+        	compiled by GNU C version 6.3.0 20170516, GMP version 6.3.0, MPFR version 4.2.1, MPC version 1.3.1, isl version isl-0.26-GMP
+        
+        GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072
+        ignoring duplicate directory "/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/../../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/include/c++/15.2.0"
+        ignoring duplicate directory "/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/../../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/include/c++/15.2.0/xtensa-esp-elf/esp32s3"
+        ignoring duplicate directory "/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/../../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/include/c++/15.2.0/backward"
+        ignoring duplicate directory "/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/../../lib/gcc/xtensa-esp-elf/15.2.0/include"
+        ignoring nonexistent directory "/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../xtensa-esp-elf/builds/idf/crosstool-NG/builds/xtensa-esp-elf/xtensa-esp-elf/include"
+        ignoring duplicate directory "/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/../../lib/gcc/xtensa-esp-elf/15.2.0/include-fixed"
+        ignoring duplicate directory "/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/../../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/include"
+        ignoring duplicate directory "/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../xtensa-esp-elf/include"
+        #include "..." search starts here:
+        #include <...> search starts here:
+         /home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/include/c++/15.2.0
+         /home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/include/c++/15.2.0/xtensa-esp-elf/esp32s3
+         /home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/include/c++/15.2.0/backward
+         /home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/include
+         /home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/include-fixed
+         /home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/include
+        End of search list.
+        Compiler executable checksum: 95b4b59ce0942a0fc52253d876fb8884
+        COLLECT_GCC_OPTIONS='-mdynconfig=xtensa_esp32s3.so' '-v' '-o' 'CMakeFiles/cmTC_ab2c0.dir/CMakeCXXCompilerABI.cpp.obj' '-c' '-dumpdir' 'CMakeFiles/cmTC_ab2c0.dir/'
+         /home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/bin/as --traditional-format --dynconfig=xtensa_esp32s3.so -o CMakeFiles/cmTC_ab2c0.dir/CMakeCXXCompilerABI.cpp.obj /tmp/ccByqbpn.s
+        COMPILER_PATH=/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../libexec/gcc/xtensa-esp-elf/15.2.0/:/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../libexec/gcc/:/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/bin/
+        LIBRARY_PATH=/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/esp32s3/:/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/lib/esp32s3/:/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../xtensa-esp-elf/lib/esp32s3/:/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/:/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/:/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/lib/:/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../xtensa-esp-elf/lib/:/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../xtensa-esp-elf/usr/lib/
+        COLLECT_GCC_OPTIONS='-mdynconfig=xtensa_esp32s3.so' '-v' '-o' 'CMakeFiles/cmTC_ab2c0.dir/CMakeCXXCompilerABI.cpp.obj' '-c' '-dumpdir' 'CMakeFiles/cmTC_ab2c0.dir/CMakeCXXCompilerABI.cpp.'
+        [2/2] : && /home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/xtensa-esp32s3-elf-g++ @"/home/pi/_playground/espidf/projects/blinken/build/toolchain/cxxflags" @"/home/pi/_playground/espidf/projects/blinken/build/toolchain/ldflags" -v CMakeFiles/cmTC_ab2c0.dir/CMakeCXXCompilerABI.cpp.obj -o cmTC_ab2c0   && :
+        Using built-in specs.
+        COLLECT_GCC=/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/xtensa-esp-elf-g++
+        COLLECT_LTO_WRAPPER=/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../libexec/gcc/xtensa-esp-elf/15.2.0/lto-wrapper
+        Target: xtensa-esp-elf
+        Configured with: /builds/idf/crosstool-NG/.build/xtensa-esp-elf/src/gcc/configure --build=x86_64-build_pc-linux-gnu --host=aarch64-host_unknown-linux-gnu --target=xtensa-esp-elf --prefix=/builds/idf/crosstool-NG/builds/xtensa-esp-elf --exec_prefix=/builds/idf/crosstool-NG/builds/xtensa-esp-elf --with-local-prefix=/builds/idf/crosstool-NG/builds/xtensa-esp-elf/xtensa-esp-elf --with-sysroot=/builds/idf/crosstool-NG/builds/xtensa-esp-elf/xtensa-esp-elf --with-native-system-header-dir=/include --with-headers=/builds/idf/crosstool-NG/builds/xtensa-esp-elf/xtensa-esp-elf/include --with-newlib --enable-threads=no --disable-shared --with-pkgversion='crosstool-NG esp-15.2.0_20250929' --disable-__cxa_atexit --enable-cxx-flags='-ffunction-sections -fdata-sections' --disable-libgomp --disable-libmudflap --disable-libmpx --disable-libssp --disable-libquadmath --disable-libquadmath-support --disable-libstdcxx-verbose --with-gmp=/builds/idf/crosstool-NG/.build/xtensa-esp-elf/buildtools/complibs-host --with-mpfr=/builds/idf/crosstool-NG/.build/xtensa-esp-elf/buildtools/complibs-host --with-mpc=/builds/idf/crosstool-NG/.build/xtensa-esp-elf/buildtools/complibs-host --with-isl=/builds/idf/crosstool-NG/.build/xtensa-esp-elf/buildtools/complibs-host --enable-lto --enable-target-optspace --without-long-double-128 --enable-plugin --disable-nls --enable-multiarch --enable-languages=c,c++ --disable-libstdcxx-verbose --enable-threads=posix --enable-libstdcxx-time=yes --disable-win32-utf8-manifest
+        Thread model: posix
+        Supported LTO compression algorithms: zlib zstd
+        gcc version 15.2.0 (crosstool-NG esp-15.2.0_20250929) 
+        COMPILER_PATH=/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../libexec/gcc/xtensa-esp-elf/15.2.0/:/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../libexec/gcc/:/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/bin/
+        LIBRARY_PATH=/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/esp32s3/:/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/lib/esp32s3/:/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../xtensa-esp-elf/lib/esp32s3/:/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/:/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/:/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/lib/:/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../xtensa-esp-elf/lib/:/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../xtensa-esp-elf/usr/lib/
+        COLLECT_GCC_OPTIONS='-mdynconfig=xtensa_esp32s3.so' '-v' '-o' 'cmTC_ab2c0' '-dumpdir' 'cmTC_ab2c0.'
+         /home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../libexec/gcc/xtensa-esp-elf/15.2.0/collect2 -plugin /home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../libexec/gcc/xtensa-esp-elf/15.2.0/liblto_plugin.so -plugin-opt=/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../libexec/gcc/xtensa-esp-elf/15.2.0/lto-wrapper -plugin-opt=-fresolution=/tmp/ccwWTZGw.res -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lnosys -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc --sysroot=/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../xtensa-esp-elf --dynconfig=xtensa_esp32s3.so -o cmTC_ab2c0 /home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/lib/esp32s3/crt0.o /home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/esp32s3/crti.o /home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/esp32s3/crtbegin.o -L/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/esp32s3 -L/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/lib/esp32s3 -L/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../xtensa-esp-elf/lib/esp32s3 -L/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0 -L/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc -L/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/lib -L/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../xtensa-esp-elf/lib -L/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../xtensa-esp-elf/usr/lib @/tmp/ccCykdtU -lgcc -lc -lnosys -lc -lgcc /home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/esp32s3/crtend.o /home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/esp32s3/crtn.o
+        COLLECT_GCC_OPTIONS='-mdynconfig=xtensa_esp32s3.so' '-v' '-o' 'cmTC_ab2c0' '-dumpdir' 'cmTC_ab2c0.'
+        
+      exitCode: 0
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/usr/share/cmake-3.31/Modules/CMakeDetermineCompilerABI.cmake:182 (message)"
+      - "/usr/share/cmake-3.31/Modules/CMakeTestCXXCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "/home/pi/esp/esp-idf/tools/cmake/project.cmake:588 (__project)"
+      - "CMakeLists.txt:4 (project)"
+    message: |
+      Parsed CXX implicit include dir info: rv=done
+        found start of include info
+        found start of implicit include info
+          add: [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/include/c++/15.2.0]
+          add: [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/include/c++/15.2.0/xtensa-esp-elf/esp32s3]
+          add: [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/include/c++/15.2.0/backward]
+          add: [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/include]
+          add: [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/include-fixed]
+          add: [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/include]
+        end of search list found
+        collapse include dir [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/include/c++/15.2.0] ==> [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/xtensa-esp-elf/include/c++/15.2.0]
+        collapse include dir [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/include/c++/15.2.0/xtensa-esp-elf/esp32s3] ==> [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/xtensa-esp-elf/include/c++/15.2.0/xtensa-esp-elf/esp32s3]
+        collapse include dir [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/include/c++/15.2.0/backward] ==> [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/xtensa-esp-elf/include/c++/15.2.0/backward]
+        collapse include dir [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/include] ==> [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/lib/gcc/xtensa-esp-elf/15.2.0/include]
+        collapse include dir [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/include-fixed] ==> [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/lib/gcc/xtensa-esp-elf/15.2.0/include-fixed]
+        collapse include dir [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/include] ==> [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/xtensa-esp-elf/include]
+        implicit include dirs: [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/xtensa-esp-elf/include/c++/15.2.0;/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/xtensa-esp-elf/include/c++/15.2.0/xtensa-esp-elf/esp32s3;/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/xtensa-esp-elf/include/c++/15.2.0/backward;/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/lib/gcc/xtensa-esp-elf/15.2.0/include;/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/lib/gcc/xtensa-esp-elf/15.2.0/include-fixed;/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/xtensa-esp-elf/include]
+      
+      
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/usr/share/cmake-3.31/Modules/CMakeDetermineCompilerABI.cmake:218 (message)"
+      - "/usr/share/cmake-3.31/Modules/CMakeTestCXXCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "/home/pi/esp/esp-idf/tools/cmake/project.cmake:588 (__project)"
+      - "CMakeLists.txt:4 (project)"
+    message: |
+      Parsed CXX implicit link information:
+        link line regex: [^( *|.*[/\\])(ld[0-9]*(\\.[a-z]+)?|CMAKE_LINK_STARTFILE-NOTFOUND|([^/\\]+-)?ld|collect2)[^/\\]*( |$)]
+        linker tool regex: [^[ 	]*(->|")?[ 	]*(([^"]*[/\\])?(ld[0-9]*(\\.[a-z]+)?))("|,| |$)]
+        ignore line: [Change Dir: '/home/pi/_playground/espidf/projects/blinken/build/CMakeFiles/CMakeScratch/TryCompile-I65jAZ']
+        ignore line: []
+        ignore line: [Run Build Command(s): /usr/bin/ninja -v cmTC_ab2c0]
+        ignore line: [[1/2] /home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/xtensa-esp32s3-elf-g++   @"/home/pi/_playground/espidf/projects/blinken/build/toolchain/cxxflags"    -v -o CMakeFiles/cmTC_ab2c0.dir/CMakeCXXCompilerABI.cpp.obj -c /usr/share/cmake-3.31/Modules/CMakeCXXCompilerABI.cpp]
+        ignore line: [Using built-in specs.]
+        ignore line: [COLLECT_GCC=/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/xtensa-esp-elf-g++]
+        ignore line: [Target: xtensa-esp-elf]
+        ignore line: [Configured with: /builds/idf/crosstool-NG/.build/xtensa-esp-elf/src/gcc/configure --build=x86_64-build_pc-linux-gnu --host=aarch64-host_unknown-linux-gnu --target=xtensa-esp-elf --prefix=/builds/idf/crosstool-NG/builds/xtensa-esp-elf --exec_prefix=/builds/idf/crosstool-NG/builds/xtensa-esp-elf --with-local-prefix=/builds/idf/crosstool-NG/builds/xtensa-esp-elf/xtensa-esp-elf --with-sysroot=/builds/idf/crosstool-NG/builds/xtensa-esp-elf/xtensa-esp-elf --with-native-system-header-dir=/include --with-headers=/builds/idf/crosstool-NG/builds/xtensa-esp-elf/xtensa-esp-elf/include --with-newlib --enable-threads=no --disable-shared --with-pkgversion='crosstool-NG esp-15.2.0_20250929' --disable-__cxa_atexit --enable-cxx-flags='-ffunction-sections -fdata-sections' --disable-libgomp --disable-libmudflap --disable-libmpx --disable-libssp --disable-libquadmath --disable-libquadmath-support --disable-libstdcxx-verbose --with-gmp=/builds/idf/crosstool-NG/.build/xtensa-esp-elf/buildtools/complibs-host --with-mpfr=/builds/idf/crosstool-NG/.build/xtensa-esp-elf/buildtools/complibs-host --with-mpc=/builds/idf/crosstool-NG/.build/xtensa-esp-elf/buildtools/complibs-host --with-isl=/builds/idf/crosstool-NG/.build/xtensa-esp-elf/buildtools/complibs-host --enable-lto --enable-target-optspace --without-long-double-128 --enable-plugin --disable-nls --enable-multiarch --enable-languages=c c++ --disable-libstdcxx-verbose --enable-threads=posix --enable-libstdcxx-time=yes --disable-win32-utf8-manifest]
+        ignore line: [Thread model: posix]
+        ignore line: [Supported LTO compression algorithms: zlib zstd]
+        ignore line: [gcc version 15.2.0 (crosstool-NG esp-15.2.0_20250929) ]
+        ignore line: [COLLECT_GCC_OPTIONS='-mdynconfig=xtensa_esp32s3.so' '-v' '-o' 'CMakeFiles/cmTC_ab2c0.dir/CMakeCXXCompilerABI.cpp.obj' '-c' '-dumpdir' 'CMakeFiles/cmTC_ab2c0.dir/']
+        ignore line: [ /home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../libexec/gcc/xtensa-esp-elf/15.2.0/cc1plus -quiet -v -imultilib esp32s3 -iprefix /home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/ -isysroot /home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../xtensa-esp-elf /usr/share/cmake-3.31/Modules/CMakeCXXCompilerABI.cpp -quiet -dumpdir CMakeFiles/cmTC_ab2c0.dir/ -dumpbase CMakeCXXCompilerABI.cpp.cpp -dumpbase-ext .cpp -mdynconfig=xtensa_esp32s3.so -version -o /tmp/ccByqbpn.s]
+        ignore line: [GNU C++17 (crosstool-NG esp-15.2.0_20250929) version 15.2.0 (xtensa-esp-elf)]
+        ignore line: [	compiled by GNU C version 6.3.0 20170516  GMP version 6.3.0  MPFR version 4.2.1  MPC version 1.3.1  isl version isl-0.26-GMP]
+        ignore line: []
+        ignore line: [GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072]
+        ignore line: [ignoring duplicate directory "/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/../../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/include/c++/15.2.0"]
+        ignore line: [ignoring duplicate directory "/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/../../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/include/c++/15.2.0/xtensa-esp-elf/esp32s3"]
+        ignore line: [ignoring duplicate directory "/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/../../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/include/c++/15.2.0/backward"]
+        ignore line: [ignoring duplicate directory "/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/../../lib/gcc/xtensa-esp-elf/15.2.0/include"]
+        ignore line: [ignoring nonexistent directory "/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../xtensa-esp-elf/builds/idf/crosstool-NG/builds/xtensa-esp-elf/xtensa-esp-elf/include"]
+        ignore line: [ignoring duplicate directory "/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/../../lib/gcc/xtensa-esp-elf/15.2.0/include-fixed"]
+        ignore line: [ignoring duplicate directory "/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/../../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/include"]
+        ignore line: [ignoring duplicate directory "/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../xtensa-esp-elf/include"]
+        ignore line: [#include "..." search starts here:]
+        ignore line: [#include <...> search starts here:]
+        ignore line: [ /home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/include/c++/15.2.0]
+        ignore line: [ /home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/include/c++/15.2.0/xtensa-esp-elf/esp32s3]
+        ignore line: [ /home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/include/c++/15.2.0/backward]
+        ignore line: [ /home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/include]
+        ignore line: [ /home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/include-fixed]
+        ignore line: [ /home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/include]
+        ignore line: [End of search list.]
+        ignore line: [Compiler executable checksum: 95b4b59ce0942a0fc52253d876fb8884]
+        ignore line: [COLLECT_GCC_OPTIONS='-mdynconfig=xtensa_esp32s3.so' '-v' '-o' 'CMakeFiles/cmTC_ab2c0.dir/CMakeCXXCompilerABI.cpp.obj' '-c' '-dumpdir' 'CMakeFiles/cmTC_ab2c0.dir/']
+        ignore line: [ /home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/bin/as --traditional-format --dynconfig=xtensa_esp32s3.so -o CMakeFiles/cmTC_ab2c0.dir/CMakeCXXCompilerABI.cpp.obj /tmp/ccByqbpn.s]
+        ignore line: [COMPILER_PATH=/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../libexec/gcc/xtensa-esp-elf/15.2.0/:/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../libexec/gcc/:/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/bin/]
+        ignore line: [LIBRARY_PATH=/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/esp32s3/:/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/lib/esp32s3/:/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../xtensa-esp-elf/lib/esp32s3/:/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/:/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/:/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/lib/:/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../xtensa-esp-elf/lib/:/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../xtensa-esp-elf/usr/lib/]
+        ignore line: [COLLECT_GCC_OPTIONS='-mdynconfig=xtensa_esp32s3.so' '-v' '-o' 'CMakeFiles/cmTC_ab2c0.dir/CMakeCXXCompilerABI.cpp.obj' '-c' '-dumpdir' 'CMakeFiles/cmTC_ab2c0.dir/CMakeCXXCompilerABI.cpp.']
+        ignore line: [[2/2] : && /home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/xtensa-esp32s3-elf-g++ @"/home/pi/_playground/espidf/projects/blinken/build/toolchain/cxxflags" @"/home/pi/_playground/espidf/projects/blinken/build/toolchain/ldflags" -v CMakeFiles/cmTC_ab2c0.dir/CMakeCXXCompilerABI.cpp.obj -o cmTC_ab2c0   && :]
+        ignore line: [Using built-in specs.]
+        ignore line: [COLLECT_GCC=/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/xtensa-esp-elf-g++]
+        ignore line: [COLLECT_LTO_WRAPPER=/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../libexec/gcc/xtensa-esp-elf/15.2.0/lto-wrapper]
+        ignore line: [Target: xtensa-esp-elf]
+        ignore line: [Configured with: /builds/idf/crosstool-NG/.build/xtensa-esp-elf/src/gcc/configure --build=x86_64-build_pc-linux-gnu --host=aarch64-host_unknown-linux-gnu --target=xtensa-esp-elf --prefix=/builds/idf/crosstool-NG/builds/xtensa-esp-elf --exec_prefix=/builds/idf/crosstool-NG/builds/xtensa-esp-elf --with-local-prefix=/builds/idf/crosstool-NG/builds/xtensa-esp-elf/xtensa-esp-elf --with-sysroot=/builds/idf/crosstool-NG/builds/xtensa-esp-elf/xtensa-esp-elf --with-native-system-header-dir=/include --with-headers=/builds/idf/crosstool-NG/builds/xtensa-esp-elf/xtensa-esp-elf/include --with-newlib --enable-threads=no --disable-shared --with-pkgversion='crosstool-NG esp-15.2.0_20250929' --disable-__cxa_atexit --enable-cxx-flags='-ffunction-sections -fdata-sections' --disable-libgomp --disable-libmudflap --disable-libmpx --disable-libssp --disable-libquadmath --disable-libquadmath-support --disable-libstdcxx-verbose --with-gmp=/builds/idf/crosstool-NG/.build/xtensa-esp-elf/buildtools/complibs-host --with-mpfr=/builds/idf/crosstool-NG/.build/xtensa-esp-elf/buildtools/complibs-host --with-mpc=/builds/idf/crosstool-NG/.build/xtensa-esp-elf/buildtools/complibs-host --with-isl=/builds/idf/crosstool-NG/.build/xtensa-esp-elf/buildtools/complibs-host --enable-lto --enable-target-optspace --without-long-double-128 --enable-plugin --disable-nls --enable-multiarch --enable-languages=c c++ --disable-libstdcxx-verbose --enable-threads=posix --enable-libstdcxx-time=yes --disable-win32-utf8-manifest]
+        ignore line: [Thread model: posix]
+        ignore line: [Supported LTO compression algorithms: zlib zstd]
+        ignore line: [gcc version 15.2.0 (crosstool-NG esp-15.2.0_20250929) ]
+        ignore line: [COMPILER_PATH=/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../libexec/gcc/xtensa-esp-elf/15.2.0/:/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../libexec/gcc/:/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/bin/]
+        ignore line: [LIBRARY_PATH=/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/esp32s3/:/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/lib/esp32s3/:/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../xtensa-esp-elf/lib/esp32s3/:/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/:/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/:/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/lib/:/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../xtensa-esp-elf/lib/:/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../xtensa-esp-elf/usr/lib/]
+        ignore line: [COLLECT_GCC_OPTIONS='-mdynconfig=xtensa_esp32s3.so' '-v' '-o' 'cmTC_ab2c0' '-dumpdir' 'cmTC_ab2c0.']
+        link line: [ /home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../libexec/gcc/xtensa-esp-elf/15.2.0/collect2 -plugin /home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../libexec/gcc/xtensa-esp-elf/15.2.0/liblto_plugin.so -plugin-opt=/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../libexec/gcc/xtensa-esp-elf/15.2.0/lto-wrapper -plugin-opt=-fresolution=/tmp/ccwWTZGw.res -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lnosys -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc --sysroot=/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../xtensa-esp-elf --dynconfig=xtensa_esp32s3.so -o cmTC_ab2c0 /home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/lib/esp32s3/crt0.o /home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/esp32s3/crti.o /home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/esp32s3/crtbegin.o -L/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/esp32s3 -L/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/lib/esp32s3 -L/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../xtensa-esp-elf/lib/esp32s3 -L/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0 -L/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc -L/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/lib -L/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../xtensa-esp-elf/lib -L/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../xtensa-esp-elf/usr/lib @/tmp/ccCykdtU -lgcc -lc -lnosys -lc -lgcc /home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/esp32s3/crtend.o /home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/esp32s3/crtn.o]
+          arg [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../libexec/gcc/xtensa-esp-elf/15.2.0/collect2] ==> ignore
+          arg [-plugin] ==> ignore
+          arg [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../libexec/gcc/xtensa-esp-elf/15.2.0/liblto_plugin.so] ==> ignore
+          arg [-plugin-opt=/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../libexec/gcc/xtensa-esp-elf/15.2.0/lto-wrapper] ==> ignore
+          arg [-plugin-opt=-fresolution=/tmp/ccwWTZGw.res] ==> ignore
+          arg [-plugin-opt=-pass-through=-lgcc] ==> ignore
+          arg [-plugin-opt=-pass-through=-lc] ==> ignore
+          arg [-plugin-opt=-pass-through=-lnosys] ==> ignore
+          arg [-plugin-opt=-pass-through=-lc] ==> ignore
+          arg [-plugin-opt=-pass-through=-lgcc] ==> ignore
+          arg [--sysroot=/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../xtensa-esp-elf] ==> ignore
+          arg [--dynconfig=xtensa_esp32s3.so] ==> ignore
+          arg [-o] ==> ignore
+          arg [cmTC_ab2c0] ==> ignore
+          arg [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/lib/esp32s3/crt0.o] ==> obj [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/lib/esp32s3/crt0.o]
+          arg [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/esp32s3/crti.o] ==> obj [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/esp32s3/crti.o]
+          arg [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/esp32s3/crtbegin.o] ==> obj [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/esp32s3/crtbegin.o]
+          arg [-L/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/esp32s3] ==> dir [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/esp32s3]
+          arg [-L/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/lib/esp32s3] ==> dir [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/lib/esp32s3]
+          arg [-L/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../xtensa-esp-elf/lib/esp32s3] ==> dir [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../xtensa-esp-elf/lib/esp32s3]
+          arg [-L/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0] ==> dir [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0]
+          arg [-L/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc] ==> dir [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc]
+          arg [-L/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/lib] ==> dir [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/lib]
+          arg [-L/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../xtensa-esp-elf/lib] ==> dir [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../xtensa-esp-elf/lib]
+          arg [-L/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../xtensa-esp-elf/usr/lib] ==> dir [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../xtensa-esp-elf/usr/lib]
+          arg [@/tmp/ccCykdtU] ==> ignore
+          arg [-lgcc] ==> lib [gcc]
+          arg [-lc] ==> lib [c]
+          arg [-lnosys] ==> lib [nosys]
+          arg [-lc] ==> lib [c]
+          arg [-lgcc] ==> lib [gcc]
+          arg [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/esp32s3/crtend.o] ==> obj [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/esp32s3/crtend.o]
+          arg [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/esp32s3/crtn.o] ==> obj [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/esp32s3/crtn.o]
+        ignore line: [COLLECT_GCC_OPTIONS='-mdynconfig=xtensa_esp32s3.so' '-v' '-o' 'cmTC_ab2c0' '-dumpdir' 'cmTC_ab2c0.']
+        ignore line: []
+        ignore line: []
+        collapse obj [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/lib/esp32s3/crt0.o] ==> [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/xtensa-esp-elf/lib/esp32s3/crt0.o]
+        collapse obj [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/esp32s3/crti.o] ==> [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/lib/gcc/xtensa-esp-elf/15.2.0/esp32s3/crti.o]
+        collapse obj [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/esp32s3/crtbegin.o] ==> [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/lib/gcc/xtensa-esp-elf/15.2.0/esp32s3/crtbegin.o]
+        collapse obj [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/esp32s3/crtend.o] ==> [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/lib/gcc/xtensa-esp-elf/15.2.0/esp32s3/crtend.o]
+        collapse obj [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/esp32s3/crtn.o] ==> [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/lib/gcc/xtensa-esp-elf/15.2.0/esp32s3/crtn.o]
+        collapse library dir [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/esp32s3] ==> [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/lib/gcc/xtensa-esp-elf/15.2.0/esp32s3]
+        collapse library dir [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/lib/esp32s3] ==> [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/xtensa-esp-elf/lib/esp32s3]
+        collapse library dir [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../xtensa-esp-elf/lib/esp32s3] ==> [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/xtensa-esp-elf/lib/esp32s3]
+        collapse library dir [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0] ==> [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/lib/gcc/xtensa-esp-elf/15.2.0]
+        collapse library dir [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc] ==> [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/lib/gcc]
+        collapse library dir [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/lib] ==> [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/xtensa-esp-elf/lib]
+        collapse library dir [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../xtensa-esp-elf/lib] ==> [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/xtensa-esp-elf/lib]
+        collapse library dir [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../xtensa-esp-elf/usr/lib] ==> [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/xtensa-esp-elf/usr/lib]
+        implicit libs: [gcc;c;nosys;c;gcc]
+        implicit objs: [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/xtensa-esp-elf/lib/esp32s3/crt0.o;/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/lib/gcc/xtensa-esp-elf/15.2.0/esp32s3/crti.o;/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/lib/gcc/xtensa-esp-elf/15.2.0/esp32s3/crtbegin.o;/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/lib/gcc/xtensa-esp-elf/15.2.0/esp32s3/crtend.o;/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/lib/gcc/xtensa-esp-elf/15.2.0/esp32s3/crtn.o]
+        implicit dirs: [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/lib/gcc/xtensa-esp-elf/15.2.0/esp32s3;/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/xtensa-esp-elf/lib/esp32s3;/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/lib/gcc/xtensa-esp-elf/15.2.0;/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/lib/gcc;/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/xtensa-esp-elf/lib;/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/xtensa-esp-elf/usr/lib]
+        implicit fwks: []
+      
+      
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/usr/share/cmake-3.31/Modules/CMakeDetermineCompilerABI.cmake:74 (try_compile)"
+      - "/home/pi/esp/esp-idf/components/soc/project_include.cmake:106 (cmake_determine_compiler_abi)"
+      - "/home/pi/esp/esp-idf/tools/cmake/build.cmake:515 (include)"
+      - "/home/pi/esp/esp-idf/tools/cmake/build.cmake:789 (__build_process_project_includes)"
+      - "/home/pi/esp/esp-idf/tools/cmake/project.cmake:739 (idf_build_process)"
+      - "CMakeLists.txt:4 (project)"
+    checks:
+      - "Detecting C compiler ABI info"
+    directories:
+      source: "/home/pi/_playground/espidf/projects/blinken/build/CMakeFiles/CMakeScratch/TryCompile-r2VdUH"
+      binary: "/home/pi/_playground/espidf/projects/blinken/build/CMakeFiles/CMakeScratch/TryCompile-r2VdUH"
+    cmakeVariables:
+      CMAKE_C_FLAGS: "@\"/home/pi/_playground/espidf/projects/blinken/build/toolchain/cflags\""
+      CMAKE_C_FLAGS_DEBUG: "-g"
+      CMAKE_EXE_LINKER_FLAGS: "@\"/home/pi/_playground/espidf/projects/blinken/build/toolchain/ldflags\""
+      CMAKE_MODULE_PATH: "/home/pi/esp/esp-idf/tools/cmake;/home/pi/esp/esp-idf/tools/cmake/third_party"
+    buildResult:
+      variable: "CMAKE_C_ABI_COMPILED"
+      cached: true
+      stdout: |
+        Change Dir: '/home/pi/_playground/espidf/projects/blinken/build/CMakeFiles/CMakeScratch/TryCompile-r2VdUH'
+        
+        Run Build Command(s): /usr/bin/ninja -v cmTC_29efd
+        [1/2] /home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/xtensa-esp32s3-elf-gcc   @"/home/pi/_playground/espidf/projects/blinken/build/toolchain/cflags"    -v -o CMakeFiles/cmTC_29efd.dir/CMakeCCompilerABI.c.obj -c /usr/share/cmake-3.31/Modules/CMakeCCompilerABI.c
+        Using built-in specs.
+        COLLECT_GCC=/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/xtensa-esp-elf-gcc
+        Target: xtensa-esp-elf
+        Configured with: /builds/idf/crosstool-NG/.build/xtensa-esp-elf/src/gcc/configure --build=x86_64-build_pc-linux-gnu --host=aarch64-host_unknown-linux-gnu --target=xtensa-esp-elf --prefix=/builds/idf/crosstool-NG/builds/xtensa-esp-elf --exec_prefix=/builds/idf/crosstool-NG/builds/xtensa-esp-elf --with-local-prefix=/builds/idf/crosstool-NG/builds/xtensa-esp-elf/xtensa-esp-elf --with-sysroot=/builds/idf/crosstool-NG/builds/xtensa-esp-elf/xtensa-esp-elf --with-native-system-header-dir=/include --with-headers=/builds/idf/crosstool-NG/builds/xtensa-esp-elf/xtensa-esp-elf/include --with-newlib --enable-threads=no --disable-shared --with-pkgversion='crosstool-NG esp-15.2.0_20250929' --disable-__cxa_atexit --enable-cxx-flags='-ffunction-sections -fdata-sections' --disable-libgomp --disable-libmudflap --disable-libmpx --disable-libssp --disable-libquadmath --disable-libquadmath-support --disable-libstdcxx-verbose --with-gmp=/builds/idf/crosstool-NG/.build/xtensa-esp-elf/buildtools/complibs-host --with-mpfr=/builds/idf/crosstool-NG/.build/xtensa-esp-elf/buildtools/complibs-host --with-mpc=/builds/idf/crosstool-NG/.build/xtensa-esp-elf/buildtools/complibs-host --with-isl=/builds/idf/crosstool-NG/.build/xtensa-esp-elf/buildtools/complibs-host --enable-lto --enable-target-optspace --without-long-double-128 --enable-plugin --disable-nls --enable-multiarch --enable-languages=c,c++ --disable-libstdcxx-verbose --enable-threads=posix --enable-libstdcxx-time=yes --disable-win32-utf8-manifest
+        Thread model: posix
+        Supported LTO compression algorithms: zlib zstd
+        gcc version 15.2.0 (crosstool-NG esp-15.2.0_20250929) 
+        COLLECT_GCC_OPTIONS='-mdynconfig=xtensa_esp32s3.so' '-mlongcalls' '-fno-builtin-memcpy' '-fno-builtin-memset' '-fno-builtin-bzero' '-v' '-o' 'CMakeFiles/cmTC_29efd.dir/CMakeCCompilerABI.c.obj' '-c' '-dumpdir' 'CMakeFiles/cmTC_29efd.dir/'
+         /home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../libexec/gcc/xtensa-esp-elf/15.2.0/cc1 -quiet -v -imultilib esp32s3 -iprefix /home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/ -isysroot /home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../xtensa-esp-elf /usr/share/cmake-3.31/Modules/CMakeCCompilerABI.c -quiet -dumpdir CMakeFiles/cmTC_29efd.dir/ -dumpbase CMakeCCompilerABI.c.c -dumpbase-ext .c -mdynconfig=xtensa_esp32s3.so -mlongcalls -version -fno-builtin-memcpy -fno-builtin-memset -fno-builtin-bzero -o /tmp/ccfCr3wO.s
+        GNU C23 (crosstool-NG esp-15.2.0_20250929) version 15.2.0 (xtensa-esp-elf)
+        	compiled by GNU C version 6.3.0 20170516, GMP version 6.3.0, MPFR version 4.2.1, MPC version 1.3.1, isl version isl-0.26-GMP
+        
+        GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072
+        ignoring duplicate directory "/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/../../lib/gcc/xtensa-esp-elf/15.2.0/include"
+        ignoring nonexistent directory "/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../xtensa-esp-elf/builds/idf/crosstool-NG/builds/xtensa-esp-elf/xtensa-esp-elf/include"
+        ignoring duplicate directory "/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/../../lib/gcc/xtensa-esp-elf/15.2.0/include-fixed"
+        ignoring duplicate directory "/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/../../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/include"
+        ignoring duplicate directory "/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../xtensa-esp-elf/include"
+        #include "..." search starts here:
+        #include <...> search starts here:
+         /home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/include
+         /home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/include-fixed
+         /home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/include
+        End of search list.
+        Compiler executable checksum: 90a6306288c98770ccf682d9cf66dc56
+        COLLECT_GCC_OPTIONS='-mdynconfig=xtensa_esp32s3.so' '-mlongcalls' '-fno-builtin-memcpy' '-fno-builtin-memset' '-fno-builtin-bzero' '-v' '-o' 'CMakeFiles/cmTC_29efd.dir/CMakeCCompilerABI.c.obj' '-c' '-dumpdir' 'CMakeFiles/cmTC_29efd.dir/'
+         /home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/bin/as --traditional-format --longcalls --dynconfig=xtensa_esp32s3.so -o CMakeFiles/cmTC_29efd.dir/CMakeCCompilerABI.c.obj /tmp/ccfCr3wO.s
+        COMPILER_PATH=/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../libexec/gcc/xtensa-esp-elf/15.2.0/:/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../libexec/gcc/:/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/bin/
+        LIBRARY_PATH=/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/esp32s3/:/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/lib/esp32s3/:/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../xtensa-esp-elf/lib/esp32s3/:/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/:/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/:/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/lib/:/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../xtensa-esp-elf/lib/:/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../xtensa-esp-elf/usr/lib/
+        COLLECT_GCC_OPTIONS='-mdynconfig=xtensa_esp32s3.so' '-mlongcalls' '-fno-builtin-memcpy' '-fno-builtin-memset' '-fno-builtin-bzero' '-v' '-o' 'CMakeFiles/cmTC_29efd.dir/CMakeCCompilerABI.c.obj' '-c' '-dumpdir' 'CMakeFiles/cmTC_29efd.dir/CMakeCCompilerABI.c.'
+        [2/2] : && /home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/xtensa-esp32s3-elf-gcc @"/home/pi/_playground/espidf/projects/blinken/build/toolchain/cflags" @"/home/pi/_playground/espidf/projects/blinken/build/toolchain/ldflags" -v CMakeFiles/cmTC_29efd.dir/CMakeCCompilerABI.c.obj -o cmTC_29efd   && :
+        Using built-in specs.
+        COLLECT_GCC=/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/xtensa-esp-elf-gcc
+        COLLECT_LTO_WRAPPER=/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../libexec/gcc/xtensa-esp-elf/15.2.0/lto-wrapper
+        Target: xtensa-esp-elf
+        Configured with: /builds/idf/crosstool-NG/.build/xtensa-esp-elf/src/gcc/configure --build=x86_64-build_pc-linux-gnu --host=aarch64-host_unknown-linux-gnu --target=xtensa-esp-elf --prefix=/builds/idf/crosstool-NG/builds/xtensa-esp-elf --exec_prefix=/builds/idf/crosstool-NG/builds/xtensa-esp-elf --with-local-prefix=/builds/idf/crosstool-NG/builds/xtensa-esp-elf/xtensa-esp-elf --with-sysroot=/builds/idf/crosstool-NG/builds/xtensa-esp-elf/xtensa-esp-elf --with-native-system-header-dir=/include --with-headers=/builds/idf/crosstool-NG/builds/xtensa-esp-elf/xtensa-esp-elf/include --with-newlib --enable-threads=no --disable-shared --with-pkgversion='crosstool-NG esp-15.2.0_20250929' --disable-__cxa_atexit --enable-cxx-flags='-ffunction-sections -fdata-sections' --disable-libgomp --disable-libmudflap --disable-libmpx --disable-libssp --disable-libquadmath --disable-libquadmath-support --disable-libstdcxx-verbose --with-gmp=/builds/idf/crosstool-NG/.build/xtensa-esp-elf/buildtools/complibs-host --with-mpfr=/builds/idf/crosstool-NG/.build/xtensa-esp-elf/buildtools/complibs-host --with-mpc=/builds/idf/crosstool-NG/.build/xtensa-esp-elf/buildtools/complibs-host --with-isl=/builds/idf/crosstool-NG/.build/xtensa-esp-elf/buildtools/complibs-host --enable-lto --enable-target-optspace --without-long-double-128 --enable-plugin --disable-nls --enable-multiarch --enable-languages=c,c++ --disable-libstdcxx-verbose --enable-threads=posix --enable-libstdcxx-time=yes --disable-win32-utf8-manifest
+        Thread model: posix
+        Supported LTO compression algorithms: zlib zstd
+        gcc version 15.2.0 (crosstool-NG esp-15.2.0_20250929) 
+        COMPILER_PATH=/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../libexec/gcc/xtensa-esp-elf/15.2.0/:/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../libexec/gcc/:/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/bin/
+        LIBRARY_PATH=/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/esp32s3/:/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/lib/esp32s3/:/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../xtensa-esp-elf/lib/esp32s3/:/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/:/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/:/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/lib/:/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../xtensa-esp-elf/lib/:/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../xtensa-esp-elf/usr/lib/
+        COLLECT_GCC_OPTIONS='-mdynconfig=xtensa_esp32s3.so' '-mlongcalls' '-fno-builtin-memcpy' '-fno-builtin-memset' '-fno-builtin-bzero' '-nostartfiles' '-v' '-o' 'cmTC_29efd' '-dumpdir' 'cmTC_29efd.'
+         /home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../libexec/gcc/xtensa-esp-elf/15.2.0/collect2 -plugin /home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../libexec/gcc/xtensa-esp-elf/15.2.0/liblto_plugin.so -plugin-opt=/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../libexec/gcc/xtensa-esp-elf/15.2.0/lto-wrapper -plugin-opt=-fresolution=/tmp/ccdvBBo3.res -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lnosys -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc --sysroot=/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../xtensa-esp-elf --dynconfig=xtensa_esp32s3.so -o cmTC_29efd -L/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/esp32s3 -L/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/lib/esp32s3 -L/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../xtensa-esp-elf/lib/esp32s3 -L/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0 -L/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc -L/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/lib -L/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../xtensa-esp-elf/lib -L/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../xtensa-esp-elf/usr/lib @/tmp/ccAm9h6i -lgcc -lc -lnosys -lc -lgcc
+        /home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/bin/ld: warning: cannot find entry symbol _start; defaulting to 00400054
+        COLLECT_GCC_OPTIONS='-mdynconfig=xtensa_esp32s3.so' '-mlongcalls' '-fno-builtin-memcpy' '-fno-builtin-memset' '-fno-builtin-bzero' '-nostartfiles' '-v' '-o' 'cmTC_29efd' '-dumpdir' 'cmTC_29efd.'
+        
+      exitCode: 0
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/usr/share/cmake-3.31/Modules/CMakeDetermineCompilerABI.cmake:182 (message)"
+      - "/home/pi/esp/esp-idf/components/soc/project_include.cmake:106 (cmake_determine_compiler_abi)"
+      - "/home/pi/esp/esp-idf/tools/cmake/build.cmake:515 (include)"
+      - "/home/pi/esp/esp-idf/tools/cmake/build.cmake:789 (__build_process_project_includes)"
+      - "/home/pi/esp/esp-idf/tools/cmake/project.cmake:739 (idf_build_process)"
+      - "CMakeLists.txt:4 (project)"
+    message: |
+      Parsed C implicit include dir info: rv=done
+        found start of include info
+        found start of implicit include info
+          add: [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/include]
+          add: [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/include-fixed]
+          add: [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/include]
+        end of search list found
+        collapse include dir [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/include] ==> [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/lib/gcc/xtensa-esp-elf/15.2.0/include]
+        collapse include dir [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/include-fixed] ==> [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/lib/gcc/xtensa-esp-elf/15.2.0/include-fixed]
+        collapse include dir [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/include] ==> [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/xtensa-esp-elf/include]
+        implicit include dirs: [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/lib/gcc/xtensa-esp-elf/15.2.0/include;/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/lib/gcc/xtensa-esp-elf/15.2.0/include-fixed;/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/xtensa-esp-elf/include]
+      
+      
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/usr/share/cmake-3.31/Modules/CMakeDetermineCompilerABI.cmake:218 (message)"
+      - "/home/pi/esp/esp-idf/components/soc/project_include.cmake:106 (cmake_determine_compiler_abi)"
+      - "/home/pi/esp/esp-idf/tools/cmake/build.cmake:515 (include)"
+      - "/home/pi/esp/esp-idf/tools/cmake/build.cmake:789 (__build_process_project_includes)"
+      - "/home/pi/esp/esp-idf/tools/cmake/project.cmake:739 (idf_build_process)"
+      - "CMakeLists.txt:4 (project)"
+    message: |
+      Parsed C implicit link information:
+        link line regex: [^( *|.*[/\\])(ld[0-9]*(\\.[a-z]+)?|CMAKE_LINK_STARTFILE-NOTFOUND|([^/\\]+-)?ld|collect2)[^/\\]*( |$)]
+        linker tool regex: [^[ 	]*(->|")?[ 	]*(([^"]*[/\\])?(ld[0-9]*(\\.[a-z]+)?))("|,| |$)]
+        ignore line: [Change Dir: '/home/pi/_playground/espidf/projects/blinken/build/CMakeFiles/CMakeScratch/TryCompile-r2VdUH']
+        ignore line: []
+        ignore line: [Run Build Command(s): /usr/bin/ninja -v cmTC_29efd]
+        ignore line: [[1/2] /home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/xtensa-esp32s3-elf-gcc   @"/home/pi/_playground/espidf/projects/blinken/build/toolchain/cflags"    -v -o CMakeFiles/cmTC_29efd.dir/CMakeCCompilerABI.c.obj -c /usr/share/cmake-3.31/Modules/CMakeCCompilerABI.c]
+        ignore line: [Using built-in specs.]
+        ignore line: [COLLECT_GCC=/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/xtensa-esp-elf-gcc]
+        ignore line: [Target: xtensa-esp-elf]
+        ignore line: [Configured with: /builds/idf/crosstool-NG/.build/xtensa-esp-elf/src/gcc/configure --build=x86_64-build_pc-linux-gnu --host=aarch64-host_unknown-linux-gnu --target=xtensa-esp-elf --prefix=/builds/idf/crosstool-NG/builds/xtensa-esp-elf --exec_prefix=/builds/idf/crosstool-NG/builds/xtensa-esp-elf --with-local-prefix=/builds/idf/crosstool-NG/builds/xtensa-esp-elf/xtensa-esp-elf --with-sysroot=/builds/idf/crosstool-NG/builds/xtensa-esp-elf/xtensa-esp-elf --with-native-system-header-dir=/include --with-headers=/builds/idf/crosstool-NG/builds/xtensa-esp-elf/xtensa-esp-elf/include --with-newlib --enable-threads=no --disable-shared --with-pkgversion='crosstool-NG esp-15.2.0_20250929' --disable-__cxa_atexit --enable-cxx-flags='-ffunction-sections -fdata-sections' --disable-libgomp --disable-libmudflap --disable-libmpx --disable-libssp --disable-libquadmath --disable-libquadmath-support --disable-libstdcxx-verbose --with-gmp=/builds/idf/crosstool-NG/.build/xtensa-esp-elf/buildtools/complibs-host --with-mpfr=/builds/idf/crosstool-NG/.build/xtensa-esp-elf/buildtools/complibs-host --with-mpc=/builds/idf/crosstool-NG/.build/xtensa-esp-elf/buildtools/complibs-host --with-isl=/builds/idf/crosstool-NG/.build/xtensa-esp-elf/buildtools/complibs-host --enable-lto --enable-target-optspace --without-long-double-128 --enable-plugin --disable-nls --enable-multiarch --enable-languages=c c++ --disable-libstdcxx-verbose --enable-threads=posix --enable-libstdcxx-time=yes --disable-win32-utf8-manifest]
+        ignore line: [Thread model: posix]
+        ignore line: [Supported LTO compression algorithms: zlib zstd]
+        ignore line: [gcc version 15.2.0 (crosstool-NG esp-15.2.0_20250929) ]
+        ignore line: [COLLECT_GCC_OPTIONS='-mdynconfig=xtensa_esp32s3.so' '-mlongcalls' '-fno-builtin-memcpy' '-fno-builtin-memset' '-fno-builtin-bzero' '-v' '-o' 'CMakeFiles/cmTC_29efd.dir/CMakeCCompilerABI.c.obj' '-c' '-dumpdir' 'CMakeFiles/cmTC_29efd.dir/']
+        ignore line: [ /home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../libexec/gcc/xtensa-esp-elf/15.2.0/cc1 -quiet -v -imultilib esp32s3 -iprefix /home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/ -isysroot /home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../xtensa-esp-elf /usr/share/cmake-3.31/Modules/CMakeCCompilerABI.c -quiet -dumpdir CMakeFiles/cmTC_29efd.dir/ -dumpbase CMakeCCompilerABI.c.c -dumpbase-ext .c -mdynconfig=xtensa_esp32s3.so -mlongcalls -version -fno-builtin-memcpy -fno-builtin-memset -fno-builtin-bzero -o /tmp/ccfCr3wO.s]
+        ignore line: [GNU C23 (crosstool-NG esp-15.2.0_20250929) version 15.2.0 (xtensa-esp-elf)]
+        ignore line: [	compiled by GNU C version 6.3.0 20170516  GMP version 6.3.0  MPFR version 4.2.1  MPC version 1.3.1  isl version isl-0.26-GMP]
+        ignore line: []
+        ignore line: [GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072]
+        ignore line: [ignoring duplicate directory "/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/../../lib/gcc/xtensa-esp-elf/15.2.0/include"]
+        ignore line: [ignoring nonexistent directory "/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../xtensa-esp-elf/builds/idf/crosstool-NG/builds/xtensa-esp-elf/xtensa-esp-elf/include"]
+        ignore line: [ignoring duplicate directory "/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/../../lib/gcc/xtensa-esp-elf/15.2.0/include-fixed"]
+        ignore line: [ignoring duplicate directory "/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/../../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/include"]
+        ignore line: [ignoring duplicate directory "/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../xtensa-esp-elf/include"]
+        ignore line: [#include "..." search starts here:]
+        ignore line: [#include <...> search starts here:]
+        ignore line: [ /home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/include]
+        ignore line: [ /home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/include-fixed]
+        ignore line: [ /home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/include]
+        ignore line: [End of search list.]
+        ignore line: [Compiler executable checksum: 90a6306288c98770ccf682d9cf66dc56]
+        ignore line: [COLLECT_GCC_OPTIONS='-mdynconfig=xtensa_esp32s3.so' '-mlongcalls' '-fno-builtin-memcpy' '-fno-builtin-memset' '-fno-builtin-bzero' '-v' '-o' 'CMakeFiles/cmTC_29efd.dir/CMakeCCompilerABI.c.obj' '-c' '-dumpdir' 'CMakeFiles/cmTC_29efd.dir/']
+        ignore line: [ /home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/bin/as --traditional-format --longcalls --dynconfig=xtensa_esp32s3.so -o CMakeFiles/cmTC_29efd.dir/CMakeCCompilerABI.c.obj /tmp/ccfCr3wO.s]
+        ignore line: [COMPILER_PATH=/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../libexec/gcc/xtensa-esp-elf/15.2.0/:/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../libexec/gcc/:/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/bin/]
+        ignore line: [LIBRARY_PATH=/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/esp32s3/:/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/lib/esp32s3/:/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../xtensa-esp-elf/lib/esp32s3/:/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/:/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/:/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/lib/:/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../xtensa-esp-elf/lib/:/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../xtensa-esp-elf/usr/lib/]
+        ignore line: [COLLECT_GCC_OPTIONS='-mdynconfig=xtensa_esp32s3.so' '-mlongcalls' '-fno-builtin-memcpy' '-fno-builtin-memset' '-fno-builtin-bzero' '-v' '-o' 'CMakeFiles/cmTC_29efd.dir/CMakeCCompilerABI.c.obj' '-c' '-dumpdir' 'CMakeFiles/cmTC_29efd.dir/CMakeCCompilerABI.c.']
+        ignore line: [[2/2] : && /home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/xtensa-esp32s3-elf-gcc @"/home/pi/_playground/espidf/projects/blinken/build/toolchain/cflags" @"/home/pi/_playground/espidf/projects/blinken/build/toolchain/ldflags" -v CMakeFiles/cmTC_29efd.dir/CMakeCCompilerABI.c.obj -o cmTC_29efd   && :]
+        ignore line: [Using built-in specs.]
+        ignore line: [COLLECT_GCC=/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/xtensa-esp-elf-gcc]
+        ignore line: [COLLECT_LTO_WRAPPER=/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../libexec/gcc/xtensa-esp-elf/15.2.0/lto-wrapper]
+        ignore line: [Target: xtensa-esp-elf]
+        ignore line: [Configured with: /builds/idf/crosstool-NG/.build/xtensa-esp-elf/src/gcc/configure --build=x86_64-build_pc-linux-gnu --host=aarch64-host_unknown-linux-gnu --target=xtensa-esp-elf --prefix=/builds/idf/crosstool-NG/builds/xtensa-esp-elf --exec_prefix=/builds/idf/crosstool-NG/builds/xtensa-esp-elf --with-local-prefix=/builds/idf/crosstool-NG/builds/xtensa-esp-elf/xtensa-esp-elf --with-sysroot=/builds/idf/crosstool-NG/builds/xtensa-esp-elf/xtensa-esp-elf --with-native-system-header-dir=/include --with-headers=/builds/idf/crosstool-NG/builds/xtensa-esp-elf/xtensa-esp-elf/include --with-newlib --enable-threads=no --disable-shared --with-pkgversion='crosstool-NG esp-15.2.0_20250929' --disable-__cxa_atexit --enable-cxx-flags='-ffunction-sections -fdata-sections' --disable-libgomp --disable-libmudflap --disable-libmpx --disable-libssp --disable-libquadmath --disable-libquadmath-support --disable-libstdcxx-verbose --with-gmp=/builds/idf/crosstool-NG/.build/xtensa-esp-elf/buildtools/complibs-host --with-mpfr=/builds/idf/crosstool-NG/.build/xtensa-esp-elf/buildtools/complibs-host --with-mpc=/builds/idf/crosstool-NG/.build/xtensa-esp-elf/buildtools/complibs-host --with-isl=/builds/idf/crosstool-NG/.build/xtensa-esp-elf/buildtools/complibs-host --enable-lto --enable-target-optspace --without-long-double-128 --enable-plugin --disable-nls --enable-multiarch --enable-languages=c c++ --disable-libstdcxx-verbose --enable-threads=posix --enable-libstdcxx-time=yes --disable-win32-utf8-manifest]
+        ignore line: [Thread model: posix]
+        ignore line: [Supported LTO compression algorithms: zlib zstd]
+        ignore line: [gcc version 15.2.0 (crosstool-NG esp-15.2.0_20250929) ]
+        ignore line: [COMPILER_PATH=/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../libexec/gcc/xtensa-esp-elf/15.2.0/:/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../libexec/gcc/:/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/bin/]
+        ignore line: [LIBRARY_PATH=/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/esp32s3/:/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/lib/esp32s3/:/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../xtensa-esp-elf/lib/esp32s3/:/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/:/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/:/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/lib/:/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../xtensa-esp-elf/lib/:/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../xtensa-esp-elf/usr/lib/]
+        ignore line: [COLLECT_GCC_OPTIONS='-mdynconfig=xtensa_esp32s3.so' '-mlongcalls' '-fno-builtin-memcpy' '-fno-builtin-memset' '-fno-builtin-bzero' '-nostartfiles' '-v' '-o' 'cmTC_29efd' '-dumpdir' 'cmTC_29efd.']
+        link line: [ /home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../libexec/gcc/xtensa-esp-elf/15.2.0/collect2 -plugin /home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../libexec/gcc/xtensa-esp-elf/15.2.0/liblto_plugin.so -plugin-opt=/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../libexec/gcc/xtensa-esp-elf/15.2.0/lto-wrapper -plugin-opt=-fresolution=/tmp/ccdvBBo3.res -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lnosys -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc --sysroot=/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../xtensa-esp-elf --dynconfig=xtensa_esp32s3.so -o cmTC_29efd -L/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/esp32s3 -L/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/lib/esp32s3 -L/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../xtensa-esp-elf/lib/esp32s3 -L/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0 -L/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc -L/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/lib -L/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../xtensa-esp-elf/lib -L/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../xtensa-esp-elf/usr/lib @/tmp/ccAm9h6i -lgcc -lc -lnosys -lc -lgcc]
+          arg [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../libexec/gcc/xtensa-esp-elf/15.2.0/collect2] ==> ignore
+          arg [-plugin] ==> ignore
+          arg [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../libexec/gcc/xtensa-esp-elf/15.2.0/liblto_plugin.so] ==> ignore
+          arg [-plugin-opt=/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../libexec/gcc/xtensa-esp-elf/15.2.0/lto-wrapper] ==> ignore
+          arg [-plugin-opt=-fresolution=/tmp/ccdvBBo3.res] ==> ignore
+          arg [-plugin-opt=-pass-through=-lgcc] ==> ignore
+          arg [-plugin-opt=-pass-through=-lc] ==> ignore
+          arg [-plugin-opt=-pass-through=-lnosys] ==> ignore
+          arg [-plugin-opt=-pass-through=-lc] ==> ignore
+          arg [-plugin-opt=-pass-through=-lgcc] ==> ignore
+          arg [--sysroot=/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../xtensa-esp-elf] ==> ignore
+          arg [--dynconfig=xtensa_esp32s3.so] ==> ignore
+          arg [-o] ==> ignore
+          arg [cmTC_29efd] ==> ignore
+          arg [-L/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/esp32s3] ==> dir [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/esp32s3]
+          arg [-L/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/lib/esp32s3] ==> dir [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/lib/esp32s3]
+          arg [-L/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../xtensa-esp-elf/lib/esp32s3] ==> dir [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../xtensa-esp-elf/lib/esp32s3]
+          arg [-L/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0] ==> dir [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0]
+          arg [-L/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc] ==> dir [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc]
+          arg [-L/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/lib] ==> dir [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/lib]
+          arg [-L/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../xtensa-esp-elf/lib] ==> dir [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../xtensa-esp-elf/lib]
+          arg [-L/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../xtensa-esp-elf/usr/lib] ==> dir [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../xtensa-esp-elf/usr/lib]
+          arg [@/tmp/ccAm9h6i] ==> ignore
+          arg [-lgcc] ==> lib [gcc]
+          arg [-lc] ==> lib [c]
+          arg [-lnosys] ==> lib [nosys]
+          arg [-lc] ==> lib [c]
+          arg [-lgcc] ==> lib [gcc]
+        ignore line: [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/bin/ld: warning: cannot find entry symbol _start]
+        ignore line: [ defaulting to 00400054]
+        ignore line: [COLLECT_GCC_OPTIONS='-mdynconfig=xtensa_esp32s3.so' '-mlongcalls' '-fno-builtin-memcpy' '-fno-builtin-memset' '-fno-builtin-bzero' '-nostartfiles' '-v' '-o' 'cmTC_29efd' '-dumpdir' 'cmTC_29efd.']
+        ignore line: []
+        ignore line: []
+        collapse library dir [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/esp32s3] ==> [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/lib/gcc/xtensa-esp-elf/15.2.0/esp32s3]
+        collapse library dir [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/lib/esp32s3] ==> [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/xtensa-esp-elf/lib/esp32s3]
+        collapse library dir [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../xtensa-esp-elf/lib/esp32s3] ==> [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/xtensa-esp-elf/lib/esp32s3]
+        collapse library dir [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0] ==> [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/lib/gcc/xtensa-esp-elf/15.2.0]
+        collapse library dir [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc] ==> [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/lib/gcc]
+        collapse library dir [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/lib] ==> [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/xtensa-esp-elf/lib]
+        collapse library dir [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../xtensa-esp-elf/lib] ==> [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/xtensa-esp-elf/lib]
+        collapse library dir [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../xtensa-esp-elf/usr/lib] ==> [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/xtensa-esp-elf/usr/lib]
+        implicit libs: [gcc;c;nosys;c;gcc]
+        implicit objs: []
+        implicit dirs: [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/lib/gcc/xtensa-esp-elf/15.2.0/esp32s3;/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/xtensa-esp-elf/lib/esp32s3;/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/lib/gcc/xtensa-esp-elf/15.2.0;/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/lib/gcc;/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/xtensa-esp-elf/lib;/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/xtensa-esp-elf/usr/lib]
+        implicit fwks: []
+      
+      
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/usr/share/cmake-3.31/Modules/CMakeDetermineCompilerABI.cmake:74 (try_compile)"
+      - "/home/pi/esp/esp-idf/components/soc/project_include.cmake:106 (cmake_determine_compiler_abi)"
+      - "/home/pi/esp/esp-idf/tools/cmake/build.cmake:515 (include)"
+      - "/home/pi/esp/esp-idf/tools/cmake/build.cmake:789 (__build_process_project_includes)"
+      - "/home/pi/esp/esp-idf/tools/cmake/project.cmake:739 (idf_build_process)"
+      - "CMakeLists.txt:4 (project)"
+    checks:
+      - "Detecting CXX compiler ABI info"
+    directories:
+      source: "/home/pi/_playground/espidf/projects/blinken/build/CMakeFiles/CMakeScratch/TryCompile-koqVAG"
+      binary: "/home/pi/_playground/espidf/projects/blinken/build/CMakeFiles/CMakeScratch/TryCompile-koqVAG"
+    cmakeVariables:
+      CMAKE_CXX_FLAGS: "@\"/home/pi/_playground/espidf/projects/blinken/build/toolchain/cxxflags\""
+      CMAKE_CXX_FLAGS_DEBUG: "-g"
+      CMAKE_CXX_SCAN_FOR_MODULES: "OFF"
+      CMAKE_EXE_LINKER_FLAGS: "@\"/home/pi/_playground/espidf/projects/blinken/build/toolchain/ldflags\""
+      CMAKE_MODULE_PATH: "/home/pi/esp/esp-idf/tools/cmake;/home/pi/esp/esp-idf/tools/cmake/third_party"
+    buildResult:
+      variable: "CMAKE_CXX_ABI_COMPILED"
+      cached: true
+      stdout: |
+        Change Dir: '/home/pi/_playground/espidf/projects/blinken/build/CMakeFiles/CMakeScratch/TryCompile-koqVAG'
+        
+        Run Build Command(s): /usr/bin/ninja -v cmTC_e8ef3
+        [1/2] /home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/xtensa-esp32s3-elf-g++   @"/home/pi/_playground/espidf/projects/blinken/build/toolchain/cxxflags"    -v -o CMakeFiles/cmTC_e8ef3.dir/CMakeCXXCompilerABI.cpp.obj -c /usr/share/cmake-3.31/Modules/CMakeCXXCompilerABI.cpp
+        Using built-in specs.
+        COLLECT_GCC=/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/xtensa-esp-elf-g++
+        Target: xtensa-esp-elf
+        Configured with: /builds/idf/crosstool-NG/.build/xtensa-esp-elf/src/gcc/configure --build=x86_64-build_pc-linux-gnu --host=aarch64-host_unknown-linux-gnu --target=xtensa-esp-elf --prefix=/builds/idf/crosstool-NG/builds/xtensa-esp-elf --exec_prefix=/builds/idf/crosstool-NG/builds/xtensa-esp-elf --with-local-prefix=/builds/idf/crosstool-NG/builds/xtensa-esp-elf/xtensa-esp-elf --with-sysroot=/builds/idf/crosstool-NG/builds/xtensa-esp-elf/xtensa-esp-elf --with-native-system-header-dir=/include --with-headers=/builds/idf/crosstool-NG/builds/xtensa-esp-elf/xtensa-esp-elf/include --with-newlib --enable-threads=no --disable-shared --with-pkgversion='crosstool-NG esp-15.2.0_20250929' --disable-__cxa_atexit --enable-cxx-flags='-ffunction-sections -fdata-sections' --disable-libgomp --disable-libmudflap --disable-libmpx --disable-libssp --disable-libquadmath --disable-libquadmath-support --disable-libstdcxx-verbose --with-gmp=/builds/idf/crosstool-NG/.build/xtensa-esp-elf/buildtools/complibs-host --with-mpfr=/builds/idf/crosstool-NG/.build/xtensa-esp-elf/buildtools/complibs-host --with-mpc=/builds/idf/crosstool-NG/.build/xtensa-esp-elf/buildtools/complibs-host --with-isl=/builds/idf/crosstool-NG/.build/xtensa-esp-elf/buildtools/complibs-host --enable-lto --enable-target-optspace --without-long-double-128 --enable-plugin --disable-nls --enable-multiarch --enable-languages=c,c++ --disable-libstdcxx-verbose --enable-threads=posix --enable-libstdcxx-time=yes --disable-win32-utf8-manifest
+        Thread model: posix
+        Supported LTO compression algorithms: zlib zstd
+        gcc version 15.2.0 (crosstool-NG esp-15.2.0_20250929) 
+        COLLECT_GCC_OPTIONS='-mdynconfig=xtensa_esp32s3.so' '-mlongcalls' '-fno-builtin-memcpy' '-fno-builtin-memset' '-fno-builtin-bzero' '-v' '-o' 'CMakeFiles/cmTC_e8ef3.dir/CMakeCXXCompilerABI.cpp.obj' '-c' '-dumpdir' 'CMakeFiles/cmTC_e8ef3.dir/'
+         /home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../libexec/gcc/xtensa-esp-elf/15.2.0/cc1plus -quiet -v -imultilib esp32s3 -iprefix /home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/ -isysroot /home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../xtensa-esp-elf /usr/share/cmake-3.31/Modules/CMakeCXXCompilerABI.cpp -quiet -dumpdir CMakeFiles/cmTC_e8ef3.dir/ -dumpbase CMakeCXXCompilerABI.cpp.cpp -dumpbase-ext .cpp -mdynconfig=xtensa_esp32s3.so -mlongcalls -version -fno-builtin-memcpy -fno-builtin-memset -fno-builtin-bzero -o /tmp/ccObYGcQ.s
+        GNU C++17 (crosstool-NG esp-15.2.0_20250929) version 15.2.0 (xtensa-esp-elf)
+        	compiled by GNU C version 6.3.0 20170516, GMP version 6.3.0, MPFR version 4.2.1, MPC version 1.3.1, isl version isl-0.26-GMP
+        
+        GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072
+        ignoring duplicate directory "/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/../../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/include/c++/15.2.0"
+        ignoring duplicate directory "/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/../../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/include/c++/15.2.0/xtensa-esp-elf/esp32s3"
+        ignoring duplicate directory "/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/../../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/include/c++/15.2.0/backward"
+        ignoring duplicate directory "/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/../../lib/gcc/xtensa-esp-elf/15.2.0/include"
+        ignoring nonexistent directory "/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../xtensa-esp-elf/builds/idf/crosstool-NG/builds/xtensa-esp-elf/xtensa-esp-elf/include"
+        ignoring duplicate directory "/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/../../lib/gcc/xtensa-esp-elf/15.2.0/include-fixed"
+        ignoring duplicate directory "/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/../../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/include"
+        ignoring duplicate directory "/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../xtensa-esp-elf/include"
+        #include "..." search starts here:
+        #include <...> search starts here:
+         /home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/include/c++/15.2.0
+         /home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/include/c++/15.2.0/xtensa-esp-elf/esp32s3
+         /home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/include/c++/15.2.0/backward
+         /home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/include
+         /home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/include-fixed
+         /home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/include
+        End of search list.
+        Compiler executable checksum: 95b4b59ce0942a0fc52253d876fb8884
+        COLLECT_GCC_OPTIONS='-mdynconfig=xtensa_esp32s3.so' '-mlongcalls' '-fno-builtin-memcpy' '-fno-builtin-memset' '-fno-builtin-bzero' '-v' '-o' 'CMakeFiles/cmTC_e8ef3.dir/CMakeCXXCompilerABI.cpp.obj' '-c' '-dumpdir' 'CMakeFiles/cmTC_e8ef3.dir/'
+         /home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/bin/as --traditional-format --longcalls --dynconfig=xtensa_esp32s3.so -o CMakeFiles/cmTC_e8ef3.dir/CMakeCXXCompilerABI.cpp.obj /tmp/ccObYGcQ.s
+        COMPILER_PATH=/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../libexec/gcc/xtensa-esp-elf/15.2.0/:/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../libexec/gcc/:/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/bin/
+        LIBRARY_PATH=/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/esp32s3/:/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/lib/esp32s3/:/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../xtensa-esp-elf/lib/esp32s3/:/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/:/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/:/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/lib/:/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../xtensa-esp-elf/lib/:/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../xtensa-esp-elf/usr/lib/
+        COLLECT_GCC_OPTIONS='-mdynconfig=xtensa_esp32s3.so' '-mlongcalls' '-fno-builtin-memcpy' '-fno-builtin-memset' '-fno-builtin-bzero' '-v' '-o' 'CMakeFiles/cmTC_e8ef3.dir/CMakeCXXCompilerABI.cpp.obj' '-c' '-dumpdir' 'CMakeFiles/cmTC_e8ef3.dir/CMakeCXXCompilerABI.cpp.'
+        [2/2] : && /home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/xtensa-esp32s3-elf-g++ @"/home/pi/_playground/espidf/projects/blinken/build/toolchain/cxxflags" @"/home/pi/_playground/espidf/projects/blinken/build/toolchain/ldflags" -v CMakeFiles/cmTC_e8ef3.dir/CMakeCXXCompilerABI.cpp.obj -o cmTC_e8ef3   && :
+        Using built-in specs.
+        COLLECT_GCC=/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/xtensa-esp-elf-g++
+        COLLECT_LTO_WRAPPER=/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../libexec/gcc/xtensa-esp-elf/15.2.0/lto-wrapper
+        Target: xtensa-esp-elf
+        Configured with: /builds/idf/crosstool-NG/.build/xtensa-esp-elf/src/gcc/configure --build=x86_64-build_pc-linux-gnu --host=aarch64-host_unknown-linux-gnu --target=xtensa-esp-elf --prefix=/builds/idf/crosstool-NG/builds/xtensa-esp-elf --exec_prefix=/builds/idf/crosstool-NG/builds/xtensa-esp-elf --with-local-prefix=/builds/idf/crosstool-NG/builds/xtensa-esp-elf/xtensa-esp-elf --with-sysroot=/builds/idf/crosstool-NG/builds/xtensa-esp-elf/xtensa-esp-elf --with-native-system-header-dir=/include --with-headers=/builds/idf/crosstool-NG/builds/xtensa-esp-elf/xtensa-esp-elf/include --with-newlib --enable-threads=no --disable-shared --with-pkgversion='crosstool-NG esp-15.2.0_20250929' --disable-__cxa_atexit --enable-cxx-flags='-ffunction-sections -fdata-sections' --disable-libgomp --disable-libmudflap --disable-libmpx --disable-libssp --disable-libquadmath --disable-libquadmath-support --disable-libstdcxx-verbose --with-gmp=/builds/idf/crosstool-NG/.build/xtensa-esp-elf/buildtools/complibs-host --with-mpfr=/builds/idf/crosstool-NG/.build/xtensa-esp-elf/buildtools/complibs-host --with-mpc=/builds/idf/crosstool-NG/.build/xtensa-esp-elf/buildtools/complibs-host --with-isl=/builds/idf/crosstool-NG/.build/xtensa-esp-elf/buildtools/complibs-host --enable-lto --enable-target-optspace --without-long-double-128 --enable-plugin --disable-nls --enable-multiarch --enable-languages=c,c++ --disable-libstdcxx-verbose --enable-threads=posix --enable-libstdcxx-time=yes --disable-win32-utf8-manifest
+        Thread model: posix
+        Supported LTO compression algorithms: zlib zstd
+        gcc version 15.2.0 (crosstool-NG esp-15.2.0_20250929) 
+        COMPILER_PATH=/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../libexec/gcc/xtensa-esp-elf/15.2.0/:/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../libexec/gcc/:/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/bin/
+        LIBRARY_PATH=/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/esp32s3/:/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/lib/esp32s3/:/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../xtensa-esp-elf/lib/esp32s3/:/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/:/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/:/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/lib/:/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../xtensa-esp-elf/lib/:/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../xtensa-esp-elf/usr/lib/
+        COLLECT_GCC_OPTIONS='-mdynconfig=xtensa_esp32s3.so' '-mlongcalls' '-fno-builtin-memcpy' '-fno-builtin-memset' '-fno-builtin-bzero' '-nostartfiles' '-v' '-o' 'cmTC_e8ef3' '-dumpdir' 'cmTC_e8ef3.'
+         /home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../libexec/gcc/xtensa-esp-elf/15.2.0/collect2 -plugin /home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../libexec/gcc/xtensa-esp-elf/15.2.0/liblto_plugin.so -plugin-opt=/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../libexec/gcc/xtensa-esp-elf/15.2.0/lto-wrapper -plugin-opt=-fresolution=/tmp/ccISSBnm.res -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lnosys -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc --sysroot=/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../xtensa-esp-elf --dynconfig=xtensa_esp32s3.so -o cmTC_e8ef3 -L/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/esp32s3 -L/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/lib/esp32s3 -L/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../xtensa-esp-elf/lib/esp32s3 -L/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0 -L/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc -L/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/lib -L/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../xtensa-esp-elf/lib -L/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../xtensa-esp-elf/usr/lib @/tmp/ccqzAvvy -lgcc -lc -lnosys -lc -lgcc
+        /home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/bin/ld: warning: cannot find entry symbol _start; defaulting to 00400054
+        COLLECT_GCC_OPTIONS='-mdynconfig=xtensa_esp32s3.so' '-mlongcalls' '-fno-builtin-memcpy' '-fno-builtin-memset' '-fno-builtin-bzero' '-nostartfiles' '-v' '-o' 'cmTC_e8ef3' '-dumpdir' 'cmTC_e8ef3.'
+        
+      exitCode: 0
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/usr/share/cmake-3.31/Modules/CMakeDetermineCompilerABI.cmake:182 (message)"
+      - "/home/pi/esp/esp-idf/components/soc/project_include.cmake:106 (cmake_determine_compiler_abi)"
+      - "/home/pi/esp/esp-idf/tools/cmake/build.cmake:515 (include)"
+      - "/home/pi/esp/esp-idf/tools/cmake/build.cmake:789 (__build_process_project_includes)"
+      - "/home/pi/esp/esp-idf/tools/cmake/project.cmake:739 (idf_build_process)"
+      - "CMakeLists.txt:4 (project)"
+    message: |
+      Parsed CXX implicit include dir info: rv=done
+        found start of include info
+        found start of implicit include info
+          add: [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/include/c++/15.2.0]
+          add: [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/include/c++/15.2.0/xtensa-esp-elf/esp32s3]
+          add: [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/include/c++/15.2.0/backward]
+          add: [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/include]
+          add: [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/include-fixed]
+          add: [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/include]
+        end of search list found
+        collapse include dir [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/include/c++/15.2.0] ==> [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/xtensa-esp-elf/include/c++/15.2.0]
+        collapse include dir [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/include/c++/15.2.0/xtensa-esp-elf/esp32s3] ==> [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/xtensa-esp-elf/include/c++/15.2.0/xtensa-esp-elf/esp32s3]
+        collapse include dir [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/include/c++/15.2.0/backward] ==> [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/xtensa-esp-elf/include/c++/15.2.0/backward]
+        collapse include dir [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/include] ==> [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/lib/gcc/xtensa-esp-elf/15.2.0/include]
+        collapse include dir [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/include-fixed] ==> [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/lib/gcc/xtensa-esp-elf/15.2.0/include-fixed]
+        collapse include dir [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/include] ==> [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/xtensa-esp-elf/include]
+        implicit include dirs: [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/xtensa-esp-elf/include/c++/15.2.0;/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/xtensa-esp-elf/include/c++/15.2.0/xtensa-esp-elf/esp32s3;/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/xtensa-esp-elf/include/c++/15.2.0/backward;/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/lib/gcc/xtensa-esp-elf/15.2.0/include;/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/lib/gcc/xtensa-esp-elf/15.2.0/include-fixed;/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/xtensa-esp-elf/include]
+      
+      
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/usr/share/cmake-3.31/Modules/CMakeDetermineCompilerABI.cmake:218 (message)"
+      - "/home/pi/esp/esp-idf/components/soc/project_include.cmake:106 (cmake_determine_compiler_abi)"
+      - "/home/pi/esp/esp-idf/tools/cmake/build.cmake:515 (include)"
+      - "/home/pi/esp/esp-idf/tools/cmake/build.cmake:789 (__build_process_project_includes)"
+      - "/home/pi/esp/esp-idf/tools/cmake/project.cmake:739 (idf_build_process)"
+      - "CMakeLists.txt:4 (project)"
+    message: |
+      Parsed CXX implicit link information:
+        link line regex: [^( *|.*[/\\])(ld[0-9]*(\\.[a-z]+)?|CMAKE_LINK_STARTFILE-NOTFOUND|([^/\\]+-)?ld|collect2)[^/\\]*( |$)]
+        linker tool regex: [^[ 	]*(->|")?[ 	]*(([^"]*[/\\])?(ld[0-9]*(\\.[a-z]+)?))("|,| |$)]
+        ignore line: [Change Dir: '/home/pi/_playground/espidf/projects/blinken/build/CMakeFiles/CMakeScratch/TryCompile-koqVAG']
+        ignore line: []
+        ignore line: [Run Build Command(s): /usr/bin/ninja -v cmTC_e8ef3]
+        ignore line: [[1/2] /home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/xtensa-esp32s3-elf-g++   @"/home/pi/_playground/espidf/projects/blinken/build/toolchain/cxxflags"    -v -o CMakeFiles/cmTC_e8ef3.dir/CMakeCXXCompilerABI.cpp.obj -c /usr/share/cmake-3.31/Modules/CMakeCXXCompilerABI.cpp]
+        ignore line: [Using built-in specs.]
+        ignore line: [COLLECT_GCC=/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/xtensa-esp-elf-g++]
+        ignore line: [Target: xtensa-esp-elf]
+        ignore line: [Configured with: /builds/idf/crosstool-NG/.build/xtensa-esp-elf/src/gcc/configure --build=x86_64-build_pc-linux-gnu --host=aarch64-host_unknown-linux-gnu --target=xtensa-esp-elf --prefix=/builds/idf/crosstool-NG/builds/xtensa-esp-elf --exec_prefix=/builds/idf/crosstool-NG/builds/xtensa-esp-elf --with-local-prefix=/builds/idf/crosstool-NG/builds/xtensa-esp-elf/xtensa-esp-elf --with-sysroot=/builds/idf/crosstool-NG/builds/xtensa-esp-elf/xtensa-esp-elf --with-native-system-header-dir=/include --with-headers=/builds/idf/crosstool-NG/builds/xtensa-esp-elf/xtensa-esp-elf/include --with-newlib --enable-threads=no --disable-shared --with-pkgversion='crosstool-NG esp-15.2.0_20250929' --disable-__cxa_atexit --enable-cxx-flags='-ffunction-sections -fdata-sections' --disable-libgomp --disable-libmudflap --disable-libmpx --disable-libssp --disable-libquadmath --disable-libquadmath-support --disable-libstdcxx-verbose --with-gmp=/builds/idf/crosstool-NG/.build/xtensa-esp-elf/buildtools/complibs-host --with-mpfr=/builds/idf/crosstool-NG/.build/xtensa-esp-elf/buildtools/complibs-host --with-mpc=/builds/idf/crosstool-NG/.build/xtensa-esp-elf/buildtools/complibs-host --with-isl=/builds/idf/crosstool-NG/.build/xtensa-esp-elf/buildtools/complibs-host --enable-lto --enable-target-optspace --without-long-double-128 --enable-plugin --disable-nls --enable-multiarch --enable-languages=c c++ --disable-libstdcxx-verbose --enable-threads=posix --enable-libstdcxx-time=yes --disable-win32-utf8-manifest]
+        ignore line: [Thread model: posix]
+        ignore line: [Supported LTO compression algorithms: zlib zstd]
+        ignore line: [gcc version 15.2.0 (crosstool-NG esp-15.2.0_20250929) ]
+        ignore line: [COLLECT_GCC_OPTIONS='-mdynconfig=xtensa_esp32s3.so' '-mlongcalls' '-fno-builtin-memcpy' '-fno-builtin-memset' '-fno-builtin-bzero' '-v' '-o' 'CMakeFiles/cmTC_e8ef3.dir/CMakeCXXCompilerABI.cpp.obj' '-c' '-dumpdir' 'CMakeFiles/cmTC_e8ef3.dir/']
+        ignore line: [ /home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../libexec/gcc/xtensa-esp-elf/15.2.0/cc1plus -quiet -v -imultilib esp32s3 -iprefix /home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/ -isysroot /home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../xtensa-esp-elf /usr/share/cmake-3.31/Modules/CMakeCXXCompilerABI.cpp -quiet -dumpdir CMakeFiles/cmTC_e8ef3.dir/ -dumpbase CMakeCXXCompilerABI.cpp.cpp -dumpbase-ext .cpp -mdynconfig=xtensa_esp32s3.so -mlongcalls -version -fno-builtin-memcpy -fno-builtin-memset -fno-builtin-bzero -o /tmp/ccObYGcQ.s]
+        ignore line: [GNU C++17 (crosstool-NG esp-15.2.0_20250929) version 15.2.0 (xtensa-esp-elf)]
+        ignore line: [	compiled by GNU C version 6.3.0 20170516  GMP version 6.3.0  MPFR version 4.2.1  MPC version 1.3.1  isl version isl-0.26-GMP]
+        ignore line: []
+        ignore line: [GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072]
+        ignore line: [ignoring duplicate directory "/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/../../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/include/c++/15.2.0"]
+        ignore line: [ignoring duplicate directory "/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/../../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/include/c++/15.2.0/xtensa-esp-elf/esp32s3"]
+        ignore line: [ignoring duplicate directory "/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/../../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/include/c++/15.2.0/backward"]
+        ignore line: [ignoring duplicate directory "/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/../../lib/gcc/xtensa-esp-elf/15.2.0/include"]
+        ignore line: [ignoring nonexistent directory "/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../xtensa-esp-elf/builds/idf/crosstool-NG/builds/xtensa-esp-elf/xtensa-esp-elf/include"]
+        ignore line: [ignoring duplicate directory "/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/../../lib/gcc/xtensa-esp-elf/15.2.0/include-fixed"]
+        ignore line: [ignoring duplicate directory "/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/../../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/include"]
+        ignore line: [ignoring duplicate directory "/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../xtensa-esp-elf/include"]
+        ignore line: [#include "..." search starts here:]
+        ignore line: [#include <...> search starts here:]
+        ignore line: [ /home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/include/c++/15.2.0]
+        ignore line: [ /home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/include/c++/15.2.0/xtensa-esp-elf/esp32s3]
+        ignore line: [ /home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/include/c++/15.2.0/backward]
+        ignore line: [ /home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/include]
+        ignore line: [ /home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/include-fixed]
+        ignore line: [ /home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/include]
+        ignore line: [End of search list.]
+        ignore line: [Compiler executable checksum: 95b4b59ce0942a0fc52253d876fb8884]
+        ignore line: [COLLECT_GCC_OPTIONS='-mdynconfig=xtensa_esp32s3.so' '-mlongcalls' '-fno-builtin-memcpy' '-fno-builtin-memset' '-fno-builtin-bzero' '-v' '-o' 'CMakeFiles/cmTC_e8ef3.dir/CMakeCXXCompilerABI.cpp.obj' '-c' '-dumpdir' 'CMakeFiles/cmTC_e8ef3.dir/']
+        ignore line: [ /home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/bin/as --traditional-format --longcalls --dynconfig=xtensa_esp32s3.so -o CMakeFiles/cmTC_e8ef3.dir/CMakeCXXCompilerABI.cpp.obj /tmp/ccObYGcQ.s]
+        ignore line: [COMPILER_PATH=/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../libexec/gcc/xtensa-esp-elf/15.2.0/:/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../libexec/gcc/:/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/bin/]
+        ignore line: [LIBRARY_PATH=/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/esp32s3/:/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/lib/esp32s3/:/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../xtensa-esp-elf/lib/esp32s3/:/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/:/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/:/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/lib/:/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../xtensa-esp-elf/lib/:/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../xtensa-esp-elf/usr/lib/]
+        ignore line: [COLLECT_GCC_OPTIONS='-mdynconfig=xtensa_esp32s3.so' '-mlongcalls' '-fno-builtin-memcpy' '-fno-builtin-memset' '-fno-builtin-bzero' '-v' '-o' 'CMakeFiles/cmTC_e8ef3.dir/CMakeCXXCompilerABI.cpp.obj' '-c' '-dumpdir' 'CMakeFiles/cmTC_e8ef3.dir/CMakeCXXCompilerABI.cpp.']
+        ignore line: [[2/2] : && /home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/xtensa-esp32s3-elf-g++ @"/home/pi/_playground/espidf/projects/blinken/build/toolchain/cxxflags" @"/home/pi/_playground/espidf/projects/blinken/build/toolchain/ldflags" -v CMakeFiles/cmTC_e8ef3.dir/CMakeCXXCompilerABI.cpp.obj -o cmTC_e8ef3   && :]
+        ignore line: [Using built-in specs.]
+        ignore line: [COLLECT_GCC=/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/xtensa-esp-elf-g++]
+        ignore line: [COLLECT_LTO_WRAPPER=/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../libexec/gcc/xtensa-esp-elf/15.2.0/lto-wrapper]
+        ignore line: [Target: xtensa-esp-elf]
+        ignore line: [Configured with: /builds/idf/crosstool-NG/.build/xtensa-esp-elf/src/gcc/configure --build=x86_64-build_pc-linux-gnu --host=aarch64-host_unknown-linux-gnu --target=xtensa-esp-elf --prefix=/builds/idf/crosstool-NG/builds/xtensa-esp-elf --exec_prefix=/builds/idf/crosstool-NG/builds/xtensa-esp-elf --with-local-prefix=/builds/idf/crosstool-NG/builds/xtensa-esp-elf/xtensa-esp-elf --with-sysroot=/builds/idf/crosstool-NG/builds/xtensa-esp-elf/xtensa-esp-elf --with-native-system-header-dir=/include --with-headers=/builds/idf/crosstool-NG/builds/xtensa-esp-elf/xtensa-esp-elf/include --with-newlib --enable-threads=no --disable-shared --with-pkgversion='crosstool-NG esp-15.2.0_20250929' --disable-__cxa_atexit --enable-cxx-flags='-ffunction-sections -fdata-sections' --disable-libgomp --disable-libmudflap --disable-libmpx --disable-libssp --disable-libquadmath --disable-libquadmath-support --disable-libstdcxx-verbose --with-gmp=/builds/idf/crosstool-NG/.build/xtensa-esp-elf/buildtools/complibs-host --with-mpfr=/builds/idf/crosstool-NG/.build/xtensa-esp-elf/buildtools/complibs-host --with-mpc=/builds/idf/crosstool-NG/.build/xtensa-esp-elf/buildtools/complibs-host --with-isl=/builds/idf/crosstool-NG/.build/xtensa-esp-elf/buildtools/complibs-host --enable-lto --enable-target-optspace --without-long-double-128 --enable-plugin --disable-nls --enable-multiarch --enable-languages=c c++ --disable-libstdcxx-verbose --enable-threads=posix --enable-libstdcxx-time=yes --disable-win32-utf8-manifest]
+        ignore line: [Thread model: posix]
+        ignore line: [Supported LTO compression algorithms: zlib zstd]
+        ignore line: [gcc version 15.2.0 (crosstool-NG esp-15.2.0_20250929) ]
+        ignore line: [COMPILER_PATH=/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../libexec/gcc/xtensa-esp-elf/15.2.0/:/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../libexec/gcc/:/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/bin/]
+        ignore line: [LIBRARY_PATH=/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/esp32s3/:/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/lib/esp32s3/:/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../xtensa-esp-elf/lib/esp32s3/:/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/:/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/:/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/lib/:/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../xtensa-esp-elf/lib/:/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../xtensa-esp-elf/usr/lib/]
+        ignore line: [COLLECT_GCC_OPTIONS='-mdynconfig=xtensa_esp32s3.so' '-mlongcalls' '-fno-builtin-memcpy' '-fno-builtin-memset' '-fno-builtin-bzero' '-nostartfiles' '-v' '-o' 'cmTC_e8ef3' '-dumpdir' 'cmTC_e8ef3.']
+        link line: [ /home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../libexec/gcc/xtensa-esp-elf/15.2.0/collect2 -plugin /home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../libexec/gcc/xtensa-esp-elf/15.2.0/liblto_plugin.so -plugin-opt=/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../libexec/gcc/xtensa-esp-elf/15.2.0/lto-wrapper -plugin-opt=-fresolution=/tmp/ccISSBnm.res -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lnosys -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc --sysroot=/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../xtensa-esp-elf --dynconfig=xtensa_esp32s3.so -o cmTC_e8ef3 -L/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/esp32s3 -L/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/lib/esp32s3 -L/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../xtensa-esp-elf/lib/esp32s3 -L/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0 -L/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc -L/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/lib -L/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../xtensa-esp-elf/lib -L/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../xtensa-esp-elf/usr/lib @/tmp/ccqzAvvy -lgcc -lc -lnosys -lc -lgcc]
+          arg [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../libexec/gcc/xtensa-esp-elf/15.2.0/collect2] ==> ignore
+          arg [-plugin] ==> ignore
+          arg [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../libexec/gcc/xtensa-esp-elf/15.2.0/liblto_plugin.so] ==> ignore
+          arg [-plugin-opt=/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../libexec/gcc/xtensa-esp-elf/15.2.0/lto-wrapper] ==> ignore
+          arg [-plugin-opt=-fresolution=/tmp/ccISSBnm.res] ==> ignore
+          arg [-plugin-opt=-pass-through=-lgcc] ==> ignore
+          arg [-plugin-opt=-pass-through=-lc] ==> ignore
+          arg [-plugin-opt=-pass-through=-lnosys] ==> ignore
+          arg [-plugin-opt=-pass-through=-lc] ==> ignore
+          arg [-plugin-opt=-pass-through=-lgcc] ==> ignore
+          arg [--sysroot=/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../xtensa-esp-elf] ==> ignore
+          arg [--dynconfig=xtensa_esp32s3.so] ==> ignore
+          arg [-o] ==> ignore
+          arg [cmTC_e8ef3] ==> ignore
+          arg [-L/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/esp32s3] ==> dir [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/esp32s3]
+          arg [-L/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/lib/esp32s3] ==> dir [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/lib/esp32s3]
+          arg [-L/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../xtensa-esp-elf/lib/esp32s3] ==> dir [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../xtensa-esp-elf/lib/esp32s3]
+          arg [-L/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0] ==> dir [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0]
+          arg [-L/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc] ==> dir [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc]
+          arg [-L/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/lib] ==> dir [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/lib]
+          arg [-L/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../xtensa-esp-elf/lib] ==> dir [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../xtensa-esp-elf/lib]
+          arg [-L/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../xtensa-esp-elf/usr/lib] ==> dir [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../xtensa-esp-elf/usr/lib]
+          arg [@/tmp/ccqzAvvy] ==> ignore
+          arg [-lgcc] ==> lib [gcc]
+          arg [-lc] ==> lib [c]
+          arg [-lnosys] ==> lib [nosys]
+          arg [-lc] ==> lib [c]
+          arg [-lgcc] ==> lib [gcc]
+        ignore line: [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/bin/ld: warning: cannot find entry symbol _start]
+        ignore line: [ defaulting to 00400054]
+        ignore line: [COLLECT_GCC_OPTIONS='-mdynconfig=xtensa_esp32s3.so' '-mlongcalls' '-fno-builtin-memcpy' '-fno-builtin-memset' '-fno-builtin-bzero' '-nostartfiles' '-v' '-o' 'cmTC_e8ef3' '-dumpdir' 'cmTC_e8ef3.']
+        ignore line: []
+        ignore line: []
+        collapse library dir [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/esp32s3] ==> [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/lib/gcc/xtensa-esp-elf/15.2.0/esp32s3]
+        collapse library dir [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/lib/esp32s3] ==> [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/xtensa-esp-elf/lib/esp32s3]
+        collapse library dir [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../xtensa-esp-elf/lib/esp32s3] ==> [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/xtensa-esp-elf/lib/esp32s3]
+        collapse library dir [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0] ==> [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/lib/gcc/xtensa-esp-elf/15.2.0]
+        collapse library dir [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc] ==> [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/lib/gcc]
+        collapse library dir [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.2.0/../../../../xtensa-esp-elf/lib] ==> [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/xtensa-esp-elf/lib]
+        collapse library dir [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../xtensa-esp-elf/lib] ==> [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/xtensa-esp-elf/lib]
+        collapse library dir [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin/../xtensa-esp-elf/usr/lib] ==> [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/xtensa-esp-elf/usr/lib]
+        implicit libs: [gcc;c;nosys;c;gcc]
+        implicit objs: []
+        implicit dirs: [/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/lib/gcc/xtensa-esp-elf/15.2.0/esp32s3;/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/xtensa-esp-elf/lib/esp32s3;/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/lib/gcc/xtensa-esp-elf/15.2.0;/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/lib/gcc;/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/xtensa-esp-elf/lib;/home/pi/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/xtensa-esp-elf/usr/lib]
+        implicit fwks: []
+      
+      
+...

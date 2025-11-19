@@ -819,16 +819,19 @@ impl Baseline {
 
     /// Save baseline to file
     pub fn save(&self, data_dir: &Path, is_initial: bool) -> io::Result<PathBuf> {
-        let baselines_dir = data_dir.join("baselines");
-        fs::create_dir_all(&baselines_dir)?;
-
-        let filename = if is_initial {
-            "baseline-initial.json".to_string()
+        let filepath = if is_initial {
+            // Save initial baseline to chamon root directory (one level up from data_dir)
+            let chamon_root = data_dir.parent().ok_or_else(|| {
+                io::Error::new(io::ErrorKind::InvalidInput, "data_dir has no parent directory")
+            })?;
+            chamon_root.join("baseline-initial.json")
         } else {
-            format!("baseline-{}.json", self.version)
+            // Save delta baselines to baselines subdirectory
+            let baselines_dir = data_dir.join("baselines");
+            fs::create_dir_all(&baselines_dir)?;
+            let filename = format!("baseline-{}.json", self.version);
+            baselines_dir.join(&filename)
         };
-        
-        let filepath = baselines_dir.join(&filename);
         
         let file = File::create(&filepath)?;
         let writer = BufWriter::new(file);
@@ -839,7 +842,11 @@ impl Baseline {
 
     /// Load initial baseline
     pub fn load_initial(data_dir: &Path) -> io::Result<Self> {
-        let filepath = data_dir.join("baselines/baseline-initial.json");
+        // Load initial baseline from chamon root directory (one level up from data_dir)
+        let chamon_root = data_dir.parent().ok_or_else(|| {
+            io::Error::new(io::ErrorKind::InvalidInput, "data_dir has no parent directory")
+        })?;
+        let filepath = chamon_root.join("baseline-initial.json");
         let file = File::open(filepath)?;
         let reader = BufReader::new(file);
         let baseline = serde_json::from_reader(reader)?;
