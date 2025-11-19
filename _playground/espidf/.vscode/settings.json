@@ -1,0 +1,40 @@
+{
+    // ESP-IDF Extension Configuration
+    "idf.espIdfPath": "/home/pi/esp/esp-idf",
+    "idf.toolsPath": "/home/pi/.espressif",
+    "idf.pythonBinPath": "/usr/bin/python3",
+    "idf.customExtraPaths": "/home/pi/esp/esp-idf/components/esptool_py:/home/pi/.espressif/python_env/idf6.1_py3.13_env/bin",
+    "idf.customExtraVars": {
+        "IDF_PATH": "/home/pi/esp/esp-idf"
+    },
+    
+    // Target Configuration (ESP32-S3)
+    "idf.adapterTargetName": "esp32s3",
+    "idf.openOcdConfigs": [
+        "board/esp32s3-builtin.cfg"
+    ],
+    
+    // Serial Port Configuration
+    "idf.port": "/dev/ttyUSB0",
+    "idf.flashType": "UART",
+    "idf.monitorBaudRate": "115200",
+    
+    // Build Configuration
+    // Note: buildPath is auto-detected per project (looks for CMakeLists.txt)
+    // Each project in projects/ will have its own build/ directory
+    // If workspace is opened at project level, buildPath will be ${workspaceFolder}/build
+    // If workspace is at espidf level, extension should detect project root from CMakeLists.txt
+    "idf.customTask": "",
+    
+    // Git Configuration
+    "idf.gitPath": "git",
+    
+    // Terminal Configuration
+    "idf.terminalInitCommand": ". $HOME/esp/esp-idf/export.sh",
+    
+    // Other Settings
+    "idf.saveScope": "workspace",
+    "idf.notificationMode": "Notifications",
+    "idf.showOnboardingOnInit": true
+}
+

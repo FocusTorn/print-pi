@@ -126,7 +126,10 @@ iwizard_run_json() {
     _wizard_cleanup_early() {
         local show_message="${1:-false}"  # Optional: show cancellation message
         _imenu_show_cursor
-        _imenu_exit_alternate_screen
+        # Only exit alternate screen if we're not in scrollable mode
+        if [ "${WIZARD_SCROLLABLE:-false}" != "true" ]; then
+            _imenu_exit_alternate_screen
+        fi
         # Show cancellation message in original buffer if requested
         if [ "$show_message" = "true" ]; then
             printf '\n%b⚠️  Wizard cancelled%b\n' "${YELLOW}" "${NC}" >&2
@@ -160,10 +163,16 @@ iwizard_run_json() {
     trap '_wizard_cleanup_early false' EXIT            # Any exit (will be overridden in orchestrator)
     
     # Enter alternate screen buffer (prevents affecting scrollback)
-    _imenu_enter_alternate_screen
-    
-    # Clear screen immediately to ensure we start at line 1
-    _imenu_clear_screen
+    # Can be disabled by setting WIZARD_SCROLLABLE=true to allow scrolling when content exceeds terminal height
+    if [ "${WIZARD_SCROLLABLE:-false}" != "true" ]; then
+        _imenu_enter_alternate_screen
+        # Clear screen immediately to ensure we start at line 1
+        _imenu_clear_screen
+    else
+        # Scrollable mode: use normal screen buffer, allow scrolling
+        # Just clear the screen normally
+        _imenu_clear_screen
+    fi
     
     # Strip comments from JSON (works with both files and strings)
     local cleaned_json
@@ -226,12 +235,15 @@ _wizard_orchestrate_steps_json() {
     _wizard_cleanup() {
         local show_message="${1:-false}"  # Optional: show cancellation message
         _imenu_show_cursor
-        _imenu_exit_alternate_screen
-        # Add newlines after exiting alternate screen to preserve scroll position
-        # This prevents the scroll bar from jumping to the top when returning to main terminal
-        if [ "$show_message" != "true" ]; then
-            # Only add newlines on successful completion (not on cancellation)
-            printf '\n\n' >&2
+        # Only exit alternate screen if we're not in scrollable mode
+        if [ "${WIZARD_SCROLLABLE:-false}" != "true" ]; then
+            _imenu_exit_alternate_screen
+            # Add newlines after exiting alternate screen to preserve scroll position
+            # This prevents the scroll bar from jumping to the top when returning to main terminal
+            if [ "$show_message" != "true" ]; then
+                # Only add newlines on successful completion (not on cancellation)
+                printf '\n\n' >&2
+            fi
         fi
         # Show cancellation message in original buffer if requested
         if [ "$show_message" = "true" ]; then
@@ -388,29 +400,27 @@ _wizard_orchestrate_steps_json() {
         }
         
         # For step 0 (first step), just print header and draw prompt
-        # For subsequent steps, clear screen, redraw header, sent section, and active prompt
+        # For subsequent steps, clear only content area (preserves header), then redraw sent section and active prompt
         if [ $step_idx -eq 0 ]; then
-            # First step: header already printed, just draw prompt
+            # First step: header already printed (header ends with blank line)
             # Debug pause BEFORE drawing first prompt
             _wizard_debug_pause
+            # No need to add blank line - header already provides it
         else
-            # Subsequent steps: clear entire alternate screen and redraw everything
+            # Subsequent steps: clear only content area (preserves header), then redraw sent section
             # Debug pause BEFORE clearing
             _wizard_debug_pause
             
-            # Clear entire alternate screen (moves cursor to top-left)
+            # Clear only content area (from line 6 downward) - preserves header
+            # This avoids the "new window" effect by keeping header static
             _wizard_display_clear_content
             
-            # Debug pause BEFORE drawing header
-            _wizard_debug_pause
-            
-            # Redraw header (static, lines 1-5)
-            _wizard_display_print_header "$title"
-            
-            # Debug pause BEFORE drawing sent section
+            # Debug pause AFTER clearing
             _wizard_debug_pause
             
             # Draw sent section (all completed steps, dimmed)
+            # Header is NOT redrawn - it remains static from first step
+            # Note: sent section already adds blank line at the end (before active prompt)
             _wizard_display_draw_sent_section "$completed_count"
             
             # Debug pause BEFORE drawing active prompt
@@ -451,7 +461,10 @@ _wizard_orchestrate_steps_json() {
             # Remove trap handlers
             trap - INT TERM EXIT
             _imenu_show_cursor
-            _imenu_exit_alternate_screen
+            # Only exit alternate screen if we're not in scrollable mode
+            if [ "${WIZARD_SCROLLABLE:-false}" != "true" ]; then
+                _imenu_exit_alternate_screen
+            fi
             printf '\n%b⚠️  Wizard cancelled%b\n' "${YELLOW}" "${NC}" >&2
             rm -f "$temp_json_file"  # Only delete temp file, not original
             return 1
@@ -467,7 +480,10 @@ _wizard_orchestrate_steps_json() {
             # Remove trap handlers
             trap - INT TERM EXIT
             _imenu_show_cursor
-            _imenu_exit_alternate_screen
+            # Only exit alternate screen if we're not in scrollable mode
+            if [ "${WIZARD_SCROLLABLE:-false}" != "true" ]; then
+                _imenu_exit_alternate_screen
+            fi
             rm -f "$temp_json_file"  # Only delete temp file, not original
             return $exit_code
         fi

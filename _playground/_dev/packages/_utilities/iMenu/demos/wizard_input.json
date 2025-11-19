@@ -16,8 +16,16 @@
                 "Heat soak detection"
             ],
             "preselect": [0]
+        },
+        {
+            "type": "confirm",
+            "message": "ℹ️  Proceed?",
+            "initial": true
         }
+        
+        
         /* This is a
            multi-line comment */
     ]
 }
+

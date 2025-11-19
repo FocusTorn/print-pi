@@ -1,0 +1,8 @@
+{
+    // Project-specific build path override
+    // Workspace is at /home/pi/_playground/espidf
+    // But this project's build is at projects/blinken/build
+    "idf.buildPath": "${workspaceFolder}/projects/blinken/build",
+    "idf.pythonInstallPath": "/usr/bin/python"
+}
+

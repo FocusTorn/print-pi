@@ -20,7 +20,6 @@ CompileFlags:
     - -I/home/pi/esp/esp-idf/components
     - -DESP_PLATFORM
     - -DIDF_VER="v6.1-dev"
-    - -mlongcalls
     - --target=xtensa-esp32s3-elf
     - -std=c17
   CompilationDatabase: build

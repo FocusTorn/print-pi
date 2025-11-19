@@ -1,47 +1,31 @@
 {
-    "files.exclude": {
-        
-        // ".oh-my-zsh": true,
-        "_playground": true,
-        
-        ".cursor-server": true,
-        // ".cargo": true,
-
-
-
-        // OEM Directories
-        ".cache": true,
-        // ".config": true,
-        ".ssh": true,
-        "bin": true,
-        "Desktop": true,
-        "Documents": true,
-        "Music": true,
-        "Pictures": true,
-        "Public": true,
-        "Templates": true,
-        "Videos": true,
-
-        //= DOT FILES =========================================================== 
-        ".sudo_as_admin_successful": true,
-        
-        //- GIT --------------------------------------------- 
-        ".gitconfig": true,
-        //- Bash -------------------------------------------- 
-        ".bash_history": true,
-        ".bash_logout": true,
-        ".bashrc": true,
-        ".profile": true,                
-        //- X11 --------------------------------------------- 
-        ".Xauthority": true,
-        ".xsession-errors": true,
-        //- ZSH --------------------------------------------- 
-        ".zcomp*": true,
-        ".zsh_history": true,
-        ".zshenv": true,
-    },
-    "markdown.styles": [
-        "/.vscode/css/github-dimmed.css"
-    ],
-    "idf.pythonInstallPath": "/usr/bin/python"
+  "files.exclude": {
+    "_playground": true,
+    ".cursor-server": true,
+    ".cache": true,
+    ".ssh": true,
+    "bin": true,
+    "Desktop": true,
+    "Documents": true,
+    "Music": true,
+    "Pictures": true,
+    "Public": true,
+    "Templates": true,
+    "Videos": true,
+    ".sudo_as_admin_successful": true,
+    ".gitconfig": true,
+    ".bash_history": true,
+    ".bash_logout": true,
+    ".bashrc": true,
+    ".profile": true,
+    ".Xauthority": true,
+    ".xsession-errors": true,
+    ".zcomp*": true,
+    ".zsh_history": true,
+    ".zshenv": true
+  },
+  "markdown.styles": [
+    "/.vscode/css/github-dimmed.css"
+  ],
+  "idf.pythonInstallPath": "/usr/bin/python"
 }

@@ -11,6 +11,9 @@
         {
             "name": "root",
             "path": "../../.."
+        },
+        {
+            "path": "../_playground/espidf/projects/blinken"
         }
     ], //<
 
