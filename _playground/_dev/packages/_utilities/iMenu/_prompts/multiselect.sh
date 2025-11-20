@@ -222,10 +222,12 @@ _prompt_multiselect() {
                 arrow=$(_imenu_read_escape)
                 case "$arrow" in
                     "A")  # Up arrow
-                        current=$(((current - 1 + num_options) % num_options))
+                        # Use boundary-aware navigation if scroll prevention is enabled
+                        current=$(_imenu_prevent_boundary_scroll "$current" "$num_options" "up")
                         ;;
                     "B")  # Down arrow
-                        current=$(((current + 1) % num_options))
+                        # Use boundary-aware navigation if scroll prevention is enabled
+                        current=$(_imenu_prevent_boundary_scroll "$current" "$num_options" "down")
                         ;;
                     "C"|"D")  # Left/Right arrows - ignore (do nothing)
                         ;;

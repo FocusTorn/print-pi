@@ -14,8 +14,8 @@
                 "Sensor readings",
                 "IAQ (Air quality calculation)",
                 "Heat soak detection"
-            ],
-            "preselect": [0]
+            ]
+            // , "preselect": [0]
         },
         {
             "type": "confirm",

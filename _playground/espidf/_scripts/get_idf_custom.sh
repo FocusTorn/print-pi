@@ -21,12 +21,23 @@ export IDF_PATH
 export ESP_IDF_VERSION="6.1-dev"
 export IDF_PYTHON_ENV_PATH="$HOME/.espressif/python_env/idf6.1_py3.13_env"
 
+# Activate Python virtual environment (sets VIRTUAL_ENV for prompt)
+if [ -f "$IDF_PYTHON_ENV_PATH/bin/activate" ]; then
+    # Source the activate script to properly activate the venv
+    # This sets VIRTUAL_ENV which zsh uses to show venv in prompt
+    . "$IDF_PYTHON_ENV_PATH/bin/activate"
+    # Set a custom prompt label for the venv
+    export VIRTUAL_ENV_PROMPT="ESP-IDF"
+else
+    # Fallback: manually set VIRTUAL_ENV if activate script not found
+    export VIRTUAL_ENV="$IDF_PYTHON_ENV_PATH"
+    export VIRTUAL_ENV_PROMPT="ESP-IDF"
+    export PATH="$IDF_PYTHON_ENV_PATH/bin:$PATH"
+fi
+
 # Add Xtensa toolchain to PATH
 export PATH="$HOME/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20250929/xtensa-esp-elf/bin:$PATH"
 export PATH="$HOME/.espressif/tools/xtensa-esp-elf-gdb/16.3_20250913/xtensa-esp-elf-gdb/bin:$PATH"
-
-# Add ESP-IDF Python environment to PATH
-export PATH="$IDF_PYTHON_ENV_PATH/bin:$PATH"
 
 # Add ESP-IDF component paths
 export PATH="$IDF_PATH/components/espcoredump:$PATH"

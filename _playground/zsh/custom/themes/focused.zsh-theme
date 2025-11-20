@@ -89,7 +89,7 @@ fi
 # %F{#0277BD} %f%{$reset_color%}' # ➜ :
 
 PROMPT=$'
-%F{#33658A}${lb}%D{%H:%M:%S}${rb}%f $(focused_dir)\
+%F{#33658A}${lb}%D{%H:%M:%S}${rb}%F{#D8A386} $(virtualenv_prompt_info)$f $(focused_dir)\
 %F{#0277BD} %f'
 
 
@@ -117,8 +117,8 @@ ZSH_THEME_GIT_PROMPT_BRANCH="%F{#3574AC}%B %{%G%}%b"
 
 
 
-# # ZSH_THEME_GIT_PROMPT_BEHIND="%{↓%G%}"
-# # ZSH_THEME_GIT_PROMPT_AHEAD="%{↑%G%}"
+ZSH_THEME_GIT_PROMPT_BEHIND=" %{↓%G%}"
+ZSH_THEME_GIT_PROMPT_AHEAD=" %{↑%G%}"
 
 
 

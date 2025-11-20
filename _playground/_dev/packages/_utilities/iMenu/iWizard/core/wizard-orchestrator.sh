@@ -118,7 +118,7 @@ iwizard_run_json() {
         json_source="-"
     fi
     
-    # Set up cleanup function early (before entering alternate screen)
+    # Set up cleanup function early
     # This ensures Ctrl+C works even if called before orchestrator
     # Make it a global function so it's accessible from anywhere
     declare -g _WIZARD_CLEANED_JSON_PATH=""  # Global variable for cleanup function
@@ -126,11 +126,7 @@ iwizard_run_json() {
     _wizard_cleanup_early() {
         local show_message="${1:-false}"  # Optional: show cancellation message
         _imenu_show_cursor
-        # Only exit alternate screen if we're not in scrollable mode
-        if [ "${WIZARD_SCROLLABLE:-false}" != "true" ]; then
-            _imenu_exit_alternate_screen
-        fi
-        # Show cancellation message in original buffer if requested
+        # Show cancellation message if requested
         if [ "$show_message" = "true" ]; then
             printf '\n%b⚠️  Wizard cancelled%b\n' "${YELLOW}" "${NC}" >&2
         fi
@@ -139,7 +135,7 @@ iwizard_run_json() {
     }
     declare -g -f _wizard_cleanup_early >/dev/null 2>&1 || true  # Make function global (suppress output)
     
-    # Validate input BEFORE entering alternate screen
+    # Validate input
     if [ "$is_file" = true ]; then
         # File mode: validate file exists
         if [ ! -f "$json_input" ]; then
@@ -162,17 +158,8 @@ iwizard_run_json() {
     trap '_wizard_cleanup_early false; exit 143' TERM  # SIGTERM
     trap '_wizard_cleanup_early false' EXIT            # Any exit (will be overridden in orchestrator)
     
-    # Enter alternate screen buffer (prevents affecting scrollback)
-    # Can be disabled by setting WIZARD_SCROLLABLE=true to allow scrolling when content exceeds terminal height
-    if [ "${WIZARD_SCROLLABLE:-false}" != "true" ]; then
-        _imenu_enter_alternate_screen
-        # Clear screen immediately to ensure we start at line 1
-        _imenu_clear_screen
-    else
-        # Scrollable mode: use normal screen buffer, allow scrolling
-        # Just clear the screen normally
-        _imenu_clear_screen
-    fi
+    # Always use scrollable mode - no alternate screen buffer
+    # Terminal scrolling is enabled by default
     
     # Strip comments from JSON (works with both files and strings)
     local cleaned_json
@@ -227,7 +214,7 @@ _wizard_orchestrate_steps_json() {
     local title="$1"
     local json_file="$2"
     
-    # Set up signal handlers to restore cursor and exit alternate screen on interrupt
+    # Set up signal handlers to restore cursor on interrupt
     # Make cleanup function global so it's accessible from signal handlers
     # Note: json_file here is the cleaned temp file, not the original
     local temp_json_file="$json_file"
@@ -235,17 +222,7 @@ _wizard_orchestrate_steps_json() {
     _wizard_cleanup() {
         local show_message="${1:-false}"  # Optional: show cancellation message
         _imenu_show_cursor
-        # Only exit alternate screen if we're not in scrollable mode
-        if [ "${WIZARD_SCROLLABLE:-false}" != "true" ]; then
-            _imenu_exit_alternate_screen
-            # Add newlines after exiting alternate screen to preserve scroll position
-            # This prevents the scroll bar from jumping to the top when returning to main terminal
-            if [ "$show_message" != "true" ]; then
-                # Only add newlines on successful completion (not on cancellation)
-                printf '\n\n' >&2
-            fi
-        fi
-        # Show cancellation message in original buffer if requested
+        # Show cancellation message if requested
         if [ "$show_message" = "true" ]; then
             printf '\n%b⚠️  Wizard cancelled%b\n' "${YELLOW}" "${NC}" >&2
         fi
@@ -265,7 +242,7 @@ _wizard_orchestrate_steps_json() {
     # Initialize data manager
     _wizard_data_init
     
-    # Print header once (static, lines 1-5)
+    # Print blank line to start wizard (no header banner)
     _wizard_display_print_header "$title"
     
     # Get steps count
@@ -399,37 +376,41 @@ _wizard_orchestrate_steps_json() {
             fi
         }
         
-        # For step 0 (first step), just print header and draw prompt
-        # For subsequent steps, clear only content area (preserves header), then redraw sent section and active prompt
+        # For step 0 (first step), blank line already printed, just draw prompt
+        # For subsequent steps, clear only content area, then redraw sent section and active prompt
         if [ $step_idx -eq 0 ]; then
-            # First step: header already printed (header ends with blank line)
+            # First step: blank line already printed
             # Debug pause BEFORE drawing first prompt
             _wizard_debug_pause
-            # No need to add blank line - header already provides it
+            # No need to add blank line - already provided
         else
-            # Subsequent steps: clear only content area (preserves header), then redraw sent section
-            # Debug pause BEFORE clearing
+            # Subsequent steps: in scrollable mode, don't clear - just draw sent section below previous content
+            # Debug pause BEFORE drawing sent section
             _wizard_debug_pause
             
-            # Clear only content area (from line 6 downward) - preserves header
-            # This avoids the "new window" effect by keeping header static
+            # Reset content tracking (no clearing in scrollable mode - terminal scrolls naturally)
             _wizard_display_clear_content
             
-            # Debug pause AFTER clearing
+            # Debug pause AFTER reset
             _wizard_debug_pause
             
             # Draw sent section (all completed steps, dimmed)
-            # Header is NOT redrawn - it remains static from first step
             # Note: sent section already adds blank line at the end (before active prompt)
             _wizard_display_draw_sent_section "$completed_count"
             
             # Debug pause BEFORE drawing active prompt
             _wizard_debug_pause
+            
+            # Clear any previous prompt keybindings before starting the new prompt
+            # This ensures keybindings from the previous prompt don't linger
+            # Clear upward to remove keybindings (typically 1-2 lines, but clear 4-5 to be safe)
+            # Only clear a few lines - we don't want to clear content from before the wizard started
+            _imenu_clear_menu 5
         fi
         
         # Cursor positioning: 
         # - After clear, cursor is at top-left (line 1, column 0)
-        # - After header, cursor is at line 6 (virtual line 1)
+        # - After blank line, cursor is at line 2
         # - After sent section, cursor is positioned after it (sent section adds blank line)
         # So no manual positioning needed
         
@@ -455,16 +436,40 @@ _wizard_orchestrate_steps_json() {
         result=$(cat "$result_file" 2>/dev/null || echo "")
         rm -f "$result_file" 2>/dev/null || true
         
+        # In scrollable mode, clear the prompt's visible output after completion
+        # Prompts leave their message and keybindings visible, which we need to clear
+        # This prevents them from remaining visible when we draw the sent section
+        if [ $exit_code -eq 0 ]; then
+            # First, ensure we're on a new line (prompts may leave cursor mid-line)
+            printf '\n' >&2
+            
+            # Clear the prompt's visible output (message + keybindings)
+            # Estimate based on prompt types:
+            # - confirm: message (1-2) + input line (1) + blank (1) + blank (1) + keybindings (1) = ~6-7 lines
+            # - text: message (1-2) + input line (1) + keybindings (1) = ~3-4 lines
+            # - select/multiselect: message (1-2) + options (3-20) + blank (1) + keybindings (1) = ~6-24 lines
+            # We'll clear generously to ensure we get everything
+            local lines_to_clear=8
+            if [ "$step_type" = "select" ] || [ "$step_type" = "multiselect" ]; then
+                lines_to_clear=30  # Menu prompts have more options + keybindings
+            fi
+            
+            # Clear upward from current position to remove all prompt output
+            # _imenu_clear_menu moves up, clears each line, then leaves cursor at top of cleared area
+            # We want to clear everything including keybindings, then draw sent section on a clean line
+            _imenu_clear_menu "$lines_to_clear"
+            
+            # After clearing, we're at the top of the cleared area
+            # Add a newline to ensure we're on a fresh line for the sent section
+            printf '\n' >&2
+        fi
+        
         # Handle exit codes
         if [ $exit_code -eq 1 ]; then
             # Cancel (ESC) - show cancellation message
             # Remove trap handlers
             trap - INT TERM EXIT
             _imenu_show_cursor
-            # Only exit alternate screen if we're not in scrollable mode
-            if [ "${WIZARD_SCROLLABLE:-false}" != "true" ]; then
-                _imenu_exit_alternate_screen
-            fi
             printf '\n%b⚠️  Wizard cancelled%b\n' "${YELLOW}" "${NC}" >&2
             rm -f "$temp_json_file"  # Only delete temp file, not original
             return 1
@@ -480,10 +485,6 @@ _wizard_orchestrate_steps_json() {
             # Remove trap handlers
             trap - INT TERM EXIT
             _imenu_show_cursor
-            # Only exit alternate screen if we're not in scrollable mode
-            if [ "${WIZARD_SCROLLABLE:-false}" != "true" ]; then
-                _imenu_exit_alternate_screen
-            fi
             rm -f "$temp_json_file"  # Only delete temp file, not original
             return $exit_code
         fi
@@ -495,11 +496,64 @@ _wizard_orchestrate_steps_json() {
         step_idx=$((step_idx + 1))
     done
     
-    # After last step: clear, draw all sent steps, return JSON
+    # After last step: clear the final prompt's output (keybindings), then draw all sent steps
+    # The last prompt's keybindings are still visible, so we need to clear them aggressively
+    # Get the last step type from the stored data to determine how many lines to clear
+    local last_step_idx=$((step_idx - 1))  # step_idx was incremented, so last step is one less
+    local last_step_type="${_WIZARD_TYPES[$last_step_idx]:-}"
+    
+    # Clear the final prompt's visible output using a different approach
+    # Instead of just clearing upward, also clear downward to catch any remaining keybindings
+    # First ensure we're on a new line
+    printf '\n' >&2
+    
+    # Clear upward aggressively
+    local lines_to_clear=15  # Clear more lines for simple prompts
+    if [ "$last_step_type" = "select" ] || [ "$last_step_type" = "multiselect" ]; then
+        lines_to_clear=40  # Clear even more for menu prompts
+    fi
+    _imenu_clear_menu "$lines_to_clear"
+    
+    # Also clear downward to catch any remaining keybindings that might be below
+    # Clear current line and several lines below
+    for ((i=0; i<5; i++)); do
+        printf '\r' >&2
+        tput el >&2 2>/dev/null || printf "\033[K" >&2 2>/dev/null || true
+        if [ $i -lt 4 ]; then
+            printf '\033[B' >&2 2>/dev/null || tput cud1 >&2 2>/dev/null || true
+        fi
+    done
+    
+    # Move back up to where we want to be
+    for ((i=0; i<4; i++)); do
+        printf '\033[A' >&2 2>/dev/null || tput cuu1 >&2 2>/dev/null || true
+    done
+    
+    # Fresh line for sent section
+    printf '\n' >&2
+    
+    # Now draw all sent steps
     _wizard_display_clear_content
     local final_count
     final_count=$(_wizard_data_get_all)
     _wizard_display_draw_sent_section "$final_count"
+    
+    # After drawing sent section, clear any remaining keybindings that might be visible below
+    # The keybindings might be on lines that the sent section didn't overwrite
+    # Clear downward to remove them
+    for ((i=0; i<10; i++)); do
+        printf '\r' >&2
+        tput el >&2 2>/dev/null || printf "\033[K" >&2 2>/dev/null || true
+        if [ $i -lt 9 ]; then
+            printf '\033[B' >&2 2>/dev/null || tput cud1 >&2 2>/dev/null || true
+        fi
+    done
+    
+    # Move back up to after the sent section
+    for ((i=0; i<9; i++)); do
+        printf '\033[A' >&2 2>/dev/null || tput cuu1 >&2 2>/dev/null || true
+    done
+    
     # Add blank line after sent section for final display
     printf '\n' >&2
     

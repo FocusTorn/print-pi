@@ -153,3 +153,73 @@ _imenu_clear_screen() {
     printf '%b' "$seq" >&2 2>/dev/null || tput clear >&2 2>/dev/null || true
 }
 
+# Get terminal height (number of lines)
+_imenu_get_terminal_height() {
+    local height
+    height=$(tput lines 2>/dev/null || echo "${LINES:-24}")
+    echo "$height"
+}
+
+# Get terminal width (number of columns)
+_imenu_get_terminal_width() {
+    local width
+    width=$(tput cols 2>/dev/null || echo "${COLUMNS:-80}")
+    echo "$width"
+}
+
+# Check if we're at terminal top boundary
+# Returns 0 (true) if at top, 1 (false) otherwise
+# This is a simple heuristic - assumes we're near top if cursor is in upper portion
+_imenu_at_terminal_top() {
+    # This is a simplified check - in practice, we'd need to track cursor position
+    # For now, we'll use a different approach: prevent scrolling by not wrapping
+    # when at boundaries if IMENU_DISABLE_SCROLLING is enabled
+    return 1  # Default: not at top (allow navigation)
+}
+
+# Check if we're at terminal bottom boundary  
+# Returns 0 (true) if at bottom, 1 (false) otherwise
+_imenu_at_terminal_bottom() {
+    # Simplified check - see _imenu_at_terminal_top for notes
+    return 1  # Default: not at bottom (allow navigation)
+}
+
+# Prevent scrolling at boundaries by constraining navigation
+# This allows terminal scrolling for content, but prevents scrolling when
+# navigating menu items at boundaries
+# Arguments: current_index, total_options, direction ("up" or "down")
+# Returns: new_index (may be same as current if at boundary)
+_imenu_prevent_boundary_scroll() {
+    local current="$1"
+    local total="$2"
+    local direction="$3"
+    
+    # If scroll prevention is disabled, use normal wrapping behavior
+    if [ "${IMENU_DISABLE_SCROLLING:-false}" != "true" ]; then
+        if [ "$direction" = "up" ]; then
+            echo $(((current - 1 + total) % total))
+        else
+            echo $(((current + 1) % total))
+        fi
+        return
+    fi
+    
+    # With scroll prevention: prevent wrapping at boundaries
+    # This prevents scrolling but still allows navigation within visible range
+    if [ "$direction" = "up" ]; then
+        if [ $current -eq 0 ]; then
+            # At top: don't wrap, stay at top
+            echo "$current"
+        else
+            echo $((current - 1))
+        fi
+    else
+        if [ $current -eq $((total - 1)) ]; then
+            # At bottom: don't wrap, stay at bottom
+            echo "$current"
+        else
+            echo $((current + 1))
+        fi
+    fi
+}
+

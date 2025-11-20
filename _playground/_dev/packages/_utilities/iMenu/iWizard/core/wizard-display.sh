@@ -1,74 +1,52 @@
 #!/usr/bin/env bash
 # iWizard Core - Display Functions
 # Handles header printing, content clearing, and sent section drawing
-# Uses alternate screen buffer with line tracking for efficient clearing
+# Uses scrollable mode with line tracking for efficient clearing
 
-# Global variable to track content start line (after header)
-# Header is 5 lines, so content starts at line 6
-_WIZARD_CONTENT_START_LINE=6
+# Global variable to track content start line (after blank line)
+# No header banner, so content starts at line 2 (after blank line)
+_WIZARD_CONTENT_START_LINE=2
 
 # Global variable to track current content line count
 # This tracks how many lines of content have been drawn (sent section + active prompt)
 _WIZARD_CONTENT_LINES=0
 
-# Print standard wizard header (lines 1-5)
-# Line 1: blank
-# Line 2: separator
-# Line 3: title
-# Line 4: separator
-# Line 5: blank (after banner, part of static banner)
-# Content starts at line 6 (virtual line 1)
-# After printing, cursor is at line 6, column 0
-# Arguments: title
+# Print blank line to start wizard (no header banner)
+# Content starts at line 2 (after blank line)
+# After printing, cursor is at line 2, column 0
+# Arguments: title (unused, kept for compatibility)
 _wizard_display_print_header() {
     local title="$1"
     
     # Reset content line tracking
     _WIZARD_CONTENT_LINES=0
     
-    # Line 1: blank line (before banner)
-    printf '\n' >&2
-    # Line 2: top separator
-    printf '%b════════════════════════════════════════%b\n' "${CYAN}" "${NC}" >&2
-    # Line 3: title
-    printf '%b  %s%b\n' "${CYAN}" "$title" "${NC}" >&2
-    # Line 4: bottom separator
-    printf '%b════════════════════════════════════════%b\n' "${CYAN}" "${NC}" >&2
-    # Line 5: blank line (after banner, part of static banner)
+    # Just print a blank line to start
     printf '\n' >&2
     
-    # Cursor is now at line 6, column 0 (virtual line 1) - no positioning needed
+    # Cursor is now at line 2, column 0 - no positioning needed
 }
 
 # Clear only the content area (from content start line downward)
-# This preserves the header and uses cursor movement to clear specific lines
-# Much more efficient than clearing the entire screen
-# Note: This does NOT redraw the header - header should remain static
+# In scrollable mode, don't clear anything - let terminal scroll naturally
 _wizard_display_clear_content() {
-    # Move cursor to content start line (line 6, column 1)
-    # Use absolute positioning to ensure we're at the exact right place
-    printf '\033[%d;1H' "$_WIZARD_CONTENT_START_LINE" >&2
-    
-    # Clear from cursor position to end of screen
-    # \033[J clears from cursor to end of screen (preserves lines above cursor)
-    printf '\033[J' >&2
-    
-    # Ensure cursor is positioned at content start for next draw
-    # This ensures sent section draws from the correct position
-    printf '\033[%d;1H' "$_WIZARD_CONTENT_START_LINE" >&2
-    
-    # Reset content line tracking
+    # In scrollable mode, we don't clear anything - terminal scrolling handles it
+    # The sent section and new prompt will appear below the previous content
+    # Just reset content line tracking for next iteration
     _WIZARD_CONTENT_LINES=0
 }
 
 # Draw the sent section (all completed steps, dimmed)
 # Arguments: step_count (number of completed steps)
 # Uses global arrays from wizard-data: _WIZARD_MESSAGES, _WIZARD_RESULTS, _WIZARD_TYPES
-# Note: This draws starting at line 6 (virtual line 1, after static banner lines 1-5)
+# Note: This draws starting at line 2 (after blank line)
 # Tracks line count for efficient clearing
 _wizard_display_draw_sent_section() {
     local step_count="$1"
     local lines_drawn=0
+    
+    # Note: A newline is already added after prompt completion in wizard-orchestrator.sh
+    # So we start on a fresh line here
     
     # Draw all completed steps as dimmed
     local i

@@ -113,9 +113,6 @@ plugins=( #>
 
 source $ZSH/oh-my-zsh.sh
 
-
-
-
 # User configuration
 
 # export MANPATH="/usr/local/man:$MANPATH"
@@ -373,3 +370,15 @@ if [ -f "$HOME/esp/esp-idf/export.sh" ]; then
     # Uncomment the line below to auto-load ESP-IDF in every shell (slower startup)
     # . $HOME/esp/esp-idf/export.sh
 fi
+
+# ESP-IDF Development Menu (ed) - Function wrapper to allow sourcing
+ed() {
+    local ed_script="$HOME/_playground/espidf/_scripts/_ed-bin.sh"
+    if [ -f "$ed_script" ]; then
+        # Source the script so it can modify the current shell environment
+        source "$ed_script" "$@"
+    else
+        # Fallback to script execution if function version not found
+        "$HOME/.local/bin/ed" "$@"
+    fi
+}
