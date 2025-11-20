@@ -160,3 +160,4 @@ nodered/package.json
 
 .espressif
 esp
+.cursor/ide_state.json
